@@ -18,7 +18,7 @@ class AppData: NSObject {
     static let greenColor = UIColor(red: 0/255.0, green: 182/255.0, blue: 164/255.0, alpha: 1)
     static let yellowColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 1)
     static let greyColor = UIColor(red: 214/255.0, green: 214/255.0, blue: 214/255.0, alpha: 1)
-    static let imageBGColor = UIColor(red: 235/255.0, green: 235/255.0, blue: 235/255.0, alpha: 1)
+    static let lightGreyColor = UIColor(red: 235/255.0, green: 235/255.0, blue: 235/255.0, alpha: 1)
     static let darkColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 1)
     
     static let cornerRadius: CGFloat = 6
@@ -204,6 +204,12 @@ class AppData: NSObject {
                 startTimer()
             }
         }, failure: failure)
+        
+        updateJobSeeker(success: {
+            if isDataLoaded() {
+                success()
+            }
+        }, failure: failure)
     }
     
     private static func isDataLoaded() -> Bool {
@@ -216,7 +222,8 @@ class AppData: NSObject {
             applicationStatuses != nil &&
             roles != nil &&
             initialTokens != nil &&
-            applications != nil
+            applications != nil &&
+            user.isRecruiter() || jobSeeker != nil
     }
     
     static func getSex(_ id: NSNumber!) -> Sex! {
@@ -338,9 +345,28 @@ class AppData: NSObject {
     
     //================ applications =============
     
+    static var jobSeeker: JobSeeker!
+    
+    static func updateJobSeeker(success: (() -> Void)?,
+                                failure: ((String?, NSDictionary?) -> Void)?) {
+        if AppData.user.jobSeeker != nil {
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                jobSeeker = data as! JobSeeker
+                success?()
+            }, failure: failure)
+        }
+    }
+
+    //================ applications =============
+    
+    static let DEFAULT_REFRESH_TIME = 30
+    static let MESSAGE_REFRESH_TIME = 5
+    
     static var timer: Timer?
     static var time = 0
-    static var timeInterval = 30
+    static var appsRefreshTime = DEFAULT_REFRESH_TIME
+    static var refreshCallback: (() -> Void)?
+    
     static var newMessageCount = 0
     
     static var applications: [Application]!
@@ -361,9 +387,9 @@ class AppData: NSObject {
     
     static func refreshApplications() {
         time += 1
-        if time >= timeInterval {
+        if time >= appsRefreshTime {
             time = 0
-            getApplications(success: nil, failure: nil)
+            getApplications(success: refreshCallback, failure: nil)
         }
     }
     
@@ -371,7 +397,7 @@ class AppData: NSObject {
         newMessageCount = 0
         
         for application in applications {
-            newMessageCount += AppHelper.getNewMessageCount(application)
+            newMessageCount += application.getNewMessageCount()
         }
     }
     
@@ -381,6 +407,7 @@ class AppData: NSObject {
             
             applications = data as! [Application]
             preprocessApplications()
+            print("================= update applications ==============")
             success?()
             
         }, failure: failure)

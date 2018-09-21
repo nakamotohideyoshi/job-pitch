@@ -39,7 +39,7 @@ class JobEditController: MJPController {
     
     var videoUrl: URL!
     
-    var imagePicker: UIImagePickerController!
+    var logoPicker: ImagePicker!
     var logoImage: UIImage!
 
     var sectorNames = [String]()
@@ -58,10 +58,8 @@ class JobEditController: MJPController {
         
         isAddMode = SideMenuController.currentID != "businesses"
 
-        // Do any additional setup after loading the view.
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
+        logoPicker = ImagePicker()
+        logoPicker.delegate = self
         
         //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
         
@@ -174,7 +172,7 @@ class JobEditController: MJPController {
             
             playButtonView.isHidden = job.getPitch()?.video == nil
             
-            AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: { 
+            AppHelper.loadLogo(job, imageView: imgView, completion: { 
                 if self.job.images != nil && self.job.images.count > 0 {
                     self.origImage = self.job.getImage()
                     self.removeImageButton.isHidden = false
@@ -214,54 +212,7 @@ class JobEditController: MJPController {
     }
     
     @IBAction func addLogoAction(_ sender: Any) {
-        
-        let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .camera
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(takePhotoAction)
-        
-        let photoGalleryAction = UIAlertAction(title: "Select Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(photoGalleryAction)
-        
-        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
-            browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(googledriveAction)
-        
-        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(dropboxAction)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        actionSheetContoller.addAction(cancelAction)
-        
-        if let popoverController = actionSheetContoller.popoverPresentationController {
-            let sourceView = sender as! UIView
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
-            popoverController.permittedArrowDirections = .down
-        }
-        
-        present(actionSheetContoller, animated: true, completion: nil)
-        
+        logoPicker.present(self, target: sender as! UIView)
     }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
@@ -269,7 +220,7 @@ class JobEditController: MJPController {
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {
-        let controller = AppHelper.instantiate("Camera") as! CameraController
+        let controller = CameraController.instantiate()
         controller.complete = { (videoUrl) in
             self.videoUrl = videoUrl
             self.playButtonView.isHidden = false
@@ -295,30 +246,10 @@ class JobEditController: MJPController {
         }
     }
     
-    
-    func downloadedLogo(path: String) {
-        let url = URL(fileURLWithPath: path)
-        do {
-            let data = try Data(contentsOf: url)
-            logoImage = UIImage(data: data)
-            
-            if logoImage == nil {
-                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
-            } else {
-                imgView.image = logoImage
-                removeImageButton.isHidden = false
-                addLogoButton.setTitle("Change Logo", for: .normal)
-            }
-            
-        } catch {
-            print("error")
-        }
-    }
-    
     @IBAction func removeImageAction(_ sender: Any) {
         
         logoImage = nil
-        AppHelper.loadLogo(image: location?.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
         removeImageButton.isHidden = true
         addLogoButton.setTitle("Add Logo", for: .normal)
         
@@ -457,7 +388,7 @@ class JobEditController: MJPController {
             }
             navigationController?.viewControllers = controllers!
         } else {
-            let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
+            let controller = JobDetailController.instantiate()
             controller.job = job
             controllers?.insert(controller, at: (controllers?.count)!-1)
             navigationController?.viewControllers = controllers!
@@ -467,30 +398,16 @@ class JobEditController: MJPController {
         
     }
     
-    static func pushController(location: Location!, job: Job!) {
-        let controller = AppHelper.instantiate("JobEdit") as! JobEditController
-        controller.location = location
-        controller.job = job
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-    }
-
+    static func instantiate() -> JobEditController {
+        return AppHelper.instantiate("JobEdit") as! JobEditController
+    }    
 }
 
-extension JobEditController: UIImagePickerControllerDelegate {
+extension JobEditController: ImagePickerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-        
-        imgView.image = logoImage
+    func imageSelected(_ picker: ImagePicker, image: UIImage) {
+        imgView.image = image
         removeImageButton.isHidden = false
         addLogoButton.setTitle("Change Logo", for: .normal)
-        
-        dismiss(animated: true, completion: nil)
-        
     }
-    
-}
-
-extension JobEditController: UINavigationControllerDelegate {
 }

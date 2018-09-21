@@ -11,6 +11,9 @@ import GoogleMaps
 
 class ApplicationDetailsController: MJPController {
 
+    @IBOutlet weak var mainView: UIStackView!
+    @IBOutlet weak var tableView: UITableView!
+    
     @IBOutlet weak var carousel: iCarousel!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var jobTitle: UILabel!
@@ -20,26 +23,31 @@ class ApplicationDetailsController: MJPController {
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var removeView: UIView!
     @IBOutlet weak var applyView: UIView!
-    @IBOutlet weak var acceptView: UIView!
+    @IBOutlet weak var interviewInfo: InterviewView!
     @IBOutlet weak var messagesBtnView: UIView!
+    @IBOutlet weak var badge: BadgeIcon!
     @IBOutlet weak var jobDescription: UILabel!
     @IBOutlet weak var locationDescription: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var historyTitleView: UIView!
     
-    var job: Job!
-    var application: Application!
+    public var job: Job!
+    public var application: Application!
+    public var viewMode = false
+    public var controlDelegate: ControlDelegate!
+    
     var interview: ApplicationInterview!
-    var controlDelegate: ControlDelegate!
+    var interviews = [ApplicationInterview]()
+    
     var jobSeeker: JobSeeker!
     var profile: Profile!
-    var viewMode = false
     
     var resources = [MediaModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if AppData.user.jobSeeker != nil {
+        if AppData.user.isJobSeeker() {
 
             showLoading()
 
@@ -54,12 +62,40 @@ class ApplicationDetailsController: MJPController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        AppData.refreshCallback = {
+            self.loadData()
+        }
+        
+        loadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        AppData.refreshCallback = nil
+    }
+    
     func loadData() {
         
-        if application != nil {
-            job = application.job
+        if AppData.user.isJobSeeker() && profile == nil {
+            return
         }
-        interview = AppHelper.getInterview(application)
+        
+        if application != nil {
+            application = (AppData.applications.filter { $0.id == application.id })[0]
+            interview = application?.getInterview()
+            interviews = (application.interviews as! [ApplicationInterview]).filter { $0.id != interview?.id }
+            job = application.job
+            
+            let newMsgs = application.getNewMessageCount()
+            badge.text = "\(newMsgs)"
+            badge.isHidden = newMsgs == 0
+        } else {
+            interview = nil
+        }
         
         resources.removeAll()
         if let pitch = job.getPitch() {
@@ -85,12 +121,19 @@ class ApplicationDetailsController: MJPController {
         distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: workplace.latitude, longitude2: workplace.longitude)
         distanceLabel.isHidden = application == nil
 
+        interviewInfo.superview?.isHidden = interview == nil
+        if (interview != nil) {
+            interviewInfo.interview = interview
+            interviewInfo.application = application
+            interviewInfo.acceptCallback = acceptAction
+            interviewInfo.cancelCallback = cancelInterview
+        }
+        
         jobDescription.text = job.desc
         locationDescription.text = workplace.desc
         
         applyView.isHidden = viewMode || application != nil
         removeView.isHidden = viewMode || application != nil
-        acceptView.isHidden = viewMode || interview == nil || interview.status != InterviewStatus.INTERVIEW_PENDING
         messagesBtnView.isHidden = viewMode || application == nil
         
         var position = CLLocationCoordinate2DMake(workplace.latitude.doubleValue, workplace.longitude.doubleValue)
@@ -118,17 +161,20 @@ class ApplicationDetailsController: MJPController {
         
         carousel.bounces = false
         carousel.reloadData()
+        
+        historyTitleView.isHidden = interviews.count == 0
+        
+        mainView.layoutIfNeeded()
+        mainView.sizeToFit()
+        mainView.superview?.frame.size.height = mainView.frame.height
+        
+        tableView.reloadData()
     }
     
-    func updateApplication(_ close: Bool) {
+    func updateApplication() {
         AppData.updateApplication(application.id, success: { (application) in
-            if close {
-                self.popController()
-            } else {
-                self.application = application
-                self.loadData()
-                self.hideLoading()
-            }
+            self.hideLoading()
+            self.loadData()
         }, failure: self.handleErrors)
     }
     
@@ -150,15 +196,20 @@ class ApplicationDetailsController: MJPController {
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
-    @IBAction func acceptAction(_ sender: Any) {
+    func acceptAction() {
         PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
             self.showLoading()
             API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
-                AppData.updateApplication(self.application.id, success: { (application) in
-                    self.application = application
-                    self.loadData()
-                    self.hideLoading()
-                }, failure: self.handleErrors)
+                self.updateApplication()
+            }, failure: self.handleErrors)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    func cancelInterview() {
+        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+            self.showLoading()
+            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
+                self.updateApplication()
             }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)
     }
@@ -206,7 +257,7 @@ extension ApplicationDetailsController: iCarouselDataSource {
 
         var mediaView: MediaView!
         if view == nil {
-            mediaView = MediaView.instantiate(carousel.bounds)
+            mediaView = MediaView(frame: carousel.bounds)
             mediaView.controller = self
         } else {
             mediaView = view as! MediaView
@@ -222,4 +273,43 @@ extension ApplicationDetailsController: iCarouselDelegate {
         pageControl.currentPage = carousel.currentItemIndex
     }
     
+}
+
+extension ApplicationDetailsController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return interviews.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InterviewHistoryCell", for: indexPath)
+        
+        let interview = interviews[indexPath.row]
+        var status1 = ""
+        if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
+            status1 = "Completed"
+        } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
+            status1 = "Cancelled"
+        }
+        
+        (cell.viewWithTag(1) as! UILabel).text = AppHelper.dateToShortString(interview.at)
+        (cell.viewWithTag(2) as! UILabel).text = status1
+        
+        if indexPath.row < interviews.count - 1 {
+            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+        }
+        
+        return cell
+    }
+}
+
+extension ApplicationDetailsController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = InterviewDetailController.instantiate()
+        controller.application = application
+        controller.interviewId = interviews[indexPath.row].id
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }

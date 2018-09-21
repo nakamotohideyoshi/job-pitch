@@ -17,7 +17,7 @@ class JobCell: MGSwipeTableCell {
     
     func setData(_ job: Job) {
         
-        AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(job, imageView: imgView, completion: nil)
         titleLabel.text = job.title
         subTitle.text = job.getBusinessName()
         

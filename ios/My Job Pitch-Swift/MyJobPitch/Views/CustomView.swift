@@ -127,3 +127,21 @@ extension UIView {
     }
     
 }
+
+extension UILabel {
+
+    func setDeletedText(_ str: String, isDeleted: Bool) {
+        if !isDeleted {
+            attributedText = nil
+            text = str
+            alpha = 1
+            return
+        }
+
+        let str1: NSMutableAttributedString =  NSMutableAttributedString(string: str)
+        str1.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str1.length))
+        str1.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: font.pointSize), range: NSMakeRange(0, str1.length))
+        attributedText = str1
+        alpha = 0.5
+    }
+}

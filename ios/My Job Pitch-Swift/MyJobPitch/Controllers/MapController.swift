@@ -34,8 +34,6 @@ class MapController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         mapView.delegate = self
         mapView.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
@@ -165,19 +163,8 @@ class MapController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    static func showModal(latitude: NSNumber!, longitude: NSNumber!, radius: CLLocationDistance!,
-                          complete: ((CLLocationCoordinate2D, String, String) -> Void)!) {
-        
-        let controller = AppHelper.instantiate("MapController") as! MapController
-        if latitude != nil {
-            controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
-        }
-        controller.radius = radius;
-        controller.complete = complete
-        
-        let navController = UINavigationController(rootViewController: controller)
-        
-        AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+    static func instantiate() -> MapController {
+        return AppHelper.instantiate("MapController") as! MapController
     }
     
 }

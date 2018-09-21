@@ -71,14 +71,16 @@ class JobDetailController: MJPController {
     }
     
     func updateJobInfo() {
-        AppHelper.loadLogo(image: job.getImage(), imageView: headerImgView, completion: nil)
+        AppHelper.loadLogo(job, imageView: headerImgView, completion: nil)
         headerName.text = job.title
         headerSubTitle.text = job.getBusinessName()
     }
     
     @IBAction func editJobAction(_ sender: Any) {
         self.refresh = true
-        JobEditController.pushController(location: nil, job: job)
+        let controller = JobEditController.instantiate()
+        controller.job = job
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func deleteJobAction(_ sender: Any) {
@@ -101,6 +103,10 @@ class JobDetailController: MJPController {
         present(controller, animated: true, completion: nil)
     }
     
+    static func instantiate() -> JobDetailController {
+        return AppHelper.instantiate("JobDetail") as! JobDetailController
+    }
+    
 }
 
 
@@ -113,7 +119,7 @@ extension JobDetailController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobMenuCell", for: indexPath)
-        cell.addUnderLine(paddingLeft: 10, paddingRight: 0, color: AppData.greyColor)
+        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         let iconView = cell.viewWithTag(1) as! UIImageView
         let titleView = cell.viewWithTag(2) as! UILabel

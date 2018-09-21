@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMaps
 
 class LocationEditController: MJPController {
     
@@ -29,7 +30,7 @@ class LocationEditController: MJPController {
     var business: Business!
     var location: Location!
     
-    var imagePicker: UIImagePickerController!
+    var logoPicker: ImagePicker!
     var logoImage: UIImage!
     
     var latitude: NSNumber!
@@ -46,10 +47,8 @@ class LocationEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
+        logoPicker = ImagePicker()
+        logoPicker.delegate = self
         
         addressField.delegate = self
         
@@ -107,7 +106,7 @@ class LocationEditController: MJPController {
             latitude = location.latitude
             longitude = location.longitude
             
-            AppHelper.loadLogo(image: location.getImage(), imageView: imgView, completion: { 
+            AppHelper.loadLogo(location, imageView: imgView, completion: {
                 if self.location.images != nil && self.location.images.count > 0 {
                     self.origImage = self.location.getImage()
                     self.removeImageButton.isHidden = false
@@ -135,96 +134,31 @@ class LocationEditController: MJPController {
     }
     
     @IBAction func addLogoAction(_ sender: Any) {
-        
-        let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .camera
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(takePhotoAction)
-        
-        let photoGalleryAction = UIAlertAction(title: "Select Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(photoGalleryAction)
-        
-        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
-            browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(googledriveAction)
-        
-        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(dropboxAction)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        actionSheetContoller.addAction(cancelAction)
-        
-        if let popoverController = actionSheetContoller.popoverPresentationController {
-            let sourceView = sender as! UIView
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
-            popoverController.permittedArrowDirections = .down
-        }
-        
-        present(actionSheetContoller, animated: true, completion: nil)
-        
-    }
-    
-    func downloadedLogo(path: String) {
-        let url = URL(fileURLWithPath: path)
-        do {
-            let data = try Data(contentsOf: url)
-            logoImage = UIImage(data: data)
-            
-            if logoImage == nil {
-                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
-            } else {
-                imgView.image = logoImage
-                removeImageButton.isHidden = false
-                addLogoButton.setTitle("Change Logo", for: .normal)
-            }
-            
-        } catch {
-            print("error")
-        }
+        logoPicker.present(self, target: sender as! UIView)
     }
     
     @IBAction func removeImageAction(_ sender: Any) {
         
         logoImage = nil
-        AppHelper.loadLogo(image: business?.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
         addLogoButton.setTitle("Add Logo", for: .normal)
         removeImageButton.isHidden = true        
     }
     
     @IBAction func myLocationAction(_ sender: Any) {
         
-        MapController.showModal(latitude: latitude,
-                                longitude: longitude,
-                                radius: nil,
-                                complete: { (locationCoordinate, placeID, placeName) in
-                                    self.latitude = locationCoordinate.latitude as NSNumber!
-                                    self.longitude = locationCoordinate.longitude as NSNumber!
-                                    self.placeID = placeID
-                                    self.placeName = placeName
-                                    self.addressField.text = placeName
-        })
-        
+        let controller = MapController.instantiate()
+        if latitude != nil {
+            controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
+        }
+        controller.complete = { (locationCoordinate, placeID, placeName) in
+            self.latitude = locationCoordinate.latitude as NSNumber!
+            self.longitude = locationCoordinate.longitude as NSNumber!
+            self.placeID = placeID
+            self.placeName = placeName
+            self.addressField.text = placeName
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -299,11 +233,11 @@ class LocationEditController: MJPController {
         
         var controllers = navigationController?.viewControllers
         if isAddMode {
-            let controller = AppHelper.instantiate("JobEdit") as! JobEditController
+            let controller = JobEditController.instantiate()
             controller.location = location
             controllers?.insert(controller, at: (controllers?.count)!-1)
         } else {
-            let controller = AppHelper.instantiate("JobList") as! LocationDetailController
+            let controller = LocationDetailController.instantiate()
             controller.isFirstCreate = isFirstCreate
             controller.location = location
             controllers?.insert(controller, at: (controllers?.count)!-1)
@@ -312,33 +246,10 @@ class LocationEditController: MJPController {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    static func pushController(business: Business!, location: Location!) {
-        let controller = AppHelper.instantiate("LocationEdit") as! LocationEditController
-        controller.business = business
-        controller.location = location
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    static func instantiate() -> LocationEditController {
+        return AppHelper.instantiate("LocationEdit") as! LocationEditController
     }
     
-}
-
-extension LocationEditController: UIImagePickerControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-        
-        imgView.image = logoImage
-//        imgView.alpha = 1
-        removeImageButton.isHidden = false
-        addLogoButton.setTitle("Change Logo", for: .normal)
-        
-        dismiss(animated: true, completion: nil)
-        
-    }
-    
-}
-
-extension LocationEditController: UINavigationControllerDelegate {
 }
 
 extension LocationEditController: UITextFieldDelegate {
@@ -350,3 +261,11 @@ extension LocationEditController: UITextFieldDelegate {
     }
 }
 
+extension LocationEditController: ImagePickerDelegate {
+    
+    func imageSelected(_ picker: ImagePicker, image: UIImage) {
+        imgView.image = image
+        removeImageButton.isHidden = false
+        addLogoButton.setTitle("Change Logo", for: .normal)
+    }
+}

@@ -92,7 +92,7 @@ class BusinessDetailController: MJPController {
     }
     
     func updateBusinessInfo() {
-        AppHelper.loadLogo(image: business.getImage(), imageView: headerImgView, completion: nil)
+        AppHelper.loadLogo(business, imageView: headerImgView, completion: nil)
         headerName.text = business.name
         headerCreditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
     }
@@ -144,7 +144,9 @@ class BusinessDetailController: MJPController {
     @IBAction func addLocationAction(_ sender: Any) {
         refresh = true
         isFirstCreate = false
-        LocationEditController.pushController(business: business, location: nil)
+        let controller = LocationEditController.instantiate()
+        controller.business = business
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func deleteBusiness() {
@@ -221,14 +223,16 @@ extension BusinessDetailController: UITableViewDataSource {
                               padding: 20,
                               callback: { (cell) -> Bool in
                                 self.refresh = true
-                                LocationEditController.pushController(business: nil, location: location)
+                                let controller = LocationEditController.instantiate()
+                                controller.location = location
+                                self.navigationController?.pushViewController(controller, animated: true)
                                 return true
                 })
             ]
             
         }
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
+        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         return cell
         
@@ -245,11 +249,11 @@ extension BusinessDetailController: UITableViewDelegate {
         let location = data[indexPath.row] as! Location
         
         if isAddMode {
-            let controller = AppHelper.instantiate("JobEdit") as! JobEditController
+            let controller = JobEditController.instantiate()
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let controller = AppHelper.instantiate("JobList") as! LocationDetailController
+            let controller = LocationDetailController.instantiate()
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         }

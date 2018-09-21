@@ -69,7 +69,7 @@ class LocationDetailController: MJPController {
     }
     
     func updateLocationInfo() {
-        AppHelper.loadLogo(image: location.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
         nameLabel.text = location.name
     }
     
@@ -82,7 +82,9 @@ class LocationDetailController: MJPController {
     
     @IBAction func editLocationAction(_ sender: Any) {
         refresh = true
-        LocationEditController.pushController(business: nil, location: location)
+        let controller = LocationEditController.instantiate()
+        controller.location = location
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func deleteLocationAction(_ sender: Any) {
@@ -106,7 +108,9 @@ class LocationDetailController: MJPController {
     @IBAction func addJobAction(_ sender: Any) {
         refresh = true
         isFirstCreate = false
-        JobEditController.pushController(location: location, job: nil)
+        let controller = JobEditController.instantiate()
+        controller.location = location
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func deleteWorkplace() {
@@ -115,6 +119,10 @@ class LocationDetailController: MJPController {
             self.hideLoading()
             _ = self.navigationController?.popViewController(animated: true)
         }, failure: self.handleErrors)
+    }
+    
+    static func instantiate() -> LocationDetailController {
+        return AppHelper.instantiate("JobList") as! LocationDetailController
     }
     
 }
@@ -165,7 +173,9 @@ extension LocationDetailController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
                             self.refresh = true
-                            JobEditController.pushController(location: nil, job: job)
+                            let controller = JobEditController.instantiate()
+                            controller.job = job
+                            self.navigationController?.pushViewController(controller, animated: true)
                             return true
             })
         ]
@@ -180,7 +190,7 @@ extension LocationDetailController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         refresh = true
         
-        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
+        let controller = JobDetailController.instantiate()
         controller.job = data[indexPath.row] as! Job
         navigationController?.pushViewController(controller, animated: true)
     }

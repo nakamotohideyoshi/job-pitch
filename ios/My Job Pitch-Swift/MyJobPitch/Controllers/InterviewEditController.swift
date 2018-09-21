@@ -9,9 +9,9 @@
 import UIKit
 
 class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var commentLabel: UILabel!
+    
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    
     @IBOutlet weak var dateTimeField: UITextField!
     @IBOutlet weak var dateTimeError: UILabel!
     @IBOutlet weak var messageTextView: BorderTextView!
@@ -19,18 +19,17 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBOutlet weak var notesTextView: BorderTextView!
     @IBOutlet weak var feedbackTextView: BorderTextView!
     @IBOutlet weak var saveButton: GreenButton!
-    @IBOutlet weak var appInfoView: UIView!
     
-    var application: Application!
-    var interview: ApplicationInterview?
-    var isComplete = false
+    public var application: Application!
+    public var interview: ApplicationInterview?
+    public var isComplete = false
     
     var dateTime: Date! = Date()
     
-    var saveComplete: ((Application) -> Void)!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        isModal = true
         
         var title = "Arrange Interview"
         if isComplete {
@@ -41,9 +40,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         setTitle(title: title, subTitle: subTitle)
         
-        isModal = true
-        
         dateTimeField.delegate = self
+        
+        infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
         
         loadData()
     }
@@ -56,16 +55,18 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     func loadData() {
-        AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imgView, completion: nil)
-        nameLabel.text = application.jobSeeker.getFullName()
-        commentLabel.text = application.jobSeeker.desc
-        imgView.superview?.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
+        infoView.setData(application.jobSeeker) { 
+            let controller = JobSeekerDetailController.instantiate()
+            controller.application = self.application
+            controller.viewMode = true
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
         
         feedbackTextView.superview?.isHidden = true
         
         if interview != nil {
             dateTime = interview?.at
-            dateTimeField.text = AppHelper.convertDateToString(dateTime, short: false)
+            dateTimeField.text = AppHelper.dateToLongString(dateTime)
             
             if (interview?.messages.count)! > 0 {
                 messageTextView.text = (interview?.messages[0] as! Message).content
@@ -78,19 +79,10 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
                 messageTextView.isEditable = false
                 notesTextView.isEditable = false
                 feedbackTextView.superview?.isHidden = false
-                
-                saveButton.setTitle("Complete", for: .normal)
-            } else {
-                saveButton.setTitle("Update", for: .normal)
             }
+            
+            saveButton.setTitle(isComplete ? "Complete" : "Update", for: .normal)
         }
-    }
-    
-    @IBAction func appDetailAction(_ sender: Any) {
-        let controller = JobSeekerDetailController.instantiate()
-        controller.application = application
-        controller.viewMode = true
-        navigationController?.pushViewController(controller, animated: true)
     }
     
     func saveInterview() {
@@ -104,7 +96,6 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
             AppData.updateApplication(self.application.id, success: { (application) in
                 self.closeModal()
-                self.saveComplete?(application)
             }, failure: self.handleErrors)
         }, failure: self.handleErrors)
     }
@@ -141,13 +132,12 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     
     func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
         dateTime = date
-        dateTimeField.text = AppHelper.convertDateToString(dateTime, short: false)
+        dateTimeField.text = AppHelper.dateToLongString(dateTime)
     }
     
     static func instantiate() -> InterviewEditController {
         return AppHelper.instantiate("InterviewEdit") as! InterviewEditController
     }
-    
 }
 
 extension InterviewEditController: UITextFieldDelegate {

@@ -15,7 +15,6 @@ class MessageListController: MJPController {
     @IBOutlet weak var emptyView: UILabel!
     
     var applications = [(Application, Int)]()
-    var jobSeeker: JobSeeker!
         
     override func viewDidLoad() {
         super.viewDidLoad()        
@@ -23,34 +22,41 @@ class MessageListController: MJPController {
         tableView.addPullToRefresh {
             self.loadData()
         }
-        
-        if AppData.user.isJobSeeker() {
-            showLoading()
-            
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                self.hideLoading()
-                self.jobSeeker = data as! JobSeeker                
-                self.loadData()
-            }, failure: self.handleErrors)
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if AppData.user.isRecruiter() || jobSeeker != nil {
-            loadData()
+        AppData.appsRefreshTime = AppData.MESSAGE_REFRESH_TIME
+        AppData.refreshCallback = {
+            self.loadData1()
         }
+        
+        loadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        AppData.appsRefreshTime = AppData.DEFAULT_REFRESH_TIME
+        AppData.refreshCallback = nil
     }
     
     func loadData() {
+        AppData.updateJobSeeker(success: nil, failure: nil)
+        tableView.pullToRefreshView.stopAnimating()
+        loadData1()
+    }
+    
+    func loadData1() {
         applications.removeAll()
         for application in AppData.applications {
-            let newMsgs = AppHelper.getNewMessageCount(application)
-            applications.append((application, newMsgs))
+            if application.messages.count > 0 {
+                let newMsgs = application.getNewMessageCount()
+                applications.append((application, newMsgs))
+            }
         }
-        
-        tableView.pullToRefreshView.stopAnimating()
+
         tableView.reloadData()
         emptyView.isHidden = applications.count > 0
     }
@@ -72,91 +78,35 @@ extension MessageListController: UITableViewDataSource {
         
         let (application, newMsgs) = applications[indexPath.row]
         let job = application.job!
+        let lastMessage = application.messages?.lastObject as! Message
+        let message = lastMessage.fromRole == AppData.getUserRole().id ? String(format: "You: %@", (lastMessage.content)!) : lastMessage.content
+        let deleted = application.status == ApplicationStatus.APPLICATION_DELETED_ID
         
+        var title: String!, subTitle: String!
         if AppData.user.isJobSeeker() {
-            AppHelper.loadLogo(image: job.getImage(), imageView: cell.imgView, completion: nil)
-            cell.imgView.layer.cornerRadius = 0
-            cell.titleLabel.text = job.title
-            cell.subTitleLabel.text = job.getBusinessName()
+            AppHelper.loadLogo(job, imageView: cell.imgView, completion: nil)
+            title = job.title
+            subTitle = job.getBusinessName()
         } else {
-            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: cell.imgView, completion: nil)
-            cell.imgView.layer.cornerRadius = cell.imgView.frame.width / 2
-            cell.titleLabel.text = application.jobSeeker.getFullName()
-            cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
+            AppHelper.loadPhoto(application.jobSeeker, imageView: cell.imgView, completion: nil)
+            title = application.jobSeeker.getFullName()
+            subTitle = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
+        
+        cell.imgView.alpha = deleted ? 0.5 : 1
+        cell.titleLabel.setDeletedText(title, isDeleted: deleted)
+        cell.subTitleLabel.setDeletedText(subTitle, isDeleted: deleted)
+        cell.attributesLabel.setDeletedText(AppHelper.dateToShortString((lastMessage.created)!), isDeleted: deleted)
+        cell.messageLabel.setDeletedText(message!, isDeleted: deleted)
         
         cell.badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
         cell.badge.isHidden = newMsgs == 0
         
-        if let lastMessage = application.messages?.lastObject as? Message {
-            cell.attributesLabel.isHidden = false
-            cell.messageLabel.isHidden = false
-            
-            cell.attributesLabel.text = AppHelper.convertDateToString((lastMessage.created)!, short: true)
-            
-            if lastMessage.fromRole == AppData.getUserRole().id {
-                cell.messageLabel.text = String(format: "You: %@", (lastMessage.content)!)
-            } else {
-                cell.messageLabel.text = lastMessage.content
-            }
-        } else {
-            cell.attributesLabel.isHidden = true
-            cell.messageLabel.isHidden = true
-        }
-        
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
-        
-        if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
-            var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 20), range: NSMakeRange(0, str.length))
-            cell.titleLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.subTitleLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 15), range: NSMakeRange(0, str.length))
-            cell.subTitleLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.messageLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 15), range: NSMakeRange(0, str.length))
-            cell.messageLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.attributesLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12), range: NSMakeRange(0, str.length))
-            cell.attributesLabel.attributedText = str
-            
-            cell.setOpacity(0.5)
-            cell.backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
-        } else {
-            var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold), range: NSMakeRange(0, str.length))
-            cell.titleLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.subTitleLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
-            cell.subTitleLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.messageLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
-            cell.messageLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.attributesLabel.text!)
-            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 12), range: NSMakeRange(0, str.length))
-            cell.attributesLabel.attributedText = str
-            
-            cell.setOpacity(1)
-            cell.backgroundColor = UIColor.white
-        }
+        cell.backgroundColor = deleted ? AppData.lightGreyColor : .white
+        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         return cell
     }
-    
 }
 
 extension MessageListController: UITableViewDelegate {
@@ -189,7 +139,5 @@ extension MessageListController: UITableViewDelegate {
         let controller = MessageController0.instantiate()
         controller.application = applications[indexPath.row].0
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
-        
     }
-    
 }

@@ -500,11 +500,9 @@ class APIConfigure: NSObject {
                                path: "/api/messages/",
                                method: .POST)
         
-        let updateMessageArray = ["id", "read"]
-        
         configureSimpleMapping(MessageForUpdate.classForCoder(),
-                               mappingArray: updateMessageArray,
-                               mappingDictionary: ["from_role": "fromRole"],
+                               mappingArray: ["read"],
+                               mappingDictionary: nil,
                                mappingRelationships: nil,
                                path: "/api/messages/:pk/",
                                method: .PUT)

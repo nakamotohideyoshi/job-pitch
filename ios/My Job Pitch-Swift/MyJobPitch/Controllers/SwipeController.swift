@@ -62,7 +62,7 @@ class SwipeController: MJPController {
         
         if searchJob != nil {
             searchJob = (AppData.jobs.filter { $0.id === searchJob.id })[0]
-            AppHelper.loadLogo(image: searchJob.getImage(), imageView: imgView, completion: nil)
+            AppHelper.loadLogo(searchJob, imageView: imgView, completion: nil)
             nameLabel.text = searchJob.title
             commentLabel.text = searchJob.getBusinessName()
         }
@@ -246,7 +246,7 @@ class SwipeController: MJPController {
     }
     
     @IBAction func jobDetailAction(_ sender: Any) {
-        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
+        let controller = JobDetailController.instantiate()
         controller.job = searchJob
         navigationController?.pushViewController(controller, animated: true)
     }

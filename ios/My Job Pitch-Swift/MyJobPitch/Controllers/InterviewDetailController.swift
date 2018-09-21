@@ -10,27 +10,22 @@ import UIKit
 
 class InterviewDetailController: MJPController {
     
-    @IBOutlet weak var mainView: UIView!
-    @IBOutlet weak var mainContentView: UIStackView!
+    @IBOutlet weak var mainView: UIStackView!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var infoView: AppInfoSmallView!
-    
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var interviewInfo: InterviewView!
     @IBOutlet weak var feedbackLabel: UILabel!
     @IBOutlet weak var notesLabel: UILabel!
-    
-    @IBOutlet weak var acceptBtnView: UIView!
-    @IBOutlet weak var completeBtnView: UIView!
-    @IBOutlet weak var cancelBtnView: UIView!
     @IBOutlet weak var naviationsView: UIView!
+    @IBOutlet weak var badge: BadgeIcon!
     @IBOutlet weak var historyTitleView: UIView!
     
-    var application: Application!
-    var interviews: [ApplicationInterview]!
+    public var application: Application!
+    public var interviewId: NSNumber!
+    
     var interview: ApplicationInterview!
+    var interviews = [ApplicationInterview]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,138 +38,131 @@ class InterviewDetailController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        AppData.refreshCallback = {
+            self.reloadData()
+        }
+        
         reloadData()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        if application != nil {
-            var frame = mainView.frame
-            frame.size.height = mainContentView.frame.height
-            mainView.frame = frame
-            tableView.reloadData()
-        }
+        AppData.refreshCallback = nil
     }
     
     func reloadData() {
-        application = (AppData.applications.filter { $0.id == application.id })[0]
-        interviews = application.interviews as! [ApplicationInterview]
-        interview = (interviews.filter { $0.id == interview.id })[0]
-        interviews = interviews.filter { $0.id != interview.id }
-        interviews.sort { $0.at < $1.at }
+        let viewMode = interviewId != nil
         
-        if AppData.user.isRecruiter() {
-            infoView.setData(application.jobSeeker, touch: appDetailAction)
+        application = (AppData.applications.filter { $0.id == application.id })[0]
+        let appInterviews = application.interviews as! [ApplicationInterview]
+        
+        infoView.isHidden = viewMode
+        if !viewMode {
+            
+            interview = application.getInterview()
+            if interview == nil {
+                interview = application.interviews.lastObject as! ApplicationInterview
+            }
+            
+            interviews = appInterviews.filter { $0.id != interview?.id }
+
+            if AppData.user.isJobSeeker() {
+                infoView.setData(application.job) {
+                    let controller = ApplicationDetailsController.instantiate()
+                    controller.application = self.application
+                    controller.viewMode = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            } else {
+                infoView.setData(application.jobSeeker) {
+                    let controller = JobSeekerDetailController.instantiate()
+                    controller.application = self.application
+                    controller.viewMode = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
         } else {
-            infoView.setData(application.job, touch: appDetailAction)
+            interview = (appInterviews.filter { $0.id == interviewId })[0]
+            interviews.removeAll()
         }
         
-        dateLabel.text = AppHelper.convertDateToString(interview.at, short: false)
+        interviewInfo.interview = interview
+        interviewInfo.application = application
+        interviewInfo.acceptCallback = viewMode ? nil : acceptAction
+        interviewInfo.completeCallback = viewMode ? nil : completeAction
+        interviewInfo.cancelCallback = viewMode ? nil : cancelAction
         
-        locationLabel.text = application.job.locationData.placeName
+        let pending = interview.status == InterviewStatus.INTERVIEW_PENDING
+        let accepted = interview.status == InterviewStatus.INTERVIEW_ACCEPTED
+        let completed = interview.status == InterviewStatus.INTERVIEW_COMPLETED
         
-        if interview.feedback != "" {
-            feedbackLabel.text = interview.feedback
-        } else {
+        notesLabel.text = interview.notes
+        if interview.feedback == "" {
             let noneParameters = [NSForegroundColorAttributeName : UIColor.lightGray,
                                    NSFontAttributeName : UIFont.italicSystemFont(ofSize: 15)]
             feedbackLabel.attributedText = NSMutableAttributedString(string: "None", attributes: noneParameters)
-        }
-        
-        notesLabel.text = interview.notes
-        
-        acceptBtnView.isHidden = false
-        completeBtnView.isHidden = false
-        cancelBtnView.isHidden = false
-        
-        feedbackLabel.superview?.isHidden = true
-        notesLabel.superview?.isHidden = false
-        
-        naviationsView.isHidden = false
-        
-        if interview.status == InterviewStatus.INTERVIEW_PENDING {
-            if AppData.user.isRecruiter() {
-                statusLabel.text = "Interview request sent"
-            } else {
-                statusLabel.text = "Interview request received"
-            }
-        } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
-            statusLabel.text = "Interview accepted"
-            acceptBtnView.isHidden = true
         } else {
-            if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-                statusLabel.text = "This interview is done"
-                feedbackLabel.superview?.isHidden = false
-            } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-                statusLabel.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
-            }
-            acceptBtnView.isHidden = true
-            completeBtnView.isHidden = true
-            cancelBtnView.isHidden = true
-            naviationsView.isHidden = true
-            historyTitleView.isHidden = true
-            interviews = nil
+            feedbackLabel.attributedText = nil
+            feedbackLabel.text = interview.feedback
         }
         
-        navigationItem.rightBarButtonItem = nil
+        let newMsgs = application.getNewMessageCount()
+        badge.text = "\(newMsgs)"
+        badge.isHidden = newMsgs == 0
         
-        if AppData.user.isRecruiter() {
-            acceptBtnView.isHidden = true
-            if !cancelBtnView.isHidden {
-                navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editAction))
-            }
+        notesLabel.superview?.isHidden = AppData.user.isJobSeeker()
+        feedbackLabel.superview?.isHidden = !completed
+        naviationsView.isHidden = viewMode
+        historyTitleView.isHidden = viewMode || interviews.count == 0
+        
+        if AppData.user.isRecruiter() && !viewMode && (pending || accepted) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editAction))
         } else {
-            completeBtnView.isHidden = true
-            notesLabel.superview?.isHidden = true
+            navigationItem.rightBarButtonItem = nil
         }
         
-        historyTitleView.isHidden = interviews == nil || interviews.count == 0
+        historyTitleView.isHidden = viewMode || interviews.count == 0
+     
+        mainView.layoutIfNeeded()
+        mainView.sizeToFit()
+        mainView.superview?.frame.size.height = mainView.frame.height
+        
+        tableView.reloadData()
     }
     
-    func appDetailAction() {
-        if AppData.user.isJobSeeker() {
-            let controller = ApplicationDetailsController.instantiate()
-            controller.application = application
-            controller.viewMode = true
-            navigationController?.pushViewController(controller, animated: true)
-        } else {
-            let controller = JobSeekerDetailController.instantiate()
-            controller.application = application
-            controller.viewMode = true
-            navigationController?.pushViewController(controller, animated: true)
-        }
+    func updateApplication() {
+        AppData.updateApplication(application.id, success: { (application) in
+            self.hideLoading()
+            self.reloadData()
+        }, failure: self.handleErrors)
     }
     
-    @IBAction func acceptAction(_ sender: Any) {
+    func acceptAction() {
         PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
             self.showLoading()
             API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
-                AppData.updateApplication(self.application.id, success: { (_) in
-                    self.hideLoading()
-                    self.reloadData()
-                }, failure: self.handleErrors)
+                self.updateApplication()
             }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
-    @IBAction func completeAction(_ sender: Any) {
+    func cancelAction() {
+        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+            self.showLoading()
+            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
+                self.updateApplication()
+            }, failure: self.handleErrors)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    func completeAction() {
         let controller = InterviewEditController.instantiate()
         controller.application = application
         controller.interview = interview
         controller.isComplete = true
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
-    }
-    
-    @IBAction func cancelAction(_ sender: Any) {
-        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
-            self.showLoading()
-            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
-                AppData.updateApplication(self.application.id, success: { (_) in
-                    _ = self.navigationController?.popViewController(animated: true)
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
-        }, cancel: "Cancel", cancelCallback: nil)
     }
     
     func editAction() {
@@ -190,6 +178,10 @@ class InterviewDetailController: MJPController {
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
+    func popController() {
+        _ = navigationController?.popViewController(animated: true)
+    }
+    
     static func instantiate() -> InterviewDetailController {
         return AppHelper.instantiate("InterviewDetail") as! InterviewDetailController
     }
@@ -198,7 +190,7 @@ class InterviewDetailController: MJPController {
 extension InterviewDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return interviews != nil ? interviews.count : 0
+        return interviews.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -213,7 +205,7 @@ extension InterviewDetailController: UITableViewDataSource {
             status1 = "Cancelled"
         }        
         
-        (cell.viewWithTag(1) as! UILabel).text = AppHelper.convertDateToString(interview.at, short: true)
+        (cell.viewWithTag(1) as! UILabel).text = AppHelper.dateToShortString(interview.at)
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {
@@ -229,7 +221,7 @@ extension InterviewDetailController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = InterviewDetailController.instantiate()
         controller.application = application
-        controller.interview = interviews[indexPath.row]
+        controller.interviewId = interviews[indexPath.row].id
         navigationController?.pushViewController(controller, animated: true)
     }
 }

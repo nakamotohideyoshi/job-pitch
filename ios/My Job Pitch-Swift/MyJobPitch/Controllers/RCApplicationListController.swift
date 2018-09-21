@@ -12,12 +12,10 @@ import MGSwipeTableCell
 
 class RCApplicationListController: ButtonBarPagerTabStripViewController {
     
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var infoView: AppInfoSmallView!
     
-    var job: Job!
-    var defaultTab: Int = 0
+    public var job: Job!
+    public var defaultTab: Int = 0
     
     var controllers: [RCApplicationSubListController]!
     var loading: LoadingController!
@@ -37,24 +35,36 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addApplication))
         
-        AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
-        nameLabel.text = job.title
-        commentLabel.text = job.getBusinessName()
-        
-        
+        infoView.setData(job) {
+            let controller = JobDetailController.instantiate()
+            controller.job = self.job
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        AppData.refreshCallback = {
+            self.reloadData()
+        }
+        
         reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         if defaultTab != -1 {
             moveToViewController(at: defaultTab,animated: true)
             defaultTab = -1
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        AppData.refreshCallback = nil
     }
     
     func reloadData() {
@@ -67,12 +77,6 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
         let controller = ApplicationAddController.instantiate()
         controller.job = job
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
-    }
-    
-    @IBAction func jobInfoAction(_ sender: Any) {
-        //        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
-        //        controller.job = job
-        //        navigationController?.pushViewController(controller, animated: true)
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -108,18 +112,17 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
 }
 
 
-
 class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
     
-    @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UILabel!
     
-    var job: Job!
-    var status: NSNumber!
-    var shortlisted = false
-    var emptyMsg: String!
+    public var job: Job!
+    public var status: NSNumber!
+    public var shortlisted = false
+    public var emptyMsg: String!
 
-    var applications: [Application] = [Application]()
+    var applications = [Application]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,8 +140,8 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
         applications = AppData.applications.filter { $0.job.id === job.id && $0.status === status && (!shortlisted || $0.shortlisted) }
         
         if tableView != nil {
-            tableView.reloadData()
             tableView.pullToRefreshView.stopAnimating()
+            tableView.reloadData()
             emptyView.isHidden = applications.count > 0
             
             (parent as? ButtonBarPagerTabStripViewController)?.buttonBarView.reloadData()
@@ -150,7 +153,9 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
         AppData.updateApplication(applicationId, success: { (_) in
             self.hideLoading()
             (self.parent as? RCApplicationListController)?.reloadData()
-        }, failure: self.handleErrors)        
+        }) { (_, _) in
+            self.hideLoading()
+        }
     }
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
@@ -160,7 +165,6 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
     static func instantiate() -> RCApplicationSubListController {
         return AppHelper.instantiate("RCApplicationSubList") as! RCApplicationSubListController
     }
-    
 }
 
 extension RCApplicationSubListController: UITableViewDataSource {
@@ -174,21 +178,11 @@ extension RCApplicationSubListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RCApplicationCell", for: indexPath) as! RCApplicationCell
         let application = applications[indexPath.row]
         
-        AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: cell.imgView, completion: nil)
-        cell.titleLabel.text = application.jobSeeker.getFullName()
-        cell.subTitleLabel.text = application.jobSeeker.desc
-        if let interview = AppHelper.getInterview(application) {
-            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at, short: false)
-            let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
-            cell.attributesLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
-            cell.attributesLabel.isHidden = false
-        } else {
-            cell.attributesLabel.isHidden = true
-        }
+        cell.infoView.setData(application.jobSeeker, interview: application.getInterview())
         cell.iconView.isHidden = !application.shortlisted
         cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
-        cell.rightButtons = [
+        var rightButtons = [
             MGSwipeButton(title: "",
                           icon: UIImage(named: "delete-big-icon"),
                           backgroundColor: AppData.yellowColor,
@@ -206,8 +200,11 @@ extension RCApplicationSubListController: UITableViewDataSource {
                             }, cancel: "Cancel", cancelCallback: nil)
                             
                             return false
-            }),
-            MGSwipeButton(title: "",
+            })
+        ]
+        
+        if application.messages.count > 0 {
+            rightButtons.append(MGSwipeButton(title: "",
                           icon: UIImage(named: status == ApplicationStatus.APPLICATION_CREATED_ID ? "connect-big-icon" : "message-big-icon"),
                           backgroundColor: AppData.greenColor,
                           padding: 20,
@@ -215,16 +212,17 @@ extension RCApplicationSubListController: UITableViewDataSource {
                             
                             if self.status == ApplicationStatus.APPLICATION_CREATED_ID {
                                 PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect (1 credit)", okCallback: {
-
+                                    
                                     self.showLoading()
                                     
                                     let update = ApplicationStatusUpdate()
                                     update.id = application.id
                                     update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
-
+                                    
                                     API.shared().updateApplicationStatus(update: update, success: { (data) in
                                         self.updateApplication(application.id)
                                     }) { (message, errors) in
+                                        self.hideLoading()
                                         if errors?["NO_TOKENS"] != nil {
                                             PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
                                         } else {
@@ -233,7 +231,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                     }
                                     
                                 }, cancel: "Cancel", cancelCallback: nil)
-
+                                
                             } else {
                                 let controller = MessageController0.instantiate()
                                 controller.application = application
@@ -241,12 +239,13 @@ extension RCApplicationSubListController: UITableViewDataSource {
                             }
                             
                             return false
-            })
-        ];
+            }))
+        }
+        
+        cell.rightButtons = rightButtons
         
         return cell
     }
-    
 }
 
 extension RCApplicationSubListController: UITableViewDelegate {

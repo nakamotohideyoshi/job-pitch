@@ -160,6 +160,10 @@ class DropboxController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    static func instantiate() -> DropboxController {
+        return AppHelper.instantiate("Dropbox") as! DropboxController
+    }
+    
 }
 
 extension DropboxController: UITableViewDataSource {

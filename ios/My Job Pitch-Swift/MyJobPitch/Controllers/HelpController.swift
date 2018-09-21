@@ -15,8 +15,6 @@ class HelpController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
         let attributes = [
             NSFontAttributeName: UIFont(name: "Georgia-Bold", size: 22),
             NSForegroundColorAttributeName: UIColor.white,

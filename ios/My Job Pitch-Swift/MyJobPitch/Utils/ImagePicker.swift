@@ -31,7 +31,7 @@ class ImagePicker: NSObject {
         actionSheet.addAction(photoAction)
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
+            let browser = GoogleDriveController.instantiate()
             browser.downloadCallback = { (path) in
                 self.downloadedImage(path)
             }
@@ -41,7 +41,7 @@ class ImagePicker: NSObject {
         actionSheet.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
+            let browser = GoogleDriveController.instantiate()
             browser.downloadCallback = { (path) in
                 self.downloadedImage(path)
             }

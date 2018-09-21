@@ -13,18 +13,10 @@ class ResetPasswordController: MJPController {
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var emailErrorLabel: UILabel!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-    
     override func getRequiredFields() -> [String: NSArray] {
-        
         return [
             "email":        [emailField,    emailErrorLabel],
         ]
-        
     }
     
     override func showLoading() {
@@ -45,8 +37,7 @@ class ResetPasswordController: MJPController {
                     self.dismiss(animated: true, completion: nil)
                 })
             }, failure: self.handleErrors)
-        }
-        
+        }        
     }
     
     @IBAction func cancelAction(_ sender: Any) {

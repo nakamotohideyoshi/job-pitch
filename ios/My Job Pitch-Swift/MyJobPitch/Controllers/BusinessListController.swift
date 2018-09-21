@@ -213,7 +213,7 @@ extension BusinessListController: UITableViewDataSource {
             }
         }
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
+        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         return cell
         
@@ -236,7 +236,7 @@ extension BusinessListController: UITableViewDelegate {
                 navigationController?.pushViewController(controller, animated: true)
             }
         } else {
-            let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
+            let controller = BusinessDetailController.instantiate()
             controller.businessId = business.id
             navigationController?.pushViewController(controller, animated: true)
         }

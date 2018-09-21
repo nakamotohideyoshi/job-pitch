@@ -71,9 +71,7 @@ class PopupController: UIViewController {
                      message: String!,
                      ok: String!, okCallback: (() -> Void)!,
                      cancel: String!, cancelCallback: (() -> Void)!) -> PopupController {
-        
-        AppHelper.hideLoading()
-                
+                        
         let controller = AppHelper.instantiate("Popup") as! PopupController
         let popupController = STPopupController(rootViewController: controller)
         popupController.backgroundView?.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
@@ -104,7 +102,6 @@ class PopupController: UIViewController {
         }
         
         return controller
-        
     }
     
 }

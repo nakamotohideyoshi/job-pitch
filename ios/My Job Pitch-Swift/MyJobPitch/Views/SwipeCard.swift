@@ -28,7 +28,7 @@ class SwipeCard: MDCSwipeToChooseView {
         button = UIButton(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         addSubview(button)
         
-        imageView.backgroundColor = AppData.imageBGColor
+        imageView.backgroundColor = AppData.lightGreyColor
         imageView.contentMode = .scaleAspectFill
         likedView.center = CGPoint(x: likedView.center.x, y: likedView.center.y+10)
         nopeView.center = CGPoint(x: nopeView.center.x-20, y: nopeView.center.y+10)

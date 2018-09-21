@@ -13,9 +13,9 @@ class InterviewListController: MJPController {
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var job: Job!
-    var jobSeeker: JobSeeker!
+    public var job: Job!
     
+    var jobSeeker: JobSeeker!
     var interviews: [(Application, ApplicationInterview)]! = [(Application, ApplicationInterview)]()
     
     override func viewDidLoad() {
@@ -35,27 +35,37 @@ class InterviewListController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        AppData.refreshCallback = {
+            self.loadData()
+        }
+        
         loadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        AppData.refreshCallback = nil
     }
     
     func loadData() {
         interviews.removeAll()
         for application in AppData.applications {
-            if job == nil || job.id == application.job.id {
-                let appInterviews = application.interviews as! [ApplicationInterview]
-                let filters = appInterviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
-                
-                if filters.count > 0 {
-                    interviews.append((application, filters[0]))
+            if (job == nil || job.id == application.job.id) && application.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID {
+                if let interview = application.getInterview() {
+                    interviews.append((application, interview))
+                } else if application.interviews.count > 0 {
+                    interviews.append((application, application.interviews.lastObject as! ApplicationInterview))
                 }
             }
         }
         
         interviews.sort { $0.1.at > $1.1.at }
         
-        self.emptyView.isHidden = interviews.count > 0
-        self.tableView.reloadData()
         self.tableView.pullToRefreshView.stopAnimating()
+        self.tableView.reloadData()
+        self.emptyView.isHidden = interviews.count > 0
     }
     
     static func instantiate() -> InterviewListController {
@@ -75,7 +85,32 @@ extension InterviewListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "InterviewCell", for: indexPath) as! InterviewCell
         
         let (application, interview) = interviews[indexPath.row]
-        cell.setData(application, interview)
+        
+        if AppData.user.isRecruiter() {
+            
+            AppHelper.loadPhoto(application.jobSeeker, imageView: cell.imgView, completion: nil)
+            cell.name.text = application.jobSeeker.getFullName()
+            cell.comment.text = application.jobSeeker.desc
+            
+        } else {
+            AppHelper.loadLogo(application.job, imageView: cell.imgView, completion: nil)
+            cell.name.text = application.job.title
+            cell.comment.text = application.job.getBusinessName()
+        }
+        
+        if interview.status == InterviewStatus.INTERVIEW_PENDING {
+            cell.status.text = AppData.user.isJobSeeker() ? "Interview request received" : "Interview request sent"
+        } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
+            cell.status.text = "Interview accepted"
+        } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
+            cell.status.text = "This interview is done"
+        } else {
+            cell.status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+        }
+        
+        cell.dataTime.text = AppHelper.dateToLongString(interview.at)
+        cell.location.text = application.job.locationData.placeName
+        
         cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         return cell
@@ -88,7 +123,6 @@ extension InterviewListController: UITableViewDelegate {
         let (application, interview) = interviews[indexPath.row]
         let controller = InterviewDetailController.instantiate()
         controller.application = application
-        controller.interview = interview
         navigationController?.pushViewController(controller, animated: true)
     }
 }

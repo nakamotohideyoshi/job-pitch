@@ -71,7 +71,7 @@ class PitchController: MJPController {
     
     @IBAction func recordVideoAction(_ sender: Any) {
         
-        let controller = AppHelper.instantiate("Camera") as! CameraController
+        let controller = CameraController.instantiate()
         
         controller.complete = { (videoUrl) in
             

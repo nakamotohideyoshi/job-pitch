@@ -48,8 +48,6 @@ class LoginController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         navigationController?.navigationBar.isHidden = true
         
         if (AppData.production) {

@@ -196,7 +196,6 @@ class MJPController: UIViewController {
     func handleErrors(message: String?, errors: NSDictionary?) {
         
         hideLoading()
-        AppHelper.hideLoading()
         
         let requiredFields = getRequiredFields()
         

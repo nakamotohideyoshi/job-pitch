@@ -10,9 +10,7 @@ import UIKit
 
 class ApplicationAddController: MJPController {
     
-    @IBOutlet weak var jobImgView: UIImageView!
-    @IBOutlet weak var jobTitleLabel: UILabel!
-    @IBOutlet weak var jobSubTitleLabel: UILabel!
+    @IBOutlet weak var infoView: AppInfoSmallView!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var firstNameError: UILabel!
     @IBOutlet weak var lastName: UITextField!
@@ -28,7 +26,7 @@ class ApplicationAddController: MJPController {
     @IBOutlet weak var descError: UILabel!
     @IBOutlet weak var shortlisted: UISwitch!
     
-    var job: Job!
+    public var job: Job!
     
     var sexNames = [String]()
     var selectedSexNames = [String]()
@@ -41,10 +39,8 @@ class ApplicationAddController: MJPController {
         
         isModal = true
         
-        AppHelper.loadLogo(image: job.getImage(), imageView: jobImgView, completion: nil)
-        jobTitleLabel.text = job.title
-        jobSubTitleLabel.text = job.getBusinessName()
-        jobImgView.superview?.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
+        infoView.setData(job, touch: nil)
+        infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
         
         // load sex data
         
@@ -138,17 +134,16 @@ class ApplicationAddController: MJPController {
         application.hasReferences = false
         application.truthConfirmation = false
         
-        AppHelper.showLoading("")
+        showLoading()
         
         API.shared().createExternalApplication(application: application, success: { (data) in
-            AppHelper.hideLoading()
-            self.closeAction()
+            let application = data as! Application
+            AppData.updateApplication(application.id, success: { (_) in
+                self.closeModal()
+            }, failure: { (_, _) in
+                self.closeModal()
+            })
         }, failure: self.handleErrors)
-        
-    }
-    
-    func closeAction() {
-        dismiss(animated: true, completion: nil)
     }
     
     static func instantiate() -> ApplicationAddController {

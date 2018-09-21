@@ -17,7 +17,7 @@ class BusinessEditController: MJPController {
     @IBOutlet weak var removeImageButton: UIButton!
     @IBOutlet weak var creditsLabel: UILabel!
     
-    var imagePicker: UIImagePickerController!
+    var logoPicker: ImagePicker!
     var logoImage: UIImage!
     
     var isFirstCreate = false
@@ -28,10 +28,8 @@ class BusinessEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
+        logoPicker = ImagePicker()
+        logoPicker.delegate = self
         
         isFirstCreate = AppData.user.businesses.count == 0
         
@@ -58,7 +56,7 @@ class BusinessEditController: MJPController {
     func load() {        
         nameField.text = business.name
         creditsLabel.text = String(format: "%@", business.tokens)
-        AppHelper.loadLogo(image: business.getImage(), imageView: imgView) {
+        AppHelper.loadLogo(business, imageView: imgView) {
             self.removeImageButton.isHidden = false
             self.addLogoButton.setTitle("Change Logo", for: .normal)
         }
@@ -71,70 +69,7 @@ class BusinessEditController: MJPController {
     }
     
     @IBAction func addLogoAction(_ sender: Any) {
-        
-        let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .camera
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(takePhotoAction)
-        
-        let photoGalleryAction = UIAlertAction(title: "Select Photo", style: .default) { (_) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(photoGalleryAction)
-        
-        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
-            browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(googledriveAction)
-        
-        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
-            browser.downloadCallback = { (path) in
-                self.downloadedLogo(path: path)
-            }
-            let navController = UINavigationController(rootViewController: browser)
-            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        }
-        actionSheetContoller.addAction(dropboxAction)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        actionSheetContoller.addAction(cancelAction)
-        
-        if let popoverController = actionSheetContoller.popoverPresentationController {
-            let sourceView = sender as! UIView
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
-            popoverController.permittedArrowDirections = .down
-        }
-        
-        present(actionSheetContoller, animated: true, completion: nil)
-        
-    }
-    
-    func downloadedLogo(path: String) {
-        let url = URL(fileURLWithPath: path)
-        do {
-            let data = try Data(contentsOf: url)
-            if let logoImage = UIImage(data: data) {
-                imgView.image = logoImage
-                removeImageButton.isHidden = false
-                addLogoButton.setTitle("Change Logo", for: .normal)
-            } else {
-                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
-            }
-        } catch {
-            print("error")
-        }
+        logoPicker.present(self, target: sender as! UIView)
     }
     
     @IBAction func removeImageAction(_ sender: Any) {
@@ -206,7 +141,7 @@ class BusinessEditController: MJPController {
         }
         
         var controllers = navigationController?.viewControllers
-        let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
+        let controller = BusinessDetailController.instantiate()
         controller.isFirstCreate = isFirstCreate
         controller.businessId = business.id
         controllers?.insert(controller, at: (controllers?.count)!-1)
@@ -220,22 +155,12 @@ class BusinessEditController: MJPController {
 
 }
 
-extension BusinessEditController: UIImagePickerControllerDelegate {
+extension BusinessEditController: ImagePickerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-        
-        imgView.image = logoImage
+    func imageSelected(_ picker: ImagePicker, image: UIImage) {
+        imgView.image = image
         removeImageButton.isHidden = false
         addLogoButton.setTitle("Change Logo", for: .normal)
-        
-        dismiss(animated: true, completion: nil)
-        
     }
-    
-}
-
-extension BusinessEditController: UINavigationControllerDelegate {
 }
 

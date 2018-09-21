@@ -44,8 +44,6 @@ class CameraController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         recordButton.layer.cornerRadius = 35
         recordButton.layer.borderColor = UIColor.white.cgColor
         recordButton.layer.borderWidth = 1

@@ -16,7 +16,7 @@ class LocationCell: MGSwipeTableCell {
     @IBOutlet weak var subTitle: UILabel!
     
     func setData(_ location: Location) {
-        AppHelper.loadLogo(image: location.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
         nameLabel.text = location.name
         let jobCount = location.jobs.count
         subTitle.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")

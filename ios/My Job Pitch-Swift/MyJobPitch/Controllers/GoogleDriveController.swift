@@ -171,6 +171,10 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     @IBAction func cancelAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    
+    static func instantiate() -> GoogleDriveController {
+        return AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
+    }
 
 }
 

@@ -30,8 +30,5 @@ class MessageForCreation: MJPObject {
 }
 
 class MessageForUpdate: MJPObject {
-    
     var read = true
-    var fromRole: NSNumber!
-    
 }

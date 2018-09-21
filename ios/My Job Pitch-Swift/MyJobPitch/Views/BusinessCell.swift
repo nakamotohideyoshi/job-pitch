@@ -18,7 +18,7 @@ class BusinessCell: MGSwipeTableCell {
     
     func setData(_ business: Business) {
         
-        AppHelper.loadLogo(image: business.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
         nameLabel.text = business.name
         let locationCount = business.locations.count
         subTitle.text = String(format: "Includes %lu %@", locationCount, locationCount > 1 ? "workplaces" : "workplace")
@@ -28,7 +28,7 @@ class BusinessCell: MGSwipeTableCell {
     
     func setUsersData(_ business: Business) {
         
-        AppHelper.loadLogo(image: business.getImage(), imageView: imgView, completion: nil)
+        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
         
         nameLabel.text = business.name
         let userCount = business.users.count

@@ -14,10 +14,22 @@ import AVKit
 
 class MediaView: UIView {
     
-    var imageView: UIImageView!
-    var playIcon: UIImageView!
-    var playButton: UIButton!
+    @IBOutlet var contentView: UIView!
+    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var playIcon: UIImageView!
+    @IBOutlet weak var playButton: UIButton!
+    
     var controller: UIViewController!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        loadViewFromNib()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        loadViewFromNib()
+    }
     
     var model: MediaModel! {
         didSet {
@@ -25,18 +37,16 @@ class MediaView: UIView {
             if model.video == nil {
                 let size = frame.size
                 let d = size.height * 0.8
-                imageView.frame = CGRect(x: size.width / 2 - d / 2, y: size.height / 2 - d / 2, width: d, height: d)
-                imageView.layer.cornerRadius = model.isCircleView ? d / 2 : 0
+                imgView.frame = CGRect(x: size.width / 2 - d / 2, y: size.height / 2 - d / 2, width: d, height: d)
             } else {
-                imageView.frame = self.frame
-                imageView.layer.cornerRadius = 0
+                imgView.frame = self.frame
             }
             
             if model.thumbnail != nil {
-                AppHelper.loadImageURL(imageUrl: model.thumbnail, imageView: imageView, completion: nil)
-                playButton.frame = imageView.frame
+                AppHelper.loadImageURL(imageUrl: model.thumbnail, imageView: imgView, completion: nil)
+                playButton.frame = imgView.frame
             } else if model.defaultImage != nil {
-                imageView.image = model.defaultImage
+                imgView.image = model.defaultImage
             }
             
             playButton.isHidden = model.thumbnail == nil
@@ -44,7 +54,7 @@ class MediaView: UIView {
         }
     }
     
-    func viewAction(_ sender: AnyObject) {
+    @IBAction func clickAction(_ sender: Any) {
         if let video = model.video {
             let player = AVPlayer(url: URL(string: video)!)
             let playerController = AVPlayerViewController();
@@ -52,7 +62,7 @@ class MediaView: UIView {
             controller.present(playerController, animated: true, completion: nil)
         } else {
             let imageInfo = JTSImageInfo()
-            imageInfo.referenceRect = imageView.frame
+            imageInfo.referenceRect = imgView.frame
             imageInfo.referenceView = controller.view
             
             if let image = model.image {
@@ -66,24 +76,10 @@ class MediaView: UIView {
         }
     }
     
-    class func instantiate(_ frame:CGRect) -> MediaView {
-        let view = UINib(nibName: "MediaView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! UIView
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        let mediaView = MediaView(frame: frame)
-        mediaView.addSubview(view)
-        mediaView.imageView = view.viewWithTag(1) as! UIImageView
-        mediaView.imageView.frame = frame
-        mediaView.playIcon = view.viewWithTag(2) as! UIImageView
-        mediaView.playButton = view.viewWithTag(3) as! UIButton
-        mediaView.playButton.addTarget(mediaView, action: #selector(mediaView.viewAction(_:)), for: .touchUpInside)
-        
-        mediaView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: mediaView, attribute: .leading, multiplier: 1.0, constant: 0))
-        mediaView.addConstraint(NSLayoutConstraint(item: view, attribute: .trailing, relatedBy: .equal, toItem: mediaView, attribute: .trailing, multiplier: 1.0, constant: 0))
-        mediaView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: mediaView, attribute: .top, multiplier: 1.0, constant: 0))
-        mediaView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: mediaView, attribute: .bottom, multiplier: 1.0, constant: 0))
-        
-        return mediaView
+    func loadViewFromNib() {
+        Bundle.main.loadNibNamed("MediaView", owner: self, options: nil)
+        addSubview(contentView)
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
 }

@@ -231,17 +231,19 @@ class JobProfileController: MJPController {
             }
         }
         
-        MapController.showModal(latitude: latitude,
-                                longitude: longitude,
-                                radius: radius * 1609.344,
-                                complete: { (locationCoordinate, placeID, placeName) in
-                                    self.latitude = locationCoordinate.latitude as NSNumber!
-                                    self.longitude = locationCoordinate.longitude as NSNumber!
-                                    self.placeID = placeID
-                                    self.placeName = placeName
-                                    self.addressField.text = placeName
-        })
-        
+        let controller = MapController.instantiate()
+        if latitude != nil {
+            controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
+        }
+        controller.radius = radius * 1609.34;
+        controller.complete = { (locationCoordinate, placeID, placeName) in
+            self.latitude = locationCoordinate.latitude as NSNumber!
+            self.longitude = locationCoordinate.longitude as NSNumber!
+            self.placeID = placeID
+            self.placeName = placeName
+            self.addressField.text = placeName
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     @IBAction func saveAction(_ sender: Any) {

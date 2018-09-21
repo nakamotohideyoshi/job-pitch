@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		211B4B91215199B80083EDA8 /* AppInfoSmallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211B4B90215199B80083EDA8 /* AppInfoSmallView.swift */; };
-		211B4B93215199CA0083EDA8 /* AppInfoMidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211B4B92215199CA0083EDA8 /* AppInfoMidView.swift */; };
-		211B4B9821519A230083EDA8 /* AppInfoMid.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4B9421519A230083EDA8 /* AppInfoMid.xib */; };
-		211B4B9921519A230083EDA8 /* AppInfoSmall.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4B9621519A230083EDA8 /* AppInfoSmall.xib */; };
+		211B4B9E21533A390083EDA8 /* AppInfoMiddleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211B4B9D21533A390083EDA8 /* AppInfoMiddleView.swift */; };
+		211B4BA92153F5840083EDA8 /* AppInfoMiddleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4BA52153F5840083EDA8 /* AppInfoMiddleView.xib */; };
+		211B4BAA2153F5840083EDA8 /* AppInfoSmallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4BA72153F5840083EDA8 /* AppInfoSmallView.xib */; };
+		211B4BB5215420190083EDA8 /* InterviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211B4BB4215420190083EDA8 /* InterviewView.swift */; };
+		211B4BB72154202D0083EDA8 /* InterviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4BB62154202D0083EDA8 /* InterviewView.xib */; };
 		2132E0AB214ACAD600ADB223 /* RCApplicationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2132E0AA214ACAD600ADB223 /* RCApplicationListController.swift */; };
 		21AE3C27214A4FE700E73BAC /* ApplicationAddController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE3C26214A4FE700E73BAC /* ApplicationAddController.swift */; };
 		21CF19302141883D003185F0 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF19282141883D003185F0 /* Duration.swift */; };
@@ -146,9 +148,11 @@
 
 /* Begin PBXFileReference section */
 		211B4B90215199B80083EDA8 /* AppInfoSmallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoSmallView.swift; path = Views/AppInfoSmallView.swift; sourceTree = "<group>"; };
-		211B4B92215199CA0083EDA8 /* AppInfoMidView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoMidView.swift; path = Views/AppInfoMidView.swift; sourceTree = "<group>"; };
-		211B4B9521519A230083EDA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AppInfoMid.xib; sourceTree = "<group>"; };
-		211B4B9721519A230083EDA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AppInfoSmall.xib; sourceTree = "<group>"; };
+		211B4B9D21533A390083EDA8 /* AppInfoMiddleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoMiddleView.swift; path = Views/AppInfoMiddleView.swift; sourceTree = "<group>"; };
+		211B4BA62153F5840083EDA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AppInfoMiddleView.xib; sourceTree = "<group>"; };
+		211B4BA82153F5840083EDA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AppInfoSmallView.xib; sourceTree = "<group>"; };
+		211B4BB4215420190083EDA8 /* InterviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterviewView.swift; path = Views/InterviewView.swift; sourceTree = "<group>"; };
+		211B4BB62154202D0083EDA8 /* InterviewView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InterviewView.xib; sourceTree = "<group>"; };
 		2132E0AA214ACAD600ADB223 /* RCApplicationListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RCApplicationListController.swift; path = Controllers/RCApplicationListController.swift; sourceTree = "<group>"; };
 		21AE3C26214A4FE700E73BAC /* ApplicationAddController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationAddController.swift; path = Controllers/ApplicationAddController.swift; sourceTree = "<group>"; };
 		21CF19282141883D003185F0 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Duration.swift; path = Utils/WWCalendarTimeSelector/Duration.swift; sourceTree = "<group>"; };
@@ -497,10 +501,11 @@
 		D76C904D1E25172A009C35E4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				211B4B9421519A230083EDA8 /* AppInfoMid.xib */,
-				211B4B9621519A230083EDA8 /* AppInfoSmall.xib */,
+				211B4BA52153F5840083EDA8 /* AppInfoMiddleView.xib */,
+				211B4BA72153F5840083EDA8 /* AppInfoSmallView.xib */,
 				D742268E20ACC5E2002D3F4C /* MediaView.xib */,
 				21E79F6E215037D1004CEED6 /* LoadingView.xib */,
+				211B4BB62154202D0083EDA8 /* InterviewView.xib */,
 				D7B07B861E08DDE1005B9EBE /* Main.storyboard */,
 				D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */,
 			);
@@ -607,8 +612,9 @@
 				D72AE4231E1156C3004C3F02 /* CustomView.swift */,
 				D749E3581E0B21C0000FD0B1 /* SwipeCard.swift */,
 				21E79F74215092F4004CEED6 /* MediaView.swift */,
+				211B4BB4215420190083EDA8 /* InterviewView.swift */,
 				211B4B90215199B80083EDA8 /* AppInfoSmallView.swift */,
-				211B4B92215199CA0083EDA8 /* AppInfoMidView.swift */,
+				211B4B9D21533A390083EDA8 /* AppInfoMiddleView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -705,15 +711,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				D76C905B1E255540009C35E4 /* terms.html in Resources */,
+				211B4BA92153F5840083EDA8 /* AppInfoMiddleView.xib in Resources */,
 				D76C90591E255540009C35E4 /* about.html in Resources */,
-				211B4B9821519A230083EDA8 /* AppInfoMid.xib in Resources */,
 				D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */,
 				D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */,
-				211B4B9921519A230083EDA8 /* AppInfoSmall.xib in Resources */,
+				211B4BAA2153F5840083EDA8 /* AppInfoSmallView.xib in Resources */,
 				21CF19362141883D003185F0 /* WWCalendarTimeSelector.storyboard in Resources */,
 				D76C90511E25173D009C35E4 /* help-recruiter.html in Resources */,
 				D742269020ACC5E2002D3F4C /* MediaView.xib in Resources */,
 				D7B07B8A1E08DDE1005B9EBE /* Assets.xcassets in Resources */,
+				211B4BB72154202D0083EDA8 /* InterviewView.xib in Resources */,
 				D76C905A1E255540009C35E4 /* privacy.html in Resources */,
 				D76C90501E25173D009C35E4 /* help-jobseeker.html in Resources */,
 				21E79F70215037D1004CEED6 /* LoadingView.xib in Resources */,
@@ -762,7 +769,6 @@
 				"${BUILT_PRODUCTS_DIR}/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework",
 				"${BUILT_PRODUCTS_DIR}/JTSImageViewController/JTSImageViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/LLSimpleCamera/LLSimpleCamera.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MGSwipeTableCell/MGSwipeTableCell.framework",
 				"${BUILT_PRODUCTS_DIR}/Nuke/Nuke.framework",
 				"${BUILT_PRODUCTS_DIR}/RKValueTransformers/RKValueTransformers.framework",
@@ -789,7 +795,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQSystemSoundPlayer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JTSImageViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LLSimpleCamera.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MGSwipeTableCell.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nuke.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RKValueTransformers.framework",
@@ -853,7 +858,6 @@
 				D749E3531E0A36CD000FD0B1 /* APIConfigure.swift in Sources */,
 				D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */,
 				D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */,
-				211B4B93215199CA0083EDA8 /* AppInfoMidView.swift in Sources */,
 				D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */,
 				211B4B91215199B80083EDA8 /* AppInfoSmallView.swift in Sources */,
 				2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */,
@@ -914,6 +918,7 @@
 				D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */,
 				D74226B720ACCDED002D3F4C /* Business.swift in Sources */,
 				D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */,
+				211B4BB5215420190083EDA8 /* InterviewView.swift in Sources */,
 				2132E0AB214ACAD600ADB223 /* RCApplicationListController.swift in Sources */,
 				21E79F7321503C7C004CEED6 /* LoadingController.swift in Sources */,
 				D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */,
@@ -946,6 +951,7 @@
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
+				211B4B9E21533A390083EDA8 /* AppInfoMiddleView.swift in Sources */,
 				D76C90531E25405A009C35E4 /* WebViewController.swift in Sources */,
 				D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */,
 				D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */,
@@ -960,20 +966,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		211B4B9421519A230083EDA8 /* AppInfoMid.xib */ = {
+		211B4BA52153F5840083EDA8 /* AppInfoMiddleView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				211B4B9521519A230083EDA8 /* Base */,
+				211B4BA62153F5840083EDA8 /* Base */,
 			);
-			name = AppInfoMid.xib;
+			name = AppInfoMiddleView.xib;
 			sourceTree = "<group>";
 		};
-		211B4B9621519A230083EDA8 /* AppInfoSmall.xib */ = {
+		211B4BA72153F5840083EDA8 /* AppInfoSmallView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				211B4B9721519A230083EDA8 /* Base */,
+				211B4BA82153F5840083EDA8 /* Base */,
 			);
-			name = AppInfoSmall.xib;
+			name = AppInfoSmallView.xib;
 			sourceTree = "<group>";
 		};
 		21E79F6E215037D1004CEED6 /* LoadingView.xib */ = {

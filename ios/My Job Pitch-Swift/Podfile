@@ -19,5 +19,4 @@ target 'MyJobPitch' do
     pod 'Nuke', '5.2'
     pod 'SwiftyDropbox'
     pod 'XLPagerTabStrip'
-    pod 'MBProgressHUD'
 end

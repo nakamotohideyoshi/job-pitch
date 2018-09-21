@@ -17,11 +17,27 @@ class Application: MJPObjectWithDates {
     var deletedBy: NSNumber!
     var shortlisted = false
     var status: NSNumber!
-    
-    // API V3
     var pitches: NSArray!
     var interviews: NSArray!
     
+    func getInterview() -> ApplicationInterview! {
+        let filters = (interviews as! [ApplicationInterview]).filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+        return filters.count == 0 ? nil : filters[0]
+    }
+    
+    func getNewMessageCount() -> Int {
+        var count = 0
+        for message in messages.reversed() as! [Message] {
+            if message.read {
+                break
+            }
+            if message.fromRole == AppData.getUserRole().id {
+                break
+            }
+            count += 1
+        }
+        return count
+    }
 }
 
 class ApplicationForCreation: MJPObject {
@@ -29,19 +45,16 @@ class ApplicationForCreation: MJPObject {
     var jobSeeker: NSNumber!
     var job: NSNumber!
     var shortlisted = false
-    
 }
 
 class ApplicationStatusUpdate: MJPObject {
     
     var status: NSNumber!
-    
 }
 
 class ApplicationShortlistUpdate: MJPObject {
     
-    var shortlisted = false
-    
+    var shortlisted = false    
 }
 
 class ExternalApplicationForCreation: MJPObject {

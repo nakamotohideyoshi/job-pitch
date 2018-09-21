@@ -9,10 +9,13 @@
 import UIKit
 import CoreLocation
 import Nuke
-import MBProgressHUD
 
 class AppHelper: NSObject {
 
+    static func instantiate(_ identifier: String) -> UIViewController {
+        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
+    }
+    
     static func getFrontController() -> UIViewController! {
         
         let revealViewController = UIApplication.shared.keyWindow?.rootViewController as? SWRevealViewController
@@ -29,50 +32,12 @@ class AppHelper: NSObject {
         return controller!
     }
     
-    static func getFrontController1() -> UIViewController! {
-        
-        let revealViewController = UIApplication.shared.keyWindow?.rootViewController as? SWRevealViewController
-        var controller = revealViewController?.frontViewController
-        
-        while controller?.presentedViewController != nil {
-            controller = controller?.presentedViewController
-        }
-        
-        return controller!
-    }
     
-    static func showLoading(_ message:String) {
-        let hud = createLoading()
-        hud.label.text = message
-    }
-    
-    static func createLoading() -> MBProgressHUD {
-        
-        hideLoading()
-        
-        let frontController = getFrontController1()
-        let hud = MBProgressHUD.showAdded(to: (frontController?.view)!, animated: true)
-        hud.backgroundView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
-        hud.bezelView.style = MBProgressHUDBackgroundStyle.solidColor
-        hud.bezelView.backgroundColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 0.95)
-        hud.contentColor = UIColor.white
-        
-        return hud
-    }
-    
-    static func hideLoading() {
-        let frontController = getFrontController1()
-        MBProgressHUD.hide(for: (frontController?.view)!, animated: true)
-    }
-
-    
-    static func instantiate(_ identifier: String) -> UIViewController {
-        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
-    }
+    // ====================== load image ========================
     
     static func loadImageURL(imageUrl: String,
                              imageView: UIImageView,
-                             completion: (() -> Void)!) {
+                             completion: (() -> Void)?) {
         
         removeLoading(imageView: imageView)
         
@@ -92,68 +57,48 @@ class AppHelper: NSObject {
         }
     }
     
-    static func loadLogo(image: Image?,
-                         imageView: UIImageView,
-                         completion: (() -> Void)!) {
-        if let thumbnail = image?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: thumbnail, imageView: imageView, completion: nil)
-        } else {
-            imageView.image = UIImage(named: "default-logo")
-        }
-    }
-    
-    static func loadJobseekerAvatar(_ jobseeker: JobSeeker,
-                                   imageView: UIImageView,
-                                   completion: (() -> Void)!) {
-        if let avatar = jobseeker.profileThumb {
-            AppHelper.loadImageURL(imageUrl: avatar, imageView: imageView, completion: completion)
-            return
-        }
-
-//        if let avatar = jobseeker.getPitch()?.thumbnail {
-//            AppHelper.loadImageURL(imageUrl: avatar, imageView: imageView, completion: completion)
-//            return
-//        }
-        
-        var avatar = "avatar"
-        if jobseeker.sexPublic {
-            if let sex = AppData.getSex(jobseeker.sex) {
-                avatar = String(format: "avatar_%@", sex.name)
-            }
-        }
-        imageView.image = UIImage(named: avatar)
-        completion?()
-    }
-    
     static func removeLoading(imageView: UIImageView) {
         if let indicator = imageView.viewWithTag(1000) {
             indicator.removeFromSuperview()
         }
     }
     
-    static func getInterview(_ application: Application!) -> ApplicationInterview! {
-        if application == nil {
-            return nil
-        }
+    static func loadLogo(_ object: MJPObject,
+                         imageView: UIImageView,
+                         completion: (() -> Void)?) {
+        var image: Image?
 
-        let interviews = application.interviews as! [ApplicationInterview]
-        let filters = interviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
-        return filters.count == 0 ? nil : filters[0]
+        if let job = object as? Job {
+            image = job.getImage()
+        } else if let location = object as? Location {
+            image = location.getImage()
+        } else if let business = object as? Business {
+            image = business.getImage()
+        }
+        
+        if let thumbnail = image?.thumbnail {
+            AppHelper.loadImageURL(imageUrl: thumbnail, imageView: imageView, completion: completion)
+            return
+        }
+        
+        imageView.image = UIImage(named: "default-logo")
+        completion?()
     }
     
-    static func getNewMessageCount(_ application: Application) -> Int {
-        var count = 0
-        for message in application.messages.reversed() as! [Message] {
-            if message.read {
-                break
-            }
-            if message.fromRole == AppData.getUserRole().id {
-                break
-            }
-            count += 1
+    static func loadPhoto(_ jobseeker: JobSeeker,
+                          imageView: UIImageView,
+                          completion: (() -> Void)?) {
+        if let avatar = jobseeker.profileThumb {
+            AppHelper.loadImageURL(imageUrl: avatar, imageView: imageView, completion: completion)
+            return
         }
-        return count
+        
+        imageView.image = UIImage(named: "avatar")
+        completion?()
     }
+        
+    
+    // ====================== distance ========================
     
     static func distance(latitude1: NSNumber, longitude1: NSNumber, latitude2: NSNumber, longitude2: NSNumber) -> String {
         
@@ -169,13 +114,15 @@ class AppHelper: NSObject {
         return String.init(format: "%.0f km", d/1000)
     }
     
-    static func convertDateToString(_ date: Date, short: Bool) -> String {
-        if short {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMM dd, HH:mm a"
-            return dateFormatter.string(from: date)
-        }
-        
+    // ====================== date to string ========================
+    
+    static func dateToShortString(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, HH:mm a"
+        return dateFormatter.string(from: date)
+    }
+    
+    static func dateToLongString(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"
         

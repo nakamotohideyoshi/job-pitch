@@ -16,12 +16,12 @@ class MessageCell: UITableViewCell {
     @IBOutlet weak var attributesLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var badge: BadgeIcon!
-
+    
     func setOpacity(_ alpha: CGFloat) {
         imgView.alpha = alpha
-        titleLabel.alpha = alpha
-        subTitleLabel.alpha = alpha
-        attributesLabel.alpha = alpha
-        messageLabel.alpha = alpha
+//        titleLabel.alpha = alpha
+//        subTitleLabel.alpha = alpha
+//        attributesLabel.alpha = alpha
+//        messageLabel.alpha = alpha
     }
 }

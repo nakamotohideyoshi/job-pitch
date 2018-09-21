@@ -26,17 +26,28 @@ class ApplicationListController: MJPController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
+        
+        AppData.refreshCallback = {
+            self.loadData()
+        }
+        
         loadData()
+    }
+
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        AppData.refreshCallback = nil
     }
     
     func loadData() {
         applications = AppData.applications
-        tableView.reloadData()
         tableView.pullToRefreshView.stopAnimating()
+        tableView.reloadData()
         emptyView.isHidden = applications.count > 0
     }
-
 }
 
 extension ApplicationListController: UITableViewDataSource {
@@ -50,17 +61,7 @@ extension ApplicationListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ApplicationCell", for: indexPath) as! ApplicationCell
         let application = applications[indexPath.row]
         
-        AppHelper.loadLogo(image: application.job.getImage(), imageView: cell.imgView, completion: nil)
-        cell.titleLabel.text = application.job.title
-        cell.subTitleLabel.text = application.job.getBusinessName()
-        if let interview = AppHelper.getInterview(application) {
-            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at, short: false)
-            let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
-            cell.attributesLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
-            cell.attributesLabel.isHidden = false
-        } else {
-            cell.attributesLabel.isHidden = true
-        }
+        cell.infoView.setData(application.job, interview: application.getInterview())
         cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         cell.rightButtons = [
@@ -79,7 +80,6 @@ extension ApplicationListController: UITableViewDataSource {
         
         return cell
     }
-    
 }
 
 extension ApplicationListController: UITableViewDelegate {

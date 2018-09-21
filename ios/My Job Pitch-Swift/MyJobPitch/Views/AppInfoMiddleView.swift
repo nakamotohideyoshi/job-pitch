@@ -1,5 +1,5 @@
 //
-//  AppInfoSmallView.swift
+//  AppInfoMiddleView.swift
 //  MyJobPitch
 //
 //  Created by bb on 9/19/18.
@@ -8,22 +8,14 @@
 
 import UIKit
 
-class AppInfoSmallView: UIView {
-
+class AppInfoMiddleView: UIView {
+    
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subTitleLabel: UILabel!
-    @IBOutlet weak var arrowIcon: UIImageView!
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var attributeLabel: UILabel!
     
-    var touchCallback: (() -> Void)? {
-        didSet {
-            arrowIcon.isHidden = touchCallback == nil
-            button.isHidden = touchCallback == nil
-        }
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadViewFromNib()
@@ -34,9 +26,7 @@ class AppInfoSmallView: UIView {
         loadViewFromNib()
     }
     
-    func setData(_ data: NSObject!, touch: (() -> Void)?) {
-        
-        touchCallback = touch
+    func setData(_ data: NSObject!, interview: ApplicationInterview?) {
         
         if let job = data as? Job {
             AppHelper.loadLogo(job, imageView: imgView, completion: nil)
@@ -47,14 +37,18 @@ class AppInfoSmallView: UIView {
             titleLabel.text = jobseeker.getFullName()
             subTitleLabel.text = jobseeker.desc
         }
-    }
-    
-    @IBAction func clickActiom(_ sender: Any) {
-        touchCallback?()
+        
+        if interview != nil {
+            let str = "Interview: " + AppHelper.dateToLongString((interview?.at)!)
+            let subTitleParameters = [NSForegroundColorAttributeName : interview?.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
+            attributeLabel.attributedText = NSMutableAttributedString(string: str, attributes: subTitleParameters)
+        }
+        
+        attributeLabel.isHidden = interview == nil
     }
     
     func loadViewFromNib() {
-        Bundle.main.loadNibNamed("AppInfoSmallView", owner: self, options: nil)
+        Bundle.main.loadNibNamed("AppInfoMiddleView", owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

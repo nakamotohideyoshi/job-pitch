@@ -22,6 +22,7 @@ from mjp.serializers.applications import (
     MessageCreateSerializer,
     MessageUpdateSerializer,
     ExternalApplicationSerializer,
+    InterviewCompleteSerializer,
 )
 from mjp.serializers.applications import InterviewSerializer
 from mjp.serializers.job_seeker import ApplicationPitchSerializer
@@ -439,8 +440,11 @@ class InterviewViewSet(viewsets.ModelViewSet):
         if interview.status == Interview.COMPLETE:
             raise serializers.ValidationError('Interview is already complete')
 
-        interview.status = Interview.COMPLETE
-        interview.save()
+        serializer = InterviewCompleteSerializer(instance=interview, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(
+            status=Interview.COMPLETE,
+        )
 
         Message.objects.create(
             system=True,

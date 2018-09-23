@@ -127,6 +127,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
         job_seeker = self.request.user.job_seeker
         job_profile = job_seeker.profile
         query = Job.objects.exclude(applications__job_seeker=job_seeker)
+        query = query.exclude(exclusions__job_seeker=job_seeker)
         exclude_pks = self.request.query_params.get('exclude')
         if exclude_pks:
             query = query.exclude(pk__in=map(int, exclude_pks.split(',')))

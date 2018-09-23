@@ -1,10 +1,10 @@
 import uuid
-from django.contrib.auth.forms import PasswordResetForm
+
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo, User
+from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo, User, Exclusion
 
 
 class BusinessImageSerializer(serializers.ModelSerializer):
@@ -135,3 +135,10 @@ class BusinessUserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessUser
         fields = ('locations',)
+
+
+class ExclusionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exclusion
+        fields = ('id', 'job', 'job_seeker')
+        read_only_fields = ('job',)

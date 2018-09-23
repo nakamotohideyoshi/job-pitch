@@ -51,5 +51,8 @@ class EditRemoveView: UIView {
         addSubview(contentView)
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        editCallback = nil
+        removeCallback = nil
     }
 }

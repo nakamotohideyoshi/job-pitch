@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';

@@ -180,9 +180,16 @@ export default class RecordModal extends React.Component {
           </video>
 
           {stream && (
-            <RecButton onClick={this.onClickButton}>
-              <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
-            </RecButton>
+            <div className="bottom-content">
+              <ul>
+                <li>speak clearly</li>
+                <li>be yourself</li>
+                <li>show you strengths</li>
+              </ul>
+              <RecButton onClick={this.onClickButton}>
+                <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
+              </RecButton>
+            </div>
           )}
 
           {status === READY && <ReadyLabel time={Math.floor(time / 1000)} />}

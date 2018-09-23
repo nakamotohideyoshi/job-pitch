@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import PasswordResetForm
+from django.db import transaction
 from django.db.models import Q
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.decorators import detail_route
@@ -15,6 +16,7 @@ from mjp.models import (
     JobImage,
     Job,
     JobVideo,
+    Application,
 )
 from mjp.serializers import (
     BusinessSerializer,
@@ -33,6 +35,7 @@ from mjp.serializers.recruiter import (
     BusinessUserSerializer,
     BusinessUserCreateSerializer,
     BusinessUserUpdateSerializer,
+    ExclusionSerializer,
 )
 
 
@@ -212,6 +215,21 @@ class UserJobViewSet(viewsets.ModelViewSet):
         if location:
             return query.filter(location__id=location)
         return query
+
+    @detail_route(methods=['POST'])
+    def exclude(self, request, pk):
+        with transaction.atomic():
+            job = self.get_object()
+            serializer = ExclusionSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            if Application.objects.filter(job=job, job_seeker=serializer.validated_data['job_seeker']).exists():
+                raise serializers.ValidationError({'job_seeker': 'Application already exists'})
+            if job.exclusions.filter(job_seeker=serializer.validated_data['job_seeker']).exists():
+                raise serializers.ValidationError({'job_seeker': 'Job seeker already excluded'})
+            serializer.save(
+                job=job,
+            )
+        return Response(dict(serializer.data))  # convert to dict to prevent browsable API breaking
 
 
 class UserJobImageViewSet(viewsets.ModelViewSet):

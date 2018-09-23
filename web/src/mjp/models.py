@@ -663,3 +663,8 @@ class AppDeprecation(models.Model):
     platform = models.CharField(max_length=255, choices=PLATFORM_CHOICES, unique=True)
     warning = models.CharField(max_length=255)
     error = models.CharField(max_length=255)
+
+
+class Exclusion(models.Model):
+    job = models.ForeignKey(Job, related_name='exclusions')
+    job_seeker = models.ForeignKey(JobSeeker, related_name='exclusions')

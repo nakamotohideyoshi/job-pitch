@@ -144,7 +144,9 @@ class InterviewDetailController: MJPController {
     func acceptAction() {
         PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
             self.showLoading()
-            API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
+            let interviewForSave = InterviewForSave()
+            interviewForSave.id = self.interview?.id
+            API.shared().changeInterview(interview: interviewForSave, type: "accept", success: { (_) in
                 self.updateApplication()
             }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)

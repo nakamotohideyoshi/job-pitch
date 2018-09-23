@@ -685,23 +685,18 @@ class API: NSObject {
     
     // ================== Interviews ============================
     
-    func loadInterviews(success: ((NSArray) -> Void)!,
-                        failure: ((String?, NSDictionary?) -> Void)!) {
-        getObjects("/api/interviews/", success: success, failure: failure)
-    }
-    
     func loadInterview(interviewId: NSNumber!, success: ((NSObject?) -> Void)!,
                         failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/interviews/%@/", interviewId), success: success, failure: failure)
     }
     
-    func saveInterview(interviewId: NSNumber!, interview: InterviewForSave,
-                            success: ((NSObject?) -> Void)!,
-                            failure: ((String?, NSDictionary?) -> Void)!) {
-        if (interviewId == nil) {
+    func saveInterview(interview: InterviewForSave,
+                        success: ((NSObject?) -> Void)!,
+                        failure: ((String?, NSDictionary?) -> Void)!) {
+        if (interview.id == nil) {
             postObject("/api/interviews/", request: interview, success: success, failure: failure)
         } else {
-            putObject(String(format: "/api/interviews/%@/",interviewId),
+            putObject(String(format: "/api/interviews/%@/",interview.id),
                       request: interview, success: success, failure: failure)
         }
     }
@@ -713,11 +708,11 @@ class API: NSObject {
                      success: success, failure: failure)
     }
     
-    func changeInterview(interviewId: NSNumber,
+    func changeInterview(interview: InterviewForSave,
                          type: String,
                          success: ((NSObject?) -> Void)!,
                          failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject(String(format: "/api/interviews/%@/%@/", interviewId, type), request:nil, success: success, failure: failure)
+        postObject(String(format: "/api/interviews/%@/%@/", interview.id, type), request: interview, success: success, failure: failure)
     }
 
 }

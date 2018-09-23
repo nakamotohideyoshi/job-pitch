@@ -57,7 +57,7 @@ class API: NSObject {
         }
         
         if message == nil && userInfo == nil {
-            message = "Connection Error"
+            message = "Connection Error: Please check your internet connection"
         }
 
         failure?(message, userInfo)

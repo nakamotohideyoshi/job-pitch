@@ -149,7 +149,7 @@ class FindJob extends React.Component {
         if (this.state.pitchData) {
           this.uploadPitch(application);
         } else {
-          this.setState({ loading: null });
+          this.setState({ loading: null, visibleApply: false, visibleDetail: false });
           notification.success({
             message: 'Success',
             description: 'The job is applied'
@@ -172,7 +172,7 @@ class FindJob extends React.Component {
       application: id,
       data: this.state.pitchData,
       onSuccess: msg => {
-        this.setState({ loading: null });
+        this.setState({ loading: null, visibleApply: false, visibleDetail: false });
         notification.success({
           message: 'Success',
           description: 'The job is applied'
@@ -288,54 +288,56 @@ class FindJob extends React.Component {
         </div>
 
         <Drawer placement="right" onClose={() => this.onSelect()} visible={visibleDetail}>
-          {visibleDetail && (
-            <JobDetails
-              jobData={selectedJob}
-              roughLocation
-              actions={
-                <div>
-                  <Button type="primary" disabled={selectedJob.loading} onClick={() => this.onApply(selectedJob)}>
-                    Apply for job
-                  </Button>
-                  <Button type="danger" disabled={selectedJob.loading} onClick={() => this.onRemove(selectedJob)}>
-                    Not interested
-                  </Button>
-                </div>
-              }
-            />
-          )}
+          {visibleDetail &&
+            selectedJob && (
+              <JobDetails
+                jobData={selectedJob}
+                roughLocation
+                actions={
+                  <div>
+                    <Button type="primary" disabled={selectedJob.loading} onClick={() => this.onApply(selectedJob)}>
+                      Apply for job
+                    </Button>
+                    <Button type="danger" disabled={selectedJob.loading} onClick={() => this.onRemove(selectedJob)}>
+                      Not interested
+                    </Button>
+                  </div>
+                }
+              />
+            )}
         </Drawer>
 
-        {visibleApply && (
-          <Modal
-            title="Specific Pitch"
-            visible
-            onOk={this.apply}
-            onCancel={this.hideApplyDialog}
-            okText="Apply"
-            footer={[
-              <Button key="cancel" onClick={this.hideApplyDialog}>
-                Cancel
-              </Button>,
-              <Button
-                key="submit"
-                type="primary"
-                disabled={selectedJob.requires_pitch && !pitch && !pitchData}
-                onClick={this.apply}
-              >
-                Apply
-              </Button>
-            ]}
-          >
-            <PitchSelector onChange={this.changePitch} />
+        {visibleApply &&
+          selectedJob && (
+            <Modal
+              title="Specific Pitch"
+              visible
+              onOk={this.apply}
+              onCancel={this.hideApplyDialog}
+              okText="Apply"
+              footer={[
+                <Button key="cancel" onClick={this.hideApplyDialog}>
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  disabled={selectedJob.requires_pitch && !pitch && !pitchData}
+                  onClick={this.apply}
+                >
+                  Apply
+                </Button>
+              ]}
+            >
+              <PitchSelector onChange={this.changePitch} />
 
-            {!pitch && (
-              <div style={{ marginTop: '20px' }}>
-                or <Link to="/jobseeker/settings/record">Record Pitch</Link> on profile
-              </div>
-            )}
-          </Modal>
-        )}
+              {!pitch && (
+                <div style={{ marginTop: '20px' }}>
+                  or <Link to="/jobseeker/settings/record">Record Pitch</Link> on profile
+                </div>
+              )}
+            </Modal>
+          )}
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>

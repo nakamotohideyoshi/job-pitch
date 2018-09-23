@@ -76,7 +76,7 @@ class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
     jobs = serializers.SerializerMethodField()
 
     def get_jobs(self, location):
-        jobs = location.jobs.filter(status__name=JobStatus.OPEN)
+        jobs = location.adverts.filter(status__name=JobStatus.OPEN)
         serializer = PublicEmbeddedJobListingSerializer(
             instance=jobs,
             many=True,

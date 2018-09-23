@@ -1,11 +1,32 @@
 import styled from 'styled-components';
 import { Modal } from 'antd';
+import media from 'utils/mediaquery';
 
 export const Wrapper = styled(Modal)`
   width: 648px !important;
 
   .ant-modal-body {
     position: relative;
+    color: #fff;
+
+    .bottom-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      ${media.mobile`
+        font-size: 14px;
+      `};
+
+      ul {
+        display: inline-block;
+        margin: 0;
+        text-align: left;
+      }
+    }
   }
 `;
 
@@ -19,13 +40,10 @@ export const VideoContainer = styled.div`
 `;
 
 export const RecButton = styled.div`
-  position: absolute;
-  width: 10%;
+  position: relative;
   padding-top: 10%;
-  left: 0;
-  right: 0;
-  bottom: 5%;
-  margin: auto;
+  margin: 3% auto;
+  width: 10%;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
 

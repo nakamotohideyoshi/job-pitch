@@ -4,12 +4,9 @@ import media from 'utils/mediaquery';
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 0;
+  top: 3%;
   left: 0;
-  bottom: 100px;
-  ${media.mobile`bottom: 65px;`};
-  width: 100%;
-  color: white;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,22 +15,25 @@ const Wrapper = styled.div`
   span {
     margin-bottom: 20px;
     font-size: 40px;
-    ${media.mobile`font-size: 25px;`};
+    ${media.mobile`
+      margin-bottom: 10px;
+      font-size: 25px;
+    `};
   }
 
   div {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    border: 3px solid #fff;
+    border: 5px solid #fff;
     font-size: 70px;
     ${media.mobile`
-      width: 90px;
-      height: 90px;
-      border: 2px solid #fff;
+      width: 70px;
+      height: 70px;
+      border: 3px solid #fff;
       font-size: 40px;
     `};
   }

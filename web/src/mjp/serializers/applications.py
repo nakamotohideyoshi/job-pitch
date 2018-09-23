@@ -148,3 +148,12 @@ class InterviewSerializer(serializers.ModelSerializer):
             'status',
         )
         read_only_fields = ('cancelled', 'cancelled_by', 'status')
+
+
+class InterviewCompleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interview
+        fields = (
+            'notes',
+            'feedback',
+        )

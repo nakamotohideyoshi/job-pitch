@@ -75,17 +75,8 @@ function* changeInterview({ payload }) {
 }
 
 function* completeInterview({ payload }) {
-  const { id, feedback } = payload.data;
-  yield call(
-    _updateApplication,
-    function*() {
-      const result = yield call(postRequest({ url: `/api/interviews/${id}/complete/` }));
-      if (result === null) return null;
-      if (feedback === '') return '';
-      return yield call(putRequest({ url: `/api/interviews/${id}/` }), { payload });
-    },
-    payload
-  );
+  const { id } = payload;
+  yield call(_updateApplication, postRequest({ url: `/api/interviews/${id}/complete/` }), payload);
 }
 
 function* removeInterview({ payload }) {

@@ -60,19 +60,16 @@ class Interview extends React.Component {
 
   onComplete = () => {
     const { completeInterview, application, form } = this.props;
-    const { id, at, messages, notes } = application.interview;
+    const { id, notes } = application.interview;
     const feedback = this.textbox.textAreaRef.value.trim();
 
     this.showCompleteDialog(false);
 
     completeInterview({
       appId: application.id,
+      id,
       data: {
-        application: application.id,
-        id,
-        at,
         notes,
-        invitation: (messages[0] || {}).content,
         feedback
       },
       onSuccess: () => {

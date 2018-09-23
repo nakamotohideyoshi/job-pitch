@@ -21,7 +21,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBOutlet weak var saveButton: GreenButton!
     
     public var application: Application!
-    public var interview: ApplicationInterview?
+    public var interview: Interview?
     public var isComplete = false
     
     var dateTime: Date! = Date()
@@ -55,7 +55,8 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     func loadData() {
-        infoView.setData(application.jobSeeker) { 
+        infoView.jobSeeker = application.jobSeeker
+        infoView.touch = {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = self.application
             controller.viewMode = true
@@ -94,7 +95,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         interviewForSave.feedback = feedbackTextView.text
         
         API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
-            AppData.updateApplication(self.application.id, success: { (application) in
+            AppData.getApplication(self.application.id, success: { (application) in
                 self.closeModal()
             }, failure: self.handleErrors)
         }, failure: self.handleErrors)

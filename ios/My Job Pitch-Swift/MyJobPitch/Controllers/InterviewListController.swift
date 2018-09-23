@@ -16,7 +16,7 @@ class InterviewListController: MJPController {
     public var job: Job!
     
     var jobSeeker: JobSeeker!
-    var interviews: [(Application, ApplicationInterview)]! = [(Application, ApplicationInterview)]()
+    var interviews: [(Application, Interview)]! = [(Application, Interview)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class InterviewListController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData()
         }
         
@@ -46,7 +46,7 @@ class InterviewListController: MJPController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
@@ -56,7 +56,7 @@ class InterviewListController: MJPController {
                 if let interview = application.getInterview() {
                     interviews.append((application, interview))
                 } else if application.interviews.count > 0 {
-                    interviews.append((application, application.interviews.lastObject as! ApplicationInterview))
+                    interviews.append((application, application.interviews.lastObject as! Interview))
                 }
             }
         }
@@ -83,35 +83,11 @@ extension InterviewListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "InterviewCell", for: indexPath) as! InterviewCell
-        
         let (application, interview) = interviews[indexPath.row]
         
-        if AppData.user.isRecruiter() {
-            
-            AppHelper.loadPhoto(application.jobSeeker, imageView: cell.imgView, completion: nil)
-            cell.name.text = application.jobSeeker.getFullName()
-            cell.comment.text = application.jobSeeker.desc
-            
-        } else {
-            AppHelper.loadLogo(application.job, imageView: cell.imgView, completion: nil)
-            cell.name.text = application.job.title
-            cell.comment.text = application.job.getBusinessName()
-        }
-        
-        if interview.status == InterviewStatus.INTERVIEW_PENDING {
-            cell.status.text = AppData.user.isJobSeeker() ? "Interview request received" : "Interview request sent"
-        } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
-            cell.status.text = "Interview accepted"
-        } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-            cell.status.text = "This interview is done"
-        } else {
-            cell.status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
-        }
-        
-        cell.dataTime.text = AppHelper.dateToLongString(interview.at)
-        cell.location.text = application.job.locationData.placeName
-        
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+        cell.application = application
+        cell.interview = interview
+        cell.drawUnderline()
         
         return cell
     }
@@ -120,9 +96,8 @@ extension InterviewListController: UITableViewDataSource {
 extension InterviewListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let (application, interview) = interviews[indexPath.row]
         let controller = InterviewDetailController.instantiate()
-        controller.application = application
+        controller.application = interviews[indexPath.row].0
         navigationController?.pushViewController(controller, animated: true)
     }
 }

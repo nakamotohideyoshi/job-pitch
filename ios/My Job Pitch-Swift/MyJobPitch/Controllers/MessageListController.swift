@@ -28,7 +28,7 @@ class MessageListController: MJPController {
         super.viewWillAppear(animated)
         
         AppData.appsRefreshTime = AppData.MESSAGE_REFRESH_TIME
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData1()
         }
         
@@ -39,11 +39,11 @@ class MessageListController: MJPController {
         super.viewWillDisappear(animated)
         
         AppData.appsRefreshTime = AppData.DEFAULT_REFRESH_TIME
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
-        AppData.updateJobSeeker(success: nil, failure: nil)
+        AppData.getjobSeeker(success: nil, failure: nil)
         tableView.pullToRefreshView.stopAnimating()
         loadData1()
     }
@@ -75,35 +75,11 @@ extension MessageListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
-        
         let (application, newMsgs) = applications[indexPath.row]
-        let job = application.job!
-        let lastMessage = application.messages?.lastObject as! Message
-        let message = lastMessage.fromRole == AppData.getUserRole().id ? String(format: "You: %@", (lastMessage.content)!) : lastMessage.content
-        let deleted = application.status == ApplicationStatus.APPLICATION_DELETED_ID
-        
-        var title: String!, subTitle: String!
-        if AppData.user.isJobSeeker() {
-            AppHelper.loadLogo(job, imageView: cell.imgView, completion: nil)
-            title = job.title
-            subTitle = job.getBusinessName()
-        } else {
-            AppHelper.loadPhoto(application.jobSeeker, imageView: cell.imgView, completion: nil)
-            title = application.jobSeeker.getFullName()
-            subTitle = String(format: "%@ (%@)", job.title, job.getBusinessName())
-        }
-        
-        cell.imgView.alpha = deleted ? 0.5 : 1
-        cell.titleLabel.setDeletedText(title, isDeleted: deleted)
-        cell.subTitleLabel.setDeletedText(subTitle, isDeleted: deleted)
-        cell.attributesLabel.setDeletedText(AppHelper.dateToShortString((lastMessage.created)!), isDeleted: deleted)
-        cell.messageLabel.setDeletedText(message!, isDeleted: deleted)
-        
-        cell.badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
-        cell.badge.isHidden = newMsgs == 0
-        
-        cell.backgroundColor = deleted ? AppData.lightGreyColor : .white
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+
+        cell.application = application
+        cell.newMsgs = newMsgs
+        cell.drawUnderline()
         
         return cell
     }

@@ -298,7 +298,7 @@ class APIConfigure: NSObject {
                          responseDictionary: inverseDictionary(jobSeekerDictionary),
                          responseRelationships: inverseRelationships(jobSeekerRelationships),
                          path: "/api/job-seekers/",
-                         method: .POST)
+                         method: [.GET, .POST])
 
         configureMapping(JobSeekerForSave.classForCoder(),
                          requestArray: jobSeekerForSaveArray,
@@ -507,22 +507,76 @@ class APIConfigure: NSObject {
                                path: "/api/messages/:pk/",
                                method: .PUT)
 
+        // ================= Interviews ================
+        
+        let interviewArray = [ "id", "at", "notes", "feedback", "cancelled", "status" ]
+        
+        let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
+        
+        let interviewRelationships = [ [ "source": "messages",
+                                         "destination": "messages",
+                                         "mapping": messageMapping ] ]
+        
+        let interviewMapping = createResponseMappingForClass(Interview.classForCoder(),
+                                                             array: interviewArray,
+                                                             dictionary: inverseDictionary(interviewsDictionary),
+                                                             relationships: inverseRelationships(interviewRelationships))
+        
+        let createInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
+        
+        let updateInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
+        
+        configureResponseMapping(Interview.classForCoder(),
+                                 responseArray: interviewArray,
+                                 responseDictionary: interviewsDictionary,
+                                 responseRelationships: nil,
+                                 path: "/api/interviews/",
+                                 method: .GET)
+        
+        configureResponseMapping(Interview.classForCoder(),
+                                 responseArray: interviewArray,
+                                 responseDictionary: interviewsDictionary,
+                                 responseRelationships: nil,
+                                 path: "/api/interviews/:pk/",
+                                 method: .GET)
+        
+        configureSimpleMapping(InterviewForSave.classForCoder(),
+                               mappingArray: createInterviewArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/",
+                               method: .POST)
+        
+        configureSimpleMapping(InterviewForSave.classForCoder(),
+                               mappingArray: updateInterviewArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/:pk/",
+                               method: .PUT)
+        
+        configureSimpleMapping(Interview.classForCoder(),
+                               mappingArray: nil,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/:pk/",
+                               method: .DELETE)
+        
+        configureSimpleMapping(Interview.classForCoder(),
+                               mappingArray: nil,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/:pk/accept/",
+                               method: .POST)
+        
+        configureSimpleMapping(Interview.classForCoder(),
+                               mappingArray: nil,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/:pk/complete/",
+                               method: .POST)
 
         // ================= Application =====================
         
-        let applicationInterviewArray = [ "id", "at", "notes", "feedback", "cancelled", "status" ]
-        
-        let applicationInterviewDictionary = [ "cancelledBy": "cancelled_by" ]
-        
-        let applicationInterviewRelationships = [ [ "source": "messages",
-                                                    "destination": "messages",
-                                                    "mapping": messageMapping ] ]
-        
-        let applicationInterviewMapping = createResponseMappingForClass(ApplicationInterview.classForCoder(),
-                                                                        array: applicationInterviewArray,
-                                                                        dictionary: inverseDictionary(applicationInterviewDictionary),
-                                                                        relationships: inverseRelationships(applicationInterviewRelationships))
-
         let applictionCreateArray = [ "job", "shortlisted" ]
 
         let applictionCreateDictionary = [ "jobSeeker": "job_seeker" ]
@@ -585,7 +639,7 @@ class APIConfigure: NSObject {
                                            "mapping": pitchMapping ],
                                          [ "source": "interviews",
                                            "destination": "interviews",
-                                           "mapping": applicationInterviewMapping ] ]
+                                           "mapping": interviewMapping ] ]
 
         configureResponseMapping(Application.classForCoder(),
                                  responseArray: applicationArray,
@@ -676,65 +730,6 @@ class APIConfigure: NSObject {
                                path: "/api/user-businesses/:pk/users/:pk/",
                                method: [.GET, .DELETE])
         
-        // ================= Interviews ================
-        
-        let interviewArray = [ "id", "application", "at", "messages", "notes", "feedback", "cancelled", "status" ]
-        
-        let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
-        
-        let createInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
-        
-        let updateInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
-        
-        configureResponseMapping(Interview.classForCoder(),
-                                 responseArray: interviewArray,
-                                 responseDictionary: interviewsDictionary,
-                                 responseRelationships: nil,
-                                 path: "/api/interviews/",
-                                 method: .GET)
-        
-        configureResponseMapping(Interview.classForCoder(),
-                                 responseArray: interviewArray,
-                                 responseDictionary: interviewsDictionary,
-                                 responseRelationships: nil,
-                                 path: "/api/interviews/:pk/",
-                                 method: .GET)
-        
-        configureSimpleMapping(InterviewForSave.classForCoder(),
-                               mappingArray: createInterviewArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/interviews/",
-                               method: .POST)
-        
-        configureSimpleMapping(InterviewForSave.classForCoder(),
-                               mappingArray: updateInterviewArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/interviews/:pk/",
-                               method: .PUT)
-        
-        configureSimpleMapping(Interview.classForCoder(),
-                               mappingArray: nil,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/interviews/:pk/",
-                               method: .DELETE)
-        
-        configureSimpleMapping(Interview.classForCoder(),
-                               mappingArray: nil,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/interviews/:pk/accept/",
-                               method: .POST)
-        
-        configureSimpleMapping(Interview.classForCoder(),
-                               mappingArray: nil,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/interviews/:pk/complete/",
-                               method: .POST)
-
         // ================= Error =====================
 
         let errorMapping = RKObjectMapping(for: RKErrorMessage.classForCoder())

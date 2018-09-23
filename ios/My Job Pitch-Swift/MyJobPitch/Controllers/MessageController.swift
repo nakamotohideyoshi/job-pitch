@@ -58,7 +58,7 @@ class MessageController: JSQMessagesViewController {
                     update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                     
                     API.shared().updateApplicationStatus(update: update, success: { (data) in
-                        AppData.updateApplication(self.application.id, success: { (application) in
+                        AppData.getApplication(self.application.id, success: { (application) in
                             self.application = application
                             self.updateData()
                         }, failure: nil)
@@ -132,7 +132,7 @@ class MessageController: JSQMessagesViewController {
         
         for message in application.messages as! [Message] {
             
-            if message.fromRole == AppData.getUserRole().id {
+            if message.fromRole == AppData.userRole {
                 let jsqMessage = JSQMessage(senderId: senderId,
                                             senderDisplayName: senderDisplayName,
                                             date: message.created,
@@ -232,7 +232,7 @@ class MessageController: JSQMessagesViewController {
         
         API.shared().sendMessage(message: message, success: { (data) in
             
-            AppData.updateApplication(self.application.id, success: { (application) in
+            AppData.getApplication(self.application.id, success: { (application) in
                 self.application = application
                 self.updateData()
             }, failure: nil)

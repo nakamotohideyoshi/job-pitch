@@ -17,13 +17,42 @@ class AppInfoSmallView: UIView {
     @IBOutlet weak var arrowIcon: UIImageView!
     @IBOutlet weak var button: UIButton!
     
-    var touchCallback: (() -> Void)? {
+    var job: Job! {
         didSet {
-            arrowIcon.isHidden = touchCallback == nil
-            button.isHidden = touchCallback == nil
+            if job != nil {
+                AppHelper.loadLogo(job, imageView: imgView, completion: nil)
+                titleLabel.text = job.title
+                subTitleLabel.text = job.getBusinessName()
+            }
+        }
+    }
+    
+    var jobSeeker: JobSeeker! {
+        didSet {
+            if jobSeeker != nil {
+                AppHelper.loadPhoto(jobSeeker, imageView: imgView, completion: nil)
+                titleLabel.text = jobSeeker.getFullName()
+                subTitleLabel.text = jobSeeker.desc
+            }
+        }
+    }
+    
+    var touch: (() -> Void)? {
+        didSet {
+            arrowIcon.isHidden = touch == nil
+            button.isHidden = touch == nil
         }
     }
 
+    func setDescription(icon: String, text: String) {
+        imgView.image = UIImage(named: icon)?.withRenderingMode(.alwaysTemplate)
+        imgView.tintColor = AppData.greenColor
+        titleLabel.font = UIFont.systemFont(ofSize: 16)
+        titleLabel.text = text
+        titleLabel.numberOfLines = 0
+        subTitleLabel.isHidden = true
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadViewFromNib()
@@ -34,23 +63,8 @@ class AppInfoSmallView: UIView {
         loadViewFromNib()
     }
     
-    func setData(_ data: NSObject!, touch: (() -> Void)?) {
-        
-        touchCallback = touch
-        
-        if let job = data as? Job {
-            AppHelper.loadLogo(job, imageView: imgView, completion: nil)
-            titleLabel.text = job.title
-            subTitleLabel.text = job.getBusinessName()
-        } else if let jobseeker = data as? JobSeeker {
-            AppHelper.loadPhoto(jobseeker, imageView: imgView, completion: nil)
-            titleLabel.text = jobseeker.getFullName()
-            subTitleLabel.text = jobseeker.desc
-        }
-    }
-    
     @IBAction func clickActiom(_ sender: Any) {
-        touchCallback?()
+        touch?()
     }
     
     func loadViewFromNib() {

@@ -15,12 +15,14 @@ class LocationCell: MGSwipeTableCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
     
-    func setData(_ location: Location) {
-        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
-        nameLabel.text = location.name
-        let jobCount = location.jobs.count
-        subTitle.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")
-        
-    }
-    
+    var location: Location! {
+        didSet {
+            if location != nil {
+                AppHelper.loadLogo(location, imageView: imgView, completion: nil)
+                nameLabel.text = location.name
+                let jobCount = location.jobs.count
+                subTitle.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")
+            }
+        }
+    }        
 }

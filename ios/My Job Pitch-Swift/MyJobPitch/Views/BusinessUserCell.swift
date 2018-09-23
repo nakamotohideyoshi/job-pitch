@@ -10,15 +10,16 @@ import UIKit
 import MGSwipeTableCell
 
 class BusinessUserCell: MGSwipeTableCell {
+
     @IBOutlet weak var email: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-
-    func setData(_ user: BusinessUser, _ locations: String) {
-        email.text = user.email
-        subTitle.text = locations
-        
-        accessoryType = user.email == AppData.user.email ? .none : .disclosureIndicator
-        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+    
+    var user: BusinessUser! {
+        didSet {
+            if user != nil {
+                email.text = user.email
+                accessoryType = user.email == AppData.user.email ? .none : .disclosureIndicator
+            }
+        }
     }
-
 }

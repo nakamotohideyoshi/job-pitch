@@ -11,10 +11,10 @@ import MGSwipeTableCell
 
 class SelectJobController: MJPController {
     
-    @IBOutlet weak var headerImgView: UIImageView!
-    @IBOutlet weak var headerTitle: UILabel!
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    @IBOutlet weak var toolbar: SmallToolbar!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var emptyView: UIView!
+    @IBOutlet weak var emptyView: EmptyView!
     
     var jobs: [Job]! = [Job]()
     
@@ -28,31 +28,47 @@ class SelectJobController: MJPController {
         super.viewDidLoad()
         
         var item = SideMenuController.menuItems[SideMenuController.currentID]!
-        headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
-        headerTitle.text = titles[SideMenuController.currentID]
+        infoView.setDescription(icon: item["icon"]!, text: titles[SideMenuController.currentID]!)
+        
+        toolbar.titleLabel.text = "SELECT A JOB"
+        toolbar.rightAction = jobAdd
+        
+        emptyView.message.text = "You have not added any jobs yet."
+        emptyView.button.setTitle("Create job", for: .normal)
+        emptyView.action = jobAdd
         
         tableView.addPullToRefresh {
-            self.loadData()
+            self.loadJobs()
         }
         
         showLoading()
-        loadData()
+        loadJobs()
+        
     }
     
-    func loadData() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        self.emptyView.isHidden = true
-        
-        AppData.getJobs(locationId: nil, success: { 
+        if AppData.jobs != nil {
+            updateList()
+        }        
+    }
+    
+    func loadJobs() {
+        AppData.getJobs(locationId: nil, success: {
             self.hideLoading()
-            self.jobs = AppData.jobs.filter { $0.status == JobStatus.JOB_STATUS_OPEN_ID }
-            self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
-            self.emptyView.isHidden = self.jobs.count > 0
+            self.updateList()
         }, failure: self.handleErrors)
     }
     
-    @IBAction func jobAddAction(_ sender: Any) {
+    func updateList() {
+        jobs = AppData.jobs.filter { $0.status == JobStatus.JOB_STATUS_OPEN_ID }
+        tableView.reloadData()
+        emptyView.isHidden = self.jobs.count > 0
+    }
+    
+    func jobAdd() {
         
         if AppData.user.businesses.count > 1 {
             
@@ -75,8 +91,9 @@ extension SelectJobController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
-        cell.setData(jobs[indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! ApplicationCell
+        cell.infoView.job = jobs[indexPath.row]
+        cell.drawUnderline()
         return cell
     }
 }

@@ -80,7 +80,7 @@ class PopupController: UIViewController {
         popupController.transitionStyle = STPopupTransitionStyle.fade
         popupController.present(in: rootController)
         
-        controller.boardView.layer.cornerRadius = AppData.cornerRadius
+        controller.boardView.layer.cornerRadius = 6
         controller.messageLabel.text = message
         
         controller.boardView.backgroundColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 0.95)
@@ -91,14 +91,14 @@ class PopupController: UIViewController {
             controller.okButton.setTitle(ok, for: .normal)
             controller.okCallback = okCallback
         } else {
-            controller.okButton.removeFromSuperview()
+            controller.okButton.isHidden = true
         }
         
         if cancel != nil {
             controller.cancelButton.setTitle(cancel, for: .normal)
             controller.cancelCallback = cancelCallback
         } else {
-            controller.cancelButton.removeFromSuperview()
+            controller.cancelButton.isHidden = true
         }
         
         return controller

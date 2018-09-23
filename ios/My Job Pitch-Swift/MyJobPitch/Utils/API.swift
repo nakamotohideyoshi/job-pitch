@@ -341,15 +341,10 @@ class API: NSObject {
                   success: success, failure: failure)
     }
 
-    func searchJobsWithExclusions(exclusions: NSArray!,
-                                  success: ((NSArray) -> Void)!,
-                                  failure: ((String?, NSDictionary?) -> Void)!) {
+    func searchJobs(success: ((NSArray) -> Void)!,
+                    failure: ((String?, NSDictionary?) -> Void)!) {
 
-        var path = "/api/jobs/"
-        if exclusions != nil {
-            path = String(format: "%@?exclude=%@", path, exclusions.componentsJoined(by: ","))
-        }
-
+        let path = "/api/jobs/"
         getObjects(path, success: success, failure: failure)
     }
 
@@ -401,15 +396,10 @@ class API: NSObject {
     }
 
     func searchJobSeekersForJob(jobId: NSNumber,
-                                exclusions: NSArray!,
                                 success: ((NSArray) -> Void)!,
                                 failure: ((String?, NSDictionary?) -> Void)!) {
 
-        var path = String(format: "/api/job-seekers/?job=%@", jobId)
-        if exclusions != nil {
-            path = String(format: "%@&exclude=%@", path, exclusions.componentsJoined(by: ","))
-        }
-
+        let path = String(format: "/api/job-seekers/?job=%@", jobId)
         getObjects(path, success: success, failure: failure)
     }
 

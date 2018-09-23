@@ -283,11 +283,11 @@ class JobSeekerProfileController: MJPController {
         }
         
         if selectedSexNames.count > 0 {
-            newJobseeker.sex = (AppData.sexes.filter { $0.name == selectedSexNames[0] })[0].id
+            newJobseeker.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            newJobseeker.nationality = (AppData.nationalities.filter { $0.name == selectedNationalityNames[0] })[0].id
+            newJobseeker.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
         if (nationalNumber.text?.isEmpty == false) {

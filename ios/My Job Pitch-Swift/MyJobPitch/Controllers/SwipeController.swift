@@ -17,10 +17,7 @@ protocol ControlDelegate {
 
 class SwipeController: MJPController {
     
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var commentLabel: UILabel!
-    
+    @IBOutlet weak var infoView: AppInfoSmallView!
     @IBOutlet weak var cardsView: UIView!
     @IBOutlet weak var creditsButton: UIButton!
     @IBOutlet weak var emptyView: UILabel!
@@ -37,18 +34,18 @@ class SwipeController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if AppData.user.jobSeeker != nil {
+        if AppData.user.isJobSeeker() {
             
             title = "Find Job"
             emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
-            imgView.superview?.isHidden = true
+            infoView.isHidden = true
             creditsButton.superview?.isHidden = true
             
             let editMenu = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
             navigationItem.rightBarButtonItems?.insert(editMenu, at: 0)
             
         } else {
-            
+        
             title = "Find Talent"
             emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
             updateTokens()
@@ -62,9 +59,12 @@ class SwipeController: MJPController {
         
         if searchJob != nil {
             searchJob = (AppData.jobs.filter { $0.id === searchJob.id })[0]
-            AppHelper.loadLogo(searchJob, imageView: imgView, completion: nil)
-            nameLabel.text = searchJob.title
-            commentLabel.text = searchJob.getBusinessName()
+            infoView.job = searchJob
+            infoView.touch = {
+                let controller = JobDetailController.instantiate()
+                controller.job = self.searchJob
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
         }
         
 //        if AppData.user.isJobSeeker() {
@@ -91,7 +91,7 @@ class SwipeController: MJPController {
                     
                     self.profile = data as! Profile
                     AppData.searchJobs(success: {
-                        self.refreshCompleted(AppData.jsJobs)
+                        self.refreshCompleted(AppData.jobs)
                     }, failure: self.handleErrors)
                     
                 }, failure: self.handleErrors)
@@ -101,7 +101,7 @@ class SwipeController: MJPController {
         } else {
             
             AppData.searchJobseekers(jobId: searchJob.id, success: {
-                self.refreshCompleted(AppData.rcJobseekers)
+                self.refreshCompleted(AppData.jobSeekers)
             }, failure: self.handleErrors)
         }
     }
@@ -245,12 +245,6 @@ class SwipeController: MJPController {
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    @IBAction func jobDetailAction(_ sender: Any) {
-        let controller = JobDetailController.instantiate()
-        controller.job = searchJob
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
     @IBAction func refreshAction(_ sender: Any) {
         refresh()
     }
@@ -329,7 +323,7 @@ extension SwipeController: ControlDelegate {
                 
                 let newApplication = data as! ApplicationForCreation
                 
-                AppData.updateApplication(newApplication.id, success: { (application) in
+                AppData.getApplication(newApplication.id, success: { (application) in
                     self.searchJob = application.job
                     self.updateTokens()
                 }, failure: self.handleErrors)

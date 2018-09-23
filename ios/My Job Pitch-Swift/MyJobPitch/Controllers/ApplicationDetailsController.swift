@@ -36,8 +36,8 @@ class ApplicationDetailsController: MJPController {
     public var viewMode = false
     public var controlDelegate: ControlDelegate!
     
-    var interview: ApplicationInterview!
-    var interviews = [ApplicationInterview]()
+    var interview: Interview!
+    var interviews = [Interview]()
     
     var jobSeeker: JobSeeker!
     var profile: Profile!
@@ -65,7 +65,7 @@ class ApplicationDetailsController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData()
         }
         
@@ -75,7 +75,7 @@ class ApplicationDetailsController: MJPController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
@@ -87,7 +87,7 @@ class ApplicationDetailsController: MJPController {
         if application != nil {
             application = (AppData.applications.filter { $0.id == application.id })[0]
             interview = application?.getInterview()
-            interviews = (application.interviews as! [ApplicationInterview]).filter { $0.id != interview?.id }
+            interviews = (application.interviews as! [Interview]).filter { $0.id != interview?.id }
             job = application.job
             
             let newMsgs = application.getNewMessageCount()
@@ -116,8 +116,8 @@ class ApplicationDetailsController: MJPController {
         jobBusinessLocation.text = job.getBusinessName()
         let workplace = job.locationData!
         
-        contractLabel.text = AppData.getContract(job.contract).name
-        hoursLabel.text = AppData.getHours(job.hours).name
+        contractLabel.text = AppData.getNameByID(AppData.contracts, id: job.contract)
+        hoursLabel.text = AppData.getNameByID(AppData.hours, id: job.hours)
         distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: workplace.latitude, longitude2: workplace.longitude)
         distanceLabel.isHidden = application == nil
 
@@ -172,7 +172,7 @@ class ApplicationDetailsController: MJPController {
     }
     
     func updateApplication() {
-        AppData.updateApplication(application.id, success: { (application) in
+        AppData.getApplication(application.id, success: { (application) in
             self.hideLoading()
             self.loadData()
         }, failure: self.handleErrors)
@@ -297,7 +297,7 @@ extension ApplicationDetailsController: UITableViewDataSource {
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {
-            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+            cell.drawUnderline()
         }
         
         return cell

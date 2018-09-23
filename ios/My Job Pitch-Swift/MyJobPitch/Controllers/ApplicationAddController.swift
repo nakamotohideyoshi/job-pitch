@@ -39,7 +39,7 @@ class ApplicationAddController: MJPController {
         
         isModal = true
         
-        infoView.setData(job, touch: nil)
+        infoView.job = job
         infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
         
         // load sex data
@@ -111,11 +111,11 @@ class ApplicationAddController: MJPController {
         }
         
         if selectedSexNames.count > 0 {
-            application.sex = (AppData.sexes.filter { selectedSexNames.contains($0.name) })[0].id
+            application.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            application.nationality = (AppData.nationalities.filter { selectedNationalityNames.contains($0.name) })[0].id
+            application.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
         if (nationalNumber.text?.isEmpty == false) {
@@ -138,7 +138,7 @@ class ApplicationAddController: MJPController {
         
         API.shared().createExternalApplication(application: application, success: { (data) in
             let application = data as! Application
-            AppData.updateApplication(application.id, success: { (_) in
+            AppData.getApplication(application.id, success: { (_) in
                 self.closeModal()
             }, failure: { (_, _) in
                 self.closeModal()

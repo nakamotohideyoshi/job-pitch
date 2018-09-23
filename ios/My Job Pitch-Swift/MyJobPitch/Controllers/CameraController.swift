@@ -16,10 +16,15 @@ class CameraController: UIViewController {
     }
     
     @IBOutlet weak var switchButton: UIButton!
-    @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var recordButtonIcon: UIView!
     
-    var captureStatus = CaptureStatus.none
+    var captureStatus = CaptureStatus.none {
+        didSet {
+            countLabel.superview?.superview?.isHidden = captureStatus != .ready
+            recordButtonIcon.layer.cornerRadius = captureStatus == .none ? 16 : 4
+        }
+    }
     
     var camera: LLSimpleCamera!
     
@@ -44,10 +49,11 @@ class CameraController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        recordButton.layer.cornerRadius = 35
-        recordButton.layer.borderColor = UIColor.white.cgColor
-        recordButton.layer.borderWidth = 1
-        recordButton.backgroundColor = AppData.greenColor
+        countLabel.superview?.layer.cornerRadius = 50
+        countLabel.superview?.layer.borderColor = UIColor.white.cgColor
+        countLabel.superview?.layer.borderWidth = 3
+        recordButtonIcon.layer.cornerRadius = 16
+        recordButtonIcon.superview?.layer.cornerRadius = 40
         
         count = 0
         
@@ -73,8 +79,6 @@ class CameraController: UIViewController {
     func finishCapture() {
         captureStatus = .none
         timer = nil
-        recordButton.setTitle("RECORD", for: .normal)
-        recordButton.backgroundColor = AppData.greenColor
         camera.stopRecording()
     }
     
@@ -84,8 +88,6 @@ class CameraController: UIViewController {
             if captureStatus == .ready {
                 captureStatus = .capture
                 count = 30
-                recordButton.setTitle("STOP", for: .normal)
-                recordButton.backgroundColor = UIColor.red
                 
                 let appDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
                 let outputURL: URL = appDir.appendingPathComponent("myjobpitch").appendingPathExtension("mov")
@@ -117,15 +119,11 @@ class CameraController: UIViewController {
             captureStatus = .ready
             count = 10
             timer = Timer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
-            recordButton.setTitle("READY", for: .normal)
-            recordButton.backgroundColor = AppData.yellowColor
             switchButton.isHidden = true
         case .ready:
             captureStatus = .none
             count = 0
             timer = nil
-            recordButton.setTitle("RECORD", for: .normal)
-            recordButton.backgroundColor = AppData.greenColor
             switchButton.isHidden = false
         case .capture:
             finishCapture()

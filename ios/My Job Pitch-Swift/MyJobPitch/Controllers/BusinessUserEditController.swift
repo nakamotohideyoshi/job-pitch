@@ -30,7 +30,7 @@ class BusinessUserEditController: MJPController {
         setTitle(title: businessUser == nil ? "Create User" : "Edit User", subTitle: business.name)
         isModal = true
         
-        locationNames = AppData.locations.map { $0.name }
+        locationNames = AppData.workplaces.map { $0.name }
         
         if businessUser != nil {
             emailAddress.isEnabled = false
@@ -38,7 +38,7 @@ class BusinessUserEditController: MJPController {
             isAdministrator.isOn = businessUser.locations.count == 0
             workPlaceSelector.superview?.isHidden = isAdministrator.isOn
             
-            selectedLocationsNames = (AppData.locations.filter { businessUser.locations.contains($0.id) }).map { $0.name }
+            selectedLocationsNames = (AppData.workplaces.filter { businessUser.locations.contains($0.id) }).map { $0.name }
             workPlaceSelector.text = selectedLocationsNames.joined(separator: ", ")
             
             saveButton.setTitle("Save", for: .normal)
@@ -80,7 +80,7 @@ class BusinessUserEditController: MJPController {
         
         showLoading()
         
-        let locations = (AppData.locations.filter { selectedLocationsNames.contains($0.name) }).map { $0.id }
+        let locations = (AppData.workplaces.filter { selectedLocationsNames.contains($0.name) }).map { $0.id }
         
         if businessUser == nil {
             let businessUserForCreation = BusinessUserForCreation()
@@ -97,7 +97,7 @@ class BusinessUserEditController: MJPController {
             businessUserForUpdate.locations = locations as NSArray!
             
             API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
-                AppData.updateBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: {
+                AppData.getBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: { (_) in
                     self.closeModal()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)

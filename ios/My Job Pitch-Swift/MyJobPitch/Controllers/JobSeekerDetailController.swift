@@ -43,8 +43,8 @@ class JobSeekerDetailController: MJPController {
     public var isHideMessages = false
     public var controlDelegate: ControlDelegate!
     
-    var interview: ApplicationInterview!
-    var interviews = [ApplicationInterview]()
+    var interview: Interview!
+    var interviews = [Interview]()
     var isProfile = false
     
     var resources = [MediaModel]()
@@ -74,7 +74,7 @@ class JobSeekerDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData()
         }
         
@@ -84,7 +84,7 @@ class JobSeekerDetailController: MJPController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
@@ -92,7 +92,7 @@ class JobSeekerDetailController: MJPController {
         if application != nil {
             application = (AppData.applications.filter { $0.id == application.id })[0]
             interview = application?.getInterview()
-            interviews = (application.interviews as! [ApplicationInterview]).filter { $0.id != interview?.id }
+            interviews = (application.interviews as! [Interview]).filter { $0.id != interview?.id }
             jobSeeker = application?.jobSeeker
             
             let newMsgs = application.getNewMessageCount()
@@ -119,9 +119,9 @@ class JobSeekerDetailController: MJPController {
         
         nameLabel.text = jobSeeker.getFullName()
         
-        let sex = AppData.getSex(jobSeeker.sex)
-        if sex != nil && (jobSeeker.sexPublic || isProfile) {
-            genderLabel.text = (sex?.name)! + (!jobSeeker.sexPublic ? " (private)" : "")
+        let sexName = AppData.getNameByID(AppData.sexes, id: jobSeeker.sex)
+        if sexName != nil && (jobSeeker.sexPublic || isProfile) {
+            genderLabel.text = sexName! + (!jobSeeker.sexPublic ? " (private)" : "")
             genderLabel.superview?.isHidden = false
         } else {
             genderLabel.superview?.isHidden = true
@@ -199,7 +199,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     func updateApplication() {
-        AppData.updateApplication(application.id, success: { (_) in
+        AppData.getApplication(application.id, success: { (_) in
             self.popController()
         }, failure: self.handleErrors)
     }
@@ -373,7 +373,7 @@ extension JobSeekerDetailController: UITableViewDataSource {
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {
-            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+            cell.drawUnderline()
         }
         
         return cell

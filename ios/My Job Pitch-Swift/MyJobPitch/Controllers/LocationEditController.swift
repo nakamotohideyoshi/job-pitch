@@ -23,12 +23,11 @@ class LocationEditController: MJPController {
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var addressError: UILabel!
     @IBOutlet weak var locationButton: YellowButton!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var addLogoButton: UIButton!
-    @IBOutlet weak var removeImageButton: UIButton!
+    @IBOutlet weak var logoView: UIImageView!
     
-    var business: Business!
-    var location: Location!
+    public var business: Business!
+    public var workplace: Location!
+    public var saveComplete: ((Location) -> Void)?
     
     var logoPicker: ImagePicker!
     var logoImage: UIImage!
@@ -38,86 +37,51 @@ class LocationEditController: MJPController {
     var placeID: String!
     var placeName: String!
     
-    var origImage: Image!
-    
-    var isFirstCreate = false
+    var addMode = false
     var isNew = false
-    var isAddMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        isModal = true
+        
         logoPicker = ImagePicker()
         logoPicker.delegate = self
         
+        addMode = SideMenuController.currentID != "businesses"
+        
         addressField.delegate = self
+        
+        if workplace == nil {
+            isNew = true
+            
+            title = "Add Workplace"
+            logoView.image = UIImage(named: "default-logo")
+            emailField.text = AppData.email
+            
+        } else {
+            
+            title = "Edit Workplace"
+            business = workplace.businessData
+            AppHelper.loadLogo(workplace, imageView: logoView, completion: nil)
+            nameField.text = workplace.name
+            descTextView.text = workplace.desc
+            emailField.text = workplace.email
+            emailPublic.isOn = workplace.emailPublic
+            phoneField.text = workplace.mobile
+            phonePublic.isOn = workplace.mobilePublic
+            addressField.text = workplace.placeName
+            placeID = workplace.placeID
+            placeName = workplace.placeName
+            latitude = workplace.latitude
+            longitude = workplace.longitude
+            
+        }
         
         let iconView = UIImageView(image: UIImage(named: "location-icon"))
         iconView.contentMode = .scaleAspectFit
         iconView.frame = CGRect(x: 10, y: 7, width: 25, height: 26)
         locationButton.addSubview(iconView)
-        
-        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
-        
-        isFirstCreate = UserDefaults.standard.bool(forKey: "first_craete_wp")
-        isAddMode = SideMenuController.currentID != "businesses"
-        
-        if location == nil {
-            navigationItem.title = "Add Workplace"
-            isNew = true
-            
-            showLoading()
-            API.shared().loadLocationsForBusiness(businessId: nil, success: { (data) in
-                self.hideLoading()
-                self.isFirstCreate = data.count == 0
-                if !self.isFirstCreate {
-                    UserDefaults.standard.set(false, forKey: "first_craete_wp")
-                    UserDefaults.standard.synchronize()
-                }
-                self.load()
-            }, failure: self.handleErrors)
-        } else {
-            navigationItem.title = "Edit Workplace"
-            business = location.businessData
-            
-            showLoading()
-            API.shared().loadLocation(id: location.id, success: { (data) in
-                self.hideLoading()
-                self.location = data as! Location
-                self.load()
-            }, failure: self.handleErrors)
-        }
-        
-    }
-    
-    func load() {
-        
-        if location != nil {
-            
-            nameField.text = location.name
-            descTextView.text = location.desc
-            emailField.text = location.email
-            emailPublic.isOn = location.emailPublic
-            phoneField.text = location.mobile
-            phonePublic.isOn = location.mobilePublic
-            addressField.text = location.placeName
-            placeID = location.placeID
-            placeName = location.placeName
-            latitude = location.latitude
-            longitude = location.longitude
-            
-            AppHelper.loadLogo(location, imageView: imgView, completion: {
-                if self.location.images != nil && self.location.images.count > 0 {
-                    self.origImage = self.location.getImage()
-                    self.removeImageButton.isHidden = false
-                    self.addLogoButton.setTitle("Change Logo", for: .normal)
-                }
-            })            
-        } else {
-            emailField.text = AppData.email
-            imgView.image = UIImage(named: "default-logo")
-        }
-        
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -135,14 +99,6 @@ class LocationEditController: MJPController {
     
     @IBAction func addLogoAction(_ sender: Any) {
         logoPicker.present(self, target: sender as! UIView)
-    }
-    
-    @IBAction func removeImageAction(_ sender: Any) {
-        
-        logoImage = nil
-        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
-        addLogoButton.setTitle("Add Logo", for: .normal)
-        removeImageButton.isHidden = true        
     }
     
     @IBAction func myLocationAction(_ sender: Any) {
@@ -169,26 +125,28 @@ class LocationEditController: MJPController {
         
         showLoading()
         
-        if location == nil {
-            location = Location()
-            location.business = business.id
+        if workplace == nil {
+            workplace = Location()
+            workplace.business = business.id
         }
         
-        location.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.desc = descTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.emailPublic = emailPublic.isOn
-        location.telephone = ""
-        location.telephonePublic = false
-        location.mobile = phoneField.text;
-        location.mobilePublic = phonePublic.isOn
-        location.placeID = placeID
-        location.placeName = placeName
-        location.latitude = latitude
-        location.longitude = longitude
-        location.address = ""
+        workplace.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        workplace.desc = descTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        workplace.email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        workplace.emailPublic = emailPublic.isOn
+        workplace.telephone = ""
+        workplace.telephonePublic = false
+        workplace.mobile = phoneField.text;
+        workplace.mobilePublic = phonePublic.isOn
+        workplace.placeID = placeID
+        workplace.placeName = placeName
+        workplace.latitude = latitude
+        workplace.longitude = longitude
+        workplace.address = ""
         
-        API.shared().saveLocation(location: location, success: { (data) in
+        API.shared().saveLocation(location: workplace, success: { (data) in
+            
+            self.workplace = data as! Location
             
             if self.logoImage != nil {
                 
@@ -197,7 +155,7 @@ class LocationEditController: MJPController {
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-location-images",
                                          objectKey: "location",
-                                         objectId: self.location.id,
+                                         objectId: self.workplace.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             self.showLoading(label: "", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
@@ -205,45 +163,27 @@ class LocationEditController: MJPController {
                     self.saveFinished()
                 }, failure: self.handleErrors)
                 
-            } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
-                
-                API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-location-images", success: {
-                    self.saveFinished()
-                }, failure: self.handleErrors)
-                
             } else {
                 self.saveFinished()
             }
             
-        }, failure: self.handleErrors)
+        }, failure: handleErrors)
         
     }
     
     func saveFinished() {
         
-        if !isNew {
-            _ = navigationController?.popViewController(animated: true)
-            return
-        }
-        
-        if isFirstCreate {
-            UserDefaults.standard.set(false, forKey: "first_craete_wp")
-            UserDefaults.standard.synchronize()
-        }
-        
-        var controllers = navigationController?.viewControllers
-        if isAddMode {
-            let controller = JobEditController.instantiate()
-            controller.location = location
-            controllers?.insert(controller, at: (controllers?.count)!-1)
-        } else {
-            let controller = LocationDetailController.instantiate()
-            controller.isFirstCreate = isFirstCreate
-            controller.location = location
-            controllers?.insert(controller, at: (controllers?.count)!-1)
-        }
-        navigationController?.viewControllers = controllers!
-        _ = navigationController?.popViewController(animated: true)
+        AppData.getWorkplace(workplace.id, success: { (workplace) in
+            
+            if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 1 {
+                UserDefaults.standard.set(2, forKey: "tutorial")
+                UserDefaults.standard.synchronize()
+            }
+            
+            self.closeModal()
+            self.saveComplete?(self.workplace)
+            
+        }, failure: handleErrors)
     }
     
     static func instantiate() -> LocationEditController {
@@ -264,8 +204,7 @@ extension LocationEditController: UITextFieldDelegate {
 extension LocationEditController: ImagePickerDelegate {
     
     func imageSelected(_ picker: ImagePicker, image: UIImage) {
-        imgView.image = image
-        removeImageButton.isHidden = false
-        addLogoButton.setTitle("Change Logo", for: .normal)
+        logoImage = image
+        logoView.image = image
     }
 }

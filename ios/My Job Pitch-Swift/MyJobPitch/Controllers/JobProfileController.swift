@@ -58,9 +58,7 @@ class JobProfileController: MJPController {
         
         // sector data
         
-        for sector in AppData.sectors {
-            sectorNames.append(sector.name)
-        }
+        sectorNames = AppData.sectors.map { $0.name }
         sectorsField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.sectorNames,
@@ -152,25 +150,14 @@ class JobProfileController: MJPController {
     
     func load() {
         
-        if profile?.sectors != nil {
-            for sector in AppData.sectors {
-                if profile.sectors.contains(sector.id) {
-                    selectedSectorNames.append(sector.name)
-                }
-            }
-        }
+        selectedSectorNames = (AppData.sectors.filter { profile.sectors.contains($0.id) }).map { $0.name }
         
         sectorsField.text = selectedSectorNames.joined(separator: ", ")
         
         // contract data
         
         if profile?.contract != nil {
-            for contract in AppData.contracts {
-                if profile.contract == contract.id {
-                    selectedContractNames.append(contract.name)
-                    break
-                }
-            }
+            selectedContractNames = (AppData.contracts.filter { $0.id == profile.contract }).map { $0.name }
         }
         
         if selectedContractNames.count == 0 {
@@ -180,15 +167,8 @@ class JobProfileController: MJPController {
         
         // hours data
         
-        if profile?.hours != nil {
-            for hours in AppData.hours {
-                if profile.hours == hours.id {
-                    selectedHoursNames.append(hours.name)
-                    break
-                }
-            }
-        }
-        
+        selectedHoursNames = (AppData.hours.filter { $0.id == profile.hours }).map { $0.name }
+                
         if selectedHoursNames.count == 0 {
             selectedHoursNames.append("Any")
         }
@@ -261,33 +241,15 @@ class JobProfileController: MJPController {
         
         // sector data
         
-        let sectors = NSMutableArray()
-        for sector in AppData.sectors {
-            if selectedSectorNames.contains(sector.name) {
-                sectors.add(sector.id)
-            }
-        }
-        profile.sectors = sectors
+        profile.sectors = (AppData.sectors.filter { selectedSectorNames.contains($0.name) }).map { $0.id } as NSArray
         
         // contract data
         
-        let contractName = selectedContractNames[0]
-        for contract in AppData.contracts {
-            if contractName == contract.name {
-                profile.contract = contract.id
-                break
-            }
-        }
+        profile.contract = AppData.getIdByName(AppData.contracts, name: selectedContractNames[0])
         
         // hours data
         
-        let hoursName = selectedHoursNames[0]
-        for hours in AppData.hours {
-            if hoursName == hours.name {
-                profile.hours = hours.id
-                break
-            }
-        }
+        profile.hours = AppData.getIdByName(AppData.hours, name: selectedHoursNames[0])
         
         // searchRadius data
         

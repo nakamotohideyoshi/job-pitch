@@ -87,18 +87,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     func saveInterview() {
-        let interviewForSave = InterviewForSave()
-        interviewForSave.at = dateTime
-        interviewForSave.application = application.id
-        interviewForSave.invitation = messageTextView.text
-        interviewForSave.notes = notesTextView.text
-        interviewForSave.feedback = feedbackTextView.text
         
-        API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
-            AppData.getApplication(self.application.id, success: { (application) in
-                self.closeModal()
-            }, failure: self.handleErrors)
-        }, failure: self.handleErrors)
     }
     
     @IBAction func sendAction(_ sender: Any) {
@@ -110,11 +99,30 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         showLoading()
         
         if isComplete {
-            API.shared().changeInterview(interviewId: (self.interview?.id)!, type: "complete", success: { (_) in
-                self.saveInterview()
+            let interviewForSave = InterviewForSave()
+            interviewForSave.id = interview?.id
+            interviewForSave.notes = notesTextView.text
+            interviewForSave.feedback = feedbackTextView.text
+
+            API.shared().changeInterview(interview: interviewForSave, type: "complete", success: { (_) in
+                AppData.getApplication(self.application.id, success: { (application) in
+                    self.closeModal()
+                }, failure: self.handleErrors)
             }, failure: self.handleErrors)
         } else {
-            saveInterview()
+            let interviewForSave = InterviewForSave()
+            interviewForSave.id = interview?.id
+            interviewForSave.at = dateTime
+            interviewForSave.application = application.id
+            interviewForSave.invitation = messageTextView.text
+            interviewForSave.notes = notesTextView.text
+            interviewForSave.feedback = feedbackTextView.text
+            
+            API.shared().saveInterview(interview: interviewForSave, success: { (_) in
+                AppData.getApplication(self.application.id, success: { (application) in
+                    self.closeModal()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
         }
     }
     

@@ -18,11 +18,6 @@ class Interview: MJPObject {
     var status: String!
 }
 
-class InterviewForCancel: MJPObject {
-    var cancelled: Date!
-    var cancelledBy: NSNumber!
-}
-
 class InterviewForSave: MJPObject {
     var invitation:String!
     var at: Date!

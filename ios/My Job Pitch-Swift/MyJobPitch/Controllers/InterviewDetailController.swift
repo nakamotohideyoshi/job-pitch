@@ -24,8 +24,8 @@ class InterviewDetailController: MJPController {
     public var application: Application!
     public var interviewId: NSNumber!
     
-    var interview: ApplicationInterview!
-    var interviews = [ApplicationInterview]()
+    var interview: Interview!
+    var interviews = [Interview]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ class InterviewDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.reloadData()
         }
         
@@ -49,34 +49,36 @@ class InterviewDetailController: MJPController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func reloadData() {
         let viewMode = interviewId != nil
         
         application = (AppData.applications.filter { $0.id == application.id })[0]
-        let appInterviews = application.interviews as! [ApplicationInterview]
+        let appInterviews = application.interviews as! [Interview]
         
         infoView.isHidden = viewMode
         if !viewMode {
             
             interview = application.getInterview()
             if interview == nil {
-                interview = application.interviews.lastObject as! ApplicationInterview
+                interview = application.interviews.lastObject as! Interview
             }
             
             interviews = appInterviews.filter { $0.id != interview?.id }
 
             if AppData.user.isJobSeeker() {
-                infoView.setData(application.job) {
+                infoView.job = application.job
+                infoView.touch = {
                     let controller = ApplicationDetailsController.instantiate()
                     controller.application = self.application
                     controller.viewMode = true
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             } else {
-                infoView.setData(application.jobSeeker) {
+                infoView.jobSeeker = application.jobSeeker
+                infoView.touch = {
                     let controller = JobSeekerDetailController.instantiate()
                     controller.application = self.application
                     controller.viewMode = true
@@ -133,7 +135,7 @@ class InterviewDetailController: MJPController {
     }
     
     func updateApplication() {
-        AppData.updateApplication(application.id, success: { (application) in
+        AppData.getApplication(application.id, success: { (application) in
             self.hideLoading()
             self.reloadData()
         }, failure: self.handleErrors)
@@ -209,7 +211,7 @@ extension InterviewDetailController: UITableViewDataSource {
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {
-            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+            cell.drawUnderline()
         }
         
         return cell

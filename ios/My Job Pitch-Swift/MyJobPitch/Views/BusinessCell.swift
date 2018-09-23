@@ -11,29 +11,7 @@ import MGSwipeTableCell
 
 class BusinessCell: MGSwipeTableCell {
 
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var infoView: AppInfoMiddleView!
     @IBOutlet weak var creditCount: UILabel!
-    
-    func setData(_ business: Business) {
-        
-        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
-        nameLabel.text = business.name
-        let locationCount = business.locations.count
-        subTitle.text = String(format: "Includes %lu %@", locationCount, locationCount > 1 ? "workplaces" : "workplace")
-        creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
-        
-    }
-    
-    func setUsersData(_ business: Business) {
-        
-        AppHelper.loadLogo(business, imageView: imgView, completion: nil)
-        
-        nameLabel.text = business.name
-        let userCount = business.users.count
-        subTitle.text = String(format: "%lu %@", userCount, userCount > 1 ? "users" : "user")
-        creditCount.isHidden = true
-    }
-    
+
 }

@@ -17,11 +17,40 @@ class MessageCell: UITableViewCell {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var badge: BadgeIcon!
     
-    func setOpacity(_ alpha: CGFloat) {
-        imgView.alpha = alpha
-//        titleLabel.alpha = alpha
-//        subTitleLabel.alpha = alpha
-//        attributesLabel.alpha = alpha
-//        messageLabel.alpha = alpha
+    var application: Application! {
+        didSet {
+            if application != nil {
+                let job = application.job!
+                let lastMessage = application.messages?.lastObject as! Message
+                let message = lastMessage.fromRole == AppData.userRole ? String(format: "You: %@", (lastMessage.content)!) : lastMessage.content
+                let deleted = application.status == ApplicationStatus.APPLICATION_DELETED_ID
+                
+                var title: String!, subTitle: String!
+                if AppData.user.isJobSeeker() {
+                    AppHelper.loadLogo(job, imageView: imgView, completion: nil)
+                    title = job.title
+                    subTitle = job.getBusinessName()
+                } else {
+                    AppHelper.loadPhoto(application.jobSeeker, imageView: imgView, completion: nil)
+                    title = application.jobSeeker.getFullName()
+                    subTitle = String(format: "%@ (%@)", job.title, job.getBusinessName())
+                }
+                
+                imgView.alpha = deleted ? 0.5 : 1
+                titleLabel.setDeletedText(title, isDeleted: deleted)
+                subTitleLabel.setDeletedText(subTitle, isDeleted: deleted)
+                attributesLabel.setDeletedText(AppHelper.dateToShortString((lastMessage.created)!), isDeleted: deleted)
+                messageLabel.setDeletedText(message!, isDeleted: deleted)
+                
+                backgroundColor = deleted ? AppData.lightGreyColor : .white
+            }
+        }
+    }
+    
+    var newMsgs: Int! {
+        didSet {
+            badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
+            badge.isHidden = newMsgs == 0
+        }
     }
 }

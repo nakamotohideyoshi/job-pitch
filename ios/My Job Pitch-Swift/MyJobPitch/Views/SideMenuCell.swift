@@ -15,12 +15,6 @@ class SideMenuCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var badge: BadgeIcon!
     
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//        
-//        badgeLabel.
-//    }
-    
     func addLine(frame: CGRect, color: UIColor) {
         let border = CALayer()
         border.borderColor = color.cgColor

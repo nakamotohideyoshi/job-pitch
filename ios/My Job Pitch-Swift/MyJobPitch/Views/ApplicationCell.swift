@@ -18,5 +18,6 @@ class RCApplicationCell: MGSwipeTableCell {
 class ApplicationCell: MGSwipeTableCell {
     
     @IBOutlet weak var infoView: AppInfoMiddleView!
+    
 }
 

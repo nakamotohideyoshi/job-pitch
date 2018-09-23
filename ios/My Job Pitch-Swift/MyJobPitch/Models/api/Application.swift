@@ -20,8 +20,8 @@ class Application: MJPObjectWithDates {
     var pitches: NSArray!
     var interviews: NSArray!
     
-    func getInterview() -> ApplicationInterview! {
-        let filters = (interviews as! [ApplicationInterview]).filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+    func getInterview() -> Interview! {
+        let filters = (interviews as! [Interview]).filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
         return filters.count == 0 ? nil : filters[0]
     }
     
@@ -31,7 +31,7 @@ class Application: MJPObjectWithDates {
             if message.read {
                 break
             }
-            if message.fromRole == AppData.getUserRole().id {
+            if message.fromRole == AppData.userRole {
                 break
             }
             count += 1

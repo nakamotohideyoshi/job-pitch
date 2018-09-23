@@ -12,113 +12,103 @@ import MGSwipeTableCell
 class LocationDetailController: MJPController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var emptyView: UIView!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
-    @IBOutlet weak var editButton: UIButton!
-    @IBOutlet weak var removeButton: UIButton!
-    @IBOutlet weak var toolbar: UIToolbar!    
-    @IBOutlet weak var firstCreateMessage: UIButton!
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    @IBOutlet weak var editRemoveView: EditRemoveView!
+    @IBOutlet weak var toolbar: SmallToolbar!
+    @IBOutlet weak var emptyView: EmptyView!
     
-    var data: NSMutableArray! = NSMutableArray()
+    public var workplace: Location!
     
-    var isFirstCreate = false
-    var location: Location!
-    
-    var refresh = true
+    var jobs = [Job]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        AppHelper.loadLogo(workplace, imageView: infoView.imgView, completion: nil)
+        infoView.titleLabel.text = workplace.name
+        
+        if !workplace.businessData.restricted {
+            editRemoveView.editCallback = editWorkplace
+            editRemoveView.removeCallback = removeWorkplace
+        }
 
+        toolbar.titleLabel.text = "JOBS"
+        toolbar.rightAction = addJob
+        
+        emptyView.button.setTitle("Create job", for: .normal)
+        emptyView.action = addJob
+        
         tableView.addPullToRefresh {
             self.loadJobs()
         }
+        
+        showLoading()
+        AppData.jobs = nil
+        loadJobs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if refresh {
-            refresh = false
-            showLoading()
-            API.shared().loadLocation(id: location.id, success: { (data) in
-                self.location = data as! Location
-                if self.location.businessData.restricted {
-                    self.editButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-                    self.editButton.isEnabled = false
-                    self.removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-                    self.removeButton.isEnabled = false
-                    if (self.toolbar.items?.count)! > 1 {
-                        self.toolbar.items?.remove(at: 1)
-                    }
-                }
-                self.updateLocationInfo()
-                self.loadJobs()
-            }, failure: self.handleErrors)
-        }
+        if AppData.jobs != nil {
+            updateList()
+        }        
     }
     
     func loadJobs() {
-        API.shared().loadJobsForLocation(locationId: location?.id, success: { (data) in
+        AppData.getJobs(locationId: workplace.id, success: {
             self.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.updateJobList()
             self.tableView.pullToRefreshView.stopAnimating()
-        }, failure: self.handleErrors)
+            self.updateList()
+        }, failure: handleErrors)
     }
     
-    func updateLocationInfo() {
-        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
-        nameLabel.text = location.name
-    }
-    
-    func updateJobList() {
-        subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "jobs" : "job")
-        firstCreateMessage.isHidden = !isFirstCreate
-        emptyView.isHidden = isFirstCreate || self.data.count > 0
+    func updateList() {
+        jobs = AppData.jobs
+
+        let jobCount = jobs.count
+        infoView.subTitleLabel.text = String(format: "Includes %lu %@", jobCount, jobCount > 1 ? "jobs" : "job")
+        
+        emptyView.isHidden = jobs.count > 0
+        if UserDefaults.standard.integer(forKey: "tutorial") == 2 {
+            emptyView.message.text = "Okay, last step, now tap to create your first job."
+        } else {
+            emptyView.message.text = "You have not added any jobs yet."
+        }
+        
         tableView.reloadData()
     }
     
-    @IBAction func editLocationAction(_ sender: Any) {
-        refresh = true
+    func editWorkplace() {
         let controller = LocationEditController.instantiate()
-        controller.location = location
-        navigationController?.pushViewController(controller, animated: true)
+        controller.workplace = workplace
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    @IBAction func deleteLocationAction(_ sender: Any) {
-        let message = String(format: "Are you sure you want to delete %@", location.name)
+    func removeWorkplace() {
+        
+        let jobCount = jobs.count
+        let message = jobCount == 0 ?
+            String(format: "Are you sure you want to delete %@", workplace.name) :
+            String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
-            let jobCount = self.location.jobs.count
-            if jobCount == 0 {
-                self.deleteWorkplace()
-                return
-            }
-            
-            let message1 = String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
-            PopupController.showYellow(message1, ok: "Delete", okCallback: {
-                self.deleteWorkplace()
-            }, cancel: "Cancel", cancelCallback: nil)
+            self.showLoading()
+            AppData.removeWorkplace(self.workplace.id, success: { () in
+                _ = self.navigationController?.popViewController(animated: true)
+            }, failure: self.handleErrors)
             
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
-    @IBAction func addJobAction(_ sender: Any) {
-        refresh = true
-        isFirstCreate = false
+    func addJob() {
         let controller = JobEditController.instantiate()
-        controller.location = location
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    func deleteWorkplace() {
-        self.showLoading()
-        API.shared().deleteLocation(id: location.id, success: {
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-        }, failure: self.handleErrors)
+        controller.workplace = workplace
+        controller.saveComplete = { (job: Job) in
+            let controller = JobDetailController.instantiate()
+            controller.job = job
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     static func instantiate() -> LocationDetailController {
@@ -130,16 +120,16 @@ class LocationDetailController: MJPController {
 extension LocationDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return jobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let job = data[indexPath.row] as! Job
+        let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! ApplicationCell
+        let job = jobs[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
-        
-        cell.setData(job)
+        cell.infoView.job = job
+        cell.backgroundColor = job.status != JobStatus.JOB_STATUS_OPEN_ID ? AppData.lightGreyColor : UIColor.white
         
         cell.rightButtons = [
             MGSwipeButton(title: "",
@@ -151,15 +141,12 @@ extension LocationDetailController: UITableViewDataSource {
                             let message = String(format: "Are you sure you want to delete %@", job.title)
                             PopupController.showYellow(message, ok: "Delete", okCallback: {
                                 
-                                self.showLoading()
-                                
-                                API.shared().deleteJob(id: job.id, success: {
-                                    self.hideLoading()
-                                    self.data.remove(job)
-                                    self.updateJobList()
-                                }, failure: self.handleErrors)
-                                
                                 cell.hideSwipe(animated: true)
+                                self.showLoading()
+                                AppData.removeJob(job.id, success: {
+                                    self.hideLoading()
+                                    self.updateList()
+                                }, failure: self.handleErrors)
                                 
                             }, cancel: "Cancel", cancelCallback: {
                                 cell.hideSwipe(animated: true)
@@ -172,13 +159,14 @@ extension LocationDetailController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in
-                            self.refresh = true
                             let controller = JobEditController.instantiate()
                             controller.job = job
-                            self.navigationController?.pushViewController(controller, animated: true)
+                            self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
                             return true
             })
         ]
+        
+        cell.drawUnderline()
         
         return cell
     }
@@ -188,11 +176,8 @@ extension LocationDetailController: UITableViewDataSource {
 extension LocationDetailController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        refresh = true
-        
         let controller = JobDetailController.instantiate()
-        controller.job = data[indexPath.row] as! Job
+        controller.job = jobs[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)
     }
-    
 }

@@ -24,20 +24,14 @@ class JobEditController: MJPController {
     @IBOutlet weak var contractError: UILabel!
     @IBOutlet weak var hoursField: ButtonTextField!
     @IBOutlet weak var hoursError: UILabel!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var addLogoButton: UIButton!
-    @IBOutlet weak var removeImageButton: UIButton!
+    @IBOutlet weak var logoView: UIImageView!
     @IBOutlet weak var playButtonView: UIView!
     @IBOutlet weak var requirePitch: UISwitch!
     @IBOutlet weak var requireCV: UISwitch!
     
-    var isAddMode = false
-    var isNew = false
-    
-    var location: Location!
-    var job: Job!
-    
-    var videoUrl: URL!
+    public var workplace: Location!
+    public var job: Job!
+    public var saveComplete: ((Job) -> Void)?
     
     var logoPicker: ImagePicker!
     var logoImage: UIImage!
@@ -51,23 +45,24 @@ class JobEditController: MJPController {
     var hoursNames = [String]()
     var selectedHoursNames = [String]()
     
-    var origImage: Image!
+    var videoUrl: URL!
+    
+    var addMode = false
+    var isNew = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        isAddMode = SideMenuController.currentID != "businesses"
+        isModal = true
+        
+        addMode = SideMenuController.currentID != "businesses"
 
         logoPicker = ImagePicker()
         logoPicker.delegate = self
         
-        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
-        
         // sector data
         
-        for sector in AppData.sectors {
-            sectorNames.append(sector.name)
-        }
+        sectorNames = AppData.sectors.map { $0.name }
         sectorField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.sectorNames,
@@ -82,9 +77,7 @@ class JobEditController: MJPController {
         
         // contract data
         
-        for contract in AppData.contracts {
-            contractNames.append(contract.name)
-        }
+        contractNames = AppData.contracts.map { $0.name }
         contractField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.contractNames,
@@ -114,76 +107,42 @@ class JobEditController: MJPController {
         // load job
         
         if job == nil {
+            isNew = true
+            
             navigationItem.title = "Add Job"
             navigationItem.rightBarButtonItem = nil
-            isNew = true
-            load()
+            logoView.image = UIImage(named: "default-logo")
+            
         } else {
+            
             navigationItem.title = "Edit Job"
             
-            showLoading()
-            API.shared().loadJob(id: job.id, success: { (data) in
-                self.hideLoading()
-                self.job = data as! Job
-                self.load()
-            }, failure: self.handleErrors)
-        }
-        
-    }
-    
-    func load() {
-        
-        if job != nil {
+            workplace = job.locationData
             
-            location = job.locationData
-            
-            for status in AppData.jobStatuses {
-                if status.id == job.status {
-                    active.isOn = status.name == JobStatus.JOB_STATUS_OPEN
-                    break
-                }
-            }
+            active.isOn = job.status == JobStatus.JOB_STATUS_OPEN_ID
             
             titleField.text = job.title
             descTextView.text = job.desc
             
-            for sector in AppData.sectors {
-                if job.sector == sector.id {
-                    selectedSectorNames.append(sector.name)
-                    break
-                }
-            }
+            selectedSectorNames = (AppData.sectors.filter { $0.id == job.sector }).map { $0.name }
             sectorField.text = selectedSectorNames.joined(separator: ", ")
             
             // contract data
             
-            for contract in AppData.contracts {
-                if job.contract == contract.id {
-                    selectedContractNames.append(contract.name)
-                    break
-                }
-            }
-            contractField.text = selectedSectorNames.joined(separator: ", ")
+            selectedContractNames = (AppData.contracts.filter { $0.id == job.contract }).map { $0.name }
+            contractField.text = selectedContractNames.joined(separator: ", ")
             
             // hours data
             
-            selectedHoursNames = (AppData.hours.filter { $0.id ==  job.hours }).map { $0.name }
+            selectedHoursNames = (AppData.hours.filter { $0.id == job.hours }).map { $0.name }
             hoursField.text = selectedHoursNames.joined(separator: ", ")
             
             playButtonView.isHidden = job.getPitch()?.video == nil
             
-            AppHelper.loadLogo(job, imageView: imgView, completion: { 
-                if self.job.images != nil && self.job.images.count > 0 {
-                    self.origImage = self.job.getImage()
-                    self.removeImageButton.isHidden = false
-                    self.addLogoButton.setTitle("Change Logo", for: .normal)
-                }
-            })
+            AppHelper.loadLogo(job, imageView: logoView, completion: nil)
             
             requirePitch.isOn = job.requiresPitch
             requireCV.isOn = job.requiresCV
-        } else {
-            imgView.image = UIImage(named: "default-logo")
         }
         
     }
@@ -246,15 +205,6 @@ class JobEditController: MJPController {
         }
     }
     
-    @IBAction func removeImageAction(_ sender: Any) {
-        
-        logoImage = nil
-        AppHelper.loadLogo(location, imageView: imgView, completion: nil)
-        removeImageButton.isHidden = true
-        addLogoButton.setTitle("Add Logo", for: .normal)
-        
-    }
-    
     @IBAction func shareAction(_ sender: Any) {
         let url = String(format: "%@/jobseeker/jobs/%d", API.apiRoot.absoluteString, job.id)
         let itemProvider = ShareProvider(placeholderItem: url)
@@ -270,46 +220,24 @@ class JobEditController: MJPController {
         
         if job == nil {
             job = Job()
-            job.location = location.id
+            job.location = workplace.id
         }
         
-        let statusName = active.isOn ? JobStatus.JOB_STATUS_OPEN : JobStatus.JOB_STATUS_CLOSED
-        for status in AppData.jobStatuses {
-            if status.name == statusName {
-                job.status = status.id
-                break
-            }
-        }
-        
+        job.status = active.isOn ? JobStatus.JOB_STATUS_OPEN_ID : JobStatus.JOB_STATUS_CLOSED_ID
         job.title = titleField.text
         job.desc = descTextView.text
         
         // sector data
         
-        for sector in AppData.sectors {
-            if selectedSectorNames.contains(sector.name) {
-                job.sector = sector.id
-                break
-            }
-        }
+        job.sector = AppData.getIdByName(AppData.sectors, name: selectedSectorNames[0])
         
         // contract data
         
-        for contract in AppData.contracts {
-            if selectedContractNames.contains(contract.name) {
-                job.contract = contract.id
-                break
-            }
-        }
+        job.contract = AppData.getIdByName(AppData.contracts, name: selectedContractNames[0])
         
         // hours data
-        
-        for hours in AppData.hours {
-            if selectedHoursNames.contains(hours.name) {
-                job.hours = hours.id
-                break
-            }
-        }
+
+        job.hours = AppData.getIdByName(AppData.hours, name: selectedHoursNames[0])
         
         job.requiresPitch = requirePitch.isOn
         job.requiresCV = requirePitch.isOn
@@ -317,6 +245,8 @@ class JobEditController: MJPController {
         showLoading()
         
         API.shared().saveJob(job: job, success: { (data) in
+            
+            self.job = data as! Job
             
             if self.logoImage != nil {
                 
@@ -333,29 +263,23 @@ class JobEditController: MJPController {
                     self.uploadPitch()
                 }, failure: self.handleErrors)
                 
-            } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
-                
-                API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-job-images", success: {
-                    self.uploadPitch()
-                }, failure: self.handleErrors)
-                
             } else {
                 self.uploadPitch()
             }
             
-        }, failure: self.handleErrors)
+        }, failure: handleErrors)
         
     }
     
     func uploadPitch() {
-        if self.videoUrl == nil {
-            self.saveFinished();
+        if videoUrl == nil {
+            saveFinished();
             return;
         }
         
-        self.showLoading()
+        showLoading()
         
-        JobPitchUploader().uploadVideo(videoUrl: self.videoUrl, job: job.id, complete: { (pitch) in
+        JobPitchUploader().uploadVideo(videoUrl: videoUrl, job: job.id, complete: { (pitch) in
             self.saveFinished()
         }) { (progress) in
             print(progress)
@@ -369,32 +293,17 @@ class JobEditController: MJPController {
     
     func saveFinished() {
         
-        if !isNew {
-            _ = navigationController?.popViewController(animated: true)
-            return
-        }
+        AppData.getJob(job.id, success: { (job) in
         
-        var controllers = navigationController?.viewControllers
-        if isAddMode {
-            while true {
-                if controllers?[(controllers?.count)!-2] is SelectJobController {
-                    break
-                }
-                if controllers?.count == 2 {
-                    _ = navigationController?.popViewController(animated: true)
-                    return
-                }
-                controllers?.remove(at: (controllers?.count)!-2)
+            if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 2 {
+                UserDefaults.standard.removeObject(forKey: "tutorial")
+                UserDefaults.standard.synchronize()
             }
-            navigationController?.viewControllers = controllers!
-        } else {
-            let controller = JobDetailController.instantiate()
-            controller.job = job
-            controllers?.insert(controller, at: (controllers?.count)!-1)
-            navigationController?.viewControllers = controllers!
-        }
-        
-        _ = navigationController?.popViewController(animated: true)
+            
+            self.closeModal()
+            self.saveComplete?(self.job)
+            
+        }, failure: handleErrors)
         
     }
     
@@ -406,8 +315,7 @@ class JobEditController: MJPController {
 extension JobEditController: ImagePickerDelegate {
     
     func imageSelected(_ picker: ImagePicker, image: UIImage) {
-        imgView.image = image
-        removeImageButton.isHidden = false
-        addLogoButton.setTitle("Change Logo", for: .normal)
+        logoImage = image
+        logoView.image = image
     }
 }

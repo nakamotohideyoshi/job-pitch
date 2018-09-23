@@ -37,7 +37,7 @@ class InterviewView: UIView {
         }
     }
     
-    var interview: ApplicationInterview? {
+    var interview: Interview? {
         didSet {
             let pending = interview?.status == InterviewStatus.INTERVIEW_PENDING
             let accepted = interview?.status == InterviewStatus.INTERVIEW_ACCEPTED

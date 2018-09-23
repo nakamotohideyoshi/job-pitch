@@ -27,7 +27,6 @@
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6Ck-t6-vux">
                     <rect key="frame" x="12" y="12" width="119" height="119"/>
-                    <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="6Ck-t6-vux" secondAttribute="height" multiplier="1:1" id="ZNz-vV-5km"/>
                     </constraints>
@@ -55,14 +54,14 @@
                         <constraint firstAttribute="trailing" secondItem="Ldk-or-5si" secondAttribute="trailing" id="x9i-MB-xCe"/>
                     </constraints>
                 </stackView>
-                <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="CJp-iY-DuW">
+                <imageView hidden="YES" userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="CJp-iY-DuW">
                     <rect key="frame" x="505" y="63" width="16" height="16"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="16" id="TYa-5F-Pbz"/>
                         <constraint firstAttribute="height" constant="16" id="u7G-8K-Ee9"/>
                     </constraints>
                 </imageView>
-                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smo-2R-iGu">
+                <button hidden="YES" opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smo-2R-iGu">
                     <rect key="frame" x="0.0" y="0.0" width="533" height="143"/>
                     <connections>
                         <action selector="clickActiom:" destination="-1" eventType="touchUpInside" id="b9v-56-cVb"/>

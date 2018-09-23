@@ -10,90 +10,58 @@ import UIKit
 
 class JobDetailController: MJPController {
 
-    @IBOutlet weak var headerImgView: UIImageView!
-    @IBOutlet weak var headerName: UILabel!
-    @IBOutlet weak var headerSubTitle: UILabel!
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    @IBOutlet weak var editRemoveView: EditRemoveView!
+    @IBOutlet weak var toolbar: SmallToolbar!
     @IBOutlet weak var tableView: UITableView!
     
-    var job: Job!
+    public var job: Job!
     
-    var isRecruiter = false
-    var refresh = true
+    var menuItems = [ "find_talent", "applications", "applications", "applications", "interviews" ]
+    var titles = [ "Find Talent", "New Applications", "My Connections", "My Shortlist", "Interviews" ]
+    var counts = [ "", "", "", "", "" ]
     
-    let menuItems = [
-        "find_talent", "applications", "applications", "applications", "interviews"
-    ]
-    
-    let titles = [
-        "Find Talent", "New Applications", "My Connections", "My Shortlist", "Interviews"
-    ]
-    
-    var countItems = [
-        "", "", "", "", ""
-    ]
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        editRemoveView.editCallback = {
+            let controller = JobEditController.instantiate()
+            controller.job = self.job
+            self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+        }
+        
+        editRemoveView.removeCallback = {
+            let message = String(format: "Are you sure you want to delete %@", self.job.title)
+            PopupController.showYellow(message, ok: "Delete", okCallback: {
+                
+                self.showLoading()
+                AppData.removeJob(self.job.id, success: {
+                    _ = self.navigationController?.popViewController(animated: true)
+                }, failure: self.handleErrors)
+                
+            }, cancel: "Cancel", cancelCallback: nil)
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateData()
+    }
+    
+    func updateData() {
         
-        if refresh {
-            refresh = false
-            showLoading()
-            isRecruiter = AppData.user.isRecruiter()
-            
-            API.shared().loadJob(id: job.id, success: { (data) in
-                self.job = data as! Job
-                self.updateJobInfo()
-            }, failure: self.handleErrors)
-            self.getAllApplications()
-        }
+        job = (AppData.jobs.filter { $0.id == job.id })[0]
+        infoView.job = self.job
         
-    }
-    
-    func getAllApplications() {
-        var cnt_applications = 0, cnt_connections = 0, cnt_shortlists = 0
-        API.shared().loadApplicationsForJob(jobId: job.id, status: nil, shortlisted: false, success: { (data) in
-            for application in data as! [Application] {
-                if application.status == 1 {
-                   cnt_applications += 1
-                } else if application.status == 2  {
-                    cnt_connections += 1
-                    if application.shortlisted {
-                        cnt_shortlists += 1
-                    }
-                }
-            }
-            self.countItems[1] = " (\(cnt_applications))"
-            self.countItems[2] = " (\(cnt_connections))"
-            self.countItems[3] = " (\(cnt_shortlists))"
-            self.tableView.reloadData()
-            self.hideLoading()
-        }, failure: self.handleErrors)
-    }
-    
-    func updateJobInfo() {
-        AppHelper.loadLogo(job, imageView: headerImgView, completion: nil)
-        headerName.text = job.title
-        headerSubTitle.text = job.getBusinessName()
-    }
-    
-    @IBAction func editJobAction(_ sender: Any) {
-        self.refresh = true
-        let controller = JobEditController.instantiate()
-        controller.job = job
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    @IBAction func deleteJobAction(_ sender: Any) {
-        let message = String(format: "Are you sure you want to delete %@", job.title)
-        PopupController.showYellow(message, ok: "Delete", okCallback: {
-            
-            self.showLoading()
-            API.shared().deleteJob(id: self.job.id, success: {
-                self.hideLoading()
-                _ = self.navigationController?.popViewController(animated: true)
-            }, failure: self.handleErrors)
-            
-        }, cancel: "Cancel", cancelCallback: nil)
+        let applications = AppData.applications.filter { $0.job.id == job.id && $0.status == ApplicationStatus.APPLICATION_CREATED_ID }
+        let connections = AppData.applications.filter { $0.job.id == job.id && $0.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID }
+        let shortlists = connections.filter { $0.shortlisted }
+        
+        counts[1] = " (\(applications.count))"
+        counts[2] = " (\(connections.count))"
+        counts[3] = " (\(shortlists.count))"
+        
+        tableView.reloadData()
     }
     
     @IBAction func shareAction(_ sender: Any) {
@@ -104,9 +72,8 @@ class JobDetailController: MJPController {
     }
     
     static func instantiate() -> JobDetailController {
-        return AppHelper.instantiate("JobDetail") as! JobDetailController
-    }
-    
+        return AppHelper.instantiate("JobDetails") as! JobDetailController
+    }    
 }
 
 
@@ -119,19 +86,16 @@ extension JobDetailController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobMenuCell", for: indexPath)
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
-        
-        let iconView = cell.viewWithTag(1) as! UIImageView
-        let titleView = cell.viewWithTag(2) as! UILabel
-        
+        let cellInfoView = cell.viewWithTag(1) as! AppInfoSmallView
         let item = SideMenuController.menuItems[menuItems[indexPath.row]]!
-        let count = countItems[indexPath.row]
-        iconView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
-        titleView.text = titles[indexPath.row] + count
+        let text = titles[indexPath.row] + counts[indexPath.row]
+        
+        cellInfoView.setDescription(icon: item["icon"]!, text: text)
+        cellInfoView.imgView.tintColor = UIColor.black
+        cell.drawUnderline()
         
         return cell
     }
-    
 }
 
 extension JobDetailController: UITableViewDelegate {
@@ -153,7 +117,5 @@ extension JobDetailController: UITableViewDelegate {
             controller.defaultTab = indexPath.row - 1
             navigationController?.pushViewController(controller, animated: true)
         }
-        
     }
-    
 }

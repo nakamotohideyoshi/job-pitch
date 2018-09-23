@@ -16,6 +16,39 @@ class AppInfoMiddleView: UIView {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var attributeLabel: UILabel!
     
+    var job: Job! {
+        didSet {
+            if job != nil {
+                let deleted = job.status != JobStatus.JOB_STATUS_OPEN_ID
+                AppHelper.loadLogo(job, imageView: imgView, completion: nil)
+                imgView.alpha = deleted ? 0.5 : 1
+                titleLabel.setDeletedText(job.title, isDeleted: deleted)
+                subTitleLabel.setDeletedText(job.getBusinessName(), isDeleted: deleted)
+            }
+        }
+    }
+    
+    var jobSeeker: JobSeeker! {
+        didSet {
+            if jobSeeker != nil {
+                AppHelper.loadPhoto(jobSeeker, imageView: imgView, completion: nil)
+                titleLabel.text = jobSeeker.getFullName()
+                subTitleLabel.text = jobSeeker.desc
+            }
+        }
+    }
+    
+    var interview: Interview! {
+        didSet {
+            if interview != nil {
+                let str = "Interview: " + AppHelper.dateToLongString((interview?.at)!)
+                let subTitleParameters = [NSForegroundColorAttributeName : interview?.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
+                attributeLabel.attributedText = NSMutableAttributedString(string: str, attributes: subTitleParameters)
+            }
+            attributeLabel.isHidden = interview == nil
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadViewFromNib()
@@ -26,26 +59,7 @@ class AppInfoMiddleView: UIView {
         loadViewFromNib()
     }
     
-    func setData(_ data: NSObject!, interview: ApplicationInterview?) {
-        
-        if let job = data as? Job {
-            AppHelper.loadLogo(job, imageView: imgView, completion: nil)
-            titleLabel.text = job.title
-            subTitleLabel.text = job.getBusinessName()
-        } else if let jobseeker = data as? JobSeeker {
-            AppHelper.loadPhoto(jobseeker, imageView: imgView, completion: nil)
-            titleLabel.text = jobseeker.getFullName()
-            subTitleLabel.text = jobseeker.desc
-        }
-        
-        if interview != nil {
-            let str = "Interview: " + AppHelper.dateToLongString((interview?.at)!)
-            let subTitleParameters = [NSForegroundColorAttributeName : interview?.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
-            attributeLabel.attributedText = NSMutableAttributedString(string: str, attributes: subTitleParameters)
-        }
-        
-        attributeLabel.isHidden = interview == nil
-    }
+    
     
     func loadViewFromNib() {
         Bundle.main.loadNibNamed("AppInfoMiddleView", owner: self, options: nil)

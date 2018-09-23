@@ -12,7 +12,7 @@ class RoundButton: UIButton {
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.layer.cornerRadius = AppData.cornerRadius;
+        self.layer.cornerRadius = 6
     }
     
 }
@@ -143,5 +143,12 @@ extension UILabel {
         str1.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: font.pointSize), range: NSMakeRange(0, str1.length))
         attributedText = str1
         alpha = 0.5
+    }
+}
+
+extension UITableViewCell {
+    
+    func drawUnderline() {
+        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
     }
 }

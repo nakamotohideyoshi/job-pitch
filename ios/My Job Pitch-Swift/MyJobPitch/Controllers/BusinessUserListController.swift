@@ -44,7 +44,7 @@ class BusinessUserListController: MJPController {
             return
         }
         
-        AppData.getLocations(businessId: business.id, success: {
+        AppData.getWorkplaces(businessId: business.id, success: {
             AppData.getBusinessUsers(businessId: self.business.id, success: {
                 self.updatedData()
             }, failure: self.handleErrors)
@@ -59,7 +59,7 @@ class BusinessUserListController: MJPController {
         data = AppData.businessUsers.map({ (user) -> (BusinessUser, String) in
             var label = ""
             if user.locations.count > 0 {
-                let locations = AppData.locations.filter { user.locations.contains($0.id) }
+                let locations = AppData.workplaces.filter { user.locations.contains($0.id) }
                 let names: [String] = locations.map { $0.name }
                 label = names.joined(separator: ", ")
             } else if user.email == AppData.user.email {
@@ -93,9 +93,11 @@ extension BusinessUserListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessUserCell", for: indexPath) as! BusinessUserCell
+        let (user, locations) = data[indexPath.row]
         
-        let (user, label) = data[indexPath.row]
-        cell.setData(user, label)
+        cell.user = user
+        cell.subTitle.text = locations
+        cell.drawUnderline()
         
         return cell
     }

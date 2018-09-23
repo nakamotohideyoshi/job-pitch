@@ -35,7 +35,8 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addApplication))
         
-        infoView.setData(job) {
+        infoView.job = job
+        infoView.touch = {
             let controller = JobDetailController.instantiate()
             controller.job = self.job
             self.navigationController?.pushViewController(controller, animated: true)
@@ -45,7 +46,7 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.reloadData()
         }
         
@@ -64,7 +65,7 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func reloadData() {
@@ -150,7 +151,7 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
     
     func updateApplication(_ applicationId: NSNumber) {
         
-        AppData.updateApplication(applicationId, success: { (_) in
+        AppData.getApplication(applicationId, success: { (_) in
             self.hideLoading()
             (self.parent as? RCApplicationListController)?.reloadData()
         }) { (_, _) in
@@ -178,9 +179,10 @@ extension RCApplicationSubListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RCApplicationCell", for: indexPath) as! RCApplicationCell
         let application = applications[indexPath.row]
         
-        cell.infoView.setData(application.jobSeeker, interview: application.getInterview())
+        cell.infoView.jobSeeker = application.jobSeeker
+        cell.infoView.interview = application.getInterview()
         cell.iconView.isHidden = !application.shortlisted
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+        cell.drawUnderline()
         
         var rightButtons = [
             MGSwipeButton(title: "",

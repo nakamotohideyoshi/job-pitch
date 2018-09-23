@@ -11,163 +11,139 @@ import MGSwipeTableCell
 
 class BusinessDetailController: MJPController {
     
-    @IBOutlet weak var headerImgView: UIImageView!
-    @IBOutlet weak var headerComment: UILabel!
-    @IBOutlet weak var headerName: UILabel!
-    @IBOutlet weak var headerSubTitle: UILabel!
-    @IBOutlet weak var headerCreditCount: UIButton!
-    @IBOutlet weak var headerNavTitle: UILabel!
-    @IBOutlet weak var editButton: UIButton!
-    @IBOutlet weak var removeButton: UIButton!
-    @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    @IBOutlet weak var creditCount: UILabel!
+    @IBOutlet weak var editRemoveView: EditRemoveView!
+    @IBOutlet weak var toolbar: SmallToolbar!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var emptyView: UIView!
-    @IBOutlet weak var firstCreateMessage: UIButton!
-    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var emptyView: EmptyView!
     
-    var business: Business!
-    var data: NSMutableArray! = NSMutableArray()
-    var isAddMode = false
+    public var business: Business!
+    public var businessId: NSNumber!
     
-    var isFirstCreate = false
-    var businessId: NSNumber!
-    
-    var refresh = true
+    var workplaces = [Location]()
+    var addMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        headerName.text = ""
-        headerSubTitle.text = ""
-        headerCreditCount.setTitle("", for: .normal)
+        addMode = SideMenuController.currentID != "businesses"
         
-        isAddMode = SideMenuController.currentID != "businesses"
-        
-        if isAddMode {
+        if addMode {
+            
             title = "Add job"
-            headerImgView.image = UIImage(named: "menu-business")?.withRenderingMode(.alwaysTemplate)
-            headerCreditCount.isHidden = true
-            headerSubTitle.isHidden = true
-            controlHeightConstraint.constant = 0
-            headerNavTitle.text = "Select workplace"
+            infoView.setDescription(icon: "menu-business", text: "Select which workplace to add job to")
+            creditCount.isHidden = true
+            editRemoveView.isHidden = true
+            toolbar.titleLabel.text = "SELECT A WORKOPLACE"
+            
         } else {
-            headerComment.isHidden = true
-            headerNavTitle.text = "Workplaces"
-            if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
-                removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-                removeButton.isEnabled = false
+            
+            AppHelper.loadLogo(business, imageView: infoView.imgView, completion: nil)
+            infoView.titleLabel.text = business.name
+            creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
+            
+            if !business.restricted {
+                editRemoveView.editCallback = editBusiness
+                
+                if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
+                    editRemoveView.removeCallback = removeBusiness
+                }
+
+                toolbar.rightAction = addWorkplace
+                
+                emptyView.button.setTitle("Create workplace", for: .normal)
+                emptyView.action = addWorkplace
             }
+            
+            toolbar.titleLabel.text = "WORKPLACES"
         }
         
         tableView.addPullToRefresh {
-            self.loadLocations()
+            self.loadWorkplaces()
+        }
+        
+        showLoading()
+        AppData.workplaces = nil
+        if businessId != nil {
+            AppData.getBusiness(businessId, success: { (business) in
+                self.business = business
+                self.loadWorkplaces()
+            }, failure: self.handleErrors)
+        } else {
+            loadWorkplaces()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if refresh {
-            refresh = false
-            showLoading()
-            API.shared().loadBusiness(id: businessId, success: { (data) in
-                self.business = data as! Business
-                
-                if self.business.restricted {
-                    self.editButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-                    self.editButton.isEnabled = false
-                    self.removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-                    self.removeButton.isEnabled = false
-                    if (self.toolbar.items?.count)! > 1 {
-                        self.toolbar.items?.remove(at: 1)
-                    }
-                }
-
-                if !self.isAddMode {
-                    self.updateBusinessInfo()
-                }
-                self.loadLocations()
-            }, failure: self.handleErrors)
-        }
+        if AppData.workplaces != nil {
+            updateList()
+        }        
     }
     
-    func updateBusinessInfo() {
-        AppHelper.loadLogo(business, imageView: headerImgView, completion: nil)
-        headerName.text = business.name
-        headerCreditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
-    }
-    
-    func loadLocations() {
-        API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
+    func loadWorkplaces() {
+        AppData.getWorkplaces(businessId: business.id, success: { 
             self.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.updateLocationList()
             self.tableView.pullToRefreshView.stopAnimating()
-        }, failure: self.handleErrors)
+            self.updateList()
+        }, failure: handleErrors)
     }
     
-    func updateLocationList() {
-        if !isAddMode {
-            headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "workplaces" : "workplace")
+    func updateList() {
+        workplaces = AppData.workplaces
+        
+        if !addMode {
+            let workplaceCount = workplaces.count
+            infoView.subTitleLabel.text = String(format: "Includes %lu %@", workplaceCount, workplaceCount > 1 ? "workplaces" : "workplace")
         }
         
-        firstCreateMessage.isHidden = !isFirstCreate
-        emptyView.isHidden = isFirstCreate || self.data.count > 0
+        emptyView.isHidden = workplaces.count > 0
+        
+        if UserDefaults.standard.integer(forKey: "tutorial") == 1 {
+            emptyView.message.text = "Great, you've created your business!\nNow tap to create your workplaces."
+        } else {
+            emptyView.message.text = "You have not added any workplaces yet."
+        }
+        
         tableView.reloadData()
     }
     
-    @IBAction func editBusinessAction(_ sender: Any) {
-        refresh = true
+    func editBusiness() {
         let controller = BusinessEditController.instantiate()
         controller.business = business
-        navigationController?.pushViewController(controller, animated: true)
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    @IBAction func deleteBusinessAction(_ sender: Any) {
-        let message = String(format: "Are you sure you want to delete %@", headerName.text!)
+    func removeBusiness() {
+        
+        let workplaceCount = workplaces.count
+        let message = workplaceCount == 0 ?
+            String(format: "Are you sure you want to delete %@", business.name) :
+            String(format: "Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", workplaceCount)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
-            let locationCount = self.business.locations.count
-            if locationCount == 0 {
-                self.deleteBusiness()
-                return
-            }
             
-            let message1 = String(format: "Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", locationCount)
-            PopupController.showYellow(message1, ok: "Delete", okCallback: {
-                self.deleteBusiness()
-            }, cancel: "Cancel", cancelCallback: nil)
+            self.showLoading()
+            AppData.removeBusiness(self.business.id, success: { () in
+                _ = self.navigationController?.popViewController(animated: true)
+            }, failure: self.handleErrors)
             
         }, cancel: "Cancel", cancelCallback: nil)
-        
     }
     
-    @IBAction func addLocationAction(_ sender: Any) {
-        refresh = true
-        isFirstCreate = false
+    func addWorkplace() {
         let controller = LocationEditController.instantiate()
         controller.business = business
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    func deleteBusiness() {
-        self.showLoading()
-        API.shared().deleteBusiness(id: businessId, success: {
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-        }, failure: self.handleErrors)
-    }
-    
-    func deleteWorkplace(_ location: Location) {
-        self.showLoading()
-        API.shared().deleteLocation(id: location.id, success: {
-            self.hideLoading()
-            self.data.remove(location)
-            self.updateLocationList()
-        }, failure: self.handleErrors)
+        controller.saveComplete = { (workplace: Location) in
+            let controller = LocationDetailController.instantiate()
+            controller.workplace = workplace
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     static func instantiate() -> BusinessDetailController {
-        return AppHelper.instantiate("LocationList") as! BusinessDetailController
+        return AppHelper.instantiate("WorkplaceList") as! BusinessDetailController
     }
     
 }
@@ -175,18 +151,20 @@ class BusinessDetailController: MJPController {
 extension BusinessDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return workplaces.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let location = data[indexPath.row] as! Location
+        let cell = tableView.dequeueReusableCell(withIdentifier: "WorkplaceCell", for: indexPath) as! ApplicationCell
+        let workplace = workplaces[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath) as! LocationCell
+        AppHelper.loadLogo(workplace, imageView: cell.infoView.imgView, completion: nil)
+        cell.infoView.titleLabel.text = workplace.name
+        let jobCount = workplace.jobs.count
+        cell.infoView.subTitleLabel.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")
         
-        cell.setData(location)
-        
-        if !isAddMode && !business.restricted {
+        if !business.restricted && !addMode {
             
             cell.rightButtons = [
                 MGSwipeButton(title: "",
@@ -194,22 +172,18 @@ extension BusinessDetailController: UITableViewDataSource {
                               backgroundColor: AppData.yellowColor,
                               padding: 20,
                               callback: { (cell) -> Bool in
-                                let message = String(format: "Are you sure you want to delete %@", location.name)
+                                
+                                let message = jobCount == 0 ?
+                                    String(format: "Are you sure you want to delete %@", workplace.name) :
+                                    String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
                                 PopupController.showYellow(message, ok: "Delete", okCallback: {
-                                    let jobCount = location.jobs.count
-                                    if jobCount == 0 {
-                                        self.deleteWorkplace(location)
-                                        cell.hideSwipe(animated: true)
-                                        return
-                                    }
                                     
-                                    let message1 = String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
-                                    PopupController.showYellow(message1, ok: "Delete", okCallback: {
-                                        self.deleteWorkplace(location)
-                                        cell.hideSwipe(animated: true)
-                                    }, cancel: "Cancel", cancelCallback: {
-                                        cell.hideSwipe(animated: true)
-                                    })
+                                    cell.hideSwipe(animated: true)
+                                    self.showLoading()
+                                    AppData.removeWorkplace(workplace.id, success: { () in
+                                        self.hideLoading()
+                                        self.updateList()
+                                    }, failure: self.handleErrors)
                                     
                                 }, cancel: "Cancel", cancelCallback: {
                                     cell.hideSwipe(animated: true)
@@ -222,41 +196,46 @@ extension BusinessDetailController: UITableViewDataSource {
                               backgroundColor: AppData.greenColor,
                               padding: 20,
                               callback: { (cell) -> Bool in
-                                self.refresh = true
                                 let controller = LocationEditController.instantiate()
-                                controller.location = location
-                                self.navigationController?.pushViewController(controller, animated: true)
+                                controller.workplace = workplace
+                                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
                                 return true
                 })
             ]
             
         }
         
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+        cell.drawUnderline()
         
         return cell
-        
-    }
-    
+    }    
 }
 
 extension BusinessDetailController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        refresh = true
+        let workplace = workplaces[indexPath.row]
         
-        let location = data[indexPath.row] as! Location
-        
-        if isAddMode {
+        if addMode {
             let controller = JobEditController.instantiate()
-            controller.location = location
-            navigationController?.pushViewController(controller, animated: true)
+            controller.workplace = workplace
+            controller.saveComplete = { (job: Job) in
+                var controllers = self.navigationController?.viewControllers
+                while true {
+                    let count = (controllers?.count)!
+                    if count <= 2 || controllers?[count - 2] is SelectJobController {
+                        _ = self.navigationController?.popViewController(animated: true)
+                        return
+                    }
+                    controllers?.removeLast()
+                }
+            }
+            present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         } else {
             let controller = LocationDetailController.instantiate()
-            controller.location = location
+            controller.workplace = workplace
             navigationController?.pushViewController(controller, animated: true)
         }
     }
-    
 }

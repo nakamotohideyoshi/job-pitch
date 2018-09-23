@@ -9,7 +9,6 @@
 import UIKit
 
 class Interview: MJPObject {
-    var application: NSNumber!
     var at: Date!
     var messages: NSArray!
     var notes: String!
@@ -30,14 +29,4 @@ class InterviewForSave: MJPObject {
     var application: NSNumber!
     var notes: String!
     var feedback: String!
-}
-
-class ApplicationInterview: MJPObject{
-    var at: Date!
-    var messages: NSArray!
-    var notes: String!
-    var feedback: String!
-    var cancelled: Date!
-    var cancelledBy: NSNumber!
-    var status: String!
 }

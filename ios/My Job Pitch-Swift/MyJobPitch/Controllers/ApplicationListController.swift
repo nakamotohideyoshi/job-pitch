@@ -28,7 +28,7 @@ class ApplicationListController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData()
         }
         
@@ -39,7 +39,7 @@ class ApplicationListController: MJPController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
@@ -61,8 +61,9 @@ extension ApplicationListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ApplicationCell", for: indexPath) as! ApplicationCell
         let application = applications[indexPath.row]
         
-        cell.infoView.setData(application.job, interview: application.getInterview())
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
+        cell.infoView.job = application.job
+        cell.infoView.interview = application.getInterview()
+        cell.drawUnderline()
         
         cell.rightButtons = [
             MGSwipeButton(title: "",

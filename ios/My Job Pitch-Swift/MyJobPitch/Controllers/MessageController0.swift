@@ -16,7 +16,7 @@ class MessageController0: MJPController {
     
     public var application: Application!
 
-    var interview: ApplicationInterview!
+    var interview: Interview!
     var messageController: MessageController!    
     var viewHeight: CGFloat!
     
@@ -43,7 +43,7 @@ class MessageController0: MJPController {
             let updated = MessageForUpdate()
             updated.id = (application.messages.lastObject as! Message).id
             API.shared().updateMessageStatus(update: updated, success: { (_) in
-                AppData.updateApplication(self.application.id, success: nil, failure: nil)
+                AppData.getApplication(self.application.id, success: nil, failure: nil)
             }, failure: nil)
         }
         
@@ -54,7 +54,7 @@ class MessageController0: MJPController {
         super.viewWillAppear(animated)
 
         AppData.appsRefreshTime = AppData.MESSAGE_REFRESH_TIME
-        AppData.refreshCallback = {
+        AppData.appsUpdateCallback = {
             self.loadData()
         }
 
@@ -65,7 +65,7 @@ class MessageController0: MJPController {
         super.viewWillDisappear(animated)
 
         AppData.appsRefreshTime = AppData.DEFAULT_REFRESH_TIME
-        AppData.refreshCallback = nil
+        AppData.appsUpdateCallback = nil
     }
     
     func loadData() {
@@ -75,7 +75,8 @@ class MessageController0: MJPController {
         
         if AppData.user.isJobSeeker() {
 
-            infoView.setData(application.job) {
+            infoView.job = application.job
+            infoView.touch = {
                 let controller = ApplicationDetailsController.instantiate()
                 controller.application = self.application
                 controller.viewMode = true
@@ -84,7 +85,8 @@ class MessageController0: MJPController {
 
         } else {
             
-            infoView.setData(application.jobSeeker) {
+            infoView.jobSeeker = application.jobSeeker
+            infoView.touch = {
                 let controller = JobSeekerDetailController.instantiate()
                 controller.application = self.application
                 controller.isHideMessages = true

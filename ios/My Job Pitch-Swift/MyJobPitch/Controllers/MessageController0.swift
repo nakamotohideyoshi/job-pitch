@@ -12,7 +12,7 @@ class MessageController0: MJPController {
 
     @IBOutlet weak var infoView: AppInfoSmallView!
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var bannerLabel: UILabel!
+    @IBOutlet weak var interviewButton: UIButton!
     
     public var application: Application!
 
@@ -31,6 +31,7 @@ class MessageController0: MJPController {
         }
         
         infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
+        interviewButton.superview?.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
         
         messageController = MessageController.instantiate()
         messageController.application = application
@@ -97,13 +98,10 @@ class MessageController0: MJPController {
         }
         
         if interview != nil {
-            let subTitle = "Interview: " + AppHelper.dateToLongString(interview.at)
-            let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor,
-                                      NSFontAttributeName : UIFont.systemFont(ofSize: 14)]
-            bannerLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
+            interviewButton.setTitle("Interview: " + AppHelper.dateToLongString(interview.at), for: .normal)
         }
         
-        bannerLabel.superview?.isHidden = interview == nil
+        interviewButton.superview?.isHidden = interview == nil
         
         messageController.application = application
         messageController.updateData()
@@ -113,6 +111,12 @@ class MessageController0: MJPController {
         let controller = InterviewEditController.instantiate()
         controller.application = application
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+
+    @IBAction func interviewAction(_ sender: Any) {
+        let controller = InterviewDetailController.instantiate()
+        controller.application = application
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     static func instantiate() -> MessageController0 {

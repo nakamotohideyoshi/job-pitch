@@ -17,7 +17,7 @@ protocol ControlDelegate {
 
 class SwipeController: MJPController {
     
-    @IBOutlet weak var infoView: AppInfoSmallView!
+    @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var cardsView: UIView!
     @IBOutlet weak var creditsButton: UIButton!
     @IBOutlet weak var emptyView: UILabel!
@@ -38,11 +38,8 @@ class SwipeController: MJPController {
             
             title = "Find Job"
             emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
-            infoView.isHidden = true
+            infoLabel.superview?.isHidden = true
             creditsButton.superview?.isHidden = true
-            
-            let editMenu = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
-            navigationItem.rightBarButtonItems?.insert(editMenu, at: 0)
             
         } else {
         
@@ -50,6 +47,9 @@ class SwipeController: MJPController {
             emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
             updateTokens()
         }
+        
+        let editMenu = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editAction))
+        navigationItem.rightBarButtonItems?.insert(editMenu, at: 0)
         
         refresh()
     }
@@ -59,12 +59,7 @@ class SwipeController: MJPController {
         
         if searchJob != nil {
             searchJob = (AppData.jobs.filter { $0.id === searchJob.id })[0]
-            infoView.job = searchJob
-            infoView.touch = {
-                let controller = JobDetailController.instantiate()
-                controller.job = self.searchJob
-                self.navigationController?.pushViewController(controller, animated: true)
-            }
+            infoLabel.text = String(format: "%@, (%@)", searchJob.title, searchJob.getBusinessName())
         }
         
 //        if AppData.user.isJobSeeker() {
@@ -240,9 +235,15 @@ class SwipeController: MJPController {
         emptyView.isHidden = cards.count > 0
     }
     
-    func editProfile() {
-        let controller = JobSeekerProfileController.instantiate()
-        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    func editAction() {
+        if AppData.user.isJobSeeker() {
+            let controller = JobSeekerProfileController.instantiate()
+            present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+        } else {
+            let controller = JobDetailController.instantiate()
+            controller.job = self.searchJob
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     @IBAction func refreshAction(_ sender: Any) {
@@ -281,7 +282,7 @@ extension SwipeController: ControlDelegate {
         if AppData.user.isJobSeeker() {
             if !jobSeeker.active {
                 PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
-                    self.editProfile()
+                    self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
                 reloadCard()
                 return
@@ -289,7 +290,7 @@ extension SwipeController: ControlDelegate {
             
             if jobSeeker.profileImage == nil {
                 PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
-                    self.editProfile()
+                    self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
                 reloadCard()
                 return
@@ -297,7 +298,7 @@ extension SwipeController: ControlDelegate {
             
             if searchJob.requiresCV && jobSeeker.cv == nil {
                 PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
-                    self.editProfile()
+                    self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
                 reloadCard()
                 return

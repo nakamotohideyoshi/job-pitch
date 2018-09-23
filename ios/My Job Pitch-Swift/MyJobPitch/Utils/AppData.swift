@@ -165,7 +165,7 @@ class AppData: NSObject {
             }, failure: loadFailure)
         }
         
-        getjobSeeker(success: {
+        getJobSeeker(success: {
             loadSuccess()
         }, failure: loadFailure)
     }
@@ -182,7 +182,7 @@ class AppData: NSObject {
     
     //================ jobseeker =============
     
-    static func getjobSeeker(success: (() -> Void)?,
+    static func getJobSeeker(success: (() -> Void)?,
                              failure: ((String?, NSDictionary?) -> Void)?) {
         if AppData.user.jobSeeker != nil {
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in

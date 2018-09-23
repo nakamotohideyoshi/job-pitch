@@ -43,7 +43,7 @@ class MessageListController: MJPController {
     }
     
     func loadData() {
-        AppData.getjobSeeker(success: nil, failure: nil)
+        AppData.getJobSeeker(success: nil, failure: nil)
         tableView.pullToRefreshView.stopAnimating()
         loadData1()
     }

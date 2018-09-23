@@ -95,6 +95,8 @@ class JobSeekerDetailController: MJPController {
             interviews = (application.interviews as! [Interview]).filter { $0.id != interview?.id }
             jobSeeker = application?.jobSeeker
             
+            shortlisted.isOn = application.shortlisted
+            
             let newMsgs = application.getNewMessageCount()
             badge.text = "\(newMsgs)"
             badge.isHidden = newMsgs == 0
@@ -119,9 +121,8 @@ class JobSeekerDetailController: MJPController {
         
         nameLabel.text = jobSeeker.getFullName()
         
-        let sexName = AppData.getNameByID(AppData.sexes, id: jobSeeker.sex)
-        if sexName != nil && (jobSeeker.sexPublic || isProfile) {
-            genderLabel.text = sexName! + (!jobSeeker.sexPublic ? " (private)" : "")
+        if jobSeeker.sex != nil && (jobSeeker.sexPublic || isProfile) {
+            genderLabel.text = AppData.getNameByID(AppData.sexes, id: jobSeeker.sex) + (!jobSeeker.sexPublic ? " (private)" : "")
             genderLabel.superview?.isHidden = false
         } else {
             genderLabel.superview?.isHidden = true
@@ -147,8 +148,6 @@ class JobSeekerDetailController: MJPController {
         } else {
             mobileLabel.superview?.isHidden = true
         }
-        
-        shortlisted.isOn = application.shortlisted
         
         interviewInfo.superview?.isHidden = interview == nil
         if (interview != nil) {

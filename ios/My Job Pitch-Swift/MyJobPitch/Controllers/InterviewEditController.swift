@@ -76,9 +76,8 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             notesTextView.text = interview?.notes
             
             if isComplete {
-                dateTimeField.isEnabled = false
-                messageTextView.isEditable = false
-                notesTextView.isEditable = false
+                dateTimeField.superview?.isHidden = true
+                messageTextView.superview?.isHidden = true
                 feedbackTextView.superview?.isHidden = false
             }
             
@@ -116,7 +115,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             interviewForSave.application = application.id
             interviewForSave.invitation = messageTextView.text
             interviewForSave.notes = notesTextView.text
-            interviewForSave.feedback = feedbackTextView.text
+            interviewForSave.feedback = ""
             
             API.shared().saveInterview(interview: interviewForSave, success: { (_) in
                 AppData.getApplication(self.application.id, success: { (application) in

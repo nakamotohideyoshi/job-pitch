@@ -11,52 +11,68 @@ import LLSimpleCamera
 
 class CameraController: UIViewController {
 
+    @IBOutlet weak var switchButton: UIButton!
+    @IBOutlet weak var recordButtonIcon: UIView!
+    @IBOutlet weak var readyCountLabel: UILabel!
+    
+    @IBOutlet weak var recIcon: CircleView!
+    @IBOutlet weak var recTimeLabel: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
+    @IBOutlet weak var hintLabel: UILabel!
+    
     enum CaptureStatus {
         case none, ready, capture
     }
     
-    @IBOutlet weak var switchButton: UIButton!
-    @IBOutlet weak var countLabel: UILabel!
-    @IBOutlet weak var recordButtonIcon: UIView!
-    
-    var captureStatus = CaptureStatus.none {
-        didSet {
-            countLabel.superview?.superview?.isHidden = captureStatus != .ready
-            recordButtonIcon.layer.cornerRadius = captureStatus == .none ? 16 : 4
-        }
-    }
+    public var complete: ((URL?) -> Void)!
     
     var camera: LLSimpleCamera!
     
     var timer: Timer! {
         willSet(newTimer) {
-            if newTimer != nil {
-                RunLoop.current.add(newTimer, forMode: RunLoopMode.commonModes)
-            } else {
+            if timer != nil {
                 timer?.invalidate()
             }
         }
     }
     
-    var count: Int = 0 {
+    var recIconTimer: Timer! {
+        willSet(newRecIconTimer) {
+            if recIconTimer != nil {
+                recIconTimer?.invalidate()
+            }
+        }
+    }
+
+    var captureStatus = CaptureStatus.none {
         didSet {
-            countLabel.text = count != 0 ? String(count) : ""
+            recordButtonIcon.layer.cornerRadius = captureStatus == .none ? 16 : 4
+            readyCountLabel.superview?.superview?.isHidden = captureStatus != .ready
+            recIcon.superview?.isHidden = captureStatus != .capture
+            progressBar.isHidden = captureStatus != .capture
+            hintLabel.isHidden = captureStatus == .capture
         }
     }
     
-    var complete: ((URL?) -> Void)!
+    var readyCount = 0 {
+        didSet {
+            readyCountLabel.text = "\(readyCount)"
+        }
+    }
+    
+    var recTime: Float = 0 {
+        didSet {
+            progressBar.progress = 1 - recTime / 30000
+            let time = Int(recTime / 1000)
+            let minute = time / 60
+            let second = time % 60
+            recTimeLabel.text = "\(minute):" + (second < 10 ? "0\(second)" : "\(second)")
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countLabel.superview?.layer.cornerRadius = 50
-        countLabel.superview?.layer.borderColor = UIColor.white.cgColor
-        countLabel.superview?.layer.borderWidth = 3
-        recordButtonIcon.layer.cornerRadius = 16
-        recordButtonIcon.superview?.layer.cornerRadius = 40
-        
-        count = 0
-        
         let screenSize = UIScreen.main.bounds.size
         camera = LLSimpleCamera(quality: AVCaptureSessionPresetHigh, position: LLCameraPositionFront, videoEnabled: true)
         addChildViewController(camera)
@@ -65,6 +81,12 @@ class CameraController: UIViewController {
         camera.didMove(toParentViewController: self)
         camera.useDeviceOrientation = true
         
+        readyCountLabel.superview?.layer.borderColor = UIColor.white.cgColor
+        readyCountLabel.superview?.layer.borderWidth = 3
+        recIcon.superview?.layer.cornerRadius = 4
+        
+        captureStatus = .none
+        recIconTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(blinkRecIcon), userInfo: nil, repeats: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,30 +98,55 @@ class CameraController: UIViewController {
         return true
     }
     
+    func blinkRecIcon() {
+        recIcon.isHidden = !recIcon.isHidden
+    }
+    
     func finishCapture() {
-        captureStatus = .none
         timer = nil
+        recIconTimer = nil
         camera.stopRecording()
     }
     
-    func countDown() {
-        count -= 1
-        if count == 0 {
-            if captureStatus == .ready {
-                captureStatus = .capture
-                count = 30
-                
-                let appDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
-                let outputURL: URL = appDir.appendingPathComponent("myjobpitch").appendingPathExtension("mov")
-                camera.startRecording(withOutputUrl: outputURL, didRecord: { (_, videoURL, error) in
-                    if error == nil {
-                        self.complete?(videoURL)
-                        _ = self.dismiss(animated: true, completion: nil)
-                    }
-                })
-            } else {
-                finishCapture()
-            }
+    func countDown1() {
+        readyCount -= 1
+        if readyCount == 0 {
+            let appDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
+            let outputURL: URL = appDir.appendingPathComponent("myjobpitch").appendingPathExtension("mov")
+            camera.startRecording(withOutputUrl: outputURL, didRecord: { (_, videoURL, error) in
+                if error == nil {
+                    self.complete?(videoURL)
+                    _ = self.dismiss(animated: true, completion: nil)
+                }
+            })
+            
+            captureStatus = .capture
+            recTime = 0
+            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(countDown2), userInfo: nil, repeats: true)
+        }
+    }
+    
+    func countDown2() {
+        recTime += 100
+        if recTime >= 30000 {
+            finishCapture()
+        }
+    }
+    
+    @IBAction func recordAction(_ sender: Any) {
+
+        switch captureStatus {
+        case .none:
+            captureStatus = .ready
+            readyCount = 10
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown1), userInfo: nil, repeats: true)
+            switchButton.isHidden = true
+        case .ready:
+            captureStatus = .none
+            timer = nil
+            switchButton.isHidden = false
+        case .capture:
+            finishCapture()
         }
     }
     
@@ -109,25 +156,8 @@ class CameraController: UIViewController {
     
     @IBAction func closeAction(_ sender: Any) {
         timer = nil
+        recIconTimer = nil
         _ = dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func recordAction(_ sender: Any) {
-
-        switch captureStatus {
-        case .none:
-            captureStatus = .ready
-            count = 10
-            timer = Timer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
-            switchButton.isHidden = true
-        case .ready:
-            captureStatus = .none
-            count = 0
-            timer = nil
-            switchButton.isHidden = false
-        case .capture:
-            finishCapture()
-        }
     }
     
     static func instantiate() -> CameraController {

@@ -40,7 +40,6 @@ class JobSeekerDetailController: MJPController {
     public var jobSeeker: JobSeeker!
     public var application: Application!
     public var viewMode = false
-    public var isHideMessages = false
     public var controlDelegate: ControlDelegate!
     
     var interview: Interview!
@@ -60,12 +59,11 @@ class JobSeekerDetailController: MJPController {
             isProfile = true
 
             self.showLoading()
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+            AppData.getJobSeeker(success: { 
                 self.hideLoading()
-                self.jobSeeker = data as! JobSeeker
+                self.jobSeeker = AppData.jobSeeker
                 self.loadData()
             }, failure: self.handleErrors)
-            
         } else {
             loadData()
         }
@@ -78,7 +76,9 @@ class JobSeekerDetailController: MJPController {
             self.loadData()
         }
         
-        loadData()
+        if jobSeeker != nil || application != nil {
+            loadData()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -135,22 +135,22 @@ class JobSeekerDetailController: MJPController {
             ageLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.email != nil && (jobSeeker.emailPublic || isProfile) {
+        if jobSeeker.email != nil && ((jobSeeker.emailPublic && application != nil) || isProfile) {
             emailLabel.text = jobSeeker.email + (!jobSeeker.emailPublic ? " (private)" : "")
             emailLabel.superview?.isHidden = false
         } else {
             emailLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.mobile != nil && (jobSeeker.mobilePublic || isProfile) {
+        if jobSeeker.mobile != nil && ((jobSeeker.mobilePublic && application != nil) || isProfile) {
             mobileLabel.text = jobSeeker.mobile + (!jobSeeker.mobilePublic ? " (private)" : "")
             mobileLabel.superview?.isHidden = false
         } else {
             mobileLabel.superview?.isHidden = true
         }
         
-        interviewInfo.superview?.isHidden = interview == nil
-        if (interview != nil) {
+        interviewInfo.superview?.isHidden = viewMode || interview == nil
+        if (!(interviewInfo.superview?.isHidden)!) {
             interviewInfo.interview = interview
             interviewInfo.application = application
             interviewInfo.completeCallback = completeAction
@@ -166,13 +166,11 @@ class JobSeekerDetailController: MJPController {
         let connected = application?.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID
         let external = application != nil && application.messages.count == 0
         
-        shortlisted.superview?.isHidden = !connected
-        emailLabel.superview?.isHidden = !isProfile && application == nil
-        mobileLabel.superview?.isHidden = !isProfile && application == nil
+        shortlisted.superview?.isHidden = viewMode || !connected
         connectBtnView.isHidden = viewMode || isProfile || application?.status != ApplicationStatus.APPLICATION_CREATED_ID
         removeBtnView.isHidden = viewMode || isProfile || application?.status == ApplicationStatus.APPLICATION_DELETED_ID
         arrangeBtnView.isHidden = viewMode || isProfile || !connected || interview != nil || external
-        messageBtnView.isHidden = viewMode || isProfile || isHideMessages || !connected || external
+        messageBtnView.isHidden = viewMode || isProfile || !connected || external
         
         overviewLabel.text = jobSeeker.desc
         cvButton.isHidden = jobSeeker.cv == nil
@@ -285,10 +283,6 @@ class JobSeekerDetailController: MJPController {
     @IBAction func arrangeAction(_ sender: Any) {
         let controller = InterviewEditController.instantiate()
         controller.application = application
-        /*controller.saveComplete = { (application) in
-            self.application = application
-            self.loadData()
-        }*/
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     

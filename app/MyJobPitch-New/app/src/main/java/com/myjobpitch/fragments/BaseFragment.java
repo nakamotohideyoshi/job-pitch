@@ -95,7 +95,7 @@ public class BaseFragment extends Fragment {
         hideLoading();
 
         if (errors == null) {
-            Popup popup = new Popup(getContext(), "Connection Error", true);
+            Popup popup = new Popup(getContext(), "Connection Error: Please check your internet connection", true);
             popup.addGreyButton("Ok", null);
             popup.show();
         }

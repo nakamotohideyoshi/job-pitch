@@ -378,7 +378,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleDriveActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Popup popup = new Popup(GoogleDriveActivity.this, "Connection Error", true);
+                    Popup popup = new Popup(GoogleDriveActivity.this, "Connection Error: Please check your internet connection", true);
                     popup.addGreyButton("Ok", null);
                     popup.show();
                 }

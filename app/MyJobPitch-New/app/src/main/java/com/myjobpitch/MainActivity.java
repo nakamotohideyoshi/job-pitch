@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity
     public void errorHandler(JsonNode errors) {
 
         if (errors == null) {
-            Popup popup = new Popup(null, "Connection Error", true);
+            Popup popup = new Popup(null, "Connection Error: Please check your internet connection", true);
             popup.addGreyButton("Ok", null);
             popup.show();
         }

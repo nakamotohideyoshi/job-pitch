@@ -79,6 +79,7 @@ class MediaView: UIView {
     func loadViewFromNib() {
         Bundle.main.loadNibNamed("MediaView", owner: self, options: nil)
         addSubview(contentView)
+        contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     

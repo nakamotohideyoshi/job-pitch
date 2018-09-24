@@ -83,14 +83,6 @@ extension ButtonTextField: UITextFieldDelegate {
 
 }
 
-class CircleImageView: UIImageView {
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        clipsToBounds = true
-        layer.cornerRadius = frame.width / 2
-    }
-}
-
 class BadgeIcon: UILabel {
     
     public required init?(coder aDecoder: NSCoder) {
@@ -115,6 +107,12 @@ class BadgeIcon: UILabel {
     
 }
 
+class CircleView: UIView {
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.cornerRadius = frame.width / 2
+    }
+}
 
 extension UIView {
     
@@ -125,7 +123,6 @@ extension UIView {
         border.frame = CGRect(x: paddingLeft, y: frame.size.height - 0.5, width: frame.size.width - paddingLeft - paddingRight, height: 0.5)
         layer.addSublayer(border)
     }
-    
 }
 
 extension UILabel {

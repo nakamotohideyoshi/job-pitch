@@ -90,7 +90,7 @@ class MessageController0: MJPController {
             infoView.touch = {
                 let controller = JobSeekerDetailController.instantiate()
                 controller.application = self.application
-                controller.isHideMessages = true
+                controller.viewMode = true
                 self.navigationController?.pushViewController(controller, animated: true)
             }
             

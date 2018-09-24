@@ -247,6 +247,10 @@ public class TalentDetailFragment extends BaseFragment {
             removeButton.setVisibility(View.GONE);
         }
 
+        if (application.getMessages().size() == 0) {
+            applyButton.setVisibility(View.GONE);
+        }
+
     }
 
     @OnClick(R.id.jobseeker_pitch_play)

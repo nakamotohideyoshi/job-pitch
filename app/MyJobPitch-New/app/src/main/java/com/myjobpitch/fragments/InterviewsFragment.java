@@ -140,25 +140,28 @@ public class InterviewsFragment extends BaseFragment {
         Boolean isEmpty = true;
 
         for (Application application : applications) {
-            Boolean isOpenInterview = false;
-            for (Interview interview : application.getInterviews()) {
-                if (interview.getStatus().equals(InterviewStatus.PENDING) || interview.getStatus().equals(InterviewStatus.ACCEPTED)) {
-                    interview.setApplication(application.getId());
-                    adapter.add(interview);
-                    isOpenInterview = true;
-                    isEmpty = false;
-                    break;
-                }
-            }
-            if (!isOpenInterview) {
-                List<Interview> interviewList = application.getInterviews();
-                if (interviewList.size() != 0) {
-                    Interview interview = interviewList.get(interviewList.size() - 1);
-                    interview.setApplication(application.getId());
-                    adapter.add(interview);
-                    isEmpty = false;
-                }
 
+            if (application.getMessages().size() != 0) {
+                Boolean isOpenInterview = false;
+                for (Interview interview : application.getInterviews()) {
+                    if (interview.getStatus().equals(InterviewStatus.PENDING) || interview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                        interview.setApplication(application.getId());
+                        adapter.add(interview);
+                        isOpenInterview = true;
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                if (!isOpenInterview) {
+                    List<Interview> interviewList = application.getInterviews();
+                    if (interviewList.size() != 0) {
+                        Interview interview = interviewList.get(interviewList.size() - 1);
+                        interview.setApplication(application.getId());
+                        adapter.add(interview);
+                        isEmpty = false;
+                    }
+
+                }
             }
         }
 

@@ -52,12 +52,12 @@ class AppData: NSObject {
     static var jobSeeker: JobSeeker!
     static var existProfile = false
     
-    static var businesses: [Business]!
-    static var workplaces: [Location]!
-    static var jobs: [Job]!
-    static var businessUsers: [BusinessUser]!
-    static var jobSeekers: [JobSeeker]!
-    static var applications: [Application]!
+    static var businesses = [Business]()
+    static var workplaces = [Location]()
+    static var jobs = [Job]()
+    static var businessUsers = [BusinessUser]()
+    static var jobSeekers = [JobSeeker]()
+    static var applications = [Application]()
     static var newMessageCount = 0
     
     static var appsRefreshTime = DEFAULT_REFRESH_TIME
@@ -69,12 +69,12 @@ class AppData: NSObject {
         jobSeeker = nil
         existProfile = false
         
-        businesses = nil
-        workplaces = nil
-        jobs = nil
-        businessUsers = nil
-        jobSeekers = nil
-        applications = nil
+        businesses.removeAll()
+        workplaces.removeAll()
+        jobs.removeAll()
+        businessUsers.removeAll()
+        jobSeekers.removeAll()
+        applications.removeAll()
         
         stopTimer()
     }
@@ -203,43 +203,44 @@ class AppData: NSObject {
         }, failure: failure)
     }
     
-    static func getBusiness(_ id: NSNumber,
+    static func updateBusiness(_ object: NSObject,
                             success: ((Business) -> Void)?,
                             failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadBusiness(id: id, success: { (data) in
-            let newBusiness: Business! = data as! Business
+        
+        let _updateBusiness = { (newBusiness: Business) in
             var isNew = true
             
-            if businesses != nil {
-                for (index, business) in businesses.enumerated() {
-                    if business.id == newBusiness.id {
-                        businesses[index] = newBusiness
-                        isNew = false
-                        break
-                    }
-                }
-                
-                if isNew {
-                    businesses.insert(newBusiness, at: 0)
-                    AppData.user.businesses = businesses.map { $0.id } as NSArray
-                }
-            }
-            
-            success?(newBusiness)
-        }, failure: failure)
-    }
-    
-    static func removeBusiness(_ id: NSNumber,
-                               success: (() -> Void)?,
-                               failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteBusiness(id: id, success: {
             for (index, business) in businesses.enumerated() {
-                if business.id == id {
-                    businesses.remove(at: index)
-                    AppData.user.businesses = businesses.map { $0.id } as NSArray
+                if business.id == newBusiness.id {
+                    businesses[index] = newBusiness
+                    isNew = false
                     break
                 }
             }
+            
+            if isNew {
+                businesses.insert(newBusiness, at: 0)
+                AppData.user.businesses = businesses.map { $0.id } as NSArray
+            }
+            
+            success?(newBusiness)
+        }
+        
+        if let newBusiness = object as? Business {
+            _updateBusiness(newBusiness)
+        } else {
+            API.shared().loadBusiness(id: object as! NSNumber, success: { (data) in
+                _updateBusiness(data as! Business)
+            }, failure: failure)
+        }
+    }
+    
+    static func removeBusiness(_ business: Business,
+                               success: (() -> Void)?,
+                               failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().deleteBusiness(id: business.id, success: {
+            businesses = businesses.filter { $0.id != business.id }
+            AppData.user.businesses = businesses.map { $0.id } as NSArray
             success?()
         }, failure: failure)
     }
@@ -255,11 +256,11 @@ class AppData: NSObject {
         }, failure: failure)
     }
     
-    static func getWorkplace(_ id: NSNumber,
+    static func updateWorkplace(_ object: NSObject,
                                success: ((Location) -> Void)?,
                                failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadLocation(id: id, success: { (data) in
-            let newWorkplace: Location! = data as! Location
+
+        let _updateWorkplace = { (newWorkplace: Location) in
             var isNew = true
             
             for (index, location) in workplaces.enumerated() {
@@ -274,19 +275,28 @@ class AppData: NSObject {
                 workplaces.insert(newWorkplace, at: 0)
             }
             
+            updateBusiness(newWorkplace.businessData, success: nil, failure: nil)
+            
             success?(newWorkplace)
-        }, failure: failure)
+        }
+        
+        if let newWorkplace = object as? Location {
+            _updateWorkplace(newWorkplace)
+        } else {
+            API.shared().loadLocation(id: object as! NSNumber, success: { (data) in
+                _updateWorkplace(data as! Location)
+            }, failure: failure)
+        }
     }
     
-    static func removeWorkplace(_ id: NSNumber,
+    static func removeWorkplace(_ workplace: Location,
                                 success: (() -> Void)?,
                                 failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteLocation(id: id, success: {
-            for (index, workplace) in workplaces.enumerated() {
-                if workplace.id == id {
-                    workplaces.remove(at: index)
-                    break
-                }
+        API.shared().deleteLocation(id: workplace.id, success: {
+            workplaces = workplaces.filter { $0.id != workplace.id }
+            let businesses1 = businesses.filter { $0.id == workplace.businessData.id }
+            if businesses1.count > 0 {
+                businesses1[0].locations = (businesses1[0].locations as! [NSNumber]).filter { $0 != workplace.id } as NSArray!
             }
             success?()
         }, failure: failure)
@@ -311,11 +321,11 @@ class AppData: NSObject {
         }, failure: failure)
     }
     
-    static func getJob(_ id: NSNumber,
+    static func updateJob(_ object: NSObject,
                        success: ((Job) -> Void)?,
                        failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadJob(id: id, success: { (data) in
-            let newJob: Job! = data as! Job
+        
+        let _updateJob = { (newJob: Job) in
             var isNew = true
             
             for (index, job) in jobs.enumerated() {
@@ -330,19 +340,29 @@ class AppData: NSObject {
                 jobs.insert(newJob, at: 0)
             }
             
+            updateWorkplace(newJob.locationData, success: nil, failure: nil)
+
             success?(newJob)
-        }, failure: failure)
+        }
+        
+        if let newJob = object as? Job {
+            _updateJob(newJob)
+        } else {
+            API.shared().loadJob(id: object as! NSNumber, success: { (data) in
+                let newJob = data as! Job
+                _updateJob(newJob)
+            }, failure: failure)
+        }
     }
     
-    static func removeJob(_ id: NSNumber,
+    static func removeJob(_ job: Job,
                           success: (() -> Void)?,
                           failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteJob(id: id, success: {
-            for (index, job) in jobs.enumerated() {
-                if job.id == id {
-                    jobs.remove(at: index)
-                    break
-                }
+        API.shared().deleteJob(id: job.id, success: {
+            jobs = jobs.filter { $0.id != job.id }
+            let workplaces1 = workplaces.filter { $0.id == job.locationData.id }
+            if workplaces1.count > 0 {
+                workplaces1[0].jobs = (workplaces1[0].jobs as! [NSNumber]).filter { $0 != job.id } as NSArray!
             }
             success?()
         }, failure: failure)

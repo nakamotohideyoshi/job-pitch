@@ -21,7 +21,7 @@ class BusinessDetailController: MJPController {
     public var business: Business!
     public var businessId: NSNumber!
     
-    var workplaces = [Location]()
+    var workplaces: [Location]!
     var addMode = false
     
     override func viewDidLoad() {
@@ -64,9 +64,8 @@ class BusinessDetailController: MJPController {
         }
         
         showLoading()
-        AppData.workplaces = nil
         if businessId != nil {
-            AppData.getBusiness(businessId, success: { (business) in
+            AppData.updateBusiness(businessId, success: { (business) in
                 self.business = business
                 self.loadWorkplaces()
             }, failure: self.handleErrors)
@@ -77,7 +76,7 @@ class BusinessDetailController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if AppData.workplaces != nil {
+        if workplaces != nil {
             updateList()
         }        
     }
@@ -91,6 +90,7 @@ class BusinessDetailController: MJPController {
     }
     
     func updateList() {
+        business = AppData.businesses.filter {$0.id == business.id }[0]
         workplaces = AppData.workplaces
         
         if !addMode {
@@ -124,7 +124,7 @@ class BusinessDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             self.showLoading()
-            AppData.removeBusiness(self.business.id, success: { () in
+            AppData.removeBusiness(self.business, success: { () in
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
             
@@ -151,7 +151,7 @@ class BusinessDetailController: MJPController {
 extension BusinessDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return workplaces.count
+        return workplaces == nil ? 0 : workplaces.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -180,7 +180,7 @@ extension BusinessDetailController: UITableViewDataSource {
                                     
                                     cell.hideSwipe(animated: true)
                                     self.showLoading()
-                                    AppData.removeWorkplace(workplace.id, success: { () in
+                                    AppData.removeWorkplace(workplace, success: { () in
                                         self.hideLoading()
                                         self.updateList()
                                     }, failure: self.handleErrors)

@@ -173,7 +173,7 @@ class LocationEditController: MJPController {
     
     func saveFinished() {
         
-        AppData.getWorkplace(workplace.id, success: { (workplace) in
+        AppData.updateWorkplace(workplace.id, success: { (workplace) in
             
             if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 1 {
                 UserDefaults.standard.set(2, forKey: "tutorial")

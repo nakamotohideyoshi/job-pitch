@@ -16,7 +16,7 @@ class BusinessListController: MJPController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: EmptyView!
     
-    var businesses = [Business]()
+    var businesses: [Business]!
     var businessMode = false
     var userMode = false
     
@@ -53,13 +53,12 @@ class BusinessListController: MJPController {
         }
         
         showLoading()
-        AppData.businesses = nil
         loadBusinesses()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if AppData.businesses != nil {
+        if businesses != nil {
             updateList()
         }        
     }
@@ -128,7 +127,7 @@ class BusinessListController: MJPController {
 extension BusinessListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return businesses.count
+        return businesses == nil ? 0 : businesses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -182,7 +181,7 @@ extension BusinessListController: UITableViewDataSource {
                                             
                                             cell.hideSwipe(animated: true)
                                             self.showLoading()
-                                            AppData.removeBusiness(business.id, success: { () in
+                                            AppData.removeBusiness(business, success: { () in
                                                 self.hideLoading()
                                                 self.updateList()
                                             }, failure: self.handleErrors)

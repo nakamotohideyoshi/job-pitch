@@ -19,7 +19,7 @@ class LocationDetailController: MJPController {
     
     public var workplace: Location!
     
-    var jobs = [Job]()
+    var jobs: [Job]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,13 +43,12 @@ class LocationDetailController: MJPController {
         }
         
         showLoading()
-        AppData.jobs = nil
         loadJobs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if AppData.jobs != nil {
+        if jobs != nil {
             updateList()
         }        
     }
@@ -63,6 +62,7 @@ class LocationDetailController: MJPController {
     }
     
     func updateList() {
+        workplace = AppData.workplaces.filter { $0.id == workplace.id }[0]
         jobs = AppData.jobs
 
         let jobCount = jobs.count
@@ -93,7 +93,7 @@ class LocationDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             self.showLoading()
-            AppData.removeWorkplace(self.workplace.id, success: { () in
+            AppData.removeWorkplace(self.workplace, success: { () in
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
             
@@ -120,7 +120,7 @@ class LocationDetailController: MJPController {
 extension LocationDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return jobs.count
+        return jobs == nil ? 0 : jobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -143,7 +143,7 @@ extension LocationDetailController: UITableViewDataSource {
                                 
                                 cell.hideSwipe(animated: true)
                                 self.showLoading()
-                                AppData.removeJob(job.id, success: {
+                                AppData.removeJob(job, success: {
                                     self.hideLoading()
                                     self.updateList()
                                 }, failure: self.handleErrors)

@@ -35,7 +35,7 @@ class JobDetailController: MJPController {
             PopupController.showYellow(message, ok: "Delete", okCallback: {
                 
                 self.showLoading()
-                AppData.removeJob(self.job.id, success: {
+                AppData.removeJob(self.job, success: {
                     _ = self.navigationController?.popViewController(animated: true)
                 }, failure: self.handleErrors)
                 

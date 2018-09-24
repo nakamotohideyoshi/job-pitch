@@ -96,7 +96,7 @@ class BusinessEditController: MJPController {
     
     func saveFinished() {
         
-        AppData.getBusiness(business.id, success: { (business) in
+        AppData.updateBusiness(business.id, success: { (business) in
             
             if self.isNew && AppData.user.businesses.count == 1 {
                 UserDefaults.standard.set(1, forKey: "tutorial")

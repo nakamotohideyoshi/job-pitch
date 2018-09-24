@@ -293,7 +293,7 @@ class JobEditController: MJPController {
     
     func saveFinished() {
         
-        AppData.getJob(job.id, success: { (job) in
+        AppData.updateJob(job.id, success: { (job) in
         
             if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 2 {
                 UserDefaults.standard.removeObject(forKey: "tutorial")

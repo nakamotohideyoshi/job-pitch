@@ -95,39 +95,51 @@ public class MessageListFragment extends ApplicationsFragment {
             }
         }
 
+       List<Application> appApplicationsList = new ArrayList();
+       List<Application> applications = new ArrayList();
+
         String query = job != null ? "job=" + job.getId() : null;
-        return MJPApi.shared().get(Application.class, query);
+        appApplicationsList.addAll(MJPApi.shared().get(Application.class, query));
+
+        for (Application application : appApplicationsList) {
+            if (application.getMessages().size() != 0) {
+                applications.add(application);
+            }
+        }
+        return applications;
     }
 
     @Override
     protected void showApplicationInfo(Application application, View view) {
 
-        Message lastMessage = application.getMessages().get(application.getMessages().size()-1);
-        Job job = application.getJob_data();
+        if (application.getMessages().size() != 0) {
 
-        if (AppData.user.isJobSeeker()) {
-            AppHelper.loadJobLogo(job, AppHelper.getImageView(view));
-            setItemTitle(view, job.getTitle());
-            setItemSubTitle(view, AppHelper.getBusinessName(job));
-        } else {
-            JobSeeker jobSeeker = application.getJobSeeker();
-            AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
-            setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
-            setItemSubTitle(view, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+            Message lastMessage = application.getMessages().get(application.getMessages().size() - 1);
+            Job job = application.getJob_data();
+
+            if (AppData.user.isJobSeeker()) {
+                AppHelper.loadJobLogo(job, AppHelper.getImageView(view));
+                setItemTitle(view, job.getTitle());
+                setItemSubTitle(view, AppHelper.getBusinessName(job));
+            } else {
+                JobSeeker jobSeeker = application.getJobSeeker();
+                AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
+                setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
+                setItemSubTitle(view, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+            }
+
+            SimpleDateFormat format = new SimpleDateFormat("MMM d, h:mm a");
+            setItemAttributes(view, format.format(lastMessage.getCreated()));
+
+            if (lastMessage.getFrom_role() == AppData.getUserRole().getId()) {
+                setItemDesc(view, "You: " + lastMessage.getContent());
+            } else {
+                setItemDesc(view, lastMessage.getContent());
+            }
+
+            AppHelper.getEditButton(view).setVisibility(View.GONE);
+            AppHelper.getRemoveButton(view).setVisibility(View.GONE);
         }
-
-        SimpleDateFormat format = new SimpleDateFormat("MMM d, h:mm a");
-        setItemAttributes(view, format.format(lastMessage.getCreated()));
-
-        if (lastMessage.getFrom_role() == AppData.getUserRole().getId()) {
-            setItemDesc(view, "You: " + lastMessage.getContent());
-        } else {
-            setItemDesc(view, lastMessage.getContent());
-        }
-
-        AppHelper.getEditButton(view).setVisibility(View.GONE);
-        AppHelper.getRemoveButton(view).setVisibility(View.GONE);
-
 
     }
 

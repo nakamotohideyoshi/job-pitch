@@ -103,6 +103,8 @@ class AppData: NSObject {
                 initialTokens != nil &&
                 user.isRecruiter() || jobSeeker != nil) {
                 
+                userRole = user.isJobSeeker() ? Role.ROLE_JOB_SEEKER_ID : Role.ROLE_RECRUITER_ID
+                
                 getApplications(success: {
                     success()
                     startTimer()
@@ -155,7 +157,6 @@ class AppData: NSObject {
                 roles = data as! [Role]
                 Role.ROLE_JOB_SEEKER_ID = getIdByName(roles, name: Role.ROLE_JOB_SEEKER)
                 Role.ROLE_RECRUITER_ID = getIdByName(roles, name: Role.ROLE_RECRUITER)
-                userRole = user.isJobSeeker() ? Role.ROLE_JOB_SEEKER_ID : Role.ROLE_RECRUITER_ID
                 loadSuccess()
             }, failure: loadFailure)
             
@@ -189,6 +190,8 @@ class AppData: NSObject {
                 jobSeeker = data as! JobSeeker
                 success?()
             }, failure: failure)
+        } else {
+            success?()
         }
     }
 

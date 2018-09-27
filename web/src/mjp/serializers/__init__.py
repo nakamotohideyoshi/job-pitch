@@ -66,7 +66,7 @@ class UserBusinessSerializer(BusinessSerializer):  # v5 (<5 uses BusinessSeriali
 
 
 class LocationSerializer(serializers.ModelSerializer):  # v1-4 /api/user-locations/, all versions /api/locations/
-    jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='adverts')
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
@@ -74,7 +74,7 @@ class LocationSerializer(serializers.ModelSerializer):  # v1-4 /api/user-locatio
     active_job_count = serializers.SerializerMethodField()
 
     def get_active_job_count(self, obj):
-        return obj.jobs.filter(status__name=JobStatus.OPEN).count()
+        return obj.adverts.filter(status__name=JobStatus.OPEN).count()
 
     def validate_business(self, value):
         request = self.context['request']

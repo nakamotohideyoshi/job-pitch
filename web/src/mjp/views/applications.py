@@ -35,13 +35,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return True
             pk = request.data.get('job')
             if pk:
-                is_recruiter = request.user.businesses.filter(locations__jobs__pk=pk).exists()
+                is_recruiter = request.user.businesses.filter(locations__adverts__pk=pk).exists()
                 if not is_recruiter and not request.user.is_job_seeker:
                     return False
             return True
 
         def has_object_permission(self, request, view, application):
-            is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
+            is_recruiter = request.user.businesses.filter(locations__adverts__applications=application).exists()
             is_job_seeker = application.job_seeker.user == request.user
             if is_recruiter or is_job_seeker:
                 if request.method in permissions.SAFE_METHODS:
@@ -146,7 +146,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                      )
         query = query.prefetch_related('job_seeker__pitches',
                                        'messages',
-                                       'job__location__jobs',
+                                       'job__location__adverts',
                                        'job__location__business__locations',
                                        'job__images',
                                        'job__videos',
@@ -208,7 +208,7 @@ class MessageViewSet(viewsets.ModelViewSet):
                 pk = request.data.get('application')
                 if pk:
                     application = Application.objects.get(pk=int(pk))
-                    is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
+                    is_recruiter = request.user.businesses.filter(locations__adverts__applications=application).exists()
                     is_job_seeker = application.job_seeker.user == request.user
                     return is_recruiter or (is_job_seeker and application.status.name != ApplicationStatus.CREATED)
                 return True
@@ -218,7 +218,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         def has_object_permission(self, request, view, message):
             if request.method == 'PUT':  # set read
-                is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
+                is_recruiter = request.user.businesses.filter(locations__adverts__applications__messages=message).exists()
                 if is_recruiter and message.from_role.name == Role.JOB_SEEKER:
                     return True
                 is_job_seeker = message.application.job_seeker.user == request.user
@@ -239,7 +239,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         application = Application.objects.get(pk=int(self.request.data.get('application')))
-        if self.request.user.businesses.filter(locations__jobs__applications=application).exists():
+        if self.request.user.businesses.filter(locations__adverts__applications=application).exists():
             role = Role.objects.get(name=Role.RECRUITER)
         else:
             role = Role.objects.get(name=Role.JOB_SEEKER)

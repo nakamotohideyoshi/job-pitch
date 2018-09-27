@@ -36,6 +36,7 @@ import com.myjobpitch.views.Popup;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -88,6 +89,7 @@ public class TalentDetailFragment extends BaseFragment {
     public boolean viewMode = false;
 
     public Application application;
+    public List<Application> applications;
     public JobSeeker jobSeeker;
     public Job job;
     public Action action;
@@ -108,6 +110,9 @@ public class TalentDetailFragment extends BaseFragment {
         if (application != null) {
             jobSeeker = application.getJobSeeker();
             connected = application.getStatus() == AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+
+            loadApplications();
+
         }
 
         if (AppData.user.isJobSeeker()) {
@@ -116,20 +121,6 @@ public class TalentDetailFragment extends BaseFragment {
             addMenuItem(MENUGROUP2, 100, "Edit", R.drawable.ic_edit);
         } else {
             title = "Talent Detail";
-
-            for (Interview applicationInterview : application.getInterviews()) {
-                if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
-                    interview = applicationInterview;
-                    interview.setApplication(application.getId());
-                    isOpenInterview = true;
-                    break;
-                }
-            }
-            if (isOpenInterview) {
-                applyButton.setText("Pending Interview");
-            } else {
-                applyButton.setText("Arrange Interview");
-            }
         }
 
         if (jobSeeker == null) {
@@ -155,6 +146,52 @@ public class TalentDetailFragment extends BaseFragment {
         }
 
         return view;
+    }
+
+    private void loadApplications() {
+        applications = new ArrayList();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                String query = "job=" + application.getJob() + "&status=" + application.getStatus();
+                query += application.getShortlisted() ? "&shortlisted=1" : "&shortlisted=0";
+                applications.addAll(MJPApi.shared().get(Application.class, query));
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                for (Application jobApplication : applications) {
+                    if (jobApplication.getId().intValue() == application.getId().intValue()) {
+                        application = jobApplication;
+                        break;
+                    }
+                }
+
+                if (AppData.user.isRecruiter()) {
+                    isOpenInterview = false;
+                    for (Interview applicationInterview : application.getInterviews()) {
+                        if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                            interview = applicationInterview;
+                            interview.setApplication(application.getId());
+                            isOpenInterview = true;
+                            break;
+                        }
+                    }
+                    if (connected) {
+                        if (isOpenInterview) {
+                            applyButton.setText("Pending Interview");
+                        } else {
+                            applyButton.setText("Arrange Interview");
+                        }
+                    }
+                }
+
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     void load() {
@@ -227,6 +264,10 @@ public class TalentDetailFragment extends BaseFragment {
 
             connectHelpButton.setVisibility(View.GONE);
 
+            if (application.getMessages().size() == 0) {
+                applyButton.setVisibility(View.GONE);
+            }
+
         } else {
 
             contactView.setVisibility(View.GONE);
@@ -245,10 +286,6 @@ public class TalentDetailFragment extends BaseFragment {
         if (viewMode) {
             applyButton.setVisibility(View.GONE);
             removeButton.setVisibility(View.GONE);
-        }
-
-        if (application.getMessages().size() == 0) {
-            applyButton.setVisibility(View.GONE);
         }
 
     }

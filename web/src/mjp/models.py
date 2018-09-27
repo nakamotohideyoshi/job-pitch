@@ -204,6 +204,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             return False
         return True
 
+    def owns_business(self, business):
+        return business.business_users.filter(user=self, locations__isnull=True).exists()
+
 
 class Sector(models.Model):
     name = models.CharField(max_length=255)

@@ -188,7 +188,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
             except BusinessUser.DoesNotExist:
                 return False
             if business_user.locations.exists():
-                return business_user.locations.filter(jobs__pk=obj.pk).exists()
+                return business_user.locations.filter(adverts__pk=obj.pk).exists()
             return True
 
     permission_classes = (permissions.IsAuthenticated, UserJobPermission)
@@ -240,7 +240,7 @@ class UserJobImageViewSet(viewsets.ModelViewSet):
             except BusinessUser.DoesNotExist:
                 return False
             if business_user.locations.exists():
-                return business_user.locations.filter(jobs__pk=obj.location.pk).exists()
+                return business_user.locations.filter(adverts__pk=obj.location.pk).exists()
             return True
 
     def get_queryset(self):

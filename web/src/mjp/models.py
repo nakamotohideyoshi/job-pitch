@@ -204,6 +204,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             return False
         return True
 
+    def owns_business(self, business):
+        return business.business_users.filter(user=self, locations__isnull=True).exists()
+
 
 class Sector(models.Model):
     name = models.CharField(max_length=255)
@@ -388,13 +391,14 @@ class LocationImage(models.Model):
 class Job(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    sector = models.ForeignKey(Sector, related_name='jobs')
-    location = models.ForeignKey(Location, related_name='jobs')
-    contract = models.ForeignKey(Contract, related_name='jobs')
-    hours = models.ForeignKey(Hours, related_name='jobs')
-    status = models.ForeignKey(JobStatus, related_name='jobs')
+    sector = models.ForeignKey(Sector, related_name='adverts')
+    location = models.ForeignKey(Location, related_name='adverts')
+    contract = models.ForeignKey(Contract, related_name='adverts')
+    hours = models.ForeignKey(Hours, related_name='adverts')
+    status = models.ForeignKey(JobStatus, related_name='adverts')
     requires_pitch = models.BooleanField(default=True)
     requires_cv = models.BooleanField(default=False)
+    hr_job = models.ForeignKey('hr.Job', related_name='adverts', null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

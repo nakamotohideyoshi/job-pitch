@@ -97,6 +97,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
             query = JobSeeker.objects.filter(active=True).prefetch_related('pitches', 'profile').distinct()
             query = query.filter(pitches__video__isnull=False)
             query = query.exclude(applications__job=job)
+            query = query.exclude(exclusions__job=job)
             query = query.exclude(profile=None)
             exclude_pks = self.request.query_params.get('exclude')
             if exclude_pks:

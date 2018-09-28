@@ -93,7 +93,7 @@ export default class RecordModal extends React.Component {
 
     this.timer = setInterval(() => {
       const { time } = this.state;
-      if (time > 0) {
+      if (time > 1000) {
         this.setState({ time: time - 1000 });
       } else {
         this.startRecording();
@@ -181,11 +181,14 @@ export default class RecordModal extends React.Component {
 
           {stream && (
             <div className="bottom-content">
-              <ul>
-                <li>speak clearly</li>
-                <li>be yourself</li>
-                <li>show you strengths</li>
-              </ul>
+              {status !== RECORDING && (
+                <ul>
+                  <li>speak clearly</li>
+                  <li>be yourself</li>
+                  <li>show you strengths</li>
+                </ul>
+              )}
+
               <RecButton onClick={this.onClickButton}>
                 <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
               </RecButton>

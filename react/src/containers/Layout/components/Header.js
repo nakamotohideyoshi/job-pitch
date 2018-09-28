@@ -89,7 +89,7 @@ export default ({ menu: MainMenu, shareUrl, avatar }) => {
     <Wrapper className="shadow">
       <div className="container">
         {MainMenu && (
-          <Responsive maxWidth={767}>{<Popover float="left" icon={Icons.Bars} menu={MainMenu} />}</Responsive>
+          <Responsive maxWidth={767}>{<Popover float="left" icon={<Icons.Bars />} menu={MainMenu} />}</Responsive>
         )}
 
         <Link to="/">

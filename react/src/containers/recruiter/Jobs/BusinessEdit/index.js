@@ -25,7 +25,7 @@ class BusinessEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { can_create_businesses, business, form, selectBusiness, history } = this.props;
+    const { user, business, form, selectBusiness, history } = this.props;
 
     if (business) {
       if (business.restricted) {
@@ -45,7 +45,7 @@ class BusinessEdit extends React.Component {
         name: business.name
       });
     } else {
-      if (!can_create_businesses) {
+      if (user.businesses.length > 0 && !user.can_create_businesses) {
         history.replace('/recruiter/jobs/business');
         return;
       }
@@ -116,7 +116,7 @@ class BusinessEdit extends React.Component {
           this.setState({
             loading: {
               label: 'Logo uploading...',
-              progress: Math.floor(progress.loaded / progress.total * 100)
+              progress: Math.floor((progress.loaded / progress.total) * 100)
             }
           });
         }
@@ -191,7 +191,7 @@ export default connect(
     const businessId = helper.str2int(match.params.businessId);
     const business = helper.getItemByID(getBusinesses(state), businessId);
     return {
-      can_create_businesses: state.auth.user.can_create_businesses,
+      user: state.auth.user,
       business
     };
   },

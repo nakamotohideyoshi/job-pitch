@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 
   span {
     margin-bottom: 20px;
-    font-size: 40px;
+    font-size: 30px;
     ${media.mobile`
       margin-bottom: 10px;
       font-size: 25px;
@@ -25,11 +25,11 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 5px solid #fff;
-    font-size: 70px;
+    border: 4px solid #fff;
+    font-size: 60px;
     ${media.mobile`
       width: 70px;
       height: 70px;

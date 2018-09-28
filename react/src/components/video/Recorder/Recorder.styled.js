@@ -17,6 +17,7 @@ export const Wrapper = styled(Modal)`
       color: #fff;
       font-size: 18px;
       text-align: center;
+      font-weight: 300;
       ${media.mobile`
         font-size: 14px;
       `};

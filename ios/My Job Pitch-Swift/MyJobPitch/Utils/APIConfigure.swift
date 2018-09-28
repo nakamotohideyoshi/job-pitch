@@ -477,8 +477,7 @@ class APIConfigure: NSObject {
                          responseRelationships: inverseRelationships(jobRelationships),
                          path: "/api/user-jobs/:pk/",
                          method: .any)
-
-
+        
         // ================= Message =====================
 
         let messageArray = [ "id", "system", "content", "read", "created", "application", "interview" ]
@@ -707,6 +706,19 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/user-businesses/:pk/users/:pk/",
                                method: [.GET, .DELETE])
+        
+        // ================= new =====================
+        
+        configureMapping(ExclusionJobSeeker.classForCoder(),
+                         requestArray: nil,
+                         requestDictionary: ["jobSeeker": "job_seeker"],
+                         requestRelationships: nil,
+                         responseClass: ExclusionJobSeeker.classForCoder(),
+                         responseArray: ["id"],
+                         responseDictionary: ["job_seeker": "jobSeeker"],
+                         responseRelationships: nil,
+                         path: "/api/user-jobs/:pk/exclude/",
+                         method: .POST)
         
         // ================= Error =====================
 

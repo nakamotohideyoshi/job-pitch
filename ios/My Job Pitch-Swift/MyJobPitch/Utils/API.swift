@@ -402,8 +402,7 @@ class API: NSObject {
         let path = String(format: "/api/job-seekers/?job=%@", jobId)
         getObjects(path, success: success, failure: failure)
     }
-
-
+    
     // ================= Business =====================
 
     func saveBusiness(business: Business,
@@ -713,6 +712,14 @@ class API: NSObject {
                          success: ((NSObject?) -> Void)!,
                          failure: ((String?, NSDictionary?) -> Void)!) {
         postObject(String(format: "/api/interviews/%@/%@/", interview.id, type), request: interview, success: success, failure: failure)
+    }
+    
+    // ================== New ============================
+    
+    func ExclusionJobSeeker(_ request: ExclusionJobSeeker,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject(String(format: "/api/user-jobs/%@/exclude/", request.job), request: request, success: success, failure: failure)
     }
 
 }

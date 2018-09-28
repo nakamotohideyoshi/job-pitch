@@ -235,6 +235,27 @@ class SwipeController: MJPController {
         emptyView.isHidden = cards.count > 0
     }
     
+    func removeCard() {
+        let card = addCard()
+        if card != nil {
+            card?.alpha = 0
+        }
+        
+        (cards.firstObject as! SwipeCard).removeFromSuperview()
+        cards.removeObject(at: 0)
+        
+        if cards.count > 0 {
+            for index in 0...cards.count-1 {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.updateCardPosition(index: index)
+                    card?.alpha = 1
+                })
+            }
+        }
+        
+        showTopCardInfo()
+    }
+    
     func editAction() {
         if AppData.user.isJobSeeker() {
             let controller = JobSeekerProfileController.instantiate()
@@ -330,7 +351,7 @@ extension SwipeController: ControlDelegate {
                 }, failure: self.handleErrors)
             }
             
-            self.remove(success: nil, failure: nil)
+            self.removeCard()
             
         }) { (message, errors) in
             
@@ -345,24 +366,23 @@ extension SwipeController: ControlDelegate {
     }
     func remove(success: ((NSObject?) -> Void)?,
                 failure: ((String?, NSDictionary?) -> Void)?) {
-        let card = addCard()
-        if card != nil {
-            card?.alpha = 0
-        }
         
-        (cards.firstObject as! SwipeCard).removeFromSuperview()
-        cards.removeObject(at: 0)
-        
-        if cards.count > 0 {
-            for index in 0...cards.count-1 {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.updateCardPosition(index: index)
-                    card?.alpha = 1
-                })
+        if AppData.user.isRecruiter() {
+            
+            let request = ExclusionJobSeeker()
+            request.job = searchJob.id
+            request.jobSeeker = data[currentIndex - cards.count].id
+            
+            API.shared().ExclusionJobSeeker(request, success: { (_) in
+                self.removeCard()
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+                self.reloadCard()
             }
+            
+        } else {
+            removeCard()
         }
-        
-        showTopCardInfo()
     }
 }
 

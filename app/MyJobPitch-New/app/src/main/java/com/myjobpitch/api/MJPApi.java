@@ -19,6 +19,7 @@ import com.myjobpitch.api.data.BusinessUserForUpdate;
 import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
+import com.myjobpitch.api.data.ExcludeJobSeeker;
 import com.myjobpitch.api.data.ExternalApplication;
 import com.myjobpitch.api.data.ExternalApplicationForResponse;
 import com.myjobpitch.api.data.Hours;
@@ -586,6 +587,17 @@ public class MJPApi {
     public void addExternalApplication(ExternalApplication externalApplication) throws MJPApiException {
         try {
             rest.exchange(getTypeUrl("applications/external"), HttpMethod.POST, createAuthenticatedRequest(externalApplication), ExternalApplicationForResponse.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void excludeJobSeeker(ExcludeJobSeeker data) throws MJPApiException {
+        try {
+            rest.exchange(getTypeUrl(String.format("user-jobs/%s/exclude", data.getJob())), HttpMethod.POST, createAuthenticatedRequest(data), ExcludeJobSeeker.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

@@ -7,7 +7,11 @@ import * as C from 'redux/constants';
 const findJobseekers = weakRequest(getRequest({ url: '/api/job-seekers/' }));
 
 function* connectJobseeker({ payload }) {
-  const { onSuccess, onFail, data: { job_seeker } } = payload;
+  const {
+    onSuccess,
+    onFail,
+    data: { job_seeker }
+  } = payload;
 
   const result = yield call(postRequest({ url: `/api/applications/` }), { payload });
   if (result !== null) {
@@ -27,7 +31,12 @@ function* connectJobseeker({ payload }) {
   onFail && onFail();
 }
 
+const removeJobseeker = postRequest({
+  url: ({ job }) => `/api/user-jobs/${job}/exclude/`
+});
+
 export default function* sagas() {
   yield takeLatest(C.RC_FIND_JOBSEEKERS, findJobseekers);
   yield takeLatest(C.RC_CONNECT_JOBSEEKER, connectJobseeker);
+  yield takeLatest(C.RC_REMOVE_JOBSEEKER, removeJobseeker);
 }

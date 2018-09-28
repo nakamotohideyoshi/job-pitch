@@ -63,7 +63,23 @@ export default handleActions(
 
     [C.RC_REMOVE_JOBSEEKER]: (state, { payload }) => ({
       ...state,
-      jobseekers: helper.removeItem(state.jobseekers, payload.id)
+      jobseekers: helper.updateItem(state.jobseekers, {
+        id: payload.data.job_seeker,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.RC_REMOVE_JOBSEEKER)]: (state, { request }) => ({
+      ...state,
+      jobseekers: helper.removeItem(state.jobseekers, request.data.job_seeker)
+    }),
+
+    [requestFail(C.RC_REMOVE_JOBSEEKER)]: (state, { request }) => ({
+      ...state,
+      jobseekers: helper.updateItem(state.jobseekers, {
+        id: request.data.job_seeker,
+        loading: false
+      })
     })
   },
   initialState

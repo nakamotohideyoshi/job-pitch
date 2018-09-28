@@ -92,7 +92,10 @@ class FindTalent extends React.Component {
       maskClosable: true,
       onOk: () => {
         this.props.removeJobseeker({
-          id
+          job: this.props.job.id,
+          data: {
+            job_seeker: id
+          }
         });
       }
     });

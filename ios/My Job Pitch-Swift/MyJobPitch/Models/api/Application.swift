@@ -47,6 +47,11 @@ class ApplicationForCreation: MJPObject {
     var shortlisted = false
 }
 
+class ExclusionJobSeeker: MJPObject {
+    var job: NSNumber!
+    var jobSeeker: NSNumber!
+}
+
 class ApplicationStatusUpdate: MJPObject {
     
     var status: NSNumber!

@@ -11,6 +11,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
+import com.myjobpitch.api.data.ExcludeJobSeeker;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
@@ -77,6 +78,28 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         AppHelper.loadJobSeekerImage(jobSeeker, getCardImageContainer(view));
         setCardTitle(view, AppHelper.getJobSeekerName(jobSeeker));
         setCardDesc(view, jobSeeker.getDescription());
+    }
+
+    @Override
+    protected void swipedLeft(final JobSeeker jobSeeker) {
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                ExcludeJobSeeker data = new ExcludeJobSeeker();
+                data.setJob(job.getId());
+                data.setJob_seeker(jobSeeker.getId());
+                MJPApi.shared().excludeJobSeeker(data);
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                cardStack.unSwipeCard();
+            }
+        }).execute();
+
     }
 
     @Override

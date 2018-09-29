@@ -1,14 +1,19 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { MJPReducer, MJPSaga } from 'mjp-react-core';
+import { RecruitReducers, RecruitSaga } from 'mjp-react-recruit';
 
-import reducers from './redux/reducers';
-import rootSaga from './redux/sagas';
+function* rootSaga() {
+  yield all([MJPSaga(), RecruitSaga()]);
+}
 
 export default function configureStore(history) {
   const rootReducer = combineReducers({
-    ...reducers,
+    mjp: MJPReducer,
+    ...RecruitReducers,
     router: routerReducer
   });
 

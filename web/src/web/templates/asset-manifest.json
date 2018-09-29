@@ -1,16 +1,13 @@
 {
-  "main.css": "static/css/main.daaba353.css",
-  "main.css.map": "static/css/main.daaba353.css.map",
-  "main.js": "static/js/main.a3af5a0d.js",
-  "main.js.map": "static/js/main.a3af5a0d.js.map",
+  "main.css": "static/css/main.3f434f96.css",
+  "main.css.map": "static/css/main.3f434f96.css.map",
+  "main.js": "static/js/main.4f3b5d60.js",
+  "main.js.map": "static/js/main.4f3b5d60.js.map",
   "static/media/avatar.png": "static/media/avatar.e6e9194b.png",
-  "static/media/avatar_Female.png": "static/media/avatar_Female.3e14a602.png",
-  "static/media/avatar_Male.png": "static/media/avatar_Male.ee8e0ac7.png",
-  "static/media/default_logo.jpg": "static/media/default_logo.e0c56d44.jpg",
   "static/media/intro1.png": "static/media/intro1.f498c5e7.png",
   "static/media/intro2.png": "static/media/intro2.c2985da2.png",
   "static/media/intro3.png": "static/media/intro3.3a12a33f.png",
-  "static/media/logo.png": "static/media/logo.2296933a.png",
-  "static/media/logo1.png": "static/media/logo1.b0cd3ba2.png",
+  "static/media/job_logo.jpg": "static/media/job_logo.e0c56d44.jpg",
+  "static/media/logo.png": "static/media/logo.b0cd3ba2.png",
   "static/media/title.png": "static/media/title.5b20ae11.png"
 }

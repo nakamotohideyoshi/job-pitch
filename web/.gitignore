@@ -1,0 +1,15 @@
+src/local.py
+src/local_live.py
+src/web/static/css/*.map
+src/web/static/js/*.map
+media/
+
+#Dev
+.vagrant
+db.sqlite3
+
+# Python
+*.pyc
+
+# Log Files
+*.log

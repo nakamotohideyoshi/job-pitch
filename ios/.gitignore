@@ -1,0 +1,8 @@
+MyJobPitch.xcodeproj/project.xcworkspace/
+MyJobPitch.xcodeproj/xcuserdata/
+MyJobPitch.xcworkspace/
+Pods/
+Podfile.lock
+
+# misc
+.DS_Store

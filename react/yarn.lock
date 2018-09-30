@@ -5146,7 +5146,7 @@ mixin-deep@^1.2.0:
 
 "mjp-react-recruit@https://yoshisaburo:Scamp39173@bitbucket.org/myjobpitch/mjp-react-recruit.git":
   version "0.1.0"
-  resolved "https://yoshisaburo:Scamp39173@bitbucket.org/myjobpitch/mjp-react-recruit.git#63e27d40a06761be89933e1fafe17d1244d1a7f9"
+  resolved "https://yoshisaburo:Scamp39173@bitbucket.org/myjobpitch/mjp-react-recruit.git#0800600f7b6310d8b799529993ca73f9657aec17"
 
 mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
@@ -5197,8 +5197,8 @@ mux.js@4.5.1:
   resolved "https://registry.yarnpkg.com/mux.js/-/mux.js-4.5.1.tgz#1d70f1ad9b951315e16390d47be8fc42fd080194"
 
 nan@^2.9.2:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
 
 nanomatch@^1.2.9:
   version "1.2.13"

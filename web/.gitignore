@@ -1,7 +1,5 @@
 src/local.py
 src/local_live.py
-src/web/static/css/*.map
-src/web/static/js/*.map
 media/
 
 #Dev

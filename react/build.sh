@@ -5,6 +5,8 @@ path_dst=../web/src/web
 
 yarn build
 
+mv ./build/service-worker.js ./build/static/service-worker.js 
+
 echo ""
 echo "removing old data..."
 

@@ -4,6 +4,7 @@ import { Switch, withRouter } from 'react-router-dom';
 import { MJPRouters, getUserDataAction, setStatusAction, Loading } from 'mjp-react-core';
 import { RecruitRouters } from 'mjp-react-recruit';
 
+/* eslint-disable react/prop-types */
 const App = props => {
   const { status, user } = props;
 

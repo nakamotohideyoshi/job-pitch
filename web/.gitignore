@@ -1,6 +1,6 @@
 src/local.py
 src/local_live.py
-media/
+/media/
 
 #Dev
 .vagrant

@@ -4,6 +4,8 @@
     "prettier"
   ],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "react/prop-types": 2,
+    "react/require-default-props": 2
   }
 }

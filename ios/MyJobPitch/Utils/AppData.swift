@@ -50,7 +50,7 @@ class AppData: NSObject {
     
     static var userRole: NSNumber!
     static var jobSeeker: JobSeeker!
-    static var existProfile = false
+    static var profile: Profile!
     
     static var businesses = [Business]()
     static var workplaces = [Location]()
@@ -67,7 +67,7 @@ class AppData: NSObject {
         user = nil
         userRole = nil
         jobSeeker = nil
-        existProfile = false
+        profile = nil
         
         businesses.removeAll()
         workplaces.removeAll()
@@ -100,15 +100,22 @@ class AppData: NSObject {
                 jobStatuses != nil &&
                 applicationStatuses != nil &&
                 roles != nil &&
-                initialTokens != nil &&
-                user.isRecruiter() || jobSeeker != nil) {
+                initialTokens != nil) {
                 
-                userRole = user.isJobSeeker() ? Role.ROLE_JOB_SEEKER_ID : Role.ROLE_RECRUITER_ID
+                if (user.isJobSeeker()) {
+                    userRole = Role.ROLE_JOB_SEEKER_ID
+                } else if (user.isRecruiter()) {
+                    userRole = Role.ROLE_RECRUITER_ID
+                }
                 
-                getApplications(success: {
-                    success()
-                    startTimer()
-                }, failure: failure)
+                getJobSeeker(success: {
+                    getProfile(success: {
+                        getApplications(success: {
+                            success()
+                            startTimer()
+                        }, failure: failure)
+                    }, failure: loadFailure)
+                }, failure: loadFailure)
             }
         }
         
@@ -164,11 +171,9 @@ class AppData: NSObject {
                 initialTokens = data as! InitialTokens
                 loadSuccess()
             }, failure: loadFailure)
-        }
-        
-        getJobSeeker(success: {
+        } else {
             loadSuccess()
-        }, failure: loadFailure)
+        }
     }
     
     static func getIdByName(_ objects: [MJPObjectWithName], name: String!) -> NSNumber! {
@@ -185,9 +190,21 @@ class AppData: NSObject {
     
     static func getJobSeeker(success: (() -> Void)?,
                              failure: ((String?, NSDictionary?) -> Void)?) {
-        if AppData.user.jobSeeker != nil {
+        if (user.isJobSeeker()) {
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 jobSeeker = data as! JobSeeker
+                success?()
+            }, failure: failure)
+        } else {
+            success?()
+        }
+    }
+    
+    static func getProfile(success: (() -> Void)?,
+                           failure: ((String?, NSDictionary?) -> Void)?) {
+        if (jobSeeker?.profile != nil) {
+            API.shared().loadJobProfileWithId(id: jobSeeker.profile, success: { (data) in
+                profile = data as! Profile
                 success?()
             }, failure: failure)
         } else {

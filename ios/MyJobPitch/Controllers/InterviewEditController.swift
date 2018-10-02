@@ -105,7 +105,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
 
             API.shared().changeInterview(interview: interviewForSave, type: "complete", success: { (_) in
                 AppData.getApplication(self.application.id, success: { (application) in
-                    self.closeModal()
+                    self.closeController()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
         } else {
@@ -119,7 +119,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             
             API.shared().saveInterview(interview: interviewForSave, success: { (_) in
                 AppData.getApplication(self.application.id, success: { (application) in
-                    self.closeModal()
+                    self.closeController()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
         }

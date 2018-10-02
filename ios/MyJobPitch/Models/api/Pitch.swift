@@ -8,11 +8,30 @@
 
 import Foundation
 
-class Pitch: MJPObject {
-
+class PitchObject: MJPObject {
+    
     var video: String!
     var thumbnail: String!
     var token: String!
+    
+}
+
+
+class Pitch: PitchObject {
+
     var job_seeker: NSNumber!
+    
+}
+
+class SpecificPitch: PitchObject {
+    
+    var job_seeker: NSNumber!
+    var application: NSNumber!
+    
+}
+
+class JobPitch: PitchObject {
+    
+    var job: NSNumber!
     
 }

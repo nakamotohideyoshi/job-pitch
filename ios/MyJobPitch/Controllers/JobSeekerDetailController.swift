@@ -39,8 +39,10 @@ class JobSeekerDetailController: MJPController {
     
     public var jobSeeker: JobSeeker!
     public var application: Application!
+    public var job: Job!
     public var viewMode = false
-    public var controlDelegate: ControlDelegate!
+    public var removeCallback: (() -> Void)?
+    public var connectCallback: (() -> Void)?
     
     var interview: Interview!
     var interviews = [Interview]()
@@ -57,16 +59,10 @@ class JobSeekerDetailController: MJPController {
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
             
             isProfile = true
-
-            self.showLoading()
-            AppData.getJobSeeker(success: { 
-                self.hideLoading()
-                self.jobSeeker = AppData.jobSeeker
-                self.loadData()
-            }, failure: self.handleErrors)
-        } else {
-            loadData()
+            jobSeeker = AppData.jobSeeker
         }
+        
+        loadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -142,7 +138,7 @@ class JobSeekerDetailController: MJPController {
             emailLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.mobile != nil && ((jobSeeker.mobilePublic && application != nil) || isProfile) {
+        if jobSeeker.mobile != nil && jobSeeker.mobile != "" && ((jobSeeker.mobilePublic && application != nil) || isProfile) {
             mobileLabel.text = jobSeeker.mobile + (!jobSeeker.mobilePublic ? " (private)" : "")
             mobileLabel.superview?.isHidden = false
         } else {
@@ -192,6 +188,7 @@ class JobSeekerDetailController: MJPController {
     
     func editProfile() {
         let controller = JobSeekerProfileController.instantiate()
+        controller.isModal = true
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
@@ -235,9 +232,26 @@ class JobSeekerDetailController: MJPController {
             
             if self.application == nil {
                 
-                self.controlDelegate.apply(success: { (_) in
+                var application = ApplicationForCreation()
+                application.job = self.job?.id
+                application.jobSeeker = self.jobSeeker.id
+                
+                API.shared().createApplication(application: application, success: { (data) in
+                    
+                    application = data as! ApplicationForCreation
+                    AppData.getApplication(application.id, success: nil, failure: nil)
                     self.popController()
-                }, failure: nil)
+                    self.connectCallback?()
+                    
+                }) { (message, errors) in
+                    
+                    self.hideLoading()
+                    if errors?["NO_TOKENS"] != nil {
+                        PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                    } else {
+                        self.handleErrors(message: message, errors: errors)
+                    }
+                }
                 
             } else {
                 
@@ -268,9 +282,13 @@ class JobSeekerDetailController: MJPController {
             self.showLoading()
 
             if self.application == nil {
-                self.controlDelegate.remove(success: { (_) in
-                    self.popController()
-                }, failure: nil)
+                let request = ExclusionJobSeeker()
+                request.job = self.job.id
+                request.jobSeeker = self.jobSeeker.id
+                
+                API.shared().ExclusionJobSeeker(request, success: { (_) in
+                    self.removeCallback?()
+                }, failure: self.handleErrors)
             } else {
                 API.shared().deleteApplication(id: self.application.id, success: {
                     self.updateApplication()

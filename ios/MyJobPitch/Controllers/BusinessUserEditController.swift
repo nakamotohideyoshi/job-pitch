@@ -89,7 +89,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().createBusinessUser(businessId: business.id, businessUser: businessUserForCreation, success: { (data) in
                 AppData.getBusinessUsers(businessId: self.business.id, success: {
-                    self.closeModal()
+                    self.closeController()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
         } else {
@@ -98,7 +98,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
                 AppData.getBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: { (_) in
-                    self.closeModal()
+                    self.closeController()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
             
@@ -113,7 +113,7 @@ class BusinessUserEditController: MJPController {
         businessUserForCreation.locations = businessUser.locations
         
         API.shared().reCreateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: nil, success: { (data) in
-            self.closeModal()
+            self.closeController()
         }, failure: self.handleErrors)
     }
     
@@ -124,7 +124,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id, success: { (data) in
                 AppData.removeBusinessUser(self.businessUser.id)
-                self.closeModal()
+                self.closeController()
             }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)
     }

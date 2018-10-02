@@ -20,7 +20,7 @@ class MJPController: UIViewController {
     var isModal = false {
         didSet {
             if isModal {
-                navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeModal))
+                navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeController))
             } else {
                 navigationItem.leftBarButtonItem = nil
             }
@@ -243,8 +243,12 @@ class MJPController: UIViewController {
         
     }
     
-    func closeModal() {
-        dismiss(animated: true, completion: nil)
+    func closeController() {
+        if (isModal) {
+            dismiss(animated: true, completion: nil)
+        } else {
+            _ = navigationController?.popViewController(animated: true)
+        }
     }
         
 }

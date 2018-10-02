@@ -152,6 +152,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                 'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     can_create_businesses = models.BooleanField(default=False)
+    employees = models.ManyToManyField('hr.Employee', related_name='employees', through='hr.EmployeeUser')
 
     objects = UserManager()
 

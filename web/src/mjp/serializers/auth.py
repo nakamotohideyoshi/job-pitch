@@ -24,7 +24,13 @@ class LoginSerializer(BaseLoginSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = get_user_model()
         fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
         read_only_fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
+
+
+class UserDetailsSerializerV6(UserDetailsSerializer):
+    class Meta(UserDetailsSerializer.Meta):
+        fields = UserDetailsSerializer.Meta.fields + ('employees',)
+        read_only_fields = UserDetailsSerializer.Meta.fields + ('employees',)

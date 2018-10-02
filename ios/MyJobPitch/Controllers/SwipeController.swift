@@ -8,13 +8,6 @@
 
 import UIKit
 
-protocol ControlDelegate {
-    func apply(success: ((NSObject?) -> Void)?,
-               failure: ((String?, NSDictionary?) -> Void)?)
-    func remove(success: ((NSObject?) -> Void)?,
-                failure: ((String?, NSDictionary?) -> Void)?)
-}
-
 class SwipeController: MJPController {
     
     @IBOutlet weak var infoLabel: UILabel!
@@ -22,9 +15,7 @@ class SwipeController: MJPController {
     @IBOutlet weak var creditsButton: UIButton!
     @IBOutlet weak var emptyView: UILabel!
     
-    var searchJob: Job!
-    var jobSeeker: JobSeeker!
-    var profile: Profile!
+    public var searchJob: Job!
     
     var data: [MJPObject]!
     
@@ -61,15 +52,6 @@ class SwipeController: MJPController {
             searchJob = (AppData.jobs.filter { $0.id === searchJob.id })[0]
             infoLabel.text = String(format: "%@, (%@)", searchJob.title, searchJob.getBusinessName())
         }
-        
-//        if AppData.user.isJobSeeker() {
-//            showLoading()
-//            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-//                self.hideLoading()
-//                self.jobSeeker = data as! JobSeeker
-////                self.showInactiveBanner()
-//            }, failure: self.handleErrors)
-//        }
     }
     
     func refresh() {
@@ -78,20 +60,9 @@ class SwipeController: MJPController {
         
         if AppData.user.isJobSeeker() {
             
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                
-                self.jobSeeker = data as! JobSeeker
-                
-                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                    
-                    self.profile = data as! Profile
-                    AppData.searchJobs(success: {
-                        self.refreshCompleted(AppData.jobs)
-                    }, failure: self.handleErrors)
-                    
-                }, failure: self.handleErrors)
-                
-            }, failure: self.handleErrors)
+            AppData.searchJobs(success: {
+                self.refreshCompleted(AppData.jobs)
+            }, failure: handleErrors)
             
         } else {
             
@@ -161,8 +132,8 @@ class SwipeController: MJPController {
             
             let job = data[index] as! Job
             let workplace = job.locationData!
-            let distance = AppHelper.distance(latitude1: profile.latitude!,
-                                              longitude1: (profile.longitude)!,
+            let distance = AppHelper.distance(latitude1: AppData.profile.latitude!,
+                                              longitude1: (AppData.profile.longitude)!,
                                               latitude2: (workplace.latitude)!,
                                               longitude2: (workplace.longitude)!)
             let logo = job.getImage()
@@ -221,12 +192,15 @@ class SwipeController: MJPController {
                 if AppData.user.isJobSeeker() {
                     let controller = ApplicationDetailsController.instantiate()
                     controller.job = item as! Job
-                    controller.controlDelegate = self
+                    controller.applyCallback = self.removeCard
+                    controller.removeCallback = self.removeCard
                     self.navigationController?.pushViewController(controller, animated: true)
                 } else {
                     let controller = JobSeekerDetailController.instantiate()
                     controller.jobSeeker = item as! JobSeeker
-                    controller.controlDelegate = self
+                    controller.job = self.searchJob
+                    controller.connectCallback = self.removeCard
+                    controller.removeCallback = self.removeCard
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             })
@@ -259,6 +233,7 @@ class SwipeController: MJPController {
     func editAction() {
         if AppData.user.isJobSeeker() {
             let controller = JobSeekerProfileController.instantiate()
+            controller.isModal = true
             present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         } else {
             let controller = JobDetailController.instantiate()
@@ -277,95 +252,68 @@ class SwipeController: MJPController {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    static func instantiate() -> SwipeController {
-        return AppHelper.instantiate("Swipe") as! SwipeController
-    }    
-}
-
-extension SwipeController: MDCSwipeToChooseDelegate {
-    
-    func view(_ view: UIView!, shouldBeChosenWith direction: MDCSwipeDirection) -> Bool {
-        return true
-    }
-    
-    func view(_ view: UIView!, wasChosenWith direction: MDCSwipeDirection) {
-        if direction == .right {
-            apply(success: nil, failure: handleErrors)
-        } else {
-            remove(success: nil, failure: nil)
-        }
-    }
-}
-
-extension SwipeController: ControlDelegate {
-    func apply(success: ((NSObject?) -> Void)?,
-               failure: ((String?, NSDictionary?) -> Void)?) {
+    func apply() {
         if AppData.user.isJobSeeker() {
-            if !jobSeeker.active {
+
+            if (!AppData.jobSeeker.active) {
                 PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
-                reloadCard()
                 return
             }
             
-            if jobSeeker.profileImage == nil {
+            if (AppData.jobSeeker.profileImage == nil) {
                 PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
-                reloadCard()
                 return
             }
             
-            if searchJob.requiresCV && jobSeeker.cv == nil {
+            let job = self.data[self.currentIndex - self.cards.count] as! Job
+            if (job.requiresCV && AppData.jobSeeker.cv == nil) {
                 PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel", cancelCallback: nil)
-                reloadCard()
                 return
             }
-        }
-        
-        let newApplication = ApplicationForCreation()
-        let selectedId = data[currentIndex - cards.count].id
-        if AppData.user.isJobSeeker() {
-            newApplication.job = selectedId
-            newApplication.jobSeeker = AppData.user.jobSeeker
+            
+            let controller = JobApplyController.instantiate()
+            controller.job = job
+            controller.completeCallback = {
+                self.removeCard()
+            }
+            present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+
         } else {
-            newApplication.job = searchJob?.id
-            newApplication.jobSeeker = selectedId
-        }
-        
-        showLoading()
-        API.shared().createApplication(application: newApplication, success: { (data) in
             
-            self.hideLoading()
+            var application = ApplicationForCreation()
+            application.job = searchJob?.id
+            application.jobSeeker = data[currentIndex - cards.count].id
             
-            if AppData.user.isRecruiter() {
+            API.shared().createApplication(application: application, success: { (data) in
                 
-                let newApplication = data as! ApplicationForCreation
+                application = data as! ApplicationForCreation
                 
-                AppData.getApplication(newApplication.id, success: { (application) in
+                AppData.getApplication(application.id, success: { (application) in
                     self.searchJob = application.job
                     self.updateTokens()
                 }, failure: self.handleErrors)
+                
+                self.removeCard()
+                
+            }) { (message, errors) in
+                
+                if errors?["NO_TOKENS"] != nil {
+                    PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                } else {
+                    self.handleErrors(message: message, errors: errors)
+                }
+                self.reloadCard()
             }
-            
-            self.removeCard()
-            
-        }) { (message, errors) in
-            
-            self.hideLoading()
-            if errors?["NO_TOKENS"] != nil {
-                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
-            } else {
-                self.handleErrors(message: message, errors: errors)
-            }
-            self.reloadCard()
         }
     }
-    func remove(success: ((NSObject?) -> Void)?,
-                failure: ((String?, NSDictionary?) -> Void)?) {
+
+    func remove() {
         
         if AppData.user.isRecruiter() {
             
@@ -384,6 +332,23 @@ extension SwipeController: ControlDelegate {
             removeCard()
         }
     }
+    
+    static func instantiate() -> SwipeController {
+        return AppHelper.instantiate("Swipe") as! SwipeController
+    }    
 }
 
-
+extension SwipeController: MDCSwipeToChooseDelegate {
+    
+    func view(_ view: UIView!, shouldBeChosenWith direction: MDCSwipeDirection) -> Bool {
+        return true
+    }
+    
+    func view(_ view: UIView!, wasChosenWith direction: MDCSwipeDirection) {
+        if direction == .right {
+            apply()
+        } else {
+            remove()
+        }
+    }
+}

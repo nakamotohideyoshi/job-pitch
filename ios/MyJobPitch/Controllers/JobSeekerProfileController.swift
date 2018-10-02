@@ -48,9 +48,6 @@ class JobSeekerProfileController: MJPController {
     var nationalityNames = [String]()
     var selectedNationalityNames = [String]()
     
-    var jobSeeker: JobSeeker!
-    var saveComplete: ((JobSeeker) -> Void)!
-    
     var photoPicker: ImagePicker!
     var photoImage: UIImage!
     var cvPicker: ImagePicker!
@@ -59,9 +56,7 @@ class JobSeekerProfileController: MJPController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        isModal = true
-        
+                
         photoPicker = ImagePicker()
         photoPicker.delegate = self
         
@@ -100,21 +95,12 @@ class JobSeekerProfileController: MJPController {
         
         // load jobseeker data
         
-        if (AppData.user.jobSeeker == nil) {
-            
+        if (AppData.jobSeeker == nil) {
+            photoView.image = UIImage(named: "avatar")
             email.text = AppData.email
-            cvViewButton.isHidden = true
-            
+            cvViewButton.isHidden = true            
         } else {
-            
-            showLoading()
-            
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                self.hideLoading()
-                self.jobSeeker = data as! JobSeeker
-                self.load()
-                AppData.existProfile = self.jobSeeker.profile != nil
-            }, failure: self.handleErrors)
+            load()
         }
     }
     
@@ -127,6 +113,8 @@ class JobSeekerProfileController: MJPController {
     }
     
     func load() {
+        
+        let jobSeeker = AppData.jobSeeker!
         
         if jobSeeker.profileThumb != nil {
             AppHelper.loadImageURL(imageUrl: jobSeeker.profileThumb, imageView: photoView, completion: nil)
@@ -192,7 +180,7 @@ class JobSeekerProfileController: MJPController {
     }
     
     @IBAction func cvViewAction(_ sender: Any) {
-        let url = URL(string: jobSeeker.cv)!
+        let url = URL(string: AppData.jobSeeker.cv)!
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
@@ -245,7 +233,7 @@ class JobSeekerProfileController: MJPController {
         var url = videoUrl
         
         if url == nil {
-            if let video = jobSeeker.getPitch()?.video {
+            if let video = AppData.jobSeeker.getPitch()?.video {
                 url = URL(string: video)
             }
         }
@@ -269,44 +257,44 @@ class JobSeekerProfileController: MJPController {
             return
         }
         
-        let id = jobSeeker == nil ? nil : jobSeeker.id
-        let newJobseeker = JobSeekerForSave()
-        newJobseeker.active = active.isOn
-        newJobseeker.firstName = firstName.text?.capitalized
-        newJobseeker.lastName = lastName.text?.capitalized
-        newJobseeker.email = AppData.email
-        newJobseeker.telephone = telephone.text
-        newJobseeker.mobile = mobile.text
+        let jobSeeker = JobSeeker()
+        jobSeeker.id = AppData.jobSeeker?.id
+        jobSeeker.active = active.isOn
+        jobSeeker.firstName = firstName.text?.capitalized
+        jobSeeker.lastName = lastName.text?.capitalized
+        jobSeeker.email = AppData.email
+        jobSeeker.telephone = telephone.text
+        jobSeeker.mobile = mobile.text
         
         if let intAge = Int(age.text!) {
-            newJobseeker.age = NSNumber(value: intAge)
+            jobSeeker.age = NSNumber(value: intAge)
         }
         
         if selectedSexNames.count > 0 {
-            newJobseeker.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
+            jobSeeker.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            newJobseeker.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
+            jobSeeker.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
         if (nationalNumber.text?.isEmpty == false) {
-            newJobseeker.national_insurance_number = nationalNumber.text
+            jobSeeker.national_insurance_number = nationalNumber.text
         }
         
-        newJobseeker.emailPublic = emailPublic.isOn
-        newJobseeker.telephonePublic = telephonePublic.isOn
-        newJobseeker.mobilePublic = mobilePublic.isOn
-        newJobseeker.agePublic = agePublic.isOn
-        newJobseeker.sexPublic = sexPublic.isOn
-        newJobseeker.nationalityPublic = nationalityPublic.isOn
-        newJobseeker.desc = descView.text
-        newJobseeker.hasReferences = hasReferences.isOn
-        newJobseeker.truthConfirmation = tickBox.isOn
+        jobSeeker.emailPublic = emailPublic.isOn
+        jobSeeker.telephonePublic = telephonePublic.isOn
+        jobSeeker.mobilePublic = mobilePublic.isOn
+        jobSeeker.agePublic = agePublic.isOn
+        jobSeeker.sexPublic = sexPublic.isOn
+        jobSeeker.nationalityPublic = nationalityPublic.isOn
+        jobSeeker.desc = descView.text
+        jobSeeker.hasReferences = hasReferences.isOn
+        jobSeeker.truthConfirmation = tickBox.isOn
         
         showLoading()
         
-        API.shared().saveJobSeeker(id: id, data: newJobseeker, photo: photoImage, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+        API.shared().saveJobSeeker(jobSeeker, photo: photoImage, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
             
             if self.photoImage != nil || self.cvdata != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
@@ -315,16 +303,17 @@ class JobSeekerProfileController: MJPController {
             
         }, success: { (data) in
             
-            self.jobSeeker = data as! JobSeeker
-            self.cvViewButton.isHidden = self.jobSeeker.cv == nil
-            AppData.existProfile = self.jobSeeker.profile != nil
+            AppData.jobSeeker = data as! JobSeeker
+            
+            self.cvViewButton.isHidden = AppData.jobSeeker.cv == nil
             
             if self.videoUrl != nil {
                 
                 self.showLoading()
                 
-                PitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
+                JSPitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
                     self.videoUrl = nil
+                    AppData.jobSeeker.pitches = [pitch! as! Pitch]
                     self.saveSuccess()
                 }) { (progress) in
                     if progress < 1 {
@@ -338,18 +327,16 @@ class JobSeekerProfileController: MJPController {
                 self.saveSuccess()
             }
             
-        }, failure: self.handleErrors)
+        }, failure: handleErrors)
         
     }
     
     func saveSuccess() {
-        
         if AppData.user.jobSeeker == nil {
-            AppData.user.jobSeeker = jobSeeker.id
+            AppData.user.jobSeeker = AppData.jobSeeker.id
             SideMenuController.pushController(id: "job_profile")
         } else {
-            closeModal()
-            saveComplete?(jobSeeker)
+            closeController()
         }
     }
     

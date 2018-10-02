@@ -103,7 +103,7 @@ class BusinessEditController: MJPController {
                 UserDefaults.standard.synchronize()
             }
             
-            self.closeModal()
+            self.closeController()
             self.saveComplete?(self.business)
             
         }, failure: handleErrors)

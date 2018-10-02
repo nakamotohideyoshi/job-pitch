@@ -143,7 +143,7 @@ class MapController: UIViewController {
             var address = "address unknown"
             if let firstAddress = response?.firstResult() {
                 let lines = firstAddress.lines!
-                if lines.count > 1 {
+                if lines.count > 0 {
                     address = ""
                     let line = lines[0]
                     if line != "" {

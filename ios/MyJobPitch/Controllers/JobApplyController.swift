@@ -10,23 +10,25 @@ import UIKit
 import AVFoundation
 import AVKit
 
-class PitchController: MJPController {
-
+class JobApplyController: MJPController {
+    
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var playIcon: UIImageView!
     @IBOutlet weak var playButton: UIButton!
-    @IBOutlet weak var uploadButton: GreenButton!
-    @IBOutlet weak var noRecording: UILabel!
-
-    var videoUrl: URL!
+    @IBOutlet weak var applyButton: GreenButton!
     
+    public var job: Job!
+    public var completeCallback: (() -> Void)?
+    
+    var videoUrl: URL!
     var pitch: Pitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
-
+        
+        isModal = true
+        
         self.pitch = AppData.jobSeeker.getPitch()
         if let thumbnail = self.pitch?.thumbnail {
             AppHelper.loadImageURL(imageUrl: thumbnail, imageView: self.imgView, completion: {
@@ -34,7 +36,7 @@ class PitchController: MJPController {
                 self.playButton.isEnabled = true
             })
         } else {
-            self.noRecording.isHidden = false
+            applyButton.isHidden = job.requiresPitch
         }
     }
     
@@ -47,17 +49,13 @@ class PitchController: MJPController {
                 url = URL(string: video)
             }
         }
-       
+        
         if url != nil {
             let player = AVPlayer(url: url!)
             let playerController = MJPPlayerController();
             playerController.player = player
             present(playerController, animated: true, completion: nil)
         }
-    }
-    
-    @IBAction func playDemoAction(_ sender: Any) {
-        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
     }
     
     @IBAction func recordVideoAction(_ sender: Any) {
@@ -69,9 +67,7 @@ class PitchController: MJPController {
             self.videoUrl = videoUrl
             self.playIcon.isHidden = false
             self.playButton.isEnabled = true
-            self.uploadButton.alpha = 1
-            self.uploadButton.isHidden = false
-            self.noRecording.isHidden = true
+            self.applyButton.isHidden = false
             
             // get image
             
@@ -95,41 +91,45 @@ class PitchController: MJPController {
         present(controller, animated: true, completion: nil)
         
     }
-
-    @IBAction func uploadAction(_ sender: Any) {
+    
+    @IBAction func applyAction(_ sender: Any) {
         
-        showLoading(label: "0%", withProgress: 0)
+        let application = ApplicationForCreation()
+        application.job = job.id
+        application.jobSeeker = AppData.jobSeeker.id
         
-        JSPitchUploader().uploadVideo(videoUrl: videoUrl, complete: { (pitch) in
-            self.hideLoading()
+        showLoading()
+        API.shared().createApplication(application: application, success: { (data) in
             
-            if pitch != nil {
-                self.pitch = pitch as! Pitch!
-                AppData.jobSeeker.pitches = [self.pitch]
-                
-                self.videoUrl = nil
-                self.uploadButton.isHidden = true
-                
-                PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
-            } else {
-                PopupController.showGray("Failed to upload", ok: "OK")
+            let applyCompleted = {
+                self.closeController()
+                self.completeCallback?()
             }
-        }) { (progress) in
-            if progress < 1 {
-                self.showLoading(label: "Uploading Pitch...", withProgress: progress)
-            } else {
-                self.showLoading()
+            
+            if self.videoUrl == nil {
+                applyCompleted();
+                return;
             }
-        }
+            
+            let applicationId = (data as! ApplicationForCreation).id
+            
+            SpecificPitchUploader().uploadVideo(videoUrl: self.videoUrl, application: applicationId!, complete: { (pitch) in
+                
+                applyCompleted()
+            
+            }) { (progress) in
+                if progress < 1 {
+                    self.showLoading(label: "Uploading Pitch...", withProgress: progress)
+                } else {
+                    self.showLoading()
+                }
+            }
+            
+        }, failure: handleErrors)
     }
     
-    @IBAction func helpAction(_ sender: Any) {
-        let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
-        controller.navigationItem.title = "Recording Pitch"
-        controller.file = "pitch"
-        controller.isModal = true
-        let navController = UINavigationController(rootViewController: controller)
-        present(navController, animated: true, completion: nil)
+    static func instantiate() -> JobApplyController {
+        return AppHelper.instantiate("JobApply") as! JobApplyController
     }
     
 }

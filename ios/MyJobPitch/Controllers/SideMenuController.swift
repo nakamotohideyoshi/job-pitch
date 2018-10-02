@@ -146,7 +146,7 @@ extension SideMenuController: UITableViewDataSource {
             cell.isUserInteractionEnabled = true
             let pers = item["per"]?.characters
             if AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && LoginController.userType == 1) {
-                if (pers!.contains("J") && AppData.user.jobSeeker == nil) || (pers!.contains("P") && !AppData.existProfile) {
+                if (pers!.contains("J") && AppData.user.jobSeeker == nil) || (pers!.contains("P") && AppData.profile == nil) {
                     cell.isUserInteractionEnabled = false
                 }
             } else {

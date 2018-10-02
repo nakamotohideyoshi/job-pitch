@@ -139,9 +139,9 @@ class ApplicationAddController: MJPController {
         API.shared().createExternalApplication(application: application, success: { (data) in
             let application = data as! Application
             AppData.getApplication(application.id, success: { (_) in
-                self.closeModal()
+                self.closeController()
             }, failure: { (_, _) in
-                self.closeModal()
+                self.closeController()
             })
         }, failure: self.handleErrors)
     }

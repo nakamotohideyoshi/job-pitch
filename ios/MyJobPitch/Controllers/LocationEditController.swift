@@ -180,7 +180,7 @@ class LocationEditController: MJPController {
                 UserDefaults.standard.synchronize()
             }
             
-            self.closeModal()
+            self.closeController()
             self.saveComplete?(self.workplace)
             
         }, failure: handleErrors)

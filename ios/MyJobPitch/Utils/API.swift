@@ -319,6 +319,38 @@ class API: NSObject {
                   failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/pitches/%@/", id), success: success, failure: failure)
     }
+    
+    // ================= Specific Pitch =====================
+    
+    func saveSpecificPitch(pitch: SpecificPitch,
+                   success: ((NSObject?) -> Void)!,
+                   failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/application-pitches/", request: pitch,
+                   success: success,
+                   failure: failure)
+    }
+    
+    func getSpecificPitch(id: NSNumber,
+                  success: ((NSObject) -> Void)!,
+                  failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/application-pitches/%@/", id), success: success, failure: failure)
+    }
+    
+    // ================= JovPitch =====================
+    
+    func saveJobPitch(pitch: JobPitch,
+                      success: ((NSObject?) -> Void)!,
+                      failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/job-videos/", request: pitch,
+                   success: success,
+                   failure: failure)
+    }
+    
+    func getJobPitch(id: NSNumber,
+                     success: ((NSObject) -> Void)!,
+                     failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/job-videos/%@/", id), success: success, failure: failure)
+    }
 
 
     // ================= Profile =====================
@@ -351,14 +383,15 @@ class API: NSObject {
 
     // ================= Jobseeker =====================
 
-    func saveJobSeeker(id: NSNumber!, data: JobSeekerForSave, photo: UIImage!, cvdata: Data!,
+    func saveJobSeeker(_ jobSeeker: JobSeeker, photo: UIImage!, cvdata: Data!,
                        progress:((UInt, Int64, Int64) -> Void)!,
                        success: ((NSObject?) -> Void)!,
                        failure: ((String?, NSDictionary?) -> Void)!) {
         clearCookies()
+        let id = jobSeeker.id
         let method = id == nil ? RKRequestMethod.POST : RKRequestMethod.PATCH
-        let path = id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", id)
-        let request = manager.multipartFormRequest(with: data,
+        let path = id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", id!)
+        let request = manager.multipartFormRequest(with: jobSeeker,
                                                    method: method,
                                                    path: path,
                                                    parameters: nil,
@@ -480,22 +513,7 @@ class API: NSObject {
                      failure: failure)
     }
 
-    // ================= JovPitch =====================
     
-    func saveJobPitch(pitch: JobPitch,
-                   success: ((NSObject?) -> Void)!,
-                   failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject("/api/job-videos/", request: pitch,
-                   success: success,
-                   failure: failure)
-    }
-    
-    func getJobPitch(id: NSNumber,
-                  success: ((NSObject) -> Void)!,
-                  failure: ((String?, NSDictionary?) -> Void)!) {
-        getObject(String(format: "/api/job-videos/%@/", id), success: success, failure: failure)
-    }
-
     // ================= Job =====================
 
     func saveJob(job: Job,

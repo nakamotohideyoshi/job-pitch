@@ -176,23 +176,21 @@ class LoginController: MJPController {
                     
                 } else if AppData.user.isJobSeeker() {
                     
-                    API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                        let jobSeeker = data as! JobSeeker
-                        AppData.existProfile = jobSeeker.profile != nil
-                        if AppData.existProfile {
-                            SideMenuController.pushController(id: "find_job")
-                        } else {
-                            SideMenuController.pushController(id: "job_profile")
-                        }
-                    }, failure: self.handleErrors)
+                    if (AppData.jobSeeker.profile == nil) {
+                        SideMenuController.pushController(id: "job_profile")
+                    } else {
+                        SideMenuController.pushController(id: "find_job")
+                    }
 
                 } else {
                     
                     let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
                         LoginController.userType = 1
+                        AppData.userRole = Role.ROLE_JOB_SEEKER_ID
                         self.showIntro()
                     }, cancel: "I Need Staff", cancelCallback: {
                         LoginController.userType = 2
+                        AppData.userRole = Role.ROLE_RECRUITER_ID
                         SideMenuController.pushController(id: "businesses")
                     })
                     popupController.okButton.backgroundColor = AppData.yellowColor

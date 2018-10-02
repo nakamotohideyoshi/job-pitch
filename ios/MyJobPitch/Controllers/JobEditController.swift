@@ -282,7 +282,6 @@ class JobEditController: MJPController {
         JobPitchUploader().uploadVideo(videoUrl: videoUrl, job: job.id, complete: { (pitch) in
             self.saveFinished()
         }) { (progress) in
-            print(progress)
             if progress < 1 {
                 self.showLoading(label: "Uploading Pitch...", withProgress: progress)
             } else {
@@ -300,7 +299,7 @@ class JobEditController: MJPController {
                 UserDefaults.standard.synchronize()
             }
             
-            self.closeModal()
+            self.closeController()
             self.saveComplete?(self.job)
             
         }, failure: handleErrors)

@@ -12,28 +12,14 @@ import AVFoundation
 
 class PitchUploader: NSObject {
 
-    var videoUrl: URL!
-    var pitch: Pitch!
-    var complete: ((Pitch?) -> Void)!
+    var pitch: PitchObject!
     var progress: ((Float) -> Void)!
+    var complete: ((PitchObject?) -> Void)!
+    var endpoint: String!
     
-    func uploadVideo(videoUrl: URL!, complete:((Pitch?) -> Void)!, progress:((Float) -> Void)!) {
+    func convertVideo(_ url: URL!) {
         
-        self.videoUrl = videoUrl
-        self.complete = complete
-        self.progress = progress
-        
-        API.shared().savePitch(pitch: Pitch(), success: { (data) in
-            self.pitch = data as! Pitch!
-            self.convertVideo()
-        }) { (message, errors) in
-            self.uploadFailed()
-        }
-    }
-    
-    func convertVideo() {
-        
-        let avAsset = AVURLAsset(url: videoUrl)
+        let avAsset = AVURLAsset(url: url)
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: avAsset)
         if compatiblePresets.contains(AVAssetExportPresetLowQuality) {
             
@@ -51,7 +37,7 @@ class PitchUploader: NSObject {
             })
             
         } else {
-            startUpload(videoUrl)
+            startUpload(url)
         }
         
     }
@@ -67,7 +53,7 @@ class PitchUploader: NSObject {
         }
         
         let urlKey = API.apiRoot.absoluteString.replacingOccurrences(of: "/", with: "")
-        let keyname = String(format: "%@/%@.%@.pitches.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
+        let keyname = String(format: "%@/%@.%@.%@.%@", urlKey, pitch.token, pitch.id, endpoint, url.lastPathComponent)
         let transferUtility = AWSS3TransferUtility.default()
         (transferUtility.uploadFile(url,
                                     bucket: "mjp-android-uploads",
@@ -91,22 +77,7 @@ class PitchUploader: NSObject {
         
     }
     
-    func getPitch() {
-        
-        API.shared().getPitch(id: pitch.id, success: { (data) in
-            let pitch = data as! Pitch
-            if pitch.video == nil {
-                Thread.sleep(forTimeInterval: 2)
-                self.getPitch()
-            } else {
-                DispatchQueue.main.async {
-                    self.complete?(pitch)
-                }
-            }
-        }) { (message, errors) in
-            self.uploadFailed()
-        }
-    }
+    func getPitch() {}
     
     func uploadFailed() {
         DispatchQueue.main.async {

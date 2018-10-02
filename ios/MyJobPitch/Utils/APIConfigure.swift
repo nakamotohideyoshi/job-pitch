@@ -226,6 +226,56 @@ class APIConfigure: NSObject {
                                path: "/api/pitches/:pk/",
                                method: .GET)
 
+        // ================= Specific Pitch =====================
+        
+        let specificPitchArray = [ "id", "video", "thumbnail", "job_seeker", "application", "token" ]
+        
+        let specificPitchMapping = createResponseMappingForClass(SpecificPitch.classForCoder(),
+                                                            array: specificPitchArray,
+                                                            dictionary: nil,
+                                                            relationships: nil)
+        
+        configureMapping(SpecificPitch.classForCoder(),
+                         requestArray: [ "application", "job_seeker" ],
+                         requestDictionary: nil,
+                         requestRelationships: nil,
+                         responseClass: SpecificPitch.classForCoder(),
+                         responseArray: specificPitchArray,
+                         responseDictionary: nil,
+                         responseRelationships: nil,
+                         path: "/api/application-pitches/",
+                         method: .POST)
+        
+        configureSimpleMapping(SpecificPitch.classForCoder(),
+                               mappingArray: specificPitchArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/application-pitches/:pk/",
+                               method: .GET)
+
+        // ================= Job Pitch =====================
+        
+        let jobPitchArray = [ "id", "video", "thumbnail", "job", "token" ]
+        
+        let jobPitchMapping = createResponseMappingForClass(JobPitch.classForCoder(),
+                                                            array: pitchArray,
+                                                            dictionary: nil,
+                                                            relationships: nil)
+        
+        configureSimpleMapping(JobPitch.classForCoder(),
+                               mappingArray: jobPitchArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/job-videos/",
+                               method: .POST)
+        
+        configureSimpleMapping(JobPitch.classForCoder(),
+                               mappingArray: jobPitchArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/job-videos/:pk/",
+                               method: .GET)
+        
         // ================= Profile =====================
 
         let profileArray = [ "id", "created", "updated", "latitude",
@@ -257,16 +307,16 @@ class APIConfigure: NSObject {
         let jobSeekerForSaveArray = [ "active", "email", "telephone", "mobile", "age", "sex", "nationality", "national_insurance_number" ]
         
         let jobSeekerForSaveDictionary = [ "firstName":            "first_name",
-                                    "lastName":             "last_name",
-                                    "desc":                 "description",
-                                    "emailPublic":          "email_public",
-                                    "telephonePublic":      "telephone_public",
-                                    "mobilePublic":         "mobile_public",
-                                    "agePublic":            "age_public",
-                                    "sexPublic":            "sex_public",
-                                    "nationalityPublic":    "nationality_public",
-                                    "hasReferences":        "has_references",
-                                    "truthConfirmation":    "truth_confirmation" ]
+                                           "lastName":             "last_name",
+                                           "desc":                 "description",
+                                           "emailPublic":          "email_public",
+                                           "telephonePublic":      "telephone_public",
+                                           "mobilePublic":         "mobile_public",
+                                           "agePublic":            "age_public",
+                                           "sexPublic":            "sex_public",
+                                           "nationalityPublic":    "nationality_public",
+                                           "hasReferences":        "has_references",
+                                           "truthConfirmation":    "truth_confirmation" ]
         
         let jobSeekerArray = [ "id", "email", "created", "updated", "telephone", "mobile",
                                "age", "sex", "nationality", "national_insurance_number", "has_national_insurance_number", "profile", "cv", "active" ]
@@ -289,7 +339,7 @@ class APIConfigure: NSObject {
                                          "destination":     "pitches",
                                          "mapping":         pitchMapping ] ]
 
-        configureMapping(JobSeekerForSave.classForCoder(),
+        configureMapping(JobSeeker.classForCoder(),
                          requestArray: jobSeekerForSaveArray,
                          requestDictionary: jobSeekerForSaveDictionary,
                          requestRelationships: nil,
@@ -300,7 +350,7 @@ class APIConfigure: NSObject {
                          path: "/api/job-seekers/",
                          method: [.GET, .POST])
 
-        configureMapping(JobSeekerForSave.classForCoder(),
+        configureMapping(JobSeeker.classForCoder(),
                          requestArray: jobSeekerForSaveArray,
                          requestDictionary: jobSeekerForSaveDictionary,
                          requestRelationships: nil,
@@ -395,29 +445,6 @@ class APIConfigure: NSObject {
                          method: .any)
 
 
-        // ================= JobPitch =====================
-        
-        let jobPitchArray = [ "id", "video", "thumbnail", "job", "token" ]
-        
-        let jobPitchMapping = createResponseMappingForClass(JobPitch.classForCoder(),
-                                                         array: pitchArray,
-                                                         dictionary: nil,
-                                                         relationships: nil)
-        
-        configureSimpleMapping(JobPitch.classForCoder(),
-                               mappingArray: jobPitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/job-videos/",
-                               method: .POST)
-        
-        configureSimpleMapping(JobPitch.classForCoder(),
-                               mappingArray: jobPitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/job-videos/:pk/",
-                               method: .GET)
-        
         // ================= Job =====================
 
         let jobArray = [ "id", "created", "updated", "title", "sector",
@@ -554,7 +581,7 @@ class APIConfigure: NSObject {
         
         // ================= Application =====================
         
-        let applictionCreateArray = [ "job", "shortlisted" ]
+        let applictionCreateArray = [ "id", "job", "shortlisted" ]
 
         let applictionCreateDictionary = [ "jobSeeker": "job_seeker" ]
 

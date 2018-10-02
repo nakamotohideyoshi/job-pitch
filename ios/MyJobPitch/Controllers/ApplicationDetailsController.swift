@@ -34,33 +34,13 @@ class ApplicationDetailsController: MJPController {
     public var job: Job!
     public var application: Application!
     public var viewMode = false
-    public var controlDelegate: ControlDelegate!
+    
+    public var removeCallback: (() -> Void)?
+    public var applyCallback: (() -> Void)?
     
     var interview: Interview!
     var interviews = [Interview]()
-    
-    var jobSeeker: JobSeeker!
-    var profile: Profile!
-    
     var resources = [MediaModel]()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if AppData.user.isJobSeeker() {
-
-            showLoading()
-
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                self.jobSeeker = data as! JobSeeker
-                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                    self.hideLoading()
-                    self.profile = data as! Profile
-                    self.loadData()
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
-        }
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -79,10 +59,6 @@ class ApplicationDetailsController: MJPController {
     }
     
     func loadData() {
-        
-        if AppData.user.isJobSeeker() && profile == nil {
-            return
-        }
         
         if application != nil {
             application = (AppData.applications.filter { $0.id == application.id })[0]
@@ -118,8 +94,8 @@ class ApplicationDetailsController: MJPController {
         
         contractLabel.text = AppData.getNameByID(AppData.contracts, id: job.contract)
         hoursLabel.text = AppData.getNameByID(AppData.hours, id: job.hours)
-        distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: workplace.latitude, longitude2: workplace.longitude)
-        distanceLabel.isHidden = application == nil
+        distanceLabel.text = AppHelper.distance(latitude1: AppData.profile.latitude, longitude1: AppData.profile.longitude, latitude2: workplace.latitude, longitude2: workplace.longitude)
+        distanceLabel.superview?.isHidden = application != nil
 
         interviewInfo.superview?.isHidden = interview == nil
         if (interview != nil) {
@@ -178,21 +154,48 @@ class ApplicationDetailsController: MJPController {
         }, failure: self.handleErrors)
     }
     
+    func showProfile() {
+        let controller = JobSeekerProfileController.instantiate()
+        controller.isModal = true
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
     @IBAction func applyAction(_ sender: Any) {
-        PopupController.showGreen("Are you sure you want to apply to this job?", ok: "Apply", okCallback: {
-            self.showLoading()
-            self.controlDelegate.apply(success: { (_) in
-                self.popController()
-            }, failure: nil)
-        }, cancel: "Cancel", cancelCallback: nil)
+        if (!AppData.jobSeeker.active) {
+            PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
+                self.showProfile()
+            }, cancel: "Cancel", cancelCallback: nil)
+            return
+        }
+        
+        if (AppData.jobSeeker.profileImage == nil) {
+            PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
+                self.showProfile()
+            }, cancel: "Cancel", cancelCallback: nil)
+            return
+        }
+        
+        if (job.requiresCV && AppData.jobSeeker.cv == nil) {
+            PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
+                self.showProfile()
+            }, cancel: "Cancel", cancelCallback: nil)
+            return
+        }
+        
+        let controller = JobApplyController.instantiate()
+        controller.job = job
+        controller.completeCallback = {
+            _ = self.navigationController?.popViewController(animated: false)
+            self.applyCallback?()
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     @IBAction func removeAction(_ sender: Any) {
         PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
             self.showLoading()
-            self.controlDelegate.remove(success: { (_) in
-                self.popController()
-            }, failure: nil)
+            self.popController()
+            self.removeCallback?()
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
@@ -217,10 +220,11 @@ class ApplicationDetailsController: MJPController {
     }
     
     @IBAction func messageAction(_ sender: Any) {
-        if jobSeeker != nil && !jobSeeker.active {
+        if AppData.jobSeeker != nil && !AppData.jobSeeker.active {
             
             PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
                 let controller = JobSeekerProfileController.instantiate()
+                controller.isModal = true
                 self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             }, cancel: "Cancel", cancelCallback: nil)
             

@@ -21,6 +21,11 @@
 		214B90E02156D11C0037BBD0 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 214B90DE2156D11B0037BBD0 /* EmptyView.xib */; };
 		214B90E22156D1810037BBD0 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214B90E12156D1810037BBD0 /* EmptyView.swift */; };
 		21AE3C27214A4FE700E73BAC /* ApplicationAddController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE3C26214A4FE700E73BAC /* ApplicationAddController.swift */; };
+		21BFAA3C2162B5B6003D0028 /* JobApplyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BFAA3B2162B5B6003D0028 /* JobApplyController.swift */; };
+		21BFAA422162C081003D0028 /* JobPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BFAA3E2162C081003D0028 /* JobPitchUploader.swift */; };
+		21BFAA432162C081003D0028 /* JSPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BFAA3F2162C081003D0028 /* JSPitchUploader.swift */; };
+		21BFAA442162C081003D0028 /* PitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BFAA402162C081003D0028 /* PitchUploader.swift */; };
+		21BFAA452162C081003D0028 /* SpecificPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BFAA412162C081003D0028 /* SpecificPitchUploader.swift */; };
 		21CF19302141883D003185F0 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF19282141883D003185F0 /* Duration.swift */; };
 		21CF19312141883D003185F0 /* Int+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF19292141883D003185F0 /* Int+Timepiece.swift */; };
 		21CF19322141883D003185F0 /* NSCalendar+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192A2141883D003185F0 /* NSCalendar+Timepiece.swift */; };
@@ -53,7 +58,6 @@
 		D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */; };
 		D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4231E1156C3004C3F02 /* CustomView.swift */; };
 		D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */; };
-		D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */; };
 		D742268D20ACC579002D3F4C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = D742268C20ACC579002D3F4C /* iCarousel.m */; };
 		D742269020ACC5E2002D3F4C /* MediaView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D742268E20ACC5E2002D3F4C /* MediaView.xib */; };
 		D74226B420ACCDED002D3F4C /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269520ACCDED002D3F4C /* Application.swift */; };
@@ -65,7 +69,6 @@
 		D74226BA20ACCDED002D3F4C /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269B20ACCDED002D3F4C /* Image.swift */; };
 		D74226BB20ACCDED002D3F4C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269C20ACCDED002D3F4C /* InitialTokens.swift */; };
 		D74226BC20ACCDED002D3F4C /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269D20ACCDED002D3F4C /* Job.swift */; };
-		D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269E20ACCDED002D3F4C /* JobPitch.swift */; };
 		D74226BE20ACCDED002D3F4C /* JobSeeker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269F20ACCDED002D3F4C /* JobSeeker.swift */; };
 		D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A020ACCDED002D3F4C /* JobStatus.swift */; };
 		D74226C020ACCDED002D3F4C /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A120ACCDED002D3F4C /* Location.swift */; };
@@ -141,7 +144,6 @@
 		D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */; };
 		D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */; };
 		D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFBC6A1EF8E409003FC132 /* FileCell.swift */; };
-		D7E9347B1F4C153B00299762 /* PitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E9347A1F4C153B00299762 /* PitchUploader.swift */; };
 		D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */; };
 		D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* MapController.swift */; };
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
@@ -167,6 +169,11 @@
 		214B90DF2156D11C0037BBD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EmptyView.xib; sourceTree = "<group>"; };
 		214B90E12156D1810037BBD0 /* EmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmptyView.swift; path = Views/EmptyView.swift; sourceTree = "<group>"; };
 		21AE3C26214A4FE700E73BAC /* ApplicationAddController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationAddController.swift; path = Controllers/ApplicationAddController.swift; sourceTree = "<group>"; };
+		21BFAA3B2162B5B6003D0028 /* JobApplyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobApplyController.swift; path = Controllers/JobApplyController.swift; sourceTree = "<group>"; };
+		21BFAA3E2162C081003D0028 /* JobPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitchUploader.swift; path = Utils/PitchUploader/JobPitchUploader.swift; sourceTree = "<group>"; };
+		21BFAA3F2162C081003D0028 /* JSPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSPitchUploader.swift; path = Utils/PitchUploader/JSPitchUploader.swift; sourceTree = "<group>"; };
+		21BFAA402162C081003D0028 /* PitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PitchUploader.swift; path = Utils/PitchUploader/PitchUploader.swift; sourceTree = "<group>"; };
+		21BFAA412162C081003D0028 /* SpecificPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpecificPitchUploader.swift; path = Utils/PitchUploader/SpecificPitchUploader.swift; sourceTree = "<group>"; };
 		21CF19282141883D003185F0 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Duration.swift; path = Utils/WWCalendarTimeSelector/Duration.swift; sourceTree = "<group>"; };
 		21CF19292141883D003185F0 /* Int+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Int+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/Int+Timepiece.swift"; sourceTree = "<group>"; };
 		21CF192A2141883D003185F0 /* NSCalendar+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSCalendar+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/NSCalendar+Timepiece.swift"; sourceTree = "<group>"; };
@@ -201,7 +208,6 @@
 		D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationCell.swift; path = Views/ApplicationCell.swift; sourceTree = "<group>"; };
 		D72AE4231E1156C3004C3F02 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Views/CustomView.swift; sourceTree = "<group>"; };
 		D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePasswordController.swift; path = Controllers/ChangePasswordController.swift; sourceTree = "<group>"; };
-		D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitchUploader.swift; path = Utils/JobPitchUploader.swift; sourceTree = "<group>"; };
 		D742268B20ACC579002D3F4C /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = Utils/iCarousel/iCarousel.h; sourceTree = "<group>"; };
 		D742268C20ACC579002D3F4C /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCarousel.m; path = Utils/iCarousel/iCarousel.m; sourceTree = "<group>"; };
 		D742268F20ACC5E2002D3F4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MediaView.xib; sourceTree = "<group>"; };
@@ -214,7 +220,6 @@
 		D742269B20ACCDED002D3F4C /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Image.swift; path = Models/api/Image.swift; sourceTree = "<group>"; };
 		D742269C20ACCDED002D3F4C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/api/InitialTokens.swift; sourceTree = "<group>"; };
 		D742269D20ACCDED002D3F4C /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Job.swift; path = Models/api/Job.swift; sourceTree = "<group>"; };
-		D742269E20ACCDED002D3F4C /* JobPitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitch.swift; path = Models/api/JobPitch.swift; sourceTree = "<group>"; };
 		D742269F20ACCDED002D3F4C /* JobSeeker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeeker.swift; path = Models/api/JobSeeker.swift; sourceTree = "<group>"; };
 		D74226A020ACCDED002D3F4C /* JobStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobStatus.swift; path = Models/api/JobStatus.swift; sourceTree = "<group>"; };
 		D74226A120ACCDED002D3F4C /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Location.swift; path = Models/api/Location.swift; sourceTree = "<group>"; };
@@ -309,7 +314,6 @@
 		D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GoogleDriveController.swift; path = Controllers/GoogleDriveController.swift; sourceTree = "<group>"; };
 		D7CFBC6A1EF8E409003FC132 /* FileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileCell.swift; path = Views/FileCell.swift; sourceTree = "<group>"; };
-		D7E9347A1F4C153B00299762 /* PitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PitchUploader.swift; path = Utils/PitchUploader.swift; sourceTree = "<group>"; };
 		D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectionController.swift; path = Controllers/SelectionController.swift; sourceTree = "<group>"; };
 		D7ECFBBC1E12D9A100E2E071 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = Controllers/MapController.swift; sourceTree = "<group>"; };
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
@@ -340,6 +344,17 @@
 				4EBE93C472BCA0F516AF140F /* Pods-MyJobPitch.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		21BFAA3D2162BFF3003D0028 /* PitchUploader */ = {
+			isa = PBXGroup;
+			children = (
+				21BFAA3E2162C081003D0028 /* JobPitchUploader.swift */,
+				21BFAA3F2162C081003D0028 /* JSPitchUploader.swift */,
+				21BFAA402162C081003D0028 /* PitchUploader.swift */,
+				21BFAA412162C081003D0028 /* SpecificPitchUploader.swift */,
+			);
+			name = PitchUploader;
 			sourceTree = "<group>";
 		};
 		21CF192721418825003185F0 /* WWCalendarTimeSelector */ = {
@@ -439,7 +454,6 @@
 				D742269B20ACCDED002D3F4C /* Image.swift */,
 				D742269C20ACCDED002D3F4C /* InitialTokens.swift */,
 				D742269D20ACCDED002D3F4C /* Job.swift */,
-				D742269E20ACCDED002D3F4C /* JobPitch.swift */,
 				D742269F20ACCDED002D3F4C /* JobSeeker.swift */,
 				D74226A020ACCDED002D3F4C /* JobStatus.swift */,
 				D74226A120ACCDED002D3F4C /* Location.swift */,
@@ -472,6 +486,7 @@
 		D749E35C1E0B6AC0000FD0B1 /* JobSeeker */ = {
 			isa = PBXGroup;
 			children = (
+				21BFAA3B2162B5B6003D0028 /* JobApplyController.swift */,
 				D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */,
 				D76C905C1E261ABC009C35E4 /* JobProfileController.swift */,
 				D7AF8DC81E1C997200C57DDC /* PitchController.swift */,
@@ -649,6 +664,7 @@
 		D7F76FE91E08E02F00ECB684 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				21BFAA3D2162BFF3003D0028 /* PitchUploader */,
 				21CF192721418825003185F0 /* WWCalendarTimeSelector */,
 				D742268A20ACC567002D3F4C /* iCarousel */,
 				D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */,
@@ -657,8 +673,6 @@
 				D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */,
 				D749E3501E09C09E000FD0B1 /* AppHelper.swift */,
 				D749E3541E0A8724000FD0B1 /* AppData.swift */,
-				D7E9347A1F4C153B00299762 /* PitchUploader.swift */,
-				D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */,
 				21E79F6C214F58DA004CEED6 /* ImagePicker.swift */,
 			);
 			name = Utils;
@@ -890,7 +904,7 @@
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
 				D74226BE20ACCDED002D3F4C /* JobSeeker.swift in Sources */,
 				D74226CB20ACCDED002D3F4C /* PasswordResetRequest.swift in Sources */,
-				D7E9347B1F4C153B00299762 /* PitchUploader.swift in Sources */,
+				21BFAA432162C081003D0028 /* JSPitchUploader.swift in Sources */,
 				D74226C620ACCDED002D3F4C /* MJPObjectWithNameDesc.swift in Sources */,
 				D72AE4161E1055AC004C3F02 /* MessageController.swift in Sources */,
 				D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */,
@@ -900,17 +914,17 @@
 				D74226BA20ACCDED002D3F4C /* Image.swift in Sources */,
 				21CF19322141883D003185F0 /* NSCalendar+Timepiece.swift in Sources */,
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
+				21BFAA452162C081003D0028 /* SpecificPitchUploader.swift in Sources */,
 				D74226B820ACCDED002D3F4C /* Contract.swift in Sources */,
 				D74226CF20ACCDED002D3F4C /* Role.swift in Sources */,
 				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
 				2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */,
+				21BFAA422162C081003D0028 /* JobPitchUploader.swift in Sources */,
 				21E79F6D214F58DA004CEED6 /* ImagePicker.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */,
-				D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */,
 				D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */,
-				D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */,
 				21CF19312141883D003185F0 /* Int+Timepiece.swift in Sources */,
 				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
 				21CF19302141883D003185F0 /* Duration.swift in Sources */,
@@ -922,6 +936,7 @@
 				D74226B620ACCDED002D3F4C /* AuthToken.swift in Sources */,
 				D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */,
 				2F9F066F210EF2F600E39BEC /* InterviewStatus.swift in Sources */,
+				21BFAA3C2162B5B6003D0028 /* JobApplyController.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
 				D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */,
 				D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */,
@@ -971,6 +986,7 @@
 				D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */,
 				2F030F1520E8EE2800EDFE60 /* InterviewCell.swift in Sources */,
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
+				21BFAA442162C081003D0028 /* PitchUploader.swift in Sources */,
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,

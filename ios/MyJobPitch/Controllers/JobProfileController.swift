@@ -39,9 +39,6 @@ class JobProfileController: MJPController {
     var placeID: String!
     var placeName: String!
     
-    var jobSeeker: JobSeeker!
-    var profile: Profile!
-    
     var locationManager: CLLocationManager!
     
     override func viewDidLoad() {
@@ -104,9 +101,7 @@ class JobProfileController: MJPController {
         }
         
         // searchRadius data
-        for (_, name) in radiusData {
-            radiusNames.append(name)
-        }
+        radiusNames = radiusData.map { $0.1 }
         radiusField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.radiusNames,
@@ -121,23 +116,7 @@ class JobProfileController: MJPController {
         
         // load profile
         
-        showLoading()
-        API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-            self.jobSeeker = data as! JobSeeker
-            if self.jobSeeker.profile != nil {
-                AppData.existProfile = true
-                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                    self.hideLoading()
-                    self.profile = data as! Profile
-                    self.load()
-                }, failure: self.handleErrors)
-            } else {
-                self.hideLoading()
-                self.load()
-            }
-            
-        }, failure: self.handleErrors)
-
+        load()
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -147,19 +126,20 @@ class JobProfileController: MJPController {
         ]
     }
     
-    
     func load() {
         
-        selectedSectorNames = (AppData.sectors.filter { profile.sectors.contains($0.id) }).map { $0.name }
+        let profile = AppData.profile
         
+        if profile?.sectors != nil {
+            selectedSectorNames = (AppData.sectors.filter { (profile?.sectors.contains($0.id))! }).map { $0.name }
+        }
         sectorsField.text = selectedSectorNames.joined(separator: ", ")
         
         // contract data
         
         if profile?.contract != nil {
-            selectedContractNames = (AppData.contracts.filter { $0.id == profile.contract }).map { $0.name }
+            selectedContractNames = (AppData.contracts.filter { $0.id == profile?.contract }).map { $0.name }
         }
-        
         if selectedContractNames.count == 0 {
             selectedContractNames.append("Any")
         }
@@ -167,8 +147,9 @@ class JobProfileController: MJPController {
         
         // hours data
         
-        selectedHoursNames = (AppData.hours.filter { $0.id == profile.hours }).map { $0.name }
-                
+        if profile?.hours != nil {
+            selectedHoursNames = (AppData.hours.filter { $0.id == profile?.hours }).map { $0.name }
+        }
         if selectedHoursNames.count == 0 {
             selectedHoursNames.append("Any")
         }
@@ -177,27 +158,20 @@ class JobProfileController: MJPController {
         // searchRadius data
         
         if profile?.searchRadius != nil {
-            for (value, name) in radiusData {
-                if profile.searchRadius == value as NSNumber {
-                    selectedRadiusNames.append(name)
-                    break
-                }
-            }
+            selectedRadiusNames = (radiusData.filter { ($0.0 as NSNumber) == profile?.searchRadius }).map { $0.1 }
         }
-        
         if selectedRadiusNames.count == 0 {
             selectedRadiusNames.append(radiusData[2].1)
         }
         radiusField.text = selectedRadiusNames.joined(separator: ", ")
         
         if profile != nil {
-            latitude = profile.latitude
-            longitude = profile.longitude
-            placeID = profile.placeID
-            placeName = profile.placeName
+            latitude = profile?.latitude
+            longitude = profile?.longitude
+            placeID = profile?.placeID
+            placeName = profile?.placeName
             addressField.text = placeName
         }
-        
     }
     
     @IBAction func myLocationAction(_ sender: Any) {
@@ -234,10 +208,8 @@ class JobProfileController: MJPController {
         
         showLoading()
         
-        if profile == nil {
-            profile = Profile()
-            profile.jobSeeker = AppData.user.jobSeeker
-        }
+        let profile = Profile()
+        profile.jobSeeker = AppData.jobSeeker.id
         
         // sector data
         
@@ -271,12 +243,12 @@ class JobProfileController: MJPController {
             
             self.hideLoading()
             
-            self.profile = data as! Profile
+            AppData.profile = data as! Profile
             
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
-                if self.jobSeeker.profile == nil {
-                    AppData.existProfile = true
-                    if self.jobSeeker.getPitch() == nil {
+                if AppData.jobSeeker.profile == nil {
+                    AppData.jobSeeker.profile = AppData.profile.id
+                    if AppData.jobSeeker.getPitch() == nil {
                         SideMenuController.pushController(id: "add_record")
                     } else {
                         SideMenuController.pushController(id: "find_job")
@@ -287,7 +259,6 @@ class JobProfileController: MJPController {
         }, failure: self.handleErrors)
         
     }
-    
 }
 
 extension JobProfileController: UITextFieldDelegate {

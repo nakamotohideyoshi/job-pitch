@@ -304,7 +304,7 @@ class ApplicationPitchViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         job_seeker = serializer.instance.job_seeker
-        if self.request.user.job_seeker != job_seeker:
+        if self.request.user.is_authenticated() and self.request.user.job_seeker != job_seeker:
             raise serializers.ValidationError({'job_seeker': 'does not exist'})
         if 'job_seeker' in serializer.validated_data and serializer.validated_data.get('job_seeker') != job_seeker:
             raise serializers.ValidationError({'job_seeker': 'does not exist'})

@@ -14,6 +14,7 @@ from mjp.models import (
     BusinessUser,
     JobVideo,
     JobStatus,
+    ApplicationStatus,
 )
 
 
@@ -278,3 +279,9 @@ class AppDeprecationSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppDeprecation
         fields = ('platform', 'warning', 'error',)
+
+
+class ApplicationStatusSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = ApplicationStatus
+        fields = ('id', 'name', 'friendly_name', 'description')

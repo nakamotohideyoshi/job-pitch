@@ -285,9 +285,11 @@ class Nationality(models.Model):
 class ApplicationStatus(models.Model):
     CREATED = 'CREATED'
     ESTABLISHED = 'ESTABLISHED'
+    OFFERED = 'OFFERED'
     ACCEPTED = 'ACCEPTED'
     DECLINED = 'DECLINED'
     DELETED = 'DELETED'
+    OFFER_STATUSES = (OFFERED, DECLINED, ACCEPTED)
 
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)

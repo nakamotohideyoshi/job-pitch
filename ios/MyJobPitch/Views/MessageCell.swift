@@ -49,7 +49,7 @@ class MessageCell: UITableViewCell {
     
     var newMsgs: Int! {
         didSet {
-            badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
+            badge.text = newMsgs < 10 ? String(newMsgs) : "9+"
             badge.isHidden = newMsgs == 0
         }
     }

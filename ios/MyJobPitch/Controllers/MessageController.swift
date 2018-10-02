@@ -14,7 +14,7 @@ class MessageController: JSQMessagesViewController {
     
     public var application: Application!
     
-    var messages = [JSQMessage]()
+    var messages = [(JSQMessage, Message)]()
     
     var senderBubbleImage: JSQMessagesBubbleImage!
     var senderAvatar: JSQMessagesAvatarImage!
@@ -80,6 +80,9 @@ class MessageController: JSQMessagesViewController {
             }
         }
         
+//        self.collectionView.register(UINib(nibName: "MessagesCollectionViewCellIncoming", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
+//        self.collectionView.register(UINib(nibName: "MessagesCollectionViewCellOutgoing", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
+        
         updateData()
     }
     
@@ -130,20 +133,30 @@ class MessageController: JSQMessagesViewController {
         let oldMessageCount = messages.count
         messages.removeAll()
         
+        let interview = application.getInterview()
+        
         for message in application.messages as! [Message] {
+            
+            var content = message.content
+            if interview != nil {
+                if (interview?.messages.lastObject as! Message).id == message.id {
+//                    content = "Interview\n" + content! + "\nInterview: " + AppHelper.dateToLongString((interview?.at)!)
+                    content = "Interview\n" + content! + "\n"
+                }
+            }
             
             if message.fromRole == AppData.userRole {
                 let jsqMessage = JSQMessage(senderId: senderId,
                                             senderDisplayName: senderDisplayName,
                                             date: message.created,
-                                            text: message.content)
-                messages.append(jsqMessage!)
+                                            text: content)
+                messages.append((jsqMessage!, message))
             } else {
                 let jsqMessage = JSQMessage(senderId: "receiver",
                                             senderDisplayName: receiverDisplayName,
                                             date: message.created,
-                                            text: message.content)
-                messages.append(jsqMessage!)
+                                            text: content)
+                messages.append((jsqMessage!, message))
             }
         }
         
@@ -185,13 +198,13 @@ class MessageController: JSQMessagesViewController {
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
-        let message = messages[indexPath.row]
-        return message.senderId == senderId ? senderBubbleImage : receiverBubbleImage
+        let (jsqMessage, _) = messages[indexPath.row]
+        return jsqMessage.senderId == senderId ? senderBubbleImage : receiverBubbleImage
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
-        let message = messages[indexPath.row]
-        return message.senderId == senderId ? senderAvatar : receiverAvatar
+        let (jsqMessage, _) = messages[indexPath.row]
+        return jsqMessage.senderId == senderId ? senderAvatar : receiverAvatar
     }
 
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellBottomLabelAt indexPath: IndexPath!) -> CGFloat {
@@ -199,8 +212,8 @@ class MessageController: JSQMessagesViewController {
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAt indexPath: IndexPath!) -> NSAttributedString! {
-        let message = messages[indexPath.row]
-        let dateStr = AppHelper.dateToShortString(message.date)
+        let (jsqMessage, _) = messages[indexPath.row]
+        let dateStr = AppHelper.dateToShortString(jsqMessage.date)
         return NSAttributedString(string: dateStr)
     }
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAt indexPath: IndexPath!) -> CGFloat {
@@ -208,7 +221,7 @@ class MessageController: JSQMessagesViewController {
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
-        return messages[indexPath.item]
+        return messages[indexPath.item].0
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -217,6 +230,32 @@ class MessageController: JSQMessagesViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
+        
+        let interview = application.getInterview()
+        if interview != nil {
+            let (_, message) = messages[indexPath.row]
+            if (interview?.messages.lastObject as! Message).id == message.id {
+                let str: NSMutableAttributedString =  NSMutableAttributedString(string: "Interview: " + AppHelper.dateToLongString((interview?.at)!))
+                str.addAttribute(NSUnderlineStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
+                str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
+                str.addAttribute(NSForegroundColorAttributeName, value: UIColor.white, range: NSMakeRange(0, str.length))
+                
+                let cellSize = cell.frame.size
+                let button = UIButton(frame: CGRect(x: 20, y: cellSize.height - 75, width: cellSize.width, height: 35))
+                button.setAttributedTitle(str, for: .normal)
+                button.contentHorizontalAlignment = .left
+                button.addTarget(self, action: #selector(showInterviewInfo), for: .touchUpInside)
+                button.tag = 100
+                cell.messageBubbleContainerView.addSubview(button)
+                
+                return cell
+            }
+        }
+        
+        if let button = cell.messageBubbleContainerView.viewWithTag(100) {
+            button.removeFromSuperview()
+        }
+        
         return cell
     }
     
@@ -238,6 +277,12 @@ class MessageController: JSQMessagesViewController {
             }, failure: nil)
             
         }, failure: nil)
+    }
+    
+    func showInterviewInfo() {
+        let controller = InterviewDetailController.instantiate()
+        controller.application = application
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func showLoading() -> LoadingController {

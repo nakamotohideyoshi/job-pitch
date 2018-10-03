@@ -112,7 +112,12 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
         if job:
             job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.query_params['job'])
             query = JobSeeker.objects.filter(active=True).prefetch_related('pitches', 'profile').distinct()
-            query = query.filter(pitches__video__isnull=False)
+            if job.requires_pitch:
+                query = query.filter(pitches__video__isnull=False)
+            else:
+                query = query.filter(profile_image__isnull=False)
+            if job.requires_cv:
+                query = query.exclude(cv='')
             query = query.exclude(applications__job=job)
             query = query.exclude(exclusions__job=job)
             query = query.exclude(profile=None)

@@ -27,6 +27,7 @@ from mjp.serializers import (
     JobSeekerReadSerializerV1,
     JobSeekerReadSerializer,
     AppDeprecationSerializer,
+    ApplicationStatusSerializer,
 )
 from mjp.views.applications import ApplicationViewSet, MessageViewSet, ApplicationPitchViewSet, InterviewViewSet
 from mjp.views.job_seeker import JobProfileViewSet, PitchViewSet, BusinessViewSet, LocationViewSet, JobViewSet
@@ -56,6 +57,22 @@ def SimpleViewSet(router, model, base, permissions=(permissions.IsAuthenticated,
 
 def SimpleReadOnlyViewSet(router, model, **kwargs):
     return SimpleViewSet(router, model, viewsets.ReadOnlyModelViewSet, **kwargs)
+
+
+class ApplicationStatusViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ApplicationStatusSerializer
+    queryset = ApplicationStatus.objects.all()
+
+    def get_queryset(self):
+        queryset = super(ApplicationStatusViewSet, self).get_queryset()
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+
+        if version <= 5:
+            queryset = queryset.exclude(name__in=ApplicationStatus.OFFER_STATUSES)
+        return queryset
 
 
 # TODO split into js and recruiter
@@ -129,10 +146,10 @@ HoursViewSet = SimpleReadOnlyViewSet(router, Hours)
 JobStatusViewSet = SimpleReadOnlyViewSet(router, JobStatus)
 SexViewSet = SimpleReadOnlyViewSet(router, Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(router, Nationality)
-ApplicationStatusViewSet = SimpleReadOnlyViewSet(router, ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(router, Role)
 ProductTokensViewSet = SimpleReadOnlyViewSet(router, ProductTokens)
 PayPalProductViewSet = SimpleReadOnlyViewSet(router, PayPalProduct)
+router.register('application-statuses', ApplicationStatusViewSet, base_name='application-status')
 router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 router.register('deprecation', AppDeprecationViewSet, base_name='deprecation')
 router.register('applications', ApplicationViewSet, base_name='application')

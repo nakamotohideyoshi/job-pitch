@@ -22,6 +22,12 @@ class ApplicationSerializerV1(serializers.ModelSerializer):
     job_data = JobSerializerV1(source='job', read_only=True)
     job_seeker = JobSeekerReadSerializerV1(read_only=True)
     messages = MessageSerializerV1(many=True, read_only=True)
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, application):
+        if application.status.name in ApplicationStatus.OFFER_STATUSES:
+            return ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED).pk
+        return application.status.pk
 
     class Meta:
         model = Application
@@ -62,8 +68,12 @@ class ApplicationSerializerV4(ApplicationSerializerV3):  # v4
     job_seeker = JobSeekerReadSerializer(read_only=True)
 
 
-class ApplicationSerializer(ApplicationSerializerV4):  # v5
+class ApplicationSerializerV5(ApplicationSerializerV4):  # v5
     job_data = JobSerializer(source='job', read_only=True)
+
+
+class ApplicationSerializer(ApplicationSerializerV5):  # v6
+    status = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class ExternalApplicationSerializer(serializers.ModelSerializer):
@@ -91,7 +101,7 @@ class ApplicationConnectSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if self.instance.status.name == ApplicationStatus.DELETED:
             raise serializers.ValidationError('Application deleted')
-        if self.instance.status.name == ApplicationStatus.ESTABLISHED:
+        if self.instance.status.name != ApplicationStatus.CREATED:
             raise serializers.ValidationError('Application already established')
         return super(ApplicationConnectSerializer, self).validate(attrs)
 
@@ -103,6 +113,82 @@ class ApplicationConnectSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('NO_TOKENS')
             validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED)
             return super(ApplicationConnectSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = Application
+        fields = ()
+        read_only_fields = ('id',)
+
+
+class ApplicationOfferSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name != ApplicationStatus.ESTABLISHED:
+            raise serializers.ValidationError('Application must be established')
+        return super(ApplicationOfferSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.OFFERED)
+            return super(ApplicationOfferSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = Application
+        fields = ()
+        read_only_fields = ('id',)
+
+
+class ApplicationAcceptSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name != ApplicationStatus.OFFERED:
+            raise serializers.ValidationError('Application must be offered')
+        return super(ApplicationAcceptSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ACCEPTED)
+            return super(ApplicationAcceptSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = Application
+        fields = ()
+        read_only_fields = ('id',)
+
+
+class ApplicationDeclineSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name != ApplicationStatus.OFFERED:
+            raise serializers.ValidationError('Application must be offered')
+        return super(ApplicationDeclineSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.DECLINED)
+            return super(ApplicationDeclineSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = Application
+        fields = ()
+        read_only_fields = ('id',)
+
+
+class ApplicationRevokeSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name not in ApplicationStatus.OFFER_STATUSES:
+            raise serializers.ValidationError('Application must be offered')
+        return super(ApplicationRevokeSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED)
+            return super(ApplicationRevokeSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = Application

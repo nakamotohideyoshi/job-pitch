@@ -45,6 +45,6 @@ class Employee(models.Model):
 
 
 class EmployeeUser(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='employment')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='employee_users')
     employee = models.OneToOneField(Employee)
     email = models.EmailField(null=True)

@@ -15,10 +15,15 @@ from mjp.serializers.applications import (
     ApplicationSerializerV2,
     ApplicationSerializerV3,
     ApplicationSerializerV4,
+    ApplicationSerializerV5,
     ApplicationSerializer,
     ApplicationCreateSerializer,
     ApplicationConnectSerializer,
     ApplicationShortlistUpdateSerializer,
+    ApplicationOfferSerializer,
+    ApplicationAcceptSerializer,
+    ApplicationDeclineSerializer,
+    ApplicationRevokeSerializer,
     MessageCreateSerializer,
     MessageUpdateSerializer,
     ExternalApplicationSerializer,
@@ -49,12 +54,18 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 if request.method == 'DELETE' and application.status.name != 'DELETED':
                     return True
                 if request.method == 'PUT':
+                    if 'accept' in request.data or 'decline' in request.data:
+                        return is_job_seeker
                     return is_recruiter
 
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     create_serializer_class = ApplicationCreateSerializer
     update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
+    update_offer_serializer_class = ApplicationOfferSerializer
+    update_accept_serializer_class = ApplicationAcceptSerializer
+    update_decline_serializer_class = ApplicationDeclineSerializer
+    update_revoke_serializer_class = ApplicationRevokeSerializer
 
     def perform_create(self, serializer):
         job = Job.objects.get(pk=self.request.data['job'])
@@ -120,6 +131,14 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return self.update_shortlist_serializer_class
             if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
+            if self.request.data.get('offer') is not None:
+                return self.update_offer_serializer_class
+            if self.request.data.get('accept') is not None:
+                return self.update_accept_serializer_class
+            if self.request.data.get('decline') is not None:
+                return self.update_decline_serializer_class
+            if self.request.data.get('revoke') is not None:
+                return self.update_revoke_serializer_class
             raise PermissionDenied()
         try:
             version = int(self.request.version)
@@ -133,6 +152,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return ApplicationSerializerV3
         elif version == 4:
             return ApplicationSerializerV4
+        elif version == 5:
+            return ApplicationSerializerV5
         return ApplicationSerializer
 
     def get_queryset(self):
@@ -283,7 +304,7 @@ class ApplicationPitchViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         job_seeker = serializer.instance.job_seeker
-        if self.request.user.job_seeker != job_seeker:
+        if self.request.user.is_authenticated() and self.request.user.job_seeker != job_seeker:
             raise serializers.ValidationError({'job_seeker': 'does not exist'})
         if 'job_seeker' in serializer.validated_data and serializer.validated_data.get('job_seeker') != job_seeker:
             raise serializers.ValidationError({'job_seeker': 'does not exist'})

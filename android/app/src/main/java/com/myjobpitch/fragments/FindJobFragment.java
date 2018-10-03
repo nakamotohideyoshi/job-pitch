@@ -55,18 +55,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
             showInactiveBanner();
         }
 
-        if (jobSeeker.getPitch() == null && jobSeeker.getProfile_thumb() == null) {
-            Popup popup = new Popup(getContext(), "You cannot yet be found by potential employers until you complete your profile photo or job pitch.", true);
-            popup.addYellowButton("Edit Profile", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getApp().setRootFragement(AppData.PAGE_USER_PROFILE);
-                }
-            });
-            popup.addGreenButton("Continue", null);
-            popup.show();
-        }
-
         return  view;
     }
 
@@ -88,19 +76,29 @@ public class FindJobFragment extends SwipeFragment<Job> {
                 hideLoading();
                 showInactiveBanner();
 
-                setData(data);
+                checkJobSeekerPitch();
 
-//                if (jobSeeker.getPitch() == null) {
-//                    noPitchView.setVisibility(View.VISIBLE);
-//                } else {
-//                    setData(data);
-//                }
+                setData(data);
             }
             @Override
             public void onError(JsonNode errors) {
                 errorHandler(errors);
             }
         }).execute();
+    }
+
+    void checkJobSeekerPitch() {
+        if (jobSeeker.getPitch() == null && jobSeeker.getProfile_thumb() == null) {
+            Popup popup = new Popup(getContext(), "You cannot yet be found by potential employers until you complete your profile photo or job pitch.", true);
+            popup.addYellowButton("Edit Profile", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getApp().setRootFragement(AppData.PAGE_USER_PROFILE);
+                }
+            });
+            popup.addGreenButton("Continue", null);
+            popup.show();
+        }
     }
 
     void showInactiveBanner() {

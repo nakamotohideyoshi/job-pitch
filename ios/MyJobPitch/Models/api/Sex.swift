@@ -8,6 +8,9 @@
 
 import Foundation
 
-class Sex: MJPObjectWithNameShortName {
+class Sex: MJPObjectWithName {
 
+    static let mappingDictionary = [ "shortName": "short_name" ]
+        
+    var shortName: String!
 }

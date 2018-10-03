@@ -28,29 +28,29 @@ class APIConfigure: NSObject {
         // ================= authorization =====================
 
         configureMapping(LoginRequest.classForCoder(),
-                         requestArray: [ "email", "password" ],
+                         requestArray: LoginRequest.mappingArray,
                          requestDictionary: nil,
                          requestRelationships: nil,
                          responseClass: AuthToken.classForCoder(),
-                         responseArray: [ "key" ],
+                         responseArray: AuthToken.mappingArray,
                          responseDictionary: nil,
                          responseRelationships: nil,
                          path: "/api-rest-auth/login/",
                          method: .POST)
 
         configureMapping(RegisterRequest.classForCoder(),
-                         requestArray: [ "email", "password1", "password2" ],
+                         requestArray: RegisterRequest.mappingArray,
                          requestDictionary: nil,
                          requestRelationships: nil,
                          responseClass: AuthToken.classForCoder(),
-                         responseArray: [ "key" ],
+                         responseArray: AuthToken.mappingArray,
                          responseDictionary: nil,
                          responseRelationships: nil,
                          path: "/api-rest-auth/registration/",
                          method: .POST)
 
         configureSimpleMapping(PasswordResetRequest.classForCoder(),
-                               mappingArray: [ "email" ],
+                               mappingArray: PasswordResetRequest.mappingArray,
                                mappingDictionary: nil,
                                mappingRelationships: nil,
                                path: "/api-rest-auth/password/reset/",
@@ -58,16 +58,14 @@ class APIConfigure: NSObject {
 
         configureSimpleMapping(PasswordChangeRequest.classForCoder(),
                                mappingArray: nil,
-                               mappingDictionary: [ "password1": "new_password1",
-                                                    "password2": "new_password2"],
+                               mappingDictionary: PasswordChangeRequest.mappingDictionary,
                                mappingRelationships: nil,
                                path: "/api-rest-auth/password/change/",
                                method: .POST)
 
         configureResponseMapping(User.classForCoder(),
-                                 responseArray: [ "id", "email", "businesses" ],
-                                 responseDictionary: [ "job_seeker":            "jobSeeker",
-                                                       "can_create_businesses": "canCreateBusinesses" ],
+                                 responseArray: User.mappingArray,
+                                 responseDictionary: inverseDictionary(User.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api-rest-auth/user/",
                                  method: .GET)
@@ -75,76 +73,64 @@ class APIConfigure: NSObject {
 
         // ================= data =====================
 
-        let nameArray = [ "id", "name" ]
-
-        let nameDescDictionary = [ "desc": "description" ]
-
-        let shortNameDictionary = [ "shortName": "short_name" ]
-
-        let shortNameDescDictionary = [ "shortName":    "short_name",
-                                        "desc":         "description" ]
-
-        let friendlyNameDescDictionary = [ "shortName": "short_name",
-                                           "desc":      "description" ]
-
         configureResponseMapping(InitialTokens.classForCoder(),
-                                 responseArray: [ "tokens" ],
+                                 responseArray: InitialTokens.mappingArray,
                                  responseDictionary: nil,
                                  responseRelationships: nil,
                                  path: "/api/initial-tokens/",
                                  method: .GET)
         
         configureResponseMapping(Hours.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(shortNameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(Hours.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/hours/",
                                  method: .GET)
 
         configureResponseMapping(Contract.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(shortNameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(Contract.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/contracts/",
                                  method: .GET)
 
         configureResponseMapping(Sector.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(nameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(Sector.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/sectors/",
                                  method: .GET)
 
         configureResponseMapping(Sex.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(shortNameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(Sex.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/sexes/",
                                  method: .GET)
 
         configureResponseMapping(Nationality.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(shortNameDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(Nationality.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/nationalities/",
                                  method: .GET)
 
         configureResponseMapping(JobStatus.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(friendlyNameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(JobStatus.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/job-statuses/",
                                  method: .GET)
 
         configureResponseMapping(ApplicationStatus.classForCoder(),
-                                 responseArray: nameArray,
-                                 responseDictionary: inverseDictionary(friendlyNameDescDictionary),
+                                 responseArray: MJPObjectWithName.mappingArray,
+                                 responseDictionary: inverseDictionary(ApplicationStatus.mappingDictionary),
                                  responseRelationships: nil,
                                  path: "/api/application-statuses/",
                                  method: .GET)
 
         configureResponseMapping(Role.classForCoder(),
-                                 responseArray: nameArray,
+                                 responseArray: MJPObjectWithName.mappingArray,
                                  responseDictionary: nil,
                                  responseRelationships: nil,
                                  path: "/api/roles/",
@@ -581,44 +567,24 @@ class APIConfigure: NSObject {
         
         // ================= Application =====================
         
-        let applictionCreateArray = [ "id", "job", "shortlisted" ]
-
-        let applictionCreateDictionary = [ "jobSeeker": "job_seeker" ]
-
         configureSimpleMapping(ApplicationForCreation.classForCoder(),
-                               mappingArray: applictionCreateArray,
-                               mappingDictionary: applictionCreateDictionary,
+                               mappingArray: ApplicationForCreation.mappingArray,
+                               mappingDictionary: ApplicationForCreation.mappingDictionary,
                                mappingRelationships: nil,
                                path: "/api/applications/",
                                method: .POST)
         
-        let externalApplictionCreateArray = [ "job", "shortlisted" ]
-        let externalApplictionDictionary = [ "firstName":           "job_seeker.first_name",
-                                             "lastName":            "job_seeker.last_name",
-                                             "email":               "job_seeker.email",
-                                             "telephone":           "job_seeker.telephone",
-                                             "mobile":              "job_seeker.mobile",
-                                             "age":                 "job_seeker.age",
-                                             "sex":                 "job_seeker.sex",
-                                             "nationality":         "job_seeker.nationality",
-                                             "emailPublic":          "job_seeker.email_public",
-                                             "telephonePublic":      "job_seeker.telephone_public",
-                                             "mobilePublic":         "job_seeker.mobile_public",
-                                             "agePublic":            "job_seeker.age_public",
-                                             "sexPublic":            "job_seeker.sex_public",
-                                             "nationalityPublic":    "job_seeker.nationality_public",
-                                             "nationalInsuranceNumber":                 "job_seeker.national_insurance_number",
-                                             "desc":                 "job_seeker.description",
-                                             "hasReferences":        "job_seeker.has_references",
-                                             "truthConfirmation":    "job_seeker.truth_confirmation" ]
+        configureMapping(ExternalApplicationForCreation.classForCoder(),
+                         requestArray: ExternalApplicationForCreation.mappingArray,
+                         requestDictionary: ExternalApplicationForCreation.mappingDictionary,
+                         requestRelationships: nil,
+                         responseClass: ApplicationForCreation.classForCoder(),
+                         responseArray: ApplicationForCreation.mappingArray,
+                         responseDictionary: inverseDictionary(ApplicationForCreation.mappingDictionary),
+                         responseRelationships: nil,
+                         path: "/api/applications/external/",
+                         method: .POST)
         
-        configureSimpleMapping(ExternalApplicationForCreation.classForCoder(),
-                               mappingArray: externalApplictionCreateArray,
-                               mappingDictionary: externalApplictionDictionary,
-                               mappingRelationships: nil,
-                               path: "/api/applications/external/",
-                               method: .POST)
-
         let applicationArray = [ "id", "created", "updated", "shortlisted", "status" ]
 
         let applicationDictionary = [ "createdBy": "created_by",
@@ -869,7 +835,7 @@ class APIConfigure: NSObject {
 
         manager.addResponseDescriptor(responseDescriptor)
     }
-
+    
     private func configureMapping(_ requestClass: Swift.AnyClass,
                                   requestArray: [String]!,
                                   requestDictionary: [String: String]!,

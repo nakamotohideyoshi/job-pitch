@@ -165,7 +165,7 @@ extension BusinessListController: UITableViewDataSource {
                     })
                 ]
                 
-                if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
+                if AppData.user.canCreateBusinesses && AppData.businesses.count > 1 {
                     
                     buttons.insert(
                         MGSwipeButton(title: "",

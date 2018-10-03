@@ -8,8 +8,14 @@
 
 import Foundation
 
-class Contract: MJPObjectWithNameShortNameDesc {
+class Contract: MJPObjectWithName {
 
     static let CONTRACT_PERMANENT = "Permanent"
+    
+    static let mappingDictionary = [ "shortName":    "short_name",
+                                     "desc":         "description" ]
+    
+    var shortName: String!
+    var desc: String!
     
 }

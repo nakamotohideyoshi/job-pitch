@@ -8,6 +8,9 @@
 
 import Foundation
 
-class Sector: MJPObjectWithNameDesc {
-
+class Sector: MJPObjectWithName {
+    
+    static let mappingDictionary = [ "desc": "description" ]
+    
+    var desc: String!
 }

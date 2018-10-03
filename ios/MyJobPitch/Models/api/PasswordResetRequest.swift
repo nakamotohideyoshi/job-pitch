@@ -10,6 +10,8 @@ import Foundation
 
 class PasswordResetRequest: NSObject {
 
+    static let mappingArray = [ "email" ]
+    
     var email: String!
     
 }

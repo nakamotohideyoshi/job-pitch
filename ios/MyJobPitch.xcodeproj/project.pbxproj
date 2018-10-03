@@ -77,9 +77,6 @@
 		D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A420ACCDED002D3F4C /* MJPObject.swift */; };
 		D74226C420ACCDED002D3F4C /* MJPObjectWithDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */; };
 		D74226C520ACCDED002D3F4C /* MJPObjectWithName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */; };
-		D74226C620ACCDED002D3F4C /* MJPObjectWithNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */; };
-		D74226C720ACCDED002D3F4C /* MJPObjectWithNameShortName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */; };
-		D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */; };
 		D74226C920ACCDED002D3F4C /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AA20ACCDED002D3F4C /* Nationality.swift */; };
 		D74226CA20ACCDED002D3F4C /* PasswordChangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */; };
 		D74226CB20ACCDED002D3F4C /* PasswordResetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */; };
@@ -228,9 +225,6 @@
 		D74226A420ACCDED002D3F4C /* MJPObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObject.swift; path = Models/api/MJPObject.swift; sourceTree = "<group>"; };
 		D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithDates.swift; path = Models/api/MJPObjectWithDates.swift; sourceTree = "<group>"; };
 		D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithName.swift; path = Models/api/MJPObjectWithName.swift; sourceTree = "<group>"; };
-		D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameDesc.swift; path = Models/api/MJPObjectWithNameDesc.swift; sourceTree = "<group>"; };
-		D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortName.swift; path = Models/api/MJPObjectWithNameShortName.swift; sourceTree = "<group>"; };
-		D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortNameDesc.swift; path = Models/api/MJPObjectWithNameShortNameDesc.swift; sourceTree = "<group>"; };
 		D74226AA20ACCDED002D3F4C /* Nationality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Nationality.swift; path = Models/api/Nationality.swift; sourceTree = "<group>"; };
 		D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordChangeRequest.swift; path = Models/api/PasswordChangeRequest.swift; sourceTree = "<group>"; };
 		D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordResetRequest.swift; path = Models/api/PasswordResetRequest.swift; sourceTree = "<group>"; };
@@ -445,6 +439,8 @@
 		D742269420ACCDBB002D3F4C /* api */ = {
 			isa = PBXGroup;
 			children = (
+				D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */,
+				D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */,
 				D742269520ACCDED002D3F4C /* Application.swift */,
 				D742269620ACCDED002D3F4C /* ApplicationStatus.swift */,
 				D742269720ACCDED002D3F4C /* AuthToken.swift */,
@@ -460,11 +456,6 @@
 				D74226A220ACCDED002D3F4C /* LoginRequest.swift */,
 				D74226A320ACCDED002D3F4C /* Message.swift */,
 				D74226A420ACCDED002D3F4C /* MJPObject.swift */,
-				D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */,
-				D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */,
-				D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */,
-				D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */,
-				D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */,
 				D74226AA20ACCDED002D3F4C /* Nationality.swift */,
 				D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */,
 				D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */,
@@ -905,7 +896,6 @@
 				D74226BE20ACCDED002D3F4C /* JobSeeker.swift in Sources */,
 				D74226CB20ACCDED002D3F4C /* PasswordResetRequest.swift in Sources */,
 				21BFAA432162C081003D0028 /* JSPitchUploader.swift in Sources */,
-				D74226C620ACCDED002D3F4C /* MJPObjectWithNameDesc.swift in Sources */,
 				D72AE4161E1055AC004C3F02 /* MessageController.swift in Sources */,
 				D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */,
 				21E79F79215094D7004CEED6 /* MediaModel.swift in Sources */,
@@ -917,7 +907,6 @@
 				21BFAA452162C081003D0028 /* SpecificPitchUploader.swift in Sources */,
 				D74226B820ACCDED002D3F4C /* Contract.swift in Sources */,
 				D74226CF20ACCDED002D3F4C /* Role.swift in Sources */,
-				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
 				2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */,
 				21BFAA422162C081003D0028 /* JobPitchUploader.swift in Sources */,
@@ -953,7 +942,6 @@
 				D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */,
 				21CF19352141883D003185F0 /* String+Timepiece.swift in Sources */,
 				D76C903E1E23858C009C35E4 /* SWRevealViewController.m in Sources */,
-				D74226C720ACCDED002D3F4C /* MJPObjectWithNameShortName.swift in Sources */,
 				D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */,
 				D74226B720ACCDED002D3F4C /* Business.swift in Sources */,
 				D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */,

@@ -8,6 +8,11 @@
 
 import Foundation
 
-class Hours: MJPObjectWithNameShortNameDesc {
-
+class Hours: MJPObjectWithName {
+    
+    static let mappingDictionary = [ "shortName":    "short_name",
+                                     "desc":         "description" ]
+    
+    var shortName: String!
+    var desc: String!
 }

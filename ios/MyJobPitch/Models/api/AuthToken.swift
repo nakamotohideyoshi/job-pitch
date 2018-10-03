@@ -9,6 +9,8 @@
 import Foundation
 
 class AuthToken: NSObject {
+    
+    static let mappingArray = [ "key" ]
 
     var key: String!
     

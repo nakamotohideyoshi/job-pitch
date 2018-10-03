@@ -19,7 +19,6 @@ class BusinessDetailController: MJPController {
     @IBOutlet weak var emptyView: EmptyView!
     
     public var business: Business!
-    public var businessId: NSNumber!
     
     var workplaces: [Location]!
     var addMode = false
@@ -33,30 +32,34 @@ class BusinessDetailController: MJPController {
             
             title = "Add job"
             infoView.setDescription(icon: "menu-business", text: "Select which workplace to add job to")
+
             creditCount.isHidden = true
             editRemoveView.isHidden = true
+
             toolbar.titleLabel.text = "SELECT A WORKOPLACE"
             
         } else {
+            
+            title = "Businesses"
             
             AppHelper.loadLogo(business, imageView: infoView.imgView, completion: nil)
             infoView.titleLabel.text = business.name
             creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
             
-            if !business.restricted {
-                editRemoveView.editCallback = editBusiness
-                
-                if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
-                    editRemoveView.removeCallback = removeBusiness
-                }
-
-                toolbar.rightAction = addWorkplace
-                
-                emptyView.button.setTitle("Create workplace", for: .normal)
-                emptyView.action = addWorkplace
+            toolbar.titleLabel.text = "WORKPLACES"
+        }
+        
+        if !business.restricted {
+            editRemoveView.editCallback = editBusiness
+            
+            if AppData.user.canCreateBusinesses && AppData.businesses.count > 1 {
+                editRemoveView.removeCallback = removeBusiness
             }
             
-            toolbar.titleLabel.text = "WORKPLACES"
+            toolbar.rightAction = addWorkplace
+            
+            emptyView.button.setTitle("Create workplace", for: .normal)
+            emptyView.action = addWorkplace
         }
         
         tableView.addPullToRefresh {
@@ -64,14 +67,7 @@ class BusinessDetailController: MJPController {
         }
         
         showLoading()
-        if businessId != nil {
-            AppData.updateBusiness(businessId, success: { (business) in
-                self.business = business
-                self.loadWorkplaces()
-            }, failure: self.handleErrors)
-        } else {
-            loadWorkplaces()
-        }
+        loadWorkplaces()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -135,9 +131,32 @@ class BusinessDetailController: MJPController {
         let controller = LocationEditController.instantiate()
         controller.business = business
         controller.saveComplete = { (workplace: Location) in
-            let controller = LocationDetailController.instantiate()
-            controller.workplace = workplace
-            self.navigationController?.pushViewController(controller, animated: true)
+            if !self.addMode {
+                self.workplaceDetails(workplace, animated: false)
+            }
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
+    func workplaceDetails(_ workplace: Location, animated: Bool) {
+        let controller = LocationDetailController.instantiate()
+        controller.workplace = workplace
+        navigationController?.pushViewController(controller, animated: animated)
+    }
+    
+    func addJob(_ workplace: Location) {
+        let controller = JobEditController.instantiate()
+        controller.workplace = workplace
+        controller.saveComplete = { (job: Job) in
+            var controllers = self.navigationController?.viewControllers
+            while true {
+                let count = (controllers?.count)!
+                if count <= 2 || controllers?[count - 2] is SelectJobController {
+                    _ = self.navigationController?.popViewController(animated: true)
+                    return
+                }
+                controllers?.removeLast()
+            }
         }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
@@ -218,24 +237,9 @@ extension BusinessDetailController: UITableViewDelegate {
         let workplace = workplaces[indexPath.row]
         
         if addMode {
-            let controller = JobEditController.instantiate()
-            controller.workplace = workplace
-            controller.saveComplete = { (job: Job) in
-                var controllers = self.navigationController?.viewControllers
-                while true {
-                    let count = (controllers?.count)!
-                    if count <= 2 || controllers?[count - 2] is SelectJobController {
-                        _ = self.navigationController?.popViewController(animated: true)
-                        return
-                    }
-                    controllers?.removeLast()
-                }
-            }
-            present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+            addJob(workplace)
         } else {
-            let controller = LocationDetailController.instantiate()
-            controller.workplace = workplace
-            navigationController?.pushViewController(controller, animated: true)
+            workplaceDetails(workplace, animated: true)
         }
     }
 }

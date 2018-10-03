@@ -103,19 +103,29 @@ class AppData: NSObject {
                 initialTokens != nil) {
                 
                 if (user.isJobSeeker()) {
+                    
                     userRole = Role.ROLE_JOB_SEEKER_ID
+                    
+                    getJobSeeker(success: {
+                        getProfile(success: {
+                            getApplications(success: {
+                                success()
+                                startTimer()
+                            }, failure: failure)
+                        }, failure: loadFailure)
+                    }, failure: loadFailure)
+                    
                 } else if (user.isRecruiter()) {
+                    
                     userRole = Role.ROLE_RECRUITER_ID
-                }
-                
-                getJobSeeker(success: {
-                    getProfile(success: {
+                    
+                    getBusinesses(success: { 
                         getApplications(success: {
                             success()
                             startTimer()
                         }, failure: failure)
                     }, failure: loadFailure)
-                }, failure: loadFailure)
+                }
             }
         }
         
@@ -218,7 +228,6 @@ class AppData: NSObject {
                               failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().loadBusinesses(success: { (data) in
             businesses = data as! [Business]
-            AppData.user.businesses = businesses.map { $0.id } as NSArray
             success?()
         }, failure: failure)
     }
@@ -240,7 +249,6 @@ class AppData: NSObject {
             
             if isNew {
                 businesses.insert(newBusiness, at: 0)
-                AppData.user.businesses = businesses.map { $0.id } as NSArray
             }
             
             success?(newBusiness)
@@ -260,7 +268,6 @@ class AppData: NSObject {
                                failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().deleteBusiness(id: business.id, success: {
             businesses = businesses.filter { $0.id != business.id }
-            AppData.user.businesses = businesses.map { $0.id } as NSArray
             success?()
         }, failure: failure)
     }

@@ -258,14 +258,18 @@ class SwipeController: MJPController {
             if (!AppData.jobSeeker.active) {
                 PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
                     self.editAction()
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: "Cancel") {
+                    self.reloadCard()
+                }
                 return
             }
             
             if (AppData.jobSeeker.profileImage == nil) {
                 PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
                     self.editAction()
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: "Cancel") {
+                    self.reloadCard()
+                }
                 return
             }
             
@@ -273,7 +277,9 @@ class SwipeController: MJPController {
             if (job.requiresCV && AppData.jobSeeker.cv == nil) {
                 PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
                     self.editAction()
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: "Cancel") {
+                    self.reloadCard()
+                }
                 return
             }
             
@@ -283,6 +289,8 @@ class SwipeController: MJPController {
                 self.removeCard()
             }
             present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+
+            self.reloadCard()
 
         } else {
             

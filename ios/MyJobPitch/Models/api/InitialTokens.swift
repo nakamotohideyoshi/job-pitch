@@ -10,6 +10,8 @@ import UIKit
 
 class InitialTokens: NSObject {
     
+    static let mappingArray = [ "tokens" ]
+    
     var tokens: NSNumber!
     
 }

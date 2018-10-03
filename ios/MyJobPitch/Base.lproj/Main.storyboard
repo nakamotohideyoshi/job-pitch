@@ -270,7 +270,7 @@ sdafsdf</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4221,7 +4221,7 @@ sdafsdf</string>
                                     </tableView>
                                 </subviews>
                             </stackView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tg-J9-37u" customClass="EmptyView" customModule="MyJobPitch" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5tg-J9-37u" customClass="EmptyView" customModule="MyJobPitch" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="173" width="414" height="563"/>
                             </view>
                         </subviews>
@@ -4230,9 +4230,10 @@ sdafsdf</string>
                             <constraint firstItem="5tg-J9-37u" firstAttribute="leading" secondItem="yf5-Nq-10w" secondAttribute="leading" id="0Gh-S2-VHC"/>
                             <constraint firstAttribute="trailing" secondItem="5tg-J9-37u" secondAttribute="trailing" id="4sN-JH-Nfp"/>
                             <constraint firstItem="uXU-Gg-XF5" firstAttribute="top" secondItem="ysU-I2-Cb6" secondAttribute="bottom" id="CR7-eA-ItS"/>
-                            <constraint firstItem="5tg-J9-37u" firstAttribute="centerY" secondItem="B7M-Z6-6LL" secondAttribute="centerY" id="Xnl-gO-9wn"/>
+                            <constraint firstItem="5tg-J9-37u" firstAttribute="top" secondItem="B7M-Z6-6LL" secondAttribute="top" id="MOE-09-1JL"/>
                             <constraint firstItem="aci-4e-7e9" firstAttribute="top" secondItem="uXU-Gg-XF5" secondAttribute="bottom" id="YCF-L7-NSE"/>
                             <constraint firstAttribute="trailing" secondItem="uXU-Gg-XF5" secondAttribute="trailing" id="rBa-6w-K8d"/>
+                            <constraint firstItem="5tg-J9-37u" firstAttribute="bottom" secondItem="B7M-Z6-6LL" secondAttribute="bottom" id="vdX-fG-OzP"/>
                             <constraint firstItem="uXU-Gg-XF5" firstAttribute="leading" secondItem="yf5-Nq-10w" secondAttribute="leading" id="vge-H9-dJm"/>
                         </constraints>
                     </view>
@@ -5503,7 +5504,7 @@ sdafsdf</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1x-pD-goN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5118.840579710145" y="-1130.7065217391305"/>
+            <point key="canvasLocation" x="-5093" y="-1180"/>
         </scene>
         <!--Interview-->
         <scene sceneID="9lK-tc-whP">

@@ -593,13 +593,13 @@ class API: NSObject {
                    success: success, failure: failure)
     }
     
-    func createExternalApplication(application: ExternalApplicationForCreation,
+    func createExternalApplication(_ application: ExternalApplicationForCreation,
                            success: ((NSObject?) -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/applications/external/", request: application,
                    success: success, failure: failure)
     }
-
+    
     func updateApplicationStatus(update: ApplicationStatusUpdate,
                                  success: ((NSObject?) -> Void)!,
                                  failure: ((String?, NSDictionary?) -> Void)!) {

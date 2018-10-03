@@ -9,6 +9,8 @@
 import Foundation
 
 class RegisterRequest: NSObject {
+    
+    static let mappingArray = [ "email", "password1", "password2" ]
 
     var email: String!
     var password1: String!

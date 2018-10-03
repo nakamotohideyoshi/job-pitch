@@ -8,13 +8,11 @@
 
 import Foundation
 
-class InterviewStatus: MJPObjectWithNameDesc {
+class InterviewStatus: NSObject {
     
     static let INTERVIEW_PENDING = "PENDING"
     static let INTERVIEW_ACCEPTED = "ACCEPTED"
     static let INTERVIEW_COMPLETED = "COMPLETED"
     static let INTERVIEW_CANCELLED = "CANCELLED"
-    
-    var friendlyName: String!
     
 }

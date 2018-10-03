@@ -8,14 +8,16 @@
 
 import Foundation
 
-class JobStatus: MJPObjectWithNameDesc {
+class JobStatus: MJPObjectWithName {
 
     static let JOB_STATUS_OPEN = "OPEN"
-    static let JOB_STATUS_CLOSED = "CLOSED"
-    
+    static let JOB_STATUS_CLOSED = "CLOSED"    
     static var JOB_STATUS_OPEN_ID: NSNumber = 0
     static var JOB_STATUS_CLOSED_ID: NSNumber = 0
     
-    var friendlyName: String!
+    static let mappingDictionary = [ "friendlyName": "friendly_name",
+                                     "desc":        "description" ]
     
+    var friendlyName: String!
+    var desc: String!    
 }

@@ -98,7 +98,7 @@ class BusinessEditController: MJPController {
         
         AppData.updateBusiness(business.id, success: { (business) in
             
-            if self.isNew && AppData.user.businesses.count == 1 {
+            if self.isNew && AppData.businesses.count == 1 {
                 UserDefaults.standard.set(1, forKey: "tutorial")
                 UserDefaults.standard.synchronize()
             }

@@ -96,48 +96,67 @@ class ApplicationAddController: MJPController {
             return
         }
         
-        let application = ExternalApplicationForCreation()
-        application.job = job.id
-        application.shortlisted = shortlisted.isOn
+        var jobSeeker: [String: Any] = [:]
         
-        application.firstName = firstName.text?.capitalized
-        application.lastName = lastName.text?.capitalized
-        application.email = AppData.email
-        application.telephone = telephone.text
-        application.mobile = mobile.text
+        jobSeeker["first_name"] = firstName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+        jobSeeker["last_name"] = lastName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
         
-        if let intAge = Int(age.text!) {
-            application.age = NSNumber(value: intAge)
+        if let str = email.text?.trimmingCharacters(in: .whitespacesAndNewlines) {
+            if !str.isEmpty {
+                jobSeeker["email"] = str
+            }
+        }
+        
+        if let str = telephone.text {
+            if !str.isEmpty {
+                jobSeeker["telephone"] = str
+            }
+        }
+        
+        if let str = mobile.text {
+            if !str.isEmpty {
+                jobSeeker["mobile"] = str
+            }
+        }
+        
+        if let n = Int(age.text!) {
+            jobSeeker["age"] = NSNumber(value: n)
         }
         
         if selectedSexNames.count > 0 {
-            application.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
+            jobSeeker["sex"] = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            application.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
+            jobSeeker["nationality"] = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
-        if (nationalNumber.text?.isEmpty == false) {
-            application.nationalInsuranceNumber = nationalNumber.text
-        } else {
-            application.nationalInsuranceNumber = nil
+        if let str = nationalNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) {
+            if !str.isEmpty {
+                jobSeeker["national_insurance_number"] = str
+            }
         }
         
-        application.emailPublic = true
-        application.telephonePublic = true
-        application.mobilePublic = true
-        application.agePublic = true
-        application.sexPublic = true
-        application.nationalityPublic = true
-        application.desc = descView.text
-        application.hasReferences = false
-        application.truthConfirmation = false
+        jobSeeker["description"] = descView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+//        jobSeeker["email_public"] = true
+//        jobSeeker["mobile_public"] = true
+//        jobSeeker["telephone_public"] = true
+//        jobSeeker["age_public"] = true
+//        jobSeeker["sex_public"] = true
+//        jobSeeker["nationality_public"] = true
+//        jobSeeker["has_references"] = false
+//        jobSeeker["truth_confirmation"] = false
+        
+        let application = ExternalApplicationForCreation()
+        application.job = job.id
+        application.shortlisted = shortlisted.isOn
+        application.jobSeeker = jobSeeker
         
         showLoading()
         
-        API.shared().createExternalApplication(application: application, success: { (data) in
-            let application = data as! Application
+        API.shared().createExternalApplication(application, success: { (data) in
+            let application = data as! ApplicationForCreation
             AppData.getApplication(application.id, success: { (_) in
                 self.closeController()
             }, failure: { (_, _) in

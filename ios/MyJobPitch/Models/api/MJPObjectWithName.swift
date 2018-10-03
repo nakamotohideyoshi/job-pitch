@@ -10,6 +10,7 @@ import Foundation
 
 class MJPObjectWithName: MJPObject {
 
-    var name: String!
-    
+    static let mappingArray = [ "id", "name" ]
+
+    var name: String!    
 }

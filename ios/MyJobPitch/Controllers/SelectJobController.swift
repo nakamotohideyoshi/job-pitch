@@ -16,7 +16,7 @@ class SelectJobController: MJPController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: EmptyView!
     
-    var jobs: [Job]! = [Job]()
+    var jobs: [Job]!
     
     var titles = [
         "find_talent":  "Select job bellow to start finding talent for your business.",
@@ -49,7 +49,7 @@ class SelectJobController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if AppData.jobs != nil {
+        if jobs != nil {
             updateList()
         }        
     }
@@ -70,15 +70,15 @@ class SelectJobController: MJPController {
     
     func jobAdd() {
         
-        if AppData.user.businesses.count > 1 {
+        if AppData.businesses.count == 1 {
             
-            let controller = BusinessListController.instantiate()
+            let controller = BusinessDetailController.instantiate()
+            controller.business = AppData.businesses[0]
             navigationController?.pushViewController(controller, animated: true)
             
         } else {
             
-            let controller = BusinessDetailController.instantiate()
-            controller.businessId = AppData.user.businesses[0] as! NSNumber
+            let controller = BusinessListController.instantiate()
             navigationController?.pushViewController(controller, animated: true)
         }
     }    
@@ -87,7 +87,7 @@ class SelectJobController: MJPController {
 extension SelectJobController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return jobs.count
+        return jobs == nil ? 0 : jobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

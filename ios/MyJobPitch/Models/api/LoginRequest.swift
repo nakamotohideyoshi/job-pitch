@@ -9,6 +9,8 @@
 import Foundation
 
 class LoginRequest: NSObject {
+    
+    static let mappingArray = [ "email", "password" ]
 
     var email: String!
     var password: String!

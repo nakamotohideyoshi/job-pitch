@@ -150,7 +150,7 @@ extension SideMenuController: UITableViewDataSource {
                     cell.isUserInteractionEnabled = false
                 }
             } else {
-                if pers!.contains("B") && AppData.user.businesses.count == 0 {
+                if pers!.contains("B") && AppData.businesses.count == 0 {
                     cell.isUserInteractionEnabled = false
                 }
             }

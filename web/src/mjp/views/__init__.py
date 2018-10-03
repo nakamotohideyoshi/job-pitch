@@ -115,7 +115,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
             if job.requires_pitch:
                 query = query.filter(pitches__video__isnull=False)
             else:
-                query = query.filter(profile_image__isnull=False)
+                query = query.exclude(profile_image='')
             if job.requires_cv:
                 query = query.exclude(cv='')
             query = query.exclude(applications__job=job)

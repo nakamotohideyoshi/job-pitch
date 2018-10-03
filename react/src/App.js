@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, withRouter } from 'react-router-dom';
 import { MJPRouters, getUserDataAction, setStatusAction, Loading } from 'mjp-react-core';
-import { RecruitRouters } from 'mjp-react-recruit';
 
 /* eslint-disable react/prop-types */
 const App = props => {
@@ -19,15 +18,36 @@ const App = props => {
     props.setStatusAction('select');
   }
 
-  let recruitRouters = RecruitRouters(props);
-  if (!recruitRouters) {
-    return <Loading size="large" />;
+  let recruitRouters;
+  if (process.env.REACT_APP_RECRUIT) {
+    recruitRouters = require('mjp-react-recruit').Routers(props);
+    if (!recruitRouters) {
+      return <Loading size="large" />;
+    }
+  }
+
+  let hrRouters;
+  if (process.env.REACT_APP_HR) {
+    hrRouters = require('mjp-react-hr').Routers(props);
+    if (!hrRouters) {
+      return <Loading size="large" />;
+    }
+  }
+
+  let employeeRouters;
+  if (process.env.REACT_APP_EMPLOYEE) {
+    employeeRouters = require('mjp-react-employee').Routers(props);
+    if (!employeeRouters) {
+      return <Loading size="large" />;
+    }
   }
 
   return (
     <Switch>
       {recruitRouters}
-      {status === 'auth' && MJPRouters(props)}
+      {hrRouters}
+      {employeeRouters}
+      {MJPRouters(props)}
     </Switch>
   );
 };

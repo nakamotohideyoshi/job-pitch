@@ -152,6 +152,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                 'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     can_create_businesses = models.BooleanField(default=False)
+    employees = models.ManyToManyField('hr.Employee', related_name='employees', through='hr.EmployeeUser')
 
     objects = UserManager()
 
@@ -284,9 +285,11 @@ class Nationality(models.Model):
 class ApplicationStatus(models.Model):
     CREATED = 'CREATED'
     ESTABLISHED = 'ESTABLISHED'
+    OFFERED = 'OFFERED'
     ACCEPTED = 'ACCEPTED'
     DECLINED = 'DECLINED'
     DELETED = 'DELETED'
+    OFFER_STATUSES = (OFFERED, DECLINED, ACCEPTED)
 
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)

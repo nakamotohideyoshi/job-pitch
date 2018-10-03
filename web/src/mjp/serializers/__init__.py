@@ -208,7 +208,7 @@ class JobSeekerReadSerializerV1(serializers.ModelSerializer):
     has_national_insurance_number = serializers.SerializerMethodField()
 
     def get_email(self, value):
-        if value.email_public:
+        if value.user and value.email_public:
             return value.user.email
         return ''
 

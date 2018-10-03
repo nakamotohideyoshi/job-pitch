@@ -34,7 +34,7 @@ class PublicJobListing(generics.RetrieveAPIView):
 
 
 class PublicJobSeekerListing(generics.RetrieveAPIView):
-    queryset = JobSeeker.objects.filter(active=True)
+    queryset = JobSeeker.objects.filter(active=True, user__isnull=False)
     throttle_classes = (PublicListingThrottle,)
 
     def get_serializer_class(self):

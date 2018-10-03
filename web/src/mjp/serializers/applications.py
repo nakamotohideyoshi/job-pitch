@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.fields import empty
 
 from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus, ApplicationPitch, Interview
 from mjp.serializers import (
@@ -83,14 +84,31 @@ class ExternalApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
+    pitch = serializers.PrimaryKeyRelatedField(
+        queryset=ApplicationPitch.objects.exclude(video=''),
+        required=False,
+        write_only=True,
+    )
+
     def create(self, validated_data):
         with transaction.atomic():
-            if validated_data['created_by'] == Role.objects.get(name='RECRUITER'):
+            if validated_data['created_by'] == Role.objects.get(name=Role.RECRUITER):
                 try:
                     validated_data['job'].location.business.token_store.decrement()
                 except TokenStore.NoTokens:
                     raise serializers.ValidationError('NO_TOKENS')
-            return super(ApplicationCreateSerializer, self).create(validated_data)
+
+            pitch = validated_data.pop('pitch', empty)
+
+            application = super(ApplicationCreateSerializer, self).create(validated_data)
+
+            if pitch is not empty and validated_data['created_by'] == Role.objects.get(name=Role.JOB_SEEKER):
+                if pitch.job_seeker == application.job_seeker:
+                    pitch.application = application
+                    pitch.save()
+                else:
+                    raise serializers.ValidationError({"pitch": "pitch does not exist"})
+            return application
 
     class Meta:
         model = Application

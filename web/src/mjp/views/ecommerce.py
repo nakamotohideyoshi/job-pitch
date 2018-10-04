@@ -18,10 +18,8 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from mjp.models import AndroidPurchase, TokenStore, ProductTokens, Business, PayPalProduct, InitialTokens
-from mjp.serializers import (
-    BusinessSerializer,
-)
 from mjp.serializers.ecommerce import AndroidPurchaseSerializer, PayPalPurchaseSerializer, InitialTokensSerializer
+from mjp.serializers.recruiter import UserBusinessSerializerV1, UserBusinessSerializer
 
 
 class AndroidPurchaseView(APIView):
@@ -37,14 +35,14 @@ class AndroidPurchaseView(APIView):
         )
         http_auth = credentials.authorize(Http())
         service = build('androidpublisher', 'v2', http=http_auth)
-        request = service.purchases().products().get(
+        purchase_request = service.purchases().products().get(
             packageName='com.myjobpitch',
             productId=serializer.data['product_code'],
             token=serializer.data['purchase_token'],
         )
 
         try:
-            response = request.execute()
+            purchase_request.execute()
         except HttpError as e:
             print "android purchase API error {}".format(e)
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -64,8 +62,16 @@ class AndroidPurchaseView(APIView):
                 )
 
         business = Business.objects.get(pk=serializer.data['business_id'])
-        output_serializer = BusinessSerializer(business, context={
-            'request': self.request,
+        try:
+            version = int(request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version >= 5:
+            serializer_class = UserBusinessSerializer
+        else:
+            serializer_class = UserBusinessSerializerV1
+        output_serializer = serializer_class(business, context={
+            'request': request,
             'format': self.format_kwarg,
             'view': self
         })

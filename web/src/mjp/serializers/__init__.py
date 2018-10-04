@@ -1,6 +1,5 @@
 import re
 
-from django.contrib.gis.geos import Point
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
@@ -42,67 +41,118 @@ class RelatedImageURLField(serializers.RelatedField):
                 }
 
 
-class BusinessSerializer(serializers.ModelSerializer):  # v1-4 /api/user-businesses/, all versions /api/business/
+class BusinessSerializerV1(serializers.ModelSerializer):  # v1
     users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
     tokens = serializers.IntegerField(source='token_store.tokens', read_only=True)
 
-    class Meta:
+    class Meta(object):
         model = Business
         fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
 
 
-class UserBusinessSerializer(BusinessSerializer):  # v5 (<5 uses BusinessSerializer)
-    restricted = serializers.SerializerMethodField()
+class BusinessSerializer(serializers.ModelSerializer):  # v6
+    locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    images = RelatedImageURLField(many=True, read_only=True)
 
-    def get_restricted(self, business):
-        user = self.context['request'].user
-        business_user = business.business_users.get(user=user)
-        return business_user.locations.exists()
-
-    class Meta:
-        model = Business
-        fields = BusinessSerializer.Meta.fields + ('restricted',)
+    class Meta(BusinessSerializerV1.Meta):
+        fields = ('id', 'locations', 'images', 'name')
 
 
-class LocationSerializer(serializers.ModelSerializer):  # v1-4 /api/user-locations/, all versions /api/locations/
+class DummyField(serializers.Field):
+    def to_internal_value(self, data):
+        return {}
+
+    def to_representation(self, value):
+        return ''
+
+
+class LocationSerializerV1(serializers.ModelSerializer):  # v1 /api/locations/
     jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='adverts')
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
-    business_data = BusinessSerializer(source='business', read_only=True)
+    business_data = BusinessSerializerV1(source='business', read_only=True)
     active_job_count = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    telephone = serializers.SerializerMethodField()
+    mobile = serializers.SerializerMethodField()
+    postcode_lookup = DummyField(source='*')
+    address = DummyField(source='*')
+
+    def get_email(self, value):
+        if value.email_public:
+            return value.email
+        return ''
+
+    def get_telephone(self, value):
+        if value.telephone_public:
+            return value.telephone
+        return ''
+
+    def get_mobile(self, value):
+        if value.mobile_public:
+            return value.mobile
+        return ''
 
     def get_active_job_count(self, obj):
         return obj.adverts.filter(status__name=JobStatus.OPEN).count()
 
-    def validate_business(self, value):
-        request = self.context['request']
-        try:
-            business_user = request.user.business_users.get(business=value)
-        except BusinessUser.DoesNotExist:
-            raise PermissionDenied()
-        if business_user.locations.exists():
-            raise PermissionDenied()
-        return value
-
-    def save(self, **kwargs):
-        if 'latlng' in self.validated_data:
-            self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
-        return super(LocationSerializer, self).save(**kwargs)
-    
-    class Meta:
+    class Meta(object):
         model = Location
-        exclude = ('latlng',)
+        fields = (
+            'id',
+            'business',
+            'name',
+            'description',
+            'address',
+            'place_id',
+            'place_name',
+            'postcode_lookup',
+            'email',
+            'email_public',
+            'telephone',
+            'telephone_public',
+            'mobile',
+            'mobile_public',
+            'jobs',
+            'longitude',
+            'latitude',
+            'images',
+            'business_data',
+            'active_job_count',
+            'created',
+            'updated',
+        )
 
 
-class UserLocationSerializer(LocationSerializer):  # v5 (<5 uses LocationSerializer)
-    business_data = UserBusinessSerializer(source='business', read_only=True)
+class LocationSerializer(LocationSerializerV1):  # v6 /api/locations/
+    business_data = BusinessSerializer(source='business', read_only=True)
+
+    class Meta(LocationSerializerV1.Meta):
+        fields = (
+            'id',
+            'business',
+            'name',
+            'description',
+            'place_name',
+            'email',
+            'email_public',
+            'telephone',
+            'telephone_public',
+            'mobile',
+            'mobile_public',
+            'jobs',
+            'longitude',
+            'latitude',
+            'images',
+            'business_data',
+        )
 
 
-class JobSerializerV1(serializers.ModelSerializer):
-    location_data = LocationSerializer(source='location', read_only=True)
+class JobSerializerV1(serializers.ModelSerializer):  # v1
+    location_data = LocationSerializerV1(source='location', read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
 
     def validate_location(self, value):
@@ -147,10 +197,14 @@ class JobSerializerV2(JobSerializerV1):  # v2
         fields = JobSerializerV1.Meta.fields + ('videos',)
 
 
-class JobSerializer(JobSerializerV2):  # v5
+class JobSerializerV5(JobSerializerV2):  # v5
     class Meta:
         model = Job
         fields = JobSerializerV2.Meta.fields + ('requires_pitch', 'requires_cv')
+
+
+class JobSerializer(JobSerializerV5):  # v6
+    location_data = LocationSerializer(source='location', read_only=True)
 
 
 class EmbeddedPitchSerializer(serializers.ModelSerializer):

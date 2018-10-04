@@ -19,13 +19,10 @@ from mjp.models import (
     Application,
 )
 from mjp.serializers import (
-    BusinessSerializer,
-    UserBusinessSerializer,
-    LocationSerializer,
-    UserLocationSerializer,
-    JobSerializer,
     JobSerializerV1,
     JobSerializerV2,
+    JobSerializerV5,
+    JobSerializer,
 )
 from mjp.serializers.recruiter import (
     BusinessImageSerializer,
@@ -36,6 +33,11 @@ from mjp.serializers.recruiter import (
     BusinessUserCreateSerializer,
     BusinessUserUpdateSerializer,
     ExclusionSerializer,
+    UserBusinessSerializerV1,
+    UserBusinessSerializer,
+    UserLocationSerializerV1,
+    UserLocationSerializer,
+    UserLocationSerializerV5,
 )
 
 
@@ -67,7 +69,7 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             version = 1
         if version >= 5:
             return UserBusinessSerializer
-        return BusinessSerializer
+        return UserBusinessSerializerV1
 
     def perform_create(self, serializer):
         token_store = TokenStore.objects.create(
@@ -132,9 +134,11 @@ class UserLocationViewSet(viewsets.ModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version >= 5:
+        if version >= 6:
             return UserLocationSerializer
-        return LocationSerializer
+        if version >= 5:
+            return UserLocationSerializerV5
+        return UserLocationSerializerV1
 
     def get_queryset(self):
         business = self.request.query_params.get('business', None)
@@ -198,8 +202,10 @@ class UserJobViewSet(viewsets.ModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version >= 5:
+        if version >= 6:
             return JobSerializer
+        if version >= 5:
+            return JobSerializerV5
         if version >= 2:
             return JobSerializerV2
         return JobSerializerV1

@@ -6,6 +6,7 @@ from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus
 from mjp.serializers import (
     JobSerializerV1,
     JobSerializerV2,
+    JobSerializerV5,
     JobSerializer,
     JobSeekerReadSerializerV1,
     JobSeekerReadSerializer,
@@ -70,11 +71,12 @@ class ApplicationSerializerV4(ApplicationSerializerV3):  # v4
 
 
 class ApplicationSerializerV5(ApplicationSerializerV4):  # v5
-    job_data = JobSerializer(source='job', read_only=True)
+    job_data = JobSerializerV5(source='job', read_only=True)
 
 
 class ApplicationSerializer(ApplicationSerializerV5):  # v6
     status = serializers.PrimaryKeyRelatedField(read_only=True)
+    job_data = JobSerializer(source='job', read_only=True)
 
 
 class ExternalApplicationSerializer(serializers.ModelSerializer):

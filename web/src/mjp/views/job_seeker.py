@@ -3,26 +3,44 @@ from rest_framework import permissions, viewsets
 
 from mjp.models import Business, Location, JobSeeker, JobProfile, Pitch, Job, JobStatus
 from mjp.serializers import (
+    BusinessSerializerV1,
     BusinessSerializer,
+    LocationSerializerV1,
     LocationSerializer,
-    JobSerializer,
     JobSerializerV1,
     JobSerializerV2,
+    JobSerializerV5,
+    JobSerializer,
 )
 from mjp.serializers.job_seeker import PitchSerializer, JobProfileSerializer
 
 
 class BusinessViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = BusinessSerializer
     queryset = Business.objects.all()
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version >= 6:
+            return BusinessSerializer
+        return BusinessSerializerV1
 
 
 class LocationViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = LocationSerializer
     queryset = Location.objects.all()
-    # TODO hide non-public
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version >= 6:
+            return LocationSerializer
+        return LocationSerializerV1
 
 
 class JobProfileViewSet(viewsets.ModelViewSet):
@@ -117,8 +135,10 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version >= 5:
+        if version >= 6:
             return JobSerializer
+        if version >= 5:
+            return JobSerializerV5
         if version >= 2:
             return JobSerializerV2
         return JobSerializerV1

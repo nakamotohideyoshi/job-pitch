@@ -1,10 +1,23 @@
 import uuid
 
+from django.contrib.gis.geos import Point
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo, User, Exclusion
+from mjp.models import (
+    BusinessUser,
+    BusinessImage,
+    LocationImage,
+    JobImage,
+    JobVideo,
+    User,
+    Exclusion,
+    Location,
+    JobStatus,
+    Business,
+)
+from mjp.serializers import DummyField, RelatedImageURLField
 
 
 class BusinessImageSerializer(serializers.ModelSerializer):
@@ -142,3 +155,98 @@ class ExclusionSerializer(serializers.ModelSerializer):
         model = Exclusion
         fields = ('id', 'job', 'job_seeker')
         read_only_fields = ('job',)
+
+
+class UserBusinessSerializerV1(serializers.ModelSerializer):  # v1
+    users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    images = RelatedImageURLField(many=True, read_only=True)
+    tokens = serializers.IntegerField(source='token_store.tokens', read_only=True)
+
+    class Meta(object):
+        model = Business
+        fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
+
+
+class UserBusinessSerializer(UserBusinessSerializerV1):  # v5
+    restricted = serializers.SerializerMethodField()
+
+    def get_restricted(self, business):
+        user = self.context['request'].user
+        business_user = business.business_users.get(user=user)
+        return business_user.locations.exists()
+
+    class Meta(UserBusinessSerializerV1.Meta):
+        fields = UserBusinessSerializerV1.Meta.fields + ('restricted',)
+
+
+class UserLocationSerializerV1(serializers.ModelSerializer):  # v1
+    jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='adverts')
+    longitude = serializers.FloatField(source='latlng.x')
+    latitude = serializers.FloatField(source='latlng.y')
+    images = RelatedImageURLField(many=True, read_only=True)
+    business_data = UserBusinessSerializerV1(source='business', read_only=True)
+    active_job_count = serializers.SerializerMethodField()
+    postcode_lookup = DummyField(source='*', required=False)
+    address = DummyField(source='*', required=False)
+
+    def get_active_job_count(self, obj):
+        return obj.adverts.filter(status__name=JobStatus.OPEN).count()
+
+    def validate_business(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists():
+            raise PermissionDenied()
+        return value
+
+    def save(self, **kwargs):
+        if 'latlng' in self.validated_data:
+            self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
+        return super(UserLocationSerializerV1, self).save(**kwargs)
+
+    class Meta(object):
+        model = Location
+        fields = (
+            'id',
+            'business',
+            'name',
+            'description',
+            'address',
+            'place_id',
+            'place_name',
+            'postcode_lookup',
+            'email',
+            'email_public',
+            'telephone',
+            'telephone_public',
+            'mobile',
+            'mobile_public',
+            'jobs',
+            'longitude',
+            'latitude',
+            'images',
+            'business_data',
+            'active_job_count',
+            'created',
+            'updated',
+        )
+
+
+class UserLocationSerializerV5(UserLocationSerializerV1):  # v5
+    business_data = UserBusinessSerializer(source='business', read_only=True)
+
+
+class UserLocationSerializer(UserLocationSerializerV5):  # v6
+    class Meta(UserLocationSerializerV1.Meta):
+        fields = tuple(f for f in UserLocationSerializerV1.Meta.fields if f not in ('address', 'postcode_lookup')) + (
+            'street_number',
+            'street',
+            'postcode',
+            'city',
+            'region',
+            'country',
+        )

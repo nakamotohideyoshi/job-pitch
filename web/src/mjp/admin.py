@@ -126,7 +126,7 @@ class LocationInline(admin.TabularInline):
     get_name_link.short_description = 'Name'
 
     def get_location(self, obj):
-        return obj.place_name or obj.postcode_lookup or obj.latlng
+        return obj.place_name or obj.latlng
     get_location.short_description = 'Location'
 
     def has_add_permission(self, request):
@@ -232,9 +232,13 @@ class LocationAdmin(admin.ModelAdmin):
         ('email', 'email_public'),
         ('telephone', 'telephone_public'),
         ('mobile', 'mobile_public'),
-        'address',
         'latlng',
         'get_location',
+        ('street_number', 'street'),
+        'city',
+        'region',
+        'country',
+        'postcode',
     )
     readonly_fields = ('get_business', 'get_location')
     list_display = ('name', 'get_location', 'email', 'telephone', 'mobile', 'created')

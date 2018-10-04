@@ -17,10 +17,10 @@ class IndeedJobSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
     company = serializers.CharField(source='location.business.name')
     sourcename = serializers.CharField(source='location.business.name')
-    city = serializers.CharField(source='location.name')  # TODO
-    state = serializers.CharField(source='location.name')  # TODO
-    country = serializers.CharField(source='location.name')  # TODO
-    postalcode = serializers.CharField(source='location.name')  # TODO
+    city = serializers.CharField(source='location.city')
+    state = serializers.CharField(source='location.region')
+    country = serializers.CharField(source='location.country')
+    postalcode = serializers.CharField(source='location.postcode')
     email = serializers.EmailField(source='location.email')
     jobtype = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()

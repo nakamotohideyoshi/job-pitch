@@ -241,6 +241,13 @@ class UserLocationSerializerV5(UserLocationSerializerV1):  # v5
 
 
 class UserLocationSerializer(UserLocationSerializerV5):  # v6
+    street_number = serializers.CharField(max_length=1024)
+    street = serializers.CharField(max_length=1024)
+    postcode = serializers.CharField(max_length=50)
+    city = serializers.CharField(max_length=1024)
+    region = serializers.CharField(max_length=1024)
+    country = serializers.CharField(max_length=1024)
+
     class Meta(UserLocationSerializerV1.Meta):
         fields = tuple(f for f in UserLocationSerializerV1.Meta.fields if f not in ('address', 'postcode_lookup')) + (
             'street_number',

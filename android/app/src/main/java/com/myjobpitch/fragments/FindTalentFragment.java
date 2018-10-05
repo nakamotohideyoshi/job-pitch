@@ -30,7 +30,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = initView(inflater, container, "There are no more new matches for this job. You can restore your removed matches by clicking refresh above.");
+        View view = initView(inflater, container, "There are no more new matches for this job.");
         title = "Find Talent";
         showCredits();
 

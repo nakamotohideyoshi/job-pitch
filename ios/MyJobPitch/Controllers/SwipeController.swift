@@ -35,7 +35,7 @@ class SwipeController: MJPController {
         } else {
         
             title = "Find Talent"
-            emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
+            emptyView.text = "There are no more new matches for this job."
             updateTokens()
         }
         
@@ -298,7 +298,7 @@ class SwipeController: MJPController {
             application.job = searchJob?.id
             application.jobSeeker = data[currentIndex - cards.count].id
             
-            API.shared().createApplication(application: application, success: { (data) in
+            API.shared().createApplication(application, success: { (data) in
                 
                 application = data as! ApplicationForCreation
                 

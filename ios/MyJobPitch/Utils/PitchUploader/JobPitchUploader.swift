@@ -10,16 +10,16 @@ import UIKit
 
 class JobPitchUploader: PitchUploader {
     
-    func uploadVideo(videoUrl: URL!, job: NSNumber, complete:((PitchObject?) -> Void)!, progress:((Float) -> Void)!) {
+    func uploadVideo(videoUrl: URL!, job: NSNumber, complete:((Pitch?) -> Void)!, progress:((Float) -> Void)!) {
         
         self.endpoint = "job-videos"
         self.complete = complete
         self.progress = progress
         
-        let pitch = JobPitch()
+        let pitch = JobPitchForCreation()
         pitch.job = job
-        API.shared().saveJobPitch(pitch: pitch, success: { (data) in
-            self.pitch = data as! JobPitch!
+        API.shared().saveJobPitch(pitch, success: { (data) in
+            self.pitch = data as! Pitch!
             self.convertVideo(videoUrl)
         }) { (message, errors) in
             self.uploadFailed()
@@ -28,8 +28,8 @@ class JobPitchUploader: PitchUploader {
     
     override func getPitch() {
         
-        API.shared().getJobPitch(id: pitch.id, success: { (data) in
-            let pitch = data as! JobPitch
+        API.shared().getJobPitch(pitch.id, success: { (data) in
+            let pitch = data as! Pitch
             if pitch.video == nil {
                 Thread.sleep(forTimeInterval: 2)
                 self.getPitch()

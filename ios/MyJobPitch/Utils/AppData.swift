@@ -12,7 +12,7 @@ class AppData: NSObject {
     
     // const
     
-    static let apiVersion = 5
+    static let apiVersion = 6
     static let production = false
     
     static let greenColor = UIColor(red: 0/255.0, green: 182/255.0, blue: 164/255.0, alpha: 1)
@@ -420,7 +420,7 @@ class AppData: NSObject {
     static func getBusinessUsers(businessId: NSNumber,
                          success: (() -> Void)?,
                          failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadBusinessUsers(businessId: businessId, success: { (data) in
+        API.shared().loadBusinessUsers(businessId, success: { (data) in
             businessUsers = data as! [BusinessUser]
             success?()
         }, failure: failure)
@@ -495,7 +495,7 @@ class AppData: NSObject {
     
     static func getApplications(success: (() -> Void)?,
                                 failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadApplicationsForJob(jobId: nil, status: nil, shortlisted: false, success: { (data) in
+        API.shared().loadApplications(success: { (data) in
             
             applications = data as! [Application]
             getNewMessageCount()
@@ -506,7 +506,7 @@ class AppData: NSObject {
     
     static func getApplication(_ id: NSNumber, success: ((Application) -> Void)?,
                                failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadApplicationWithId(id: id, success: { (data) in
+        API.shared().loadApplicationWithId(id, success: { (data) in
             let newApplication = data as! Application
             var isNew = true
             for (index, application) in applications.enumerated() {

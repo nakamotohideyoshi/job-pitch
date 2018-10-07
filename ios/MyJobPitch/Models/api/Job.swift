@@ -25,9 +25,9 @@ class Job: MJPObjectWithDates {
     var requiresPitch = false
     var requiresCV = false
     
-    func getPitch() -> JobPitch? {
+    func getPitch() -> Pitch? {
         if videos != nil {
-            for pitch in videos as! [JobPitch] {
+            for pitch in videos as! [Pitch] {
                 if pitch.video != nil {
                     return pitch
                 }

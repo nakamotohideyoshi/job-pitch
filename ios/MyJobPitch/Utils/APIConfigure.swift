@@ -191,76 +191,52 @@ class APIConfigure: NSObject {
 
         // ================= Pitch =====================
 
-        let pitchArray = [ "id", "video", "thumbnail", "job_seeker", "token" ]
-
         let pitchMapping = createResponseMappingForClass(Pitch.classForCoder(),
-                                                         array: pitchArray,
+                                                         array: Pitch.mappingArray,
                                                          dictionary: nil,
                                                          relationships: nil)
 
-        configureSimpleMapping(Pitch.classForCoder(),
-                               mappingArray: pitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/pitches/",
-                               method: .POST)
-
-        configureSimpleMapping(Pitch.classForCoder(),
-                               mappingArray: pitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/pitches/:pk/",
-                               method: .GET)
-
-        // ================= Specific Pitch =====================
+        configureRequestMapping(Pitch.classForCoder(),
+                                requestArray: nil,
+                                requestDictionary: nil,
+                                requestRelationships: nil,
+                                method: .POST)
         
-        let specificPitchArray = [ "id", "video", "thumbnail", "job_seeker", "application", "token" ]
+        configureRequestMapping(SpecificPitchForCreation.classForCoder(),
+                                requestArray: nil,
+                                requestDictionary: SpecificPitchForCreation.mappingDictionary,
+                                requestRelationships: nil,
+                                method: .POST)
         
-        let specificPitchMapping = createResponseMappingForClass(SpecificPitch.classForCoder(),
-                                                            array: specificPitchArray,
-                                                            dictionary: nil,
-                                                            relationships: nil)
+        configureRequestMapping(JobPitchForCreation.classForCoder(),
+                                requestArray: JobPitchForCreation.mappingArray,
+                                requestDictionary: nil,
+                                requestRelationships: nil,
+                                method: .POST)
         
-        configureMapping(SpecificPitch.classForCoder(),
-                         requestArray: [ "application", "job_seeker" ],
-                         requestDictionary: nil,
-                         requestRelationships: nil,
-                         responseClass: SpecificPitch.classForCoder(),
-                         responseArray: specificPitchArray,
-                         responseDictionary: nil,
-                         responseRelationships: nil,
-                         path: "/api/application-pitches/",
-                         method: .POST)
+        configureResponseMapping(pitchMapping,
+                                 path: "/api/pitches/",
+                                 method: .POST)
         
-        configureSimpleMapping(SpecificPitch.classForCoder(),
-                               mappingArray: specificPitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/application-pitches/:pk/",
-                               method: .GET)
-
-        // ================= Job Pitch =====================
+        configureResponseMapping(pitchMapping,
+                                 path: "/api/pitches/:pk/",
+                                 method: .GET)
         
-        let jobPitchArray = [ "id", "video", "thumbnail", "job", "token" ]
+        configureResponseMapping(pitchMapping,
+                                 path: "/api/application-pitches/",
+                                 method: .POST)
         
-        let jobPitchMapping = createResponseMappingForClass(JobPitch.classForCoder(),
-                                                            array: pitchArray,
-                                                            dictionary: nil,
-                                                            relationships: nil)
+        configureResponseMapping(pitchMapping,
+                                  path: "/api/application-pitches/:pk/",
+                                 method: .GET)
         
-        configureSimpleMapping(JobPitch.classForCoder(),
-                               mappingArray: jobPitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/job-videos/",
-                               method: .POST)
+        configureResponseMapping(pitchMapping,
+                                 path: "/api/job-videos/",
+                                 method: .POST)
         
-        configureSimpleMapping(JobPitch.classForCoder(),
-                               mappingArray: jobPitchArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: nil,
-                               path: "/api/job-videos/:pk/",
-                               method: .GET)
+        configureResponseMapping(pitchMapping,
+                                 path: "/api/job-videos/:pk/",
+                                 method: .GET)
         
         // ================= Profile =====================
 
@@ -448,7 +424,7 @@ class APIConfigure: NSObject {
                                    "mapping": imageMapping ],
                                  [ "source":          "videos",
                                    "destination":     "videos",
-                                   "mapping":         jobPitchMapping ] ]
+                                   "mapping":         pitchMapping ] ]
         
         let jobMapping = createResponseMappingForClass(Job.classForCoder(),
                                                        array: jobArray,
@@ -826,13 +802,20 @@ class APIConfigure: NSObject {
                                                             array: responseArray,
                                                             dictionary: responseDictionary,
                                                             relationships: responseRelationships)
-
-        let responseDescriptor = RKResponseDescriptor(mapping: responseMapping,
+        
+        configureResponseMapping(responseMapping, path: path, method: method)
+    }
+    
+    private func configureResponseMapping(_ mapping: RKObjectMapping,
+                                          path: String,
+                                          method: RKRequestMethod) {
+        
+        let responseDescriptor = RKResponseDescriptor(mapping: mapping,
                                                       method: method,
                                                       pathPattern: path,
                                                       keyPath: nil,
                                                       statusCodes: RKStatusCodeIndexSetForClass(RKStatusCodeClass.successful))
-
+        
         manager.addResponseDescriptor(responseDescriptor)
     }
     

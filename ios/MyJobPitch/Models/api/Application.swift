@@ -42,11 +42,12 @@ class Application: MJPObjectWithDates {
 
 class ApplicationForCreation: MJPObject {
     
-    static let mappingArray = [ "id", "job", "shortlisted" ]
+    static let mappingArray = [ "id", "job", "pitch", "shortlisted" ]
     static let mappingDictionary = ["jobSeeker": "job_seeker"]
     
     var job: NSNumber!
     var jobSeeker: NSNumber!
+    var pitch: NSNumber!
     var shortlisted = false
 }
 

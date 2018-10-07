@@ -48,6 +48,8 @@ class MapController: UIViewController {
             updatePosition(currentPos)
             mapView.camera = GMSCameraPosition.camera(withTarget: currentPos, zoom: getZoom())
         }
+        
+        PopupController.showGray("Tap on the city or location that you would like to set and tap \"select\" on the upper right corner", ok: "Got it!")
     }
     
     func showAlert() {

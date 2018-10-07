@@ -53,11 +53,11 @@ class MessageController: JSQMessagesViewController {
                 inputToolbar.contentView.textView.placeHolder = "Input is disabled"
                 PopupController.showGreen("You cannot send messages until you have connected", ok: "Connect (1 credit)", okCallback: {
                     
-                    let update = ApplicationStatusUpdate()
-                    update.id = self.application.id
-                    update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
+                    let data = ApplicationStatusUpdate()
+                    data.id = self.application.id
+                    data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                     
-                    API.shared().updateApplicationStatus(update: update, success: { (data) in
+                    API.shared().updateApplicationStatus(data, success: { (data) in
                         AppData.getApplication(self.application.id, success: { (application) in
                             self.application = application
                             self.updateData()

@@ -10,13 +10,13 @@ import UIKit
 
 class JSPitchUploader: PitchUploader {
 
-    func uploadVideo(videoUrl: URL!, complete:((PitchObject?) -> Void)!, progress:((Float) -> Void)!) {
+    func uploadVideo(videoUrl: URL!, complete:((Pitch?) -> Void)!, progress:((Float) -> Void)!) {
         
         self.endpoint = "pitches"
         self.complete = complete
         self.progress = progress
         
-        API.shared().savePitch(pitch: Pitch(), success: { (data) in
+        API.shared().savePitch(Pitch(), success: { (data) in
             self.pitch = data as! Pitch!
             self.convertVideo(videoUrl)
         }) { (message, errors) in
@@ -26,7 +26,7 @@ class JSPitchUploader: PitchUploader {
     
     override func getPitch() {
         
-        API.shared().getPitch(id: pitch.id, success: { (data) in
+        API.shared().getPitch(pitch.id, success: { (data) in
             let pitch = data as! Pitch
             if pitch.video == nil {
                 Thread.sleep(forTimeInterval: 2)

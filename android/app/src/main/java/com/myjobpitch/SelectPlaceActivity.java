@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.myjobpitch.views.Popup;
 
 import java.io.IOException;
 import java.util.List;
@@ -79,6 +80,9 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
+        Popup popup = new Popup(this, "Tap on the city or location that you would like to set and tap \"select\" on the upper right corner", true);
+        popup.addGreyButton("Got it!", null);
+        popup.show();
     }
 
     void settingMap() {

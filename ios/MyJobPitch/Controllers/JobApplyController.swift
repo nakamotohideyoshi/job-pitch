@@ -94,29 +94,37 @@ class JobApplyController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         
-        let application = ApplicationForCreation()
-        application.job = job.id
-        application.jobSeeker = AppData.jobSeeker.id
-        
-        showLoading()
-        API.shared().createApplication(application: application, success: { (data) in
+        let apply = { (pitch: Pitch?) in
             
-            let applyCompleted = {
+            let application = ApplicationForCreation()
+            application.job = self.job.id
+            application.pitch = pitch?.id
+            application.jobSeeker = AppData.jobSeeker.id
+            
+            API.shared().createApplication(application, success: { (data) in
                 self.closeController()
                 self.completeCallback?()
-            }
+            }, failure: self.handleErrors)
+        }
+        
+        showLoading()
+        
+        if self.videoUrl == nil {
             
-            if self.videoUrl == nil {
-                applyCompleted();
-                return;
-            }
+            apply(nil)
             
-            let applicationId = (data as! ApplicationForCreation).id
-            
-            SpecificPitchUploader().uploadVideo(videoUrl: self.videoUrl, application: applicationId!, complete: { (pitch) in
+        } else {
+         
+            SpecificPitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
                 
-                applyCompleted()
-            
+                if pitch == nil {
+                    PopupController.showGreen("There was an error uploading the pitch",
+                                              ok: nil, okCallback: nil,
+                                              cancel: "OK", cancelCallback: nil)
+                } else {
+                    apply(pitch)
+                }
+                
             }) { (progress) in
                 if progress < 1 {
                     self.showLoading(label: "Uploading Pitch...", withProgress: progress)
@@ -124,8 +132,7 @@ class JobApplyController: MJPController {
                     self.showLoading()
                 }
             }
-            
-        }, failure: handleErrors)
+        }
     }
     
     static func instantiate() -> JobApplyController {

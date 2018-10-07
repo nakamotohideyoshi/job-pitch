@@ -306,7 +306,7 @@ class API: NSObject {
 
     // ================= Pitch =====================
 
-    func savePitch(pitch: Pitch,
+    func savePitch(_ pitch: Pitch,
                    success: ((NSObject?) -> Void)!,
                    failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/pitches/", request: pitch,
@@ -314,7 +314,7 @@ class API: NSObject {
                    failure: failure)
     }
 
-    func getPitch(id: NSNumber,
+    func getPitch(_ id: NSNumber,
                   success: ((NSObject) -> Void)!,
                   failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/pitches/%@/", id), success: success, failure: failure)
@@ -322,7 +322,7 @@ class API: NSObject {
     
     // ================= Specific Pitch =====================
     
-    func saveSpecificPitch(pitch: SpecificPitch,
+    func saveSpecificPitch(_ pitch: SpecificPitchForCreation,
                    success: ((NSObject?) -> Void)!,
                    failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/application-pitches/", request: pitch,
@@ -330,7 +330,7 @@ class API: NSObject {
                    failure: failure)
     }
     
-    func getSpecificPitch(id: NSNumber,
+    func getSpecificPitch(_ id: NSNumber,
                   success: ((NSObject) -> Void)!,
                   failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/application-pitches/%@/", id), success: success, failure: failure)
@@ -338,7 +338,7 @@ class API: NSObject {
     
     // ================= JovPitch =====================
     
-    func saveJobPitch(pitch: JobPitch,
+    func saveJobPitch(_ pitch: JobPitchForCreation,
                       success: ((NSObject?) -> Void)!,
                       failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/job-videos/", request: pitch,
@@ -346,7 +346,7 @@ class API: NSObject {
                    failure: failure)
     }
     
-    func getJobPitch(id: NSNumber,
+    func getJobPitch(_ id: NSNumber,
                      success: ((NSObject) -> Void)!,
                      failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/job-videos/%@/", id), success: success, failure: failure)
@@ -383,7 +383,9 @@ class API: NSObject {
 
     // ================= Jobseeker =====================
 
-    func saveJobSeeker(_ jobSeeker: JobSeeker, photo: UIImage!, cvdata: Data!,
+    func saveJobSeeker(_ jobSeeker: JobSeeker,
+                       photo: UIImage!,
+                       cvdata: Data!,
                        progress:((UInt, Int64, Int64) -> Void)!,
                        success: ((NSObject?) -> Void)!,
                        failure: ((String?, NSDictionary?) -> Void)!) {
@@ -586,7 +588,7 @@ class API: NSObject {
 
     // ================= Application =====================
 
-    func createApplication(application: ApplicationForCreation,
+    func createApplication(_ application: ApplicationForCreation,
                            success: ((NSObject?) -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/applications/", request: application,
@@ -594,57 +596,65 @@ class API: NSObject {
     }
     
     func createExternalApplication(_ application: ExternalApplicationForCreation,
-                           success: ((NSObject?) -> Void)!,
-                           failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject("/api/applications/external/", request: application,
-                   success: success, failure: failure)
+                                   cvdata: Data!,
+                                   progress:((UInt, Int64, Int64) -> Void)!,
+                                   success: ((NSObject?) -> Void)!,
+                                   failure: ((String?, NSDictionary?) -> Void)!) {
+        clearCookies()
+        let request = manager.multipartFormRequest(with: application,
+                                                   method: RKRequestMethod.POST,
+                                                   path: "/api/applications/external/",
+                                                   parameters: nil,
+                                                   constructingBodyWith: { (formData) in
+                                                    if cvdata != nil {
+                                                        formData?.appendPart(withFileData: cvdata,
+                                                                             name: "cv",
+                                                                             fileName: "cv_file",
+                                                                             mimeType: "application/octet-stream")
+                                                    }
+        })
+        
+        let operation = manager.objectRequestOperation(with: request as URLRequest!,
+                                                       success: { (_, mappingResult) in
+                                                        success(mappingResult?.firstObject as! JobSeeker)
+        }, failure: { (_, error) in
+            self.failureWithError(error, failure: failure)
+        })
+        
+        operation?.httpRequestOperation.setUploadProgressBlock(progress)
+        manager.enqueue(operation)
+        
+//        postObject("/api/applications/external/", request: application,
+//                   success: success, failure: failure)
     }
     
-    func updateApplicationStatus(update: ApplicationStatusUpdate,
+    func updateApplicationStatus(_ data: ApplicationStatusUpdate,
                                  success: ((NSObject?) -> Void)!,
                                  failure: ((String?, NSDictionary?) -> Void)!) {
-        putObject(String(format: "/api/applications/%@/", update.id),
-                  request: update, success: success, failure: failure)
+        putObject(String(format: "/api/applications/%@/", data.id),
+                  request: data, success: success, failure: failure)
     }
 
-    func updateApplicationShortlist(update: ApplicationShortlistUpdate,
+    func updateApplicationShortlist(_ data: ApplicationShortlistUpdate,
                                     success: ((NSObject?) -> Void)!,
                                     failure: ((String?, NSDictionary?) -> Void)!) {
-        putObject(String(format: "/api/applications/%@/", update.id),
-                  request: update, success: success, failure: failure)
+        putObject(String(format: "/api/applications/%@/", data.id),
+                  request: data, success: success, failure: failure)
     }
 
-    func loadApplicationWithId(id: NSNumber,
+    func loadApplicationWithId(_ id: NSNumber,
                                success: ((NSObject) -> Void)!,
                                failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/applications/%@/", id),
                   success: success, failure: failure)
     }
 
-    func loadApplicationsForJob(jobId: NSNumber!,
-                                status: NSNumber!,
-                                shortlisted: Bool,
-                                success: ((NSArray) -> Void)!,
-                                failure: ((String?, NSDictionary?) -> Void)!) {
-        
-        var path = "/api/applications/"
-        var link = "?"
-        if jobId != nil {
-            path = String(format: "%@%@job=%@", path, link, jobId)
-            link = "&"
-        }
-        if status != nil {
-            path = String(format: "%@%@status=%@", path, link, status)
-            link = "&"
-        }
-        if shortlisted {
-            path = String(format: "%@%@shortlisted=1", path, link)
-        }
-
-        getObjects(path, success: success, failure: failure)
+    func loadApplications(success: ((NSArray) -> Void)!,
+                          failure: ((String?, NSDictionary?) -> Void)!) {
+        getObjects("/api/applications/", success: success, failure: failure)
     }
 
-    func deleteApplication(id: NSNumber,
+    func deleteApplication(_ id: NSNumber,
                            success: (() -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
         deleteObject(String(format: "/api/applications/%@/", id),
@@ -661,9 +671,9 @@ class API: NSObject {
     // ================= BusinessUser =====================
     
     
-    func loadBusinessUsers(businessId: NSNumber!,
-                                  success: ((NSArray) -> Void)!,
-                                  failure: ((String?, NSDictionary?) -> Void)!) {
+    func loadBusinessUsers(_ businessId: NSNumber!,
+                           success: ((NSArray) -> Void)!,
+                           failure: ((String?, NSDictionary?) -> Void)!) {
         getObjects(String(format: "/api/user-businesses/%@/users/", businessId), success: success, failure: failure)
     }
     

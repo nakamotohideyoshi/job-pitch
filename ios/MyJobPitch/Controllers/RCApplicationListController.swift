@@ -195,7 +195,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                 
                                 self.showLoading()
                                 
-                                API.shared().deleteApplication(id: application.id, success: {
+                                API.shared().deleteApplication(application.id, success: {
                                     self.updateApplication(application.id)
                                 }, failure: self.handleErrors)
                                 
@@ -217,11 +217,11 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                     
                                     self.showLoading()
                                     
-                                    let update = ApplicationStatusUpdate()
-                                    update.id = application.id
-                                    update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
+                                    let data = ApplicationStatusUpdate()
+                                    data.id = application.id
+                                    data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                                     
-                                    API.shared().updateApplicationStatus(update: update, success: { (data) in
+                                    API.shared().updateApplicationStatus(data, success: { (data) in
                                         self.updateApplication(application.id)
                                     }) { (message, errors) in
                                         self.hideLoading()

@@ -12,9 +12,9 @@ import AVFoundation
 
 class PitchUploader: NSObject {
 
-    var pitch: PitchObject!
+    var pitch: Pitch!
     var progress: ((Float) -> Void)!
-    var complete: ((PitchObject?) -> Void)!
+    var complete: ((Pitch?) -> Void)!
     var endpoint: String!
     
     func convertVideo(_ url: URL!) {
@@ -63,7 +63,6 @@ class PitchUploader: NSObject {
                                         if error == nil {
                                             self.getPitch()
                                         } else {
-                                            print(error?.localizedDescription)
                                             self.uploadFailed()
                                         }
                                         

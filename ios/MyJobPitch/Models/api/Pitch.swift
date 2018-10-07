@@ -8,7 +8,9 @@
 
 import Foundation
 
-class PitchObject: MJPObject {
+class Pitch: MJPObject {
+    
+    static var mappingArray = ["id", "video", "thumbnail", "token"]
     
     var video: String!
     var thumbnail: String!
@@ -16,22 +18,16 @@ class PitchObject: MJPObject {
     
 }
 
-
-class Pitch: PitchObject {
-
-    var job_seeker: NSNumber!
+class SpecificPitchForCreation: NSObject {
     
+    static var mappingDictionary = ["jobSeeker": "job_seeker"]
+
+    var jobSeeker: NSNumber!
 }
 
-class SpecificPitch: PitchObject {
+class JobPitchForCreation: NSObject {
     
-    var job_seeker: NSNumber!
-    var application: NSNumber!
-    
-}
+    static var mappingArray = ["job"]
 
-class JobPitch: PitchObject {
-    
-    var job: NSNumber!
-    
+    var job: NSNumber!    
 }

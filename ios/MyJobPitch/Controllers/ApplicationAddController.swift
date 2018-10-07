@@ -24,6 +24,9 @@ class ApplicationAddController: MJPController {
     @IBOutlet weak var nationalNumber: UITextField!
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
+    @IBOutlet weak var cvComment: UILabel!
+    @IBOutlet weak var cvRemoveButton: UIButton!
+    @IBOutlet weak var cvViewButton: YellowButton!
     @IBOutlet weak var shortlisted: UISwitch!
     
     public var job: Job!
@@ -34,10 +37,16 @@ class ApplicationAddController: MJPController {
     var nationalityNames = [String]()
     var selectedNationalityNames = [String]()
     
+    var cvPicker: ImagePicker!
+    var cvdata: Data!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         isModal = true
+        
+        cvPicker = ImagePicker()
+        cvPicker.delegate = self
         
         infoView.job = job
         infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
@@ -90,6 +99,29 @@ class ApplicationAddController: MJPController {
         PopupController.showGray("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", ok: "Close")
     }
     
+    @IBAction func cvViewAction(_ sender: Any) {
+        let url = URL(string: AppData.jobSeeker.cv)!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
+    }
+    
+    @IBAction func cvAddHelpAction(_ sender: Any) {
+        PopupController.showGray("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", ok: "Close")
+    }
+    
+    @IBAction func cvRemoveAction(_ sender: Any) {
+        cvdata = nil
+        cvComment.text = ""
+        cvRemoveButton.isHidden = true
+    }
+    
+    @IBAction func cvAddAction(_ sender: Any) {
+        cvPicker.present(self, target: sender as! UIView)
+    }
+    
     @IBAction func saveAction(_ sender: Any) {
         
         if !valid() {
@@ -139,14 +171,14 @@ class ApplicationAddController: MJPController {
         
         jobSeeker["description"] = descView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
-//        jobSeeker["email_public"] = true
-//        jobSeeker["mobile_public"] = true
-//        jobSeeker["telephone_public"] = true
-//        jobSeeker["age_public"] = true
-//        jobSeeker["sex_public"] = true
-//        jobSeeker["nationality_public"] = true
-//        jobSeeker["has_references"] = false
-//        jobSeeker["truth_confirmation"] = false
+        jobSeeker["email_public"] = true
+        jobSeeker["mobile_public"] = true
+        jobSeeker["telephone_public"] = true
+        jobSeeker["age_public"] = true
+        jobSeeker["sex_public"] = true
+        jobSeeker["nationality_public"] = true
+        jobSeeker["has_references"] = false
+        jobSeeker["truth_confirmation"] = false
         
         let application = ExternalApplicationForCreation()
         application.job = job.id
@@ -155,7 +187,14 @@ class ApplicationAddController: MJPController {
         
         showLoading()
         
-        API.shared().createExternalApplication(application, success: { (data) in
+        API.shared().createExternalApplication(application, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+            
+            if self.cvdata != nil {
+                let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                self.showLoading(label: "Uploading data...", withProgress: rate)
+            }
+            
+        }, success: { (data) in
             let application = data as! ApplicationForCreation
             AppData.getApplication(application.id, success: { (_) in
                 self.closeController()
@@ -170,3 +209,13 @@ class ApplicationAddController: MJPController {
     }
     
 }
+
+extension ApplicationAddController: ImagePickerDelegate {
+    
+    func imageSelected(_ picker: ImagePicker, image: UIImage) {
+        cvdata = UIImagePNGRepresentation(image)
+        cvComment.text = "CV added: save to upload."
+        cvRemoveButton.isHidden = false
+    }
+}
+

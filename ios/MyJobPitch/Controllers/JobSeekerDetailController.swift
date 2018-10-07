@@ -211,13 +211,13 @@ class JobSeekerDetailController: MJPController {
         
         application?.shortlisted = shortlisted.isOn
         
-        let update = ApplicationShortlistUpdate()
-        update.id = application?.id
-        update.shortlisted = (application?.shortlisted)!
+        let data = ApplicationShortlistUpdate()
+        data.id = application?.id
+        data.shortlisted = (application?.shortlisted)!
         
         shortlisted.isHidden = true
         shortlistIndicator.isHidden = false
-        API.shared().updateApplicationShortlist(update: update, success: { (_) in
+        API.shared().updateApplicationShortlist(data, success: { (_) in
             self.shortlisted.isHidden = false
             self.shortlistIndicator.isHidden = true
         }, failure: self.handleErrors)
@@ -236,7 +236,7 @@ class JobSeekerDetailController: MJPController {
                 application.job = self.job?.id
                 application.jobSeeker = self.jobSeeker.id
                 
-                API.shared().createApplication(application: application, success: { (data) in
+                API.shared().createApplication(application, success: { (data) in
                     
                     application = data as! ApplicationForCreation
                     AppData.getApplication(application.id, success: nil, failure: nil)
@@ -255,11 +255,11 @@ class JobSeekerDetailController: MJPController {
                 
             } else {
                 
-                let update = ApplicationStatusUpdate()
-                update.id = self.application.id
-                update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
+                let data = ApplicationStatusUpdate()
+                data.id = self.application.id
+                data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                 
-                API.shared().updateApplicationStatus(update: update, success: { (data) in
+                API.shared().updateApplicationStatus(data, success: { (data) in
                     self.updateApplication()
                 }) { (message, errors) in
                     self.hideLoading()
@@ -290,7 +290,7 @@ class JobSeekerDetailController: MJPController {
                     self.removeCallback?()
                 }, failure: self.handleErrors)
             } else {
-                API.shared().deleteApplication(id: self.application.id, success: {
+                API.shared().deleteApplication(self.application.id, success: {
                     self.updateApplication()
                 }, failure: self.handleErrors)
             }

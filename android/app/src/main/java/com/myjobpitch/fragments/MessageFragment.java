@@ -32,6 +32,8 @@ import com.myjobpitch.views.Popup;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
+import com.stfalcon.chatkit.commons.models.MessageContentType;
+import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -189,9 +191,9 @@ public class MessageFragment extends BaseFragment {
 
         // show chat list
 
-        MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setIncomingLayout(R.layout.view_message_incoming);
-        holdersConfig.setOutcomingLayout(R.layout.view_message_outcoming);
+        MessageHolders messageHolders = new MessageHolders()
+                .setIncomingTextLayout(R.layout.view_message_incoming)
+                .setOutcomingTextLayout(R.layout.view_message_outcoming);
 
         ImageLoader imageLoader = new ImageLoader() {
             @Override
@@ -206,18 +208,45 @@ public class MessageFragment extends BaseFragment {
             }
         };
 
-        final MessagesListAdapter<MessageItem> adapter = new MessagesListAdapter<>("0", holdersConfig, imageLoader);
+        final MessagesListAdapter<MessageItem> adapter = new MessagesListAdapter<>("0", messageHolders, imageLoader);
+
+        int interviewMsgId = -1;
+        if (interview != null) {
+            List<Message> interviewMsgs = interview.getMessages();
+            interviewMsgId = interviewMsgs.get(interviewMsgs.size() - 1).getId();
+        }
 
         List<MessageItem> messageItems = new ArrayList<>();
         for (int i=0; i<application.getMessages().size(); i++) {
             Message message = application.getMessages().get(i);
+            String content = message.getContent();
+            boolean isInterview = false;
+            if (interviewMsgId != -1) {
+                if (message.getId() == interviewMsgId) {
+                    SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+                    SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+                    content = "Interview\n" + content + "\nInterview: " + format.format(interview.getAt()) + " at " + format1.format(interview.getAt());
+                    isInterview = true;
+                }
+            }
+
             MessageItem messageItem = new MessageItem(i,
                     message.getFrom_role() == AppData.getUserRole().getId() ? "0" : "1",
-                    message.getContent(),
-                    message.getCreated());
+                    content,
+                    message.getCreated(),
+                    isInterview);
             messageItems.add(messageItem);
         }
         adapter.addToEnd(messageItems, true);
+
+        adapter.registerViewClickListener(R.id.messageText, new MessagesListAdapter.OnMessageViewClickListener<MessageItem>() {
+            @Override
+            public void onMessageViewClick(View view, MessageItem message) {
+                if (message.isInterview) {
+                    onClickInterview();
+                }
+            }
+        });
 
         messagesList.setAdapter(adapter);
 
@@ -228,7 +257,7 @@ public class MessageFragment extends BaseFragment {
             public boolean onSubmit(CharSequence input) {
                 String text = input.toString();
                 sendMessage(text);
-                adapter.addToStart(new MessageItem(adapter.getItemCount(), "0", text, null), true);
+                adapter.addToStart(new MessageItem(adapter.getItemCount(), "0", text, null, false), true);
                 return true;
             }
         });
@@ -298,12 +327,14 @@ public class MessageFragment extends BaseFragment {
         String userId;
         String text;
         Date createdAt;
+        boolean isInterview;
 
-        public MessageItem(int id, String userId, String text, Date createdAt) {
+        public MessageItem(int id, String userId, String text, Date createdAt, boolean isInterview) {
             this.id = id;
             this.userId = userId;
             this.text = text;
             this.createdAt = createdAt;
+            this.isInterview = isInterview;
         }
 
         @Override

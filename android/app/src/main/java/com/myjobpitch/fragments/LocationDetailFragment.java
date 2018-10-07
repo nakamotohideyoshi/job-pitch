@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,6 +42,12 @@ public class LocationDetailFragment extends BaseFragment {
 
     @BindView(R.id.nav_title)
     TextView navTitleView;
+
+    @BindView(R.id.edit_button)
+    ImageButton editButton;
+
+    @BindView(R.id.remove_button)
+    ImageButton removeButton;
 
     @BindView(R.id.list_container)
     View listContainer;
@@ -116,6 +124,16 @@ public class LocationDetailFragment extends BaseFragment {
                 hideLoading();
                 AppHelper.showLocationInfo(location, infoView);
                 swipeRefreshLayout.setRefreshing(true);
+
+                if (location.getBusiness_data().getRestricted()) {
+                    removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
+                    removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
+                    removeButton.setEnabled(false);
+                    editButton.setBackgroundColor(Color.parseColor("#008074"));
+                    editButton.setColorFilter(Color.parseColor("#808080"));
+                    editButton.setEnabled(false);
+                }
+
                 loadJobs();
             }
             @Override

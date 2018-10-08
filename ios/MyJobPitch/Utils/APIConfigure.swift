@@ -543,12 +543,22 @@ class APIConfigure: NSObject {
         
         // ================= Application =====================
         
-        configureSimpleMapping(ApplicationForCreation.classForCoder(),
-                               mappingArray: ApplicationForCreation.mappingArray,
-                               mappingDictionary: ApplicationForCreation.mappingDictionary,
-                               mappingRelationships: nil,
-                               path: "/api/applications/",
-                               method: .POST)
+        configureMapping(ApplicationForCreation.classForCoder(),
+                         requestArray: ApplicationForCreation.mappingArray,
+                         requestDictionary: ApplicationForCreation.mappingDictionary,
+                         requestRelationships: nil,
+                         responseClass: ApplicationForCreation.classForCoder(),
+                         responseArray: ApplicationForCreation.mappingArray,
+                         responseDictionary: inverseDictionary(ApplicationForCreation.mappingDictionary),
+                         responseRelationships: nil,
+                         path: "/api/applications/",
+                         method: .POST)
+        
+        configureRequestMapping(ApplicationForCreationWithPitch.classForCoder(),
+                                requestArray: ApplicationForCreationWithPitch.mappingArray,
+                                requestDictionary: ApplicationForCreationWithPitch.mappingDictionary,
+                                requestRelationships: nil,
+                                method: .POST)
         
         configureMapping(ExternalApplicationForCreation.classForCoder(),
                          requestArray: ExternalApplicationForCreation.mappingArray,

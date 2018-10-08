@@ -73,7 +73,7 @@ class BusinessEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading(label: "Uploading...")
+                self.showLoading("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-business-images",
@@ -81,7 +81,7 @@ class BusinessEditController: MJPController {
                                          objectId: self.business.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.showLoading(label: "Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                            self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)

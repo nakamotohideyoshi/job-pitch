@@ -88,19 +88,19 @@ class BadgeIcon: UILabel {
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.clipsToBounds = true
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = 10        
     }
     
     override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
+        let insets = UIEdgeInsets(top: 1, left: 6, bottom: 2, right: 6)
         super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
     }
     
     override var intrinsicContentSize: CGSize {
         get {
             var contentSize = super.intrinsicContentSize
-            contentSize.height += 0
-            contentSize.width += 16
+            contentSize.height += 3
+            contentSize.width = contentSize.width < 8 ? 20 : contentSize.width + 12
             return contentSize
         }
     }

@@ -298,7 +298,7 @@ class JobSeekerProfileController: MJPController {
             
             if self.photoImage != nil || self.cvdata != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                self.showLoading(label: "Uploading data...", withProgress: rate)
+                self.showLoading("Uploading data...", withProgress: rate)
             }
             
         }, success: { (data) in
@@ -317,7 +317,7 @@ class JobSeekerProfileController: MJPController {
                     self.saveSuccess()
                 }) { (progress) in
                     if progress < 1 {
-                        self.showLoading(label: "Uploading pitch...", withProgress: progress)
+                        self.showLoading("Uploading pitch...", withProgress: progress)
                     } else {
                         self.showLoading()
                     }

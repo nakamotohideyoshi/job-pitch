@@ -57,33 +57,36 @@ class MJPController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func showLoading() {
+    func showLoading(_ label: String!, withProgress: Float!, showIcon: Bool) {
         if loading == nil {
             loading = LoadingController()
             loading.addToView(parentView: view)
-//            navigationItem.hidesBackButton = true
+            //            navigationItem.hidesBackButton = true
             navigationItem.leftBarButtonItem?.isEnabled = false
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
-        loading.labelView.isHidden = true
-        loading.progressView.isHidden = true
-        loading.indicatorView.isHidden = false
+        
+        loading.progressView.isHidden = withProgress == nil
+        if withProgress != nil {
+            loading.progressView.progress = withProgress
+        }
+        
+        loading.labelView.isHidden = label == nil || label == ""
+        loading.labelView.text = label
+        
+        loading.indicatorView.isHidden = !showIcon
     }
     
-    func showLoading(label: String!) {
-        showLoading()
-        loading.indicatorView.isHidden = true
-        loading.labelView.isHidden = false
-        loading.labelView.text = label
+    func showLoading(_ label: String!, withProgress: Float!) {
+        showLoading(label, withProgress: withProgress, showIcon: withProgress == nil && label == nil)
     }
     
-    func showLoading(label: String!, withProgress: Float!) {
-        showLoading()
-        loading.indicatorView.isHidden = true
-        loading.labelView.isHidden = false
-        loading.labelView.text = label
-        loading.progressView.isHidden = false
-        loading.progressView.progress = withProgress
+    func showLoading(_ label: String!) {
+        showLoading(label, withProgress: nil, showIcon: label == nil)
+    }
+    
+    func showLoading() {
+        showLoading(nil, withProgress: nil, showIcon: true)
     }
     
     func hideLoading() {

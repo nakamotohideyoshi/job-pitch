@@ -98,7 +98,7 @@ class PitchController: MJPController {
 
     @IBAction func uploadAction(_ sender: Any) {
         
-        showLoading(label: "0%", withProgress: 0)
+        showLoading("0%", withProgress: 0)
         
         JSPitchUploader().uploadVideo(videoUrl: videoUrl, complete: { (pitch) in
             self.hideLoading()
@@ -116,7 +116,7 @@ class PitchController: MJPController {
             }
         }) { (progress) in
             if progress < 1 {
-                self.showLoading(label: "Uploading Pitch...", withProgress: progress)
+                self.showLoading("Uploading Pitch...", withProgress: progress)
             } else {
                 self.showLoading()
             }

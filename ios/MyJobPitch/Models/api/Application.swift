@@ -40,15 +40,21 @@ class Application: MJPObjectWithDates {
     }
 }
 
-class ApplicationForCreation: MJPObject {
-    
-    static let mappingArray = [ "id", "job", "pitch", "shortlisted" ]
-    static let mappingDictionary = ["jobSeeker": "job_seeker"]
-    
+class ApplicationForCreation0: MJPObject {
     var job: NSNumber!
     var jobSeeker: NSNumber!
     var pitch: NSNumber!
     var shortlisted = false
+}
+
+class ApplicationForCreation: ApplicationForCreation0 {
+    static let mappingArray = [ "id", "job", "shortlisted" ]
+    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+}
+
+class ApplicationForCreationWithPitch: ApplicationForCreation0 {
+    static let mappingArray = [ "id", "job", "pitch", "shortlisted" ]
+    static let mappingDictionary = ["jobSeeker": "job_seeker"]
 }
 
 class ExternalApplicationForCreation: NSObject {

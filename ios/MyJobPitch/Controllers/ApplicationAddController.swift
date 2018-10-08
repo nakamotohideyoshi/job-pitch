@@ -191,7 +191,7 @@ class ApplicationAddController: MJPController {
             
             if self.cvdata != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                self.showLoading(label: "Uploading data...", withProgress: rate)
+                self.showLoading("Uploading data...", withProgress: rate)
             }
             
         }, success: { (data) in

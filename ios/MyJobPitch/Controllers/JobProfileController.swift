@@ -119,10 +119,10 @@ class JobProfileController: MJPController {
         load()
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "sectors": [sectorsField, sectorsError],
-            "location": [addressField, addressError]
+            "sectors":      (sectorsField, sectorsError),
+            "location":     (addressField, addressError)
         ]
     }
     
@@ -239,11 +239,16 @@ class JobProfileController: MJPController {
         profile.placeName = placeName
         profile.postcodeLookup = ""
         
-        API.shared().saveJobProfile(profile: profile, success: { (data) in
+        API.shared().saveJobProfile(profile) { (result, error) in
+            
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
             self.hideLoading()
             
-            AppData.profile = data as! Profile
+            AppData.profile = result as! Profile
             
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
                 if AppData.jobSeeker.profile == nil {
@@ -255,8 +260,7 @@ class JobProfileController: MJPController {
                     }
                 }
             }, cancel: nil, cancelCallback: nil)
-            
-        }, failure: self.handleErrors)
+        }
         
     }
 }

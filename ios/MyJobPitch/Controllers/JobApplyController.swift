@@ -100,10 +100,14 @@ class JobApplyController: MJPController {
             application.jobSeeker = AppData.jobSeeker.id
             application.pitch = pitch?.id
             
-            API.shared().createApplication(application, success: { (data) in
-                self.closeController()
-                self.completeCallback?()
-            }, failure: self.handleErrors)
+            API.shared().createApplication(application) {(_, error) in
+                if error == nil {
+                    self.closeController()
+                    self.completeCallback?()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
         
         showLoading()
@@ -113,22 +117,28 @@ class JobApplyController: MJPController {
             apply(nil)
             
         } else {
-         
-            SpecificPitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
-                
-                if pitch == nil {
-                    PopupController.showGreen("There was an error uploading the pitch",
-                                              ok: nil, okCallback: nil,
-                                              cancel: "OK", cancelCallback: nil)
-                } else {
-                    apply(pitch)
+            
+            let specificPitch = SpecificPitchForCreation()
+            specificPitch.jobSeeker = AppData.jobSeeker.id
+            
+            API.shared().saveSpecificPitch(specificPitch) { (result, error) in
+                if error != nil {
+                    self.handleError(error)
+                    return
                 }
-                
-            }) { (progress) in
-                if progress < 1 {
-                    self.showLoading("Uploading Pitch...", withProgress: progress)
-                } else {
-                    self.showLoading()
+                                
+                PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "application-pitches", progress: { (progress) in
+                    if progress < 1 {
+                        self.showLoading("Uploading Pitch...", withProgress: progress)
+                    } else {
+                        self.showLoading()
+                    }
+                }) { pitch in
+                    if pitch == nil {
+                        self.handleError(error)
+                    } else {
+                        apply(pitch)
+                    }
                 }
             }
         }

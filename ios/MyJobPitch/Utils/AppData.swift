@@ -79,15 +79,14 @@ class AppData: NSObject {
         stopTimer()
     }
     
-    static func loadData(success: (() -> Void)!,
-                         failure: ((String?, NSDictionary?) -> Void)!) {
+    static func loadData(complete: ((Any?) -> Void)!) {
         
         var failed = false
         
-        let loadFailure = { (message: String?, errors: NSDictionary?) in
+        let loadFailure = { (error: Any?) in
             if !failed {
                 failed = true
-                failure(message, errors)
+                complete(error)
             }
         }
         
@@ -106,81 +105,130 @@ class AppData: NSObject {
                     
                     userRole = Role.ROLE_JOB_SEEKER_ID
                     
-                    getJobSeeker(success: {
-                        getProfile(success: {
-                            getApplications(success: {
-                                success()
-                                startTimer()
-                            }, failure: failure)
-                        }, failure: loadFailure)
-                    }, failure: loadFailure)
+                    getJobSeeker() { error in
+                        if error != nil {
+                            complete(error)
+                            return
+                        }
+                        getProfile() { error in
+                            if error != nil {
+                                complete(error)
+                                return
+                            }
+                            getApplications() { error in
+                                complete(error)
+                                if error == nil {
+                                    startTimer()
+                                }
+                                
+                            }
+                        }
+                    }
                     
                 } else if (user.isRecruiter()) {
                     
                     userRole = Role.ROLE_RECRUITER_ID
                     
-                    getBusinesses(success: { 
-                        getApplications(success: {
-                            success()
-                            startTimer()
-                        }, failure: failure)
-                    }, failure: loadFailure)
+                    getBusinesses() { error in
+                        getApplications() { error in
+                            complete(error)
+                            if error == nil {
+                                startTimer()
+                            }
+                        }
+                    }
                 }
             }
         }
         
         if initialTokens == nil {
-            API.shared().loadHours(success: { (data) in
-                hours = data as! [Hours]
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadHours() { (result, error) in
+                if result != nil {
+                    hours = result as! [Hours]
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadContracts(success: { (data) in
-                contracts = data as! [Contract]
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadContracts() { (result, error) in
+                if result != nil {
+                    contracts = result as! [Contract]
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadSexes(success: { (data) in
-                sexes = data as! [Sex]
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadSexes() { (result, error) in
+                if result != nil {
+                    sexes = result as! [Sex]
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadNationalities(success: { (data) in
-                nationalities = data as! [Nationality]
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadNationalities() { (result, error) in
+                if result != nil {
+                    nationalities = result as! [Nationality]
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadSectors(success: { (data) in
-                sectors = data as! [Sector]
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadSectors() { (result, error) in
+                if result != nil {
+                    sectors = result as! [Sector]
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadJobStatuses(success: { (data) in
-                jobStatuses = data as! [JobStatus]
-                JobStatus.JOB_STATUS_OPEN_ID = getIdByName(jobStatuses, name: JobStatus.JOB_STATUS_OPEN)
-                JobStatus.JOB_STATUS_CLOSED_ID = getIdByName(jobStatuses, name: JobStatus.JOB_STATUS_CLOSED)
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadJobStatuses() { (result, error) in
+                if result != nil {
+                    jobStatuses = result as! [JobStatus]
+                    JobStatus.JOB_STATUS_OPEN_ID = getIdByName(jobStatuses, name: JobStatus.JOB_STATUS_OPEN)
+                    JobStatus.JOB_STATUS_CLOSED_ID = getIdByName(jobStatuses, name: JobStatus.JOB_STATUS_CLOSED)
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadApplicationStatuses(success: { (data) in
-                applicationStatuses = data as! [ApplicationStatus]
-                ApplicationStatus.APPLICATION_CREATED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_CREATED)
-                ApplicationStatus.APPLICATION_ESTABLISHED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_ESTABLISHED)
-                ApplicationStatus.APPLICATION_DELETED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_DELETED)
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadApplicationStatuses() { (result, error) in
+                if result != nil {
+                    applicationStatuses = result as! [ApplicationStatus]
+                    ApplicationStatus.APPLICATION_CREATED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_CREATED)
+                    ApplicationStatus.APPLICATION_ESTABLISHED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_ESTABLISHED)
+                    ApplicationStatus.APPLICATION_DELETED_ID = getIdByName(applicationStatuses, name: ApplicationStatus.APPLICATION_DELETED)
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadRoles(success: { (data) in
-                roles = data as! [Role]
-                Role.ROLE_JOB_SEEKER_ID = getIdByName(roles, name: Role.ROLE_JOB_SEEKER)
-                Role.ROLE_RECRUITER_ID = getIdByName(roles, name: Role.ROLE_RECRUITER)
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadRoles() { (result, error) in
+                if result != nil {
+                    roles = result as! [Role]
+                    Role.ROLE_JOB_SEEKER_ID = getIdByName(roles, name: Role.ROLE_JOB_SEEKER)
+                    Role.ROLE_RECRUITER_ID = getIdByName(roles, name: Role.ROLE_RECRUITER)
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
             
-            API.shared().loadInitialTokens(success: { (data) in
-                initialTokens = data as! InitialTokens
-                loadSuccess()
-            }, failure: loadFailure)
+            API.shared().loadInitialTokens() { (result, error) in
+                if result != nil {
+                    initialTokens = result as! InitialTokens
+                    loadSuccess()
+                } else {
+                    loadFailure(error)
+                }
+            }
         } else {
             loadSuccess()
         }
@@ -198,43 +246,44 @@ class AppData: NSObject {
     
     //================ jobseeker =============
     
-    static func getJobSeeker(success: (() -> Void)?,
-                             failure: ((String?, NSDictionary?) -> Void)?) {
+    static func getJobSeeker(complete: ((Any?) -> Void)?) {
         if (user.isJobSeeker()) {
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                jobSeeker = data as! JobSeeker
-                success?()
-            }, failure: failure)
+            API.shared().loadJobSeekerWithId(AppData.user.jobSeeker) { (result, error) in
+                if result != nil {
+                    jobSeeker = result as! JobSeeker
+                }
+                complete?(error)
+            }
         } else {
-            success?()
+            complete?(nil)
         }
     }
     
-    static func getProfile(success: (() -> Void)?,
-                           failure: ((String?, NSDictionary?) -> Void)?) {
+    static func getProfile(complete: ((Any?) -> Void)?) {
         if (jobSeeker?.profile != nil) {
-            API.shared().loadJobProfileWithId(id: jobSeeker.profile, success: { (data) in
-                profile = data as! Profile
-                success?()
-            }, failure: failure)
+            API.shared().loadJobProfileWithId(jobSeeker.profile) { (result, error) in
+                if result != nil {
+                    profile = result as! Profile
+                }
+                complete?(error)
+            }
         } else {
-            success?()
+            complete?(nil)
         }
     }
 
     //================ businesses =============
     
-    static func getBusinesses(success: (() -> Void)?,
-                              failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadBusinesses(success: { (data) in
-            businesses = data as! [Business]
-            success?()
-        }, failure: failure)
+    static func getBusinesses(complete: ((Any?) -> Void)?) {
+        API.shared().loadBusinesses() { (result, error) in
+            if result != nil {
+                businesses = result as! [Business]
+            }
+            complete?(error)
+        }
     }
     
-    static func updateBusiness(_ object: NSObject,
-                            success: ((Business) -> Void)?,
-                            failure: ((String?, NSDictionary?) -> Void)?) {
+    static func updateBusiness(_ object: NSObject, complete: ((Business?, Any?) -> Void)?) {
         
         let _updateBusiness = { (newBusiness: Business) in
             var isNew = true
@@ -251,42 +300,44 @@ class AppData: NSObject {
                 businesses.insert(newBusiness, at: 0)
             }
             
-            success?(newBusiness)
+            complete?(newBusiness, nil)
         }
         
         if let newBusiness = object as? Business {
             _updateBusiness(newBusiness)
         } else {
-            API.shared().loadBusiness(id: object as! NSNumber, success: { (data) in
-                _updateBusiness(data as! Business)
-            }, failure: failure)
+            API.shared().loadBusiness(object as! NSNumber) { (result, error) in
+                if result != nil {
+                    _updateBusiness(result as! Business)
+                } else {
+                    complete?(nil, error)
+                }
+            }
         }
     }
     
-    static func removeBusiness(_ business: Business,
-                               success: (() -> Void)?,
-                               failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteBusiness(id: business.id, success: {
-            businesses = businesses.filter { $0.id != business.id }
-            success?()
-        }, failure: failure)
+    static func removeBusiness(_ business: Business, complete: ((Any?) -> Void)?) {
+        API.shared().deleteBusiness(business.id) { error in
+            if error == nil {
+                businesses = businesses.filter { $0.id != business.id }
+            }
+            complete?(error)
+        }
     }
     
     //================ workplaces =============
     
-    static func getWorkplaces(businessId: NSNumber,
-                             success: (() -> Void)?,
-                             failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
-            workplaces = data as! [Location]
-            success?()
-        }, failure: failure)
+    static func getWorkplaces(businessId: NSNumber, complete: ((Any?) -> Void)?) {
+        API.shared().loadLocationsForBusiness(businessId) { (result, error) in
+            if (result != nil) {
+                workplaces = result as! [Location]
+            }
+            complete?(error)
+        }
     }
     
-    static func updateWorkplace(_ object: NSObject,
-                               success: ((Location) -> Void)?,
-                               failure: ((String?, NSDictionary?) -> Void)?) {
-
+    static func updateWorkplace(_ object: NSObject, complete: ((Location?, Any?) -> Void)?) {
+        
         let _updateWorkplace = { (newWorkplace: Location) in
             var isNew = true
             
@@ -302,55 +353,58 @@ class AppData: NSObject {
                 workplaces.insert(newWorkplace, at: 0)
             }
             
-            updateBusiness(newWorkplace.businessData, success: nil, failure: nil)
+            updateBusiness(newWorkplace.businessData, complete: nil)
             
-            success?(newWorkplace)
+            complete?(newWorkplace, nil)
         }
         
         if let newWorkplace = object as? Location {
             _updateWorkplace(newWorkplace)
         } else {
-            API.shared().loadLocation(id: object as! NSNumber, success: { (data) in
-                _updateWorkplace(data as! Location)
-            }, failure: failure)
+            API.shared().loadLocation(object as! NSNumber) { (result, error) in
+                if (error == nil) {
+                    _updateWorkplace(result as! Location)
+                } else {
+                    complete?(nil, error)
+                }
+            }
         }
     }
     
-    static func removeWorkplace(_ workplace: Location,
-                                success: (() -> Void)?,
-                                failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteLocation(id: workplace.id, success: {
-            workplaces = workplaces.filter { $0.id != workplace.id }
-            let businesses1 = businesses.filter { $0.id == workplace.businessData.id }
-            if businesses1.count > 0 {
-                businesses1[0].locations = (businesses1[0].locations as! [NSNumber]).filter { $0 != workplace.id } as NSArray!
+    static func removeWorkplace(_ workplace: Location, complete: ((Any?) -> Void)?) {
+        API.shared().deleteLocation(workplace.id) { error in
+            if error == nil {
+                workplaces = workplaces.filter { $0.id != workplace.id }
+                let businesses1 = businesses.filter { $0.id == workplace.businessData.id }
+                if businesses1.count > 0 {
+                    businesses1[0].locations = (businesses1[0].locations as! [NSNumber]).filter { $0 != workplace.id } as NSArray!
+                }
             }
-            success?()
-        }, failure: failure)
+            complete?(error)
+        }
     }
     
     //================ jobs =============
     
-    static func getJobs(locationId: NSNumber!,
-                        success: (() -> Void)?,
-                        failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadJobsForLocation(locationId: locationId, success: { (data) in
-            jobs = data as! [Job]
-            success?()
-        }, failure: failure)
+    static func getJobs(locationId: NSNumber!, complete: ((Any?) -> Void)?) {
+        API.shared().loadJobsForLocation(locationId) { (result, error) in
+            if result != nil {
+                jobs = result as! [Job]
+            }
+            complete?(error)
+        }
     }
     
-    static func searchJobs(success: (() -> Void)?,
-                           failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().searchJobs(success: { (data) in
-            jobs = data as! [Job]
-            success?()
-        }, failure: failure)
+    static func searchJobs(complete: ((Any?) -> Void)?) {
+        API.shared().searchJobs() { (result, error) in
+            if result != nil {
+                jobs = result as! [Job]
+            }
+            complete?(error)
+        }
     }
     
-    static func updateJob(_ object: NSObject,
-                       success: ((Job) -> Void)?,
-                       failure: ((String?, NSDictionary?) -> Void)?) {
+    static func updateJob(_ object: NSObject, complete: ((Job?, Any?) -> Void)?) {
         
         let _updateJob = { (newJob: Job) in
             var isNew = true
@@ -367,43 +421,46 @@ class AppData: NSObject {
                 jobs.insert(newJob, at: 0)
             }
             
-            updateWorkplace(newJob.locationData, success: nil, failure: nil)
+            updateWorkplace(newJob.locationData, complete: nil)
 
-            success?(newJob)
+            complete?(newJob, nil)
         }
         
         if let newJob = object as? Job {
             _updateJob(newJob)
         } else {
-            API.shared().loadJob(id: object as! NSNumber, success: { (data) in
-                let newJob = data as! Job
-                _updateJob(newJob)
-            }, failure: failure)
+            API.shared().loadJob(object as! NSNumber) { (result, error) in
+                if result != nil {
+                    _updateJob(result as! Job)
+                } else {
+                    complete?(nil, error)
+                }
+            }
         }
     }
     
-    static func removeJob(_ job: Job,
-                          success: (() -> Void)?,
-                          failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().deleteJob(id: job.id, success: {
-            jobs = jobs.filter { $0.id != job.id }
-            let workplaces1 = workplaces.filter { $0.id == job.locationData.id }
-            if workplaces1.count > 0 {
-                workplaces1[0].jobs = (workplaces1[0].jobs as! [NSNumber]).filter { $0 != job.id } as NSArray!
+    static func removeJob(_ job: Job, complete: ((Any?) -> Void)?) {
+        API.shared().deleteJob(job.id) { error in
+            if error == nil {
+                jobs = jobs.filter { $0.id != job.id }
+                let workplaces1 = workplaces.filter { $0.id == job.locationData.id }
+                if workplaces1.count > 0 {
+                    workplaces1[0].jobs = (workplaces1[0].jobs as! [NSNumber]).filter { $0 != job.id } as NSArray!
+                }
             }
-            success?()
-        }, failure: failure)
+            complete?(error)
+        }
     }
     
     //================ jobseekers =============
     
-    static func searchJobseekers(jobId: NSNumber,
-                                 success: (() -> Void)?,
-                                 failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().searchJobSeekersForJob(jobId: jobId, success: { (data) in
-            jobSeekers = data as! [JobSeeker]
-            success?()
-        }, failure: failure)
+    static func searchJobseekers(jobId: NSNumber, complete: ((Any?) -> Void)?) {
+        API.shared().searchJobSeekersForJob(jobId) { (result, error) in
+            if result != nil {
+                jobSeekers = result as! [JobSeeker]
+            }
+            complete?(error)
+        }
     }
     
     static func removeJobseeker(_ jobseekerId: NSNumber) {
@@ -417,36 +474,35 @@ class AppData: NSObject {
     
     //================ business users =============
     
-    static func getBusinessUsers(businessId: NSNumber,
-                         success: (() -> Void)?,
-                         failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadBusinessUsers(businessId, success: { (data) in
-            businessUsers = data as! [BusinessUser]
-            success?()
-        }, failure: failure)
+    static func getBusinessUsers(businessId: NSNumber, complete: ((Any?) -> Void)?) {
+        API.shared().loadBusinessUsers(businessId) { (result, error) in
+            if result != nil {
+                businessUsers = result as! [BusinessUser]
+            }
+            complete?(error)
+        }
     }
     
-    static func getBusinessUser(businessId: NSNumber,
-                                userId: NSNumber,
-                                success: ((BusinessUser) -> Void)?,
-                                failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().getBusinessUser(businessId: businessId, businessUserId: userId, success: { (data) in
-            let newUser: BusinessUser! = data as! BusinessUser
-            var isNew = true
-            for (index, user) in businessUsers.enumerated() {
-                if user.id == newUser.id {
-                    businessUsers[index] = newUser
-                    isNew = false
-                    break
+    static func getBusinessUser(businessId: NSNumber, userId: NSNumber, complete: ((BusinessUser?, Any?) -> Void)?) {
+        API.shared().getBusinessUser(businessId: businessId, businessUserId: userId) { (result, error) in
+            let newBusinessUser = result as? BusinessUser
+            if newBusinessUser != nil {
+                var isNew = true
+                for (index, user) in businessUsers.enumerated() {
+                    if user.id == newBusinessUser?.id {
+                        businessUsers[index] = newBusinessUser!
+                        isNew = false
+                        break
+                    }
+                }
+                
+                if isNew {
+                    businessUsers.append(newBusinessUser!)
                 }
             }
             
-            if isNew {
-                businessUsers.append(newUser)
-            }
-            
-            success?(newUser)
-        }, failure: failure)
+            complete?(newBusinessUser, error)
+        }
     }
     
     static func removeBusinessUser(_ userId: NSNumber) {
@@ -489,41 +545,47 @@ class AppData: NSObject {
         time += 1
         if time >= appsRefreshTime {
             time = 0
-            getApplications(success: appsUpdateCallback, failure: nil)
+            getApplications() { error in
+                if error == nil {
+                    appsUpdateCallback?()
+                }
+            }
         }
     }
     
-    static func getApplications(success: (() -> Void)?,
-                                failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadApplications(success: { (data) in
-            
-            applications = data as! [Application]
-            getNewMessageCount()
-            success?()
-            
-        }, failure: failure)
+    static func getApplications(complete: ((Any?) -> Void)?) {
+        API.shared().loadApplications() { (result, error) in
+            if result != nil {
+                applications = result as! [Application]
+                getNewMessageCount()
+            }
+            complete?(error)
+        }
     }
     
-    static func getApplication(_ id: NSNumber, success: ((Application) -> Void)?,
-                               failure: ((String?, NSDictionary?) -> Void)?) {
-        API.shared().loadApplicationWithId(id, success: { (data) in
-            let newApplication = data as! Application
-            var isNew = true
-            for (index, application) in applications.enumerated() {
-                if application.id == newApplication.id {
-                    applications[index] = newApplication
-                    isNew = false
-                    break
+    static func getApplication(_ id: NSNumber, complete: ((Application?, Any?) -> Void)?) {
+        API.shared().loadApplicationWithId(id) { (result, error) in
+            let newApplication = result as? Application
+            if newApplication != nil {
+                var isNew = true
+                for (index, application) in applications.enumerated() {
+                    
+                    if application.id == newApplication?.id {
+                        applications[index] = newApplication!
+                        isNew = false
+                        break
+                    }
                 }
+                
+                if isNew {
+                    applications.insert(newApplication!, at: 0)
+                }
+                
+                getNewMessageCount()
             }
-            
-            if isNew {
-                applications.insert(newApplication, at: 0)
-            }
-            
-            getNewMessageCount()
-            success?(newApplication)
-        }, failure: failure)
+
+            complete?(newApplication, error)
+        }
     }
     
 }

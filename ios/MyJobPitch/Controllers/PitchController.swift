@@ -100,25 +100,32 @@ class PitchController: MJPController {
         
         showLoading("0%", withProgress: 0)
         
-        JSPitchUploader().uploadVideo(videoUrl: videoUrl, complete: { (pitch) in
-            self.hideLoading()
+        API.shared().savePitch(Pitch()) { (result, error) in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
-            if pitch != nil {
-                self.pitch = pitch as! Pitch!
-                AppData.jobSeeker.pitches = [self.pitch]
-                
+            PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "pitches", progress: { (progress) in
+                if progress < 1 {
+                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                } else {
+                    self.showLoading()
+                }
+            }) { pitch in
+                if pitch == nil {
+                    self.handleError(error)
+                    return
+                }
+
+                self.hideLoading()
                 self.videoUrl = nil
                 self.uploadButton.isHidden = true
                 
+                self.pitch = pitch
+                AppData.jobSeeker.pitches = [self.pitch]
+                
                 PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
-            } else {
-                PopupController.showGray("Failed to upload", ok: "OK")
-            }
-        }) { (progress) in
-            if progress < 1 {
-                self.showLoading("Uploading Pitch...", withProgress: progress)
-            } else {
-                self.showLoading()
             }
         }
     }

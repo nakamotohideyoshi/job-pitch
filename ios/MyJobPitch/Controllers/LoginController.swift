@@ -94,17 +94,22 @@ class LoginController: MJPController {
      
         // Call Deprecation API
         showLoading()
-        API.shared().loadDepreactions(success: { (data) in
+        API.shared().loadDepreactions() { (result, error) in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
             self.hideLoading()
             
-            if data.count == 0 {
+            if result!.count == 0 {
                 self.isLogin()
                 return
             }
             
             // App version
             if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                let deprecation = ((data as! [Deprecation]).filter {$0.platform == "IOS"})[0]
+                let deprecation = ((result as! [Deprecation]).filter {$0.platform == "IOS"})[0]
                 if  Int(version)! <= Int(deprecation.error)! {
                     self.showDeprecationError()
                 } else if Int(version)! <= Int(deprecation.warning)! {
@@ -113,8 +118,7 @@ class LoginController: MJPController {
                     self.isLogin()
                 }
             }
-           
-        }, failure: self.handleErrors)
+        }
     }
     
     func showDeprecationError() {
@@ -151,10 +155,10 @@ class LoginController: MJPController {
         loading.indicatorView.color = UIColor.white
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "email":        [emailField,    emailErrorLabel],
-            "password":     [passwordField, passwordErrorLabel]
+            "email":        (emailField,    emailErrorLabel),
+            "password":     (passwordField, passwordErrorLabel)
         ]
     }
     
@@ -165,10 +169,20 @@ class LoginController: MJPController {
         
         showLoading()
         
-        API.shared().getUser(success: { (data) in
-            AppData.user = data as! User
+        API.shared().getUser() { (result, error) in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
-            AppData.loadData(success: {
+            AppData.user = result as! User
+            
+            AppData.loadData() { error in
+                
+                if error != nil {
+                    self.handleError(error)
+                    return
+                }
                 
                 if AppData.user.isRecruiter() {
                     
@@ -195,13 +209,9 @@ class LoginController: MJPController {
                     })
                     popupController.okButton.backgroundColor = AppData.yellowColor
                     popupController.cancelButton.backgroundColor = AppData.greenColor
-                    
                 }
-                
-            }, failure: self.handleErrors)
-            
-        }, failure: self.handleErrors)
-        
+            }
+        }
     }
     
     func showIntro() {
@@ -215,11 +225,18 @@ class LoginController: MJPController {
             
             showLoading()
             
-            API.shared().login(email: emailField.text!, password: passwordField.text!,
-                               success: { (authToken) in
-                                API.shared().setToken((authToken as! AuthToken).key)
-                                self.loadData()
-            }, failure: self.handleErrors)
+            let request = LoginRequest()
+            request.email = emailField.text!
+            request.password = passwordField.text!
+            
+            API.shared().login(request) { (result, error) in
+                if result != nil {
+                    API.shared().setToken((result as! AuthToken).key)
+                    self.loadData()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
     }
 
@@ -231,11 +248,19 @@ class LoginController: MJPController {
             
             AppData.email = emailField.text
             
-            API.shared().register(email: emailField.text!, password: passwordField.text!,
-                                  success: { (authToken) in
-                                    API.shared().setToken((authToken as! AuthToken).key)
-                                    self.loadData()
-            }, failure: self.handleErrors)
+            let request = RegisterRequest()
+            request.email = emailField.text!
+            request.password1 = passwordField.text!
+            request.password2 = passwordField.text!
+            
+            API.shared().register(request) { (result, error) in
+                if result != nil {
+                    API.shared().setToken((result as! AuthToken).key)
+                    self.loadData()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
     }
 

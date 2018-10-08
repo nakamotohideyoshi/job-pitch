@@ -9,6 +9,8 @@
 import Foundation
 
 class Business: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "users", "locations", "name", "tokens", "restricted" ]
 
     var name: String!
     var users: NSArray!

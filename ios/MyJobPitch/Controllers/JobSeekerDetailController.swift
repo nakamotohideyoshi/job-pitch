@@ -193,9 +193,13 @@ class JobSeekerDetailController: MJPController {
     }
     
     func updateApplication() {
-        AppData.getApplication(application.id, success: { (_) in
-            self.popController()
-        }, failure: self.handleErrors)
+        AppData.getApplication(application.id) { (_, error) in
+            if error == nil {
+                self.popController()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
@@ -217,10 +221,14 @@ class JobSeekerDetailController: MJPController {
         
         shortlisted.isHidden = true
         shortlistIndicator.isHidden = false
-        API.shared().updateApplicationShortlist(data, success: { (_) in
-            self.shortlisted.isHidden = false
-            self.shortlistIndicator.isHidden = true
-        }, failure: self.handleErrors)
+        API.shared().updateApplicationShortlist(data) { (_, error) in
+            if error == nil {
+                self.shortlisted.isHidden = false
+                self.shortlistIndicator.isHidden = true
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     @IBAction func connectAction(_ sender: Any) {
@@ -232,24 +240,17 @@ class JobSeekerDetailController: MJPController {
             
             if self.application == nil {
                 
-                var application = ApplicationForCreation()
+                let application = ApplicationForCreation()
                 application.job = self.job?.id
                 application.jobSeeker = self.jobSeeker.id
                 
-                API.shared().createApplication(application, success: { (data) in
-                    
-                    application = data as! ApplicationForCreation
-                    AppData.getApplication(application.id, success: nil, failure: nil)
-                    self.popController()
-                    self.connectCallback?()
-                    
-                }) { (message, errors) in
-                    
-                    self.hideLoading()
-                    if errors?["NO_TOKENS"] != nil {
-                        PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                API.shared().createApplication(application) { (result, error) in
+                    if result != nil {
+                        AppData.getApplication((result as! Application).id, complete: nil)
+                        self.popController()
+                        self.connectCallback?()
                     } else {
-                        self.handleErrors(message: message, errors: errors)
+                        self.handleError(error)
                     }
                 }
                 
@@ -259,14 +260,11 @@ class JobSeekerDetailController: MJPController {
                 data.id = self.application.id
                 data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                 
-                API.shared().updateApplicationStatus(data, success: { (data) in
-                    self.updateApplication()
-                }) { (message, errors) in
-                    self.hideLoading()
-                    if errors?["NO_TOKENS"] != nil {
-                        PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                API.shared().updateApplicationStatus(data) { (_, error) in
+                    if error == nil {
+                        self.updateApplication()
                     } else {
-                        self.handleErrors(message: message, errors: errors)
+                        self.handleError(error)
                     }
                 }
             }
@@ -286,13 +284,21 @@ class JobSeekerDetailController: MJPController {
                 request.job = self.job.id
                 request.jobSeeker = self.jobSeeker.id
                 
-                API.shared().ExclusionJobSeeker(request, success: { (_) in
-                    self.removeCallback?()
-                }, failure: self.handleErrors)
+                API.shared().ExclusionJobSeeker(request) { (_, error) in
+                    if error == nil {
+                        self.removeCallback?()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
             } else {
-                API.shared().deleteApplication(self.application.id, success: {
-                    self.updateApplication()
-                }, failure: self.handleErrors)
+                API.shared().deleteApplication(self.application.id) { error in
+                    if error == nil {
+                        self.updateApplication()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
             }
             
         }, cancel: "Cancel", cancelCallback: nil)
@@ -315,9 +321,13 @@ class JobSeekerDetailController: MJPController {
     func cancelInterview() {
         PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
             self.showLoading()
-            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
-                self.updateApplication()
-            }, failure: self.handleErrors)
+            API.shared().deleteInterview(self.interview.id) { error in
+                if error == nil {
+                    self.updateApplication()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }, cancel: "Cancel", cancelCallback: nil)
     }
     

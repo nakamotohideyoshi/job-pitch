@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class BusinessUser: MJPObject {
+    static let mappingArray = [ "id", "user", "email", "locations", "business"]
+    
     var user: NSNumber!
     var email: String!
     var locations: NSArray!
@@ -17,10 +19,14 @@ class BusinessUser: MJPObject {
 }
 
 class BusinessUserForCreation: MJPObject {
+    static let mappingArray = [ "email", "locations" ]
+    
     var email: String!
     var locations: NSArray!
 }
 
 class BusinessUserForUpdate: MJPObject {
+    static let mappingArray = [ "locations" ]
+    
     var locations: NSArray!
 }

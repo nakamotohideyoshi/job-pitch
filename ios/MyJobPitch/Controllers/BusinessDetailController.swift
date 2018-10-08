@@ -78,11 +78,15 @@ class BusinessDetailController: MJPController {
     }
     
     func loadWorkplaces() {
-        AppData.getWorkplaces(businessId: business.id, success: { 
-            self.hideLoading()
-            self.tableView.pullToRefreshView.stopAnimating()
-            self.updateList()
-        }, failure: handleErrors)
+        AppData.getWorkplaces(businessId: business.id) { error in
+            if error == nil {
+                self.hideLoading()
+                self.tableView.pullToRefreshView.stopAnimating()
+                self.updateList()
+            } else {
+                self.handleError(error)
+            }            
+        }
     }
     
     func updateList() {
@@ -120,9 +124,13 @@ class BusinessDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             self.showLoading()
-            AppData.removeBusiness(self.business, success: { () in
-                _ = self.navigationController?.popViewController(animated: true)
-            }, failure: self.handleErrors)
+            AppData.removeBusiness(self.business) { error in
+                if error == nil {
+                    _ = self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.handleError(error)
+                }
+            }
             
         }, cancel: "Cancel", cancelCallback: nil)
     }
@@ -199,10 +207,14 @@ extension BusinessDetailController: UITableViewDataSource {
                                     
                                     cell.hideSwipe(animated: true)
                                     self.showLoading()
-                                    AppData.removeWorkplace(workplace, success: { () in
-                                        self.hideLoading()
-                                        self.updateList()
-                                    }, failure: self.handleErrors)
+                                    AppData.removeWorkplace(workplace) { error in
+                                        if error == nil {
+                                            self.hideLoading()
+                                            self.updateList()
+                                        } else {
+                                            self.handleError(error)
+                                        }
+                                    }
                                     
                                 }, cancel: "Cancel", cancelCallback: {
                                     cell.hideSwipe(animated: true)

@@ -44,11 +44,20 @@ class BusinessUserListController: MJPController {
             return
         }
         
-        AppData.getWorkplaces(businessId: business.id, success: {
-            AppData.getBusinessUsers(businessId: self.business.id, success: {
-                self.updatedData()
-            }, failure: self.handleErrors)
-        }, failure: handleErrors)
+        AppData.getWorkplaces(businessId: business.id) { error in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
+            AppData.getBusinessUsers(businessId: self.business.id) { error in
+                if error == nil {
+                    self.updatedData()
+                } else {
+                    self.handleError(error)
+                }
+            }
+        }
     }
     
     func updatedData() {

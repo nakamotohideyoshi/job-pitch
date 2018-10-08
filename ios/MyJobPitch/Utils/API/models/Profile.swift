@@ -9,6 +9,14 @@
 import Foundation
 
 class Profile: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "latitude", "longitude", "contract", "hours", "sectors" ]
+    
+    static let mappingDictionary = [ "searchRadius": "search_radius",
+                                     "placeID": "place_id",
+                                     "placeName": "place_name",
+                                     "postcodeLookup": "postcode_lookup",
+                                     "jobSeeker": "job_seeker" ]
 
     var jobSeeker: NSNumber!
     var sectors: NSArray!

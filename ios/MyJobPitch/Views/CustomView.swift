@@ -100,7 +100,7 @@ class BadgeIcon: UILabel {
         get {
             var contentSize = super.intrinsicContentSize
             contentSize.height += 3
-            contentSize.width = contentSize.width < 8 ? 20 : contentSize.width + 12
+            contentSize.width = contentSize.width < 8 ? 21 : contentSize.width + 12
             return contentSize
         }
     }

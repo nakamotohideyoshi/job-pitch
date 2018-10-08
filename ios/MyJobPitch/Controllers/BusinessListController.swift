@@ -64,11 +64,15 @@ class BusinessListController: MJPController {
     }
     
     func loadBusinesses() {
-        AppData.getBusinesses(success: {
-            self.hideLoading()
-            self.tableView.pullToRefreshView.stopAnimating()
-            self.updateList()
-        }, failure: handleErrors)
+        AppData.getBusinesses() { error in
+            if error == nil {
+                self.hideLoading()
+                self.tableView.pullToRefreshView.stopAnimating()
+                self.updateList()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     func updateList() {
@@ -181,10 +185,14 @@ extension BusinessListController: UITableViewDataSource {
                                             
                                             cell.hideSwipe(animated: true)
                                             self.showLoading()
-                                            AppData.removeBusiness(business, success: { () in
-                                                self.hideLoading()
-                                                self.updateList()
-                                            }, failure: self.handleErrors)
+                                            AppData.removeBusiness(business) { error in
+                                                if error == nil {
+                                                    self.hideLoading()
+                                                    self.updateList()
+                                                } else {
+                                                    self.handleError(error)
+                                                }                                                
+                                            }
                                             
                                         }, cancel: "Cancel", cancelCallback: {
                                             cell.hideSwipe(animated: true)

@@ -59,9 +59,9 @@ class BusinessUserEditController: MJPController {
         }
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "email": [emailAddress, emailError]
+            "email":    (emailAddress, emailError)
         ]
     }
         
@@ -87,21 +87,38 @@ class BusinessUserEditController: MJPController {
             businessUserForCreation.email = emailAddress.text
             businessUserForCreation.locations = locations as NSArray!
             
-            API.shared().createBusinessUser(businessId: business.id, businessUser: businessUserForCreation, success: { (data) in
-                AppData.getBusinessUsers(businessId: self.business.id, success: {
-                    self.closeController()
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
+            API.shared().createBusinessUser(businessId: business.id, businessUser: businessUserForCreation) { (_, error) in
+                if error != nil {
+                    self.handleError(error)
+                    return
+                }
+
+                AppData.getBusinessUsers(businessId: self.business.id) { error in
+                    if error == nil {
+                        self.closeController()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
+            }
         } else {
             let businessUserForUpdate = BusinessUserForUpdate()
             businessUserForUpdate.locations = locations as NSArray!
             
-            API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
-                AppData.getBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: { (_) in
-                    self.closeController()
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
-            
+            API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate) { (_, error) in
+                if error != nil {
+                    self.handleError(error)
+                    return
+                }
+
+                AppData.getBusinessUser(businessId: self.business.id, userId: self.businessUser.id) { (_, error) in
+                    if error == nil {
+                        self.closeController()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
+            }
         }
     }
     
@@ -112,9 +129,13 @@ class BusinessUserEditController: MJPController {
         businessUserForCreation.email = businessUser.email
         businessUserForCreation.locations = businessUser.locations
         
-        API.shared().reCreateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: nil, success: { (data) in
-            self.closeController()
-        }, failure: self.handleErrors)
+        API.shared().reCreateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: nil) { (_, error) in
+            if error == nil {
+                self.closeController()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     @IBAction func deleteAction(_ sender: Any) {
@@ -122,10 +143,14 @@ class BusinessUserEditController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             self.showLoading()
             
-            API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id, success: { (data) in
-                AppData.removeBusinessUser(self.businessUser.id)
-                self.closeController()
-            }, failure: self.handleErrors)
+            API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id) { (error) in
+                if error == nil {
+                    AppData.removeBusinessUser(self.businessUser.id)
+                    self.closeController()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }, cancel: "Cancel", cancelCallback: nil)
     }
     

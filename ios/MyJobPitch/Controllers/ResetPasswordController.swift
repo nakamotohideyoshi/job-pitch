@@ -13,9 +13,9 @@ class ResetPasswordController: MJPController {
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var emailErrorLabel: UILabel!
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "email":        [emailField,    emailErrorLabel],
+            "email":    (emailField, emailErrorLabel),
         ]
     }
     
@@ -31,12 +31,20 @@ class ResetPasswordController: MJPController {
             
             showLoading()
             
-            API.shared().resetPassword(email: emailField.text!, success: { (_) in
-                self.hideLoading()
-                let _ = PopupController.show(AppHelper.getFrontController(), message: "Password reset requested, please check your email.", ok: nil, okCallback: nil, cancel: "OK", cancelCallback: {
-                    self.dismiss(animated: true, completion: nil)
-                })
-            }, failure: self.handleErrors)
+            let request = PasswordResetRequest()
+            request.email = emailField.text!
+            
+            API.shared().resetPassword(request) { (_, error) in
+                if error == nil {
+                    self.hideLoading()
+                    let _ = PopupController.show(AppHelper.getFrontController(), message: "Password reset requested, please check your email.",
+                                                 ok: nil, okCallback: nil, cancel: "OK", cancelCallback: {
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                } else {
+                    self.handleError(error)
+                }
+            }
         }        
     }
     

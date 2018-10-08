@@ -47,10 +47,10 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         loadData()
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "at":           [dateTimeField,    dateTimeError],
-            "invitation":    [messageTextView, messageError],
+            "at":           (dateTimeField,    dateTimeError),
+            "invitation":   (messageTextView, messageError),
         ]
     }
     
@@ -103,11 +103,19 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             interviewForSave.notes = notesTextView.text
             interviewForSave.feedback = feedbackTextView.text
 
-            API.shared().changeInterview(interview: interviewForSave, type: "complete", success: { (_) in
-                AppData.getApplication(self.application.id, success: { (application) in
-                    self.closeController()
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
+            API.shared().changeInterview(interviewForSave, type: "complete") { (_, error) in
+                if error == nil {
+                    AppData.getApplication(self.application.id) { (_, error) in
+                        if error == nil {
+                            self.closeController()
+                        } else {
+                            self.handleError(error)
+                        }
+                    }
+                } else {
+                    self.handleError(error)
+                }
+            }
         } else {
             let interviewForSave = InterviewForSave()
             interviewForSave.id = interview?.id
@@ -117,11 +125,19 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             interviewForSave.notes = notesTextView.text
             interviewForSave.feedback = ""
             
-            API.shared().saveInterview(interview: interviewForSave, success: { (_) in
-                AppData.getApplication(self.application.id, success: { (application) in
-                    self.closeController()
-                }, failure: self.handleErrors)
-            }, failure: self.handleErrors)
+            API.shared().saveInterview(interviewForSave) { (_, error) in
+                if error == nil {
+                    AppData.getApplication(self.application.id) { (_, error) in
+                        if error == nil {
+                            self.closeController()
+                        } else {
+                            self.handleError(error)
+                        }
+                    }
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
     }
     

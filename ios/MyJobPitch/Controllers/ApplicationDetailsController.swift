@@ -148,10 +148,14 @@ class ApplicationDetailsController: MJPController {
     }
     
     func updateApplication() {
-        AppData.getApplication(application.id, success: { (application) in
-            self.hideLoading()
-            self.loadData()
-        }, failure: self.handleErrors)
+        AppData.getApplication(application.id) { (result, error) in
+            if error == nil {
+                self.hideLoading()
+                self.loadData()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     func showProfile() {
@@ -204,18 +208,26 @@ class ApplicationDetailsController: MJPController {
             self.showLoading()
             let interviewForSave = InterviewForSave()
             interviewForSave.id = self.interview?.id
-            API.shared().changeInterview(interview: interviewForSave, type: "accept", success: { (_) in
-                self.updateApplication()
-            }, failure: self.handleErrors)
+            API.shared().changeInterview(interviewForSave, type: "accept") { (_, error) in
+                if error == nil {
+                    self.updateApplication()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
     func cancelInterview() {
         PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
             self.showLoading()
-            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
-                self.updateApplication()
-            }, failure: self.handleErrors)
+            API.shared().deleteInterview(self.interview.id) { error in
+                if error == nil {
+                    self.updateApplication()
+                } else {
+                    self.handleError(error)
+                }
+            }
         }, cancel: "Cancel", cancelCallback: nil)
     }
     

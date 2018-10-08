@@ -151,11 +151,11 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
     
     func updateApplication(_ applicationId: NSNumber) {
         
-        AppData.getApplication(applicationId, success: { (_) in
+        AppData.getApplication(applicationId) { (_, error) in
             self.hideLoading()
-            (self.parent as? RCApplicationListController)?.reloadData()
-        }) { (_, _) in
-            self.hideLoading()
+            if error == nil {
+                (self.parent as? RCApplicationListController)?.reloadData()
+            }
         }
     }
     
@@ -195,9 +195,13 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                 
                                 self.showLoading()
                                 
-                                API.shared().deleteApplication(application.id, success: {
-                                    self.updateApplication(application.id)
-                                }, failure: self.handleErrors)
+                                API.shared().deleteApplication(application.id) { error in
+                                    if error == nil {
+                                        self.updateApplication(application.id)
+                                    } else {
+                                        self.handleError(error)
+                                    }
+                                }
                                 
                             }, cancel: "Cancel", cancelCallback: nil)
                             
@@ -221,14 +225,11 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                     data.id = application.id
                                     data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                                     
-                                    API.shared().updateApplicationStatus(data, success: { (data) in
-                                        self.updateApplication(application.id)
-                                    }) { (message, errors) in
-                                        self.hideLoading()
-                                        if errors?["NO_TOKENS"] != nil {
-                                            PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                                    API.shared().updateApplicationStatus(data) { (_, error) in
+                                        if error == nil {
+                                            self.updateApplication(application.id)
                                         } else {
-                                            self.handleErrors(message: message, errors: errors)
+                                            self.handleError(error)
                                         }
                                     }
                                     

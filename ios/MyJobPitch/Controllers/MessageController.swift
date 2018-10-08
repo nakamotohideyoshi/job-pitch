@@ -57,14 +57,14 @@ class MessageController: JSQMessagesViewController {
                     data.id = self.application.id
                     data.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                     
-                    API.shared().updateApplicationStatus(data, success: { (data) in
-                        AppData.getApplication(self.application.id, success: { (application) in
-                            self.application = application
-                            self.updateData()
-                        }, failure: nil)
-                    }) { (message, errors) in
-                        if errors?["NO_TOKENS"] != nil {
-                            PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                    API.shared().updateApplicationStatus(data) { (_, error) in
+                        if error == nil {
+                            AppData.getApplication(self.application.id) { (result, error) in
+                                if error == nil {
+                                    self.application = result
+                                    self.updateData()
+                                }
+                            }
                         } else {
                             PopupController.showGray("There was an error connecting the jobseeker.", ok: "Ok")
                         }
@@ -79,9 +79,6 @@ class MessageController: JSQMessagesViewController {
                 PopupController.showGray("This application has been deleted.", ok: "OK")
             }
         }
-        
-//        self.collectionView.register(UINib(nibName: "MessagesCollectionViewCellIncoming", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
-//        self.collectionView.register(UINib(nibName: "MessagesCollectionViewCellOutgoing", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
         
         updateData()
     }
@@ -269,14 +266,16 @@ class MessageController: JSQMessagesViewController {
         message.content = text
         message.application = application.id
         
-        API.shared().sendMessage(message: message, success: { (data) in
-            
-            AppData.getApplication(self.application.id, success: { (application) in
-                self.application = application
-                self.updateData()
-            }, failure: nil)
-            
-        }, failure: nil)
+        API.shared().sendMessage(message) { (_, error) in
+            if error == nil {
+                AppData.getApplication(self.application.id) { (result, _) in
+                    if result != nil {
+                        self.application = result
+                        self.updateData()
+                    }
+                }
+            }
+        }
     }
     
     func showInterviewInfo() {

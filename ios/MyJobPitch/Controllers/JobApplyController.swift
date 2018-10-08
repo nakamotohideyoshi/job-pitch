@@ -26,7 +26,6 @@ class JobApplyController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         isModal = true
         
         self.pitch = AppData.jobSeeker.getPitch()
@@ -96,10 +95,10 @@ class JobApplyController: MJPController {
         
         let apply = { (pitch: Pitch?) in
             
-            let application = ApplicationForCreation()
+            let application = pitch == nil ? ApplicationForCreation() : ApplicationForCreationWithPitch()
             application.job = self.job.id
-            application.pitch = pitch?.id
             application.jobSeeker = AppData.jobSeeker.id
+            application.pitch = pitch?.id
             
             API.shared().createApplication(application, success: { (data) in
                 self.closeController()
@@ -127,7 +126,7 @@ class JobApplyController: MJPController {
                 
             }) { (progress) in
                 if progress < 1 {
-                    self.showLoading(label: "Uploading Pitch...", withProgress: progress)
+                    self.showLoading("Uploading Pitch...", withProgress: progress)
                 } else {
                     self.showLoading()
                 }

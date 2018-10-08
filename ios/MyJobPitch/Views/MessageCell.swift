@@ -43,6 +43,9 @@ class MessageCell: UITableViewCell {
                 messageLabel.setDeletedText(message!, isDeleted: deleted)
                 
                 backgroundColor = deleted ? AppData.lightGreyColor : .white
+                
+                badge.layer.borderWidth = 1
+                badge.layer.borderColor = UIColor.white.cgColor
             }
         }
     }

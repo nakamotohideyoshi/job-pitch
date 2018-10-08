@@ -250,7 +250,7 @@ class JobEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading(label: "Uploading...")
+                self.showLoading("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-job-images",
@@ -258,7 +258,7 @@ class JobEditController: MJPController {
                                          objectId: self.job.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.showLoading(label: "Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                            self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }, success: { (data) in
                     self.uploadPitch()
                 }, failure: self.handleErrors)
@@ -283,7 +283,7 @@ class JobEditController: MJPController {
             self.saveFinished()
         }) { (progress) in
             if progress < 1 {
-                self.showLoading(label: "Uploading Pitch...", withProgress: progress)
+                self.showLoading("Uploading Pitch...", withProgress: progress)
             } else {
                 self.showLoading()
             }

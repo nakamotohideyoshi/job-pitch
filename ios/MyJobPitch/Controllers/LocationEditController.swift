@@ -150,7 +150,7 @@ class LocationEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading(label: "Uploading...")
+                self.showLoading("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-location-images",
@@ -158,7 +158,7 @@ class LocationEditController: MJPController {
                                          objectId: self.workplace.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.showLoading(label: "", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                            self.showLoading("", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)

@@ -588,11 +588,10 @@ class API: NSObject {
 
     // ================= Application =====================
 
-    func createApplication(_ application: ApplicationForCreation,
+    func createApplication(_ application: ApplicationForCreation0,
                            success: ((NSObject?) -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject("/api/applications/", request: application,
-                   success: success, failure: failure)
+        postObject("/api/applications/", request: application, success: success, failure: failure)
     }
     
     func createExternalApplication(_ application: ExternalApplicationForCreation,

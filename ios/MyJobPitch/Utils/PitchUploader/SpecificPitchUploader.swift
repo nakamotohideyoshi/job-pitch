@@ -10,7 +10,7 @@ class SpecificPitchUploader: PitchUploader {
     
     func uploadVideo(videoUrl: URL!, complete:((Pitch?) -> Void)!, progress:((Float) -> Void)!) {
         
-        self.endpoint = "aapplication-pitches"
+        self.endpoint = "application-pitches"
         self.complete = complete
         self.progress = progress
         

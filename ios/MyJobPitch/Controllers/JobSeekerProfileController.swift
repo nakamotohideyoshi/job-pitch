@@ -104,11 +104,11 @@ class JobSeekerProfileController: MJPController {
         }
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "first_name": [firstName, firstNameError],
-            "last_name": [lastName, lastNameError],
-            "description": [descView, descError]
+            "first_name":   (firstName, firstNameError),
+            "last_name":    (lastName, lastNameError),
+            "description":  (descView, descError)
         ]
     }
     
@@ -301,9 +301,14 @@ class JobSeekerProfileController: MJPController {
                 self.showLoading("Uploading data...", withProgress: rate)
             }
             
-        }, success: { (data) in
+        }) { (result, error) in
             
-            AppData.jobSeeker = data as! JobSeeker
+            if (error != nil) {
+                self.handleError(error)
+                return
+            }
+            
+            AppData.jobSeeker = result
             
             self.cvViewButton.isHidden = AppData.jobSeeker.cv == nil
             
@@ -311,24 +316,33 @@ class JobSeekerProfileController: MJPController {
                 
                 self.showLoading()
                 
-                JSPitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
-                    self.videoUrl = nil
-                    AppData.jobSeeker.pitches = [pitch! as! Pitch]
-                    self.saveSuccess()
-                }) { (progress) in
-                    if progress < 1 {
-                        self.showLoading("Uploading pitch...", withProgress: progress)
-                    } else {
-                        self.showLoading()
+                API.shared().savePitch(Pitch()) { (result, error) in
+                    if error != nil {
+                        self.handleError(error)
+                        return
+                    }
+                    
+                    PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "pitches", progress: { (progress) in
+                        if progress < 1 {
+                            self.showLoading("Uploading Pitch...", withProgress: progress)
+                        } else {
+                            self.showLoading()
+                        }
+                    }) { pitch in
+                        if pitch == nil {
+                            self.handleError(error)
+                            return
+                        }
+
+                        self.videoUrl = nil
+                        AppData.jobSeeker.pitches = [pitch!]
+                        self.saveSuccess()
                     }
                 }
-                
             } else {
                 self.saveSuccess()
             }
-            
-        }, failure: handleErrors)
-        
+        }
     }
     
     func saveSuccess() {

@@ -35,9 +35,13 @@ class JobDetailController: MJPController {
             PopupController.showYellow(message, ok: "Delete", okCallback: {
                 
                 self.showLoading()
-                AppData.removeJob(self.job, success: {
-                    _ = self.navigationController?.popViewController(animated: true)
-                }, failure: self.handleErrors)
+                AppData.removeJob(self.job) { error in
+                    if error == nil {
+                        _ = self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.handleError(error)
+                    }                    
+                }
                 
             }, cancel: "Cancel", cancelCallback: nil)
         }

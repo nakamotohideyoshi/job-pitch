@@ -55,11 +55,15 @@ class SelectJobController: MJPController {
     }
     
     func loadJobs() {
-        AppData.getJobs(locationId: nil, success: {
-            self.hideLoading()
-            self.tableView.pullToRefreshView.stopAnimating()
-            self.updateList()
-        }, failure: self.handleErrors)
+        AppData.getJobs(locationId: nil) { error in
+            if error == nil {
+                self.hideLoading()
+                self.tableView.pullToRefreshView.stopAnimating()
+                self.updateList()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     func updateList() {

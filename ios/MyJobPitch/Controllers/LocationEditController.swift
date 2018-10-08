@@ -84,12 +84,12 @@ class LocationEditController: MJPController {
         locationButton.addSubview(iconView)
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "location_name":        [nameField,    nameErrorLabel],
-            "location_description": [descTextView, descError],
-            "location_email":       [emailField,   emailError],
-            "location_location":    [addressField, addressError]
+            "location_name":        (nameField,    nameErrorLabel),
+            "location_description": (descTextView, descError),
+            "location_email":       (emailField,   emailError),
+            "location_location":    (addressField, addressError)
         ]
     }
     
@@ -144,36 +144,47 @@ class LocationEditController: MJPController {
         workplace.longitude = longitude
         workplace.address = ""
         
-        API.shared().saveLocation(location: workplace, success: { (data) in
+        API.shared().saveLocation(workplace) { (result, error) in
             
-            self.workplace = data as! Location
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
+            self.workplace = result as! Location
             
             if self.logoImage != nil {
                 
                 self.showLoading("Uploading...")
                 
-                API.shared().uploadImage(image: self.logoImage,
+                API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-location-images",
                                          objectKey: "location",
                                          objectId: self.workplace.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             self.showLoading("", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                }, success: { (data) in
-                    self.saveFinished()
-                }, failure: self.handleErrors)
-                
+                 }) { (_, error) in
+                    if error == nil {
+                        self.saveFinished()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
             } else {
                 self.saveFinished()
             }
-            
-        }, failure: handleErrors)
-        
+        }        
     }
     
     func saveFinished() {
         
-        AppData.updateWorkplace(workplace.id, success: { (workplace) in
+        AppData.updateWorkplace(workplace.id) { (result, error) in
+            
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
             if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 1 {
                 UserDefaults.standard.set(2, forKey: "tutorial")
@@ -181,9 +192,8 @@ class LocationEditController: MJPController {
             }
             
             self.closeController()
-            self.saveComplete?(self.workplace)
-            
-        }, failure: handleErrors)
+            self.saveComplete?(result!)
+        }
     }
     
     static func instantiate() -> LocationEditController {

@@ -9,6 +9,15 @@
 import Foundation
 
 class Location: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "business", "jobs", "name", "email", "telephone", "mobile", "longitude", "latitude", "address" ]
+    
+    static let mappingDictionary = [ "desc": "description",
+                                     "emailPublic": "email_public",
+                                     "mobilePublic": "mobile_public",
+                                     "telephonePublic": "telephone_public",
+                                     "placeName": "place_name",
+                                     "placeID": "place_id" ]
 
     var business: NSNumber!
     var jobs: NSArray!

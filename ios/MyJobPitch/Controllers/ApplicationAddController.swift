@@ -82,11 +82,11 @@ class ApplicationAddController: MJPController {
         }
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "first_name": [firstName, firstNameError],
-            "last_name": [lastName, lastNameError],
-            "description": [descView, descError]
+            "first_name":   (firstName, firstNameError),
+            "last_name":    (lastName, lastNameError),
+            "description":  (descView, descError)
         ]
     }
     
@@ -194,14 +194,17 @@ class ApplicationAddController: MJPController {
                 self.showLoading("Uploading data...", withProgress: rate)
             }
             
-        }, success: { (data) in
-            let application = data as! ApplicationForCreation
-            AppData.getApplication(application.id, success: { (_) in
+        }) { (result, error) in
+            
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
+            AppData.getApplication((result?.id)!) { (_, _) in
                 self.closeController()
-            }, failure: { (_, _) in
-                self.closeController()
-            })
-        }, failure: self.handleErrors)
+            }
+        }
     }
     
     static func instantiate() -> ApplicationAddController {

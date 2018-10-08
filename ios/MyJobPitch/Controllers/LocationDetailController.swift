@@ -54,11 +54,15 @@ class LocationDetailController: MJPController {
     }
     
     func loadJobs() {
-        AppData.getJobs(locationId: workplace.id, success: {
-            self.hideLoading()
-            self.tableView.pullToRefreshView.stopAnimating()
-            self.updateList()
-        }, failure: handleErrors)
+        AppData.getJobs(locationId: workplace.id) { error in
+            if error == nil {
+                self.hideLoading()
+                self.tableView.pullToRefreshView.stopAnimating()
+                self.updateList()
+            } else {
+                self.handleError(error)
+            }
+        }
     }
     
     func updateList() {
@@ -93,9 +97,13 @@ class LocationDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             self.showLoading()
-            AppData.removeWorkplace(self.workplace, success: { () in
-                _ = self.navigationController?.popViewController(animated: true)
-            }, failure: self.handleErrors)
+            AppData.removeWorkplace(self.workplace) { error in
+                if error == nil {
+                     _ = self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.handleError(error)
+                }
+            }
             
         }, cancel: "Cancel", cancelCallback: nil)
     }
@@ -143,10 +151,14 @@ extension LocationDetailController: UITableViewDataSource {
                                 
                                 cell.hideSwipe(animated: true)
                                 self.showLoading()
-                                AppData.removeJob(job, success: {
-                                    self.hideLoading()
-                                    self.updateList()
-                                }, failure: self.handleErrors)
+                                AppData.removeJob(job) { error in
+                                    if error == nil {
+                                        self.hideLoading()
+                                        self.updateList()
+                                    } else {
+                                        self.handleError(error)
+                                    }
+                                }
                                 
                             }, cancel: "Cancel", cancelCallback: {
                                 cell.hideSwipe(animated: true)

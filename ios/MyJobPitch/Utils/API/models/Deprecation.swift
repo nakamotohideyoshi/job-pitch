@@ -9,6 +9,8 @@
 import UIKit
 
 class Deprecation: NSObject {
+    static let mappingArray = [ "platform", "warning", "error" ]
+    
     var platform: String!
     var warning: String!
     var error: String!

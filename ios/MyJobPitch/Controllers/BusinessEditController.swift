@@ -44,9 +44,9 @@ class BusinessEditController: MJPController {
         }
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "business_name":    [nameField,    nameErrorLabel]
+            "business_name":    (nameField, nameErrorLabel)
         ]
     }
     
@@ -67,36 +67,47 @@ class BusinessEditController: MJPController {
         }
         business.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
     
-        API.shared().saveBusiness(business: business, success: { (data) in
+        API.shared().saveBusiness(business) { (result, error) in
             
-            self.business = data as! Business
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
+            self.business = result as! Business
             
             if self.logoImage != nil {
                 
                 self.showLoading("Uploading...")
                 
-                API.shared().uploadImage(image: self.logoImage,
+                API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-business-images",
                                          objectKey: "business",
                                          objectId: self.business.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                }, success: { (data) in
-                    self.saveFinished()
-                }, failure: self.handleErrors)
-                
+                }) { (_, error) in
+                    if error == nil {
+                        self.saveFinished()
+                    } else {
+                        self.handleError(error)
+                    }                    
+                }
             } else {
                 self.saveFinished()
             }
-            
-        }, failure: handleErrors)
-        
+        }
     }
     
     func saveFinished() {
         
-        AppData.updateBusiness(business.id, success: { (business) in
+        AppData.updateBusiness(business.id) { (result, error) in
+            
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
             if self.isNew && AppData.businesses.count == 1 {
                 UserDefaults.standard.set(1, forKey: "tutorial")
@@ -104,9 +115,8 @@ class BusinessEditController: MJPController {
             }
             
             self.closeController()
-            self.saveComplete?(self.business)
-            
-        }, failure: handleErrors)
+            self.saveComplete?(result!)            
+        }
     }
     
     static func instantiate() -> BusinessEditController {

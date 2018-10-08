@@ -9,6 +9,9 @@
 import UIKit
 
 class Interview: MJPObject {
+    static let mappingArray = [ "id", "at", "notes", "feedback", "cancelled", "status" ]
+    static let mappingDictionary = [ "cancelledBy": "cancelled_by" ]
+    
     var at: Date!
     var messages: NSArray!
     var notes: String!
@@ -19,6 +22,8 @@ class Interview: MJPObject {
 }
 
 class InterviewForSave: MJPObject {
+    static let mappingArray = [ "invitation", "application", "at", "notes", "feedback" ]
+    
     var invitation:String!
     var at: Date!
     var application: NSNumber!

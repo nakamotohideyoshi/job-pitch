@@ -155,8 +155,8 @@ class MJPController: UIViewController {
     
     // data input
     
-    func getRequiredFields() -> [String: NSArray] {
-        return [String: NSArray]()
+    func getRequiredFields() -> [String: (UIView, UILabel)] {
+        return [String: (UIView, UILabel)]()
     }
     
     func valid() -> Bool {
@@ -167,83 +167,68 @@ class MJPController: UIViewController {
         let requiredFields = getRequiredFields()
         var firstField: UIView? = nil
         
-        for (key, fields) in requiredFields {
-            if let field = fields.firstObject {
-                var str = ""
-                if let tf = field as? UITextField {
-                    str = tf.text!
-                } else if let tv = field as? UITextView {
-                    str = tv.text!
-                }
-                if str.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    errors[key] = ["This field is required."]
-                    if (firstField == nil) {
-                        firstField = field as? UIView
-                        let frame = (firstField?.frame)!
-                        let origin = CGPoint(x: frame.origin.x, y: frame.origin.y - 15)
-                        let rect = CGRect(origin: origin, size: frame.size)
-                        scrollView.scrollRectToVisible(rect, animated: true);
-                    }
+        for (key, (field, _)) in requiredFields {
+            var str = ""
+            if let tf = field as? UITextField {
+                str = tf.text!
+            } else if let tv = field as? UITextView {
+                str = tv.text!
+            }
+            if str.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                errors[key] = ["This field is required."]
+                if (firstField == nil) {
+                    firstField = field
+                    let frame = field.frame
+                    let origin = CGPoint(x: frame.origin.x, y: frame.origin.y - 15)
+                    let rect = CGRect(origin: origin, size: frame.size)
+                    scrollView.scrollRectToVisible(rect, animated: true);
                 }
             }
         }
         
-        handleErrors(message: nil, errors: errors)
+        handleError(errors)
         
         return errors.count == 0
-        
     }
     
     // error
     
-    func handleErrors(message: String?, errors: NSDictionary?) {
+    func handleError(_ error: Any?) {
+        if error == nil {
+            return
+        }
         
         hideLoading()
         
-        let requiredFields = getRequiredFields()
-        
-        for (_, fields) in requiredFields {
-            let label = fields.lastObject as! UILabel
-            label.text = ""
+        if let message = error as? String {
+            PopupController.showGray(message, ok: "OK")
+            return
         }
         
-        if errors != nil {
-            for (key, errorMessages) in errors! {
+        if let userInfo = error as? [String: Any] {
+            let requiredFields = getRequiredFields()
+            
+            for (_, (_, errorLabel)) in requiredFields {
+                errorLabel.text = ""
+            }
+            
+            for (key, value) in userInfo {
                 
-                var errorMessage: String!
-                if let msg = errorMessages as? String {
-                    errorMessage = msg
-                } else if let arr = errorMessages as? NSArray {
-                    errorMessage = arr.firstObject as! String
+                var message: String!
+                if let msg = value as? String {
+                    message = msg
+                } else if let arr = value as? [String] {
+                    message = arr[0]
                 }
                 
-                if errorMessage == nil {
-                    errorMessage = key as! String
-                }
-                
-                if let fields = requiredFields[key as! String] {
-                    (fields.lastObject as! UILabel).text = errorMessage
+                if let fields = requiredFields[key] {
+                    fields.1.text = message
                 } else {
-                    if errorMessage == "Invalid token." {
-                        UserDefaults.standard.removeObject(forKey: "token")
-                        API.shared().clearToken()
-                        SideMenuController.pushController(id: "log_out")
-                    } else {
-                        PopupController.showGreen(errorMessage,
-                                                  ok: nil, okCallback: nil,
-                                                  cancel: "OK", cancelCallback: nil)
-                    }
-                    return
+                    message = message == nil ? key : key + ": " + message
+                    PopupController.showGray(message, ok: "OK")
                 }
             }
-        } else {
-            if message != nil {
-                PopupController.showGreen(message,
-                                          ok: nil, okCallback: nil,
-                                          cancel: "OK", cancelCallback: nil)
-            }
         }
-        
     }
     
     func closeController() {

@@ -60,20 +60,29 @@ class SwipeController: MJPController {
         
         if AppData.user.isJobSeeker() {
             
-            AppData.searchJobs(success: {
-                self.refreshCompleted(AppData.jobs)
-            }, failure: handleErrors)
+            AppData.searchJobs() { error in
+                if error == nil {
+                    self.refreshCompleted(AppData.jobs)
+                } else {
+                    self.handleError(error)
+                }
+            }
             
         } else {
             
-            AppData.searchJobseekers(jobId: searchJob.id, success: {
-                self.refreshCompleted(AppData.jobSeekers)
-            }, failure: self.handleErrors)
+            AppData.searchJobseekers(jobId: searchJob.id) { error in
+                if error == nil {
+                    self.refreshCompleted(AppData.jobSeekers)
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
     }
     
     func updateTokens() {
-        let credits = searchJob.locationData.businessData.tokens as Int
+        let tokens = searchJob.locationData.businessData.tokens // temp code
+        let credits = tokens != nil ? (tokens as! Int) : 0
         creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
     }
     
@@ -294,29 +303,26 @@ class SwipeController: MJPController {
 
         } else {
             
-            var application = ApplicationForCreation()
+            let application = ApplicationForCreation()
             application.job = searchJob?.id
             application.jobSeeker = data[currentIndex - cards.count].id
             
-            API.shared().createApplication(application, success: { (data) in
+            API.shared().createApplication(application) { (result, error) in
                 
-                application = data as! ApplicationForCreation
-                
-                AppData.getApplication(application.id, success: { (application) in
-                    self.searchJob = application.job
-                    self.updateTokens()
-                }, failure: self.handleErrors)
-                
-                self.removeCard()
-                
-            }) { (message, errors) in
-                
-                if errors?["NO_TOKENS"] != nil {
-                    PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                if result != nil {
+                    AppData.getApplication(((result as! Application).id)!) { (result, error) in
+                        if result != nil {
+                            self.searchJob = result!.job
+                            self.updateTokens()
+                        } else {
+                            self.handleError(error)
+                        }
+                    }
+                    self.removeCard()
                 } else {
-                    self.handleErrors(message: message, errors: errors)
+                    self.handleError(error)
+                    self.reloadCard()
                 }
-                self.reloadCard()
             }
         }
     }
@@ -329,11 +335,13 @@ class SwipeController: MJPController {
             request.job = searchJob.id
             request.jobSeeker = data[currentIndex - cards.count].id
             
-            API.shared().ExclusionJobSeeker(request, success: { (_) in
-                self.removeCard()
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-                self.reloadCard()
+            API.shared().ExclusionJobSeeker(request) { (_, error) in
+                if error == nil {
+                    self.removeCard()
+                } else {
+                    self.handleError(error)
+                    self.reloadCard()
+                }
             }
             
         } else {

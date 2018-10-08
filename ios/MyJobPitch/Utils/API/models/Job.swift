@@ -9,6 +9,12 @@
 import Foundation
 
 class Job: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "title", "sector", "location", "contract", "hours", "status" ]
+    
+    static let mappingDictionary = [ "desc":           "description",
+                                     "requiresPitch":  "requires_pitch",
+                                     "requiresCV":     "requires_cv" ]
 
     var title: String!
     var desc: String!

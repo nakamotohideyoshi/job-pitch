@@ -147,13 +147,13 @@ class JobEditController: MJPController {
         
     }
     
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "title":        [titleField,    titleError],
-            "description":  [descTextView,  descError],
-            "sector":       [sectorField,   sectorError],
-            "contract":     [contractField, contractError],
-            "hours":        [hoursField,    hoursError]
+            "title":        (titleField,    titleError),
+            "description":  (descTextView,  descError),
+            "sector":       (sectorField,   sectorError),
+            "contract":     (contractField, contractError),
+            "hours":        (hoursField,    hoursError)
         ]
     }
     
@@ -244,31 +244,37 @@ class JobEditController: MJPController {
         
         showLoading()
         
-        API.shared().saveJob(job: job, success: { (data) in
+        API.shared().saveJob(job) { (result, error) in
             
-            self.job = data as! Job
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+            
+            self.job = result as! Job
             
             if self.logoImage != nil {
                 
                 self.showLoading("Uploading...")
                 
-                API.shared().uploadImage(image: self.logoImage,
+                API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-job-images",
                                          objectKey: "job",
                                          objectId: self.job.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                }, success: { (data) in
-                    self.uploadPitch()
-                }, failure: self.handleErrors)
-                
+                }) { (_, error) in
+                    if error == nil {
+                        self.uploadPitch()
+                    } else {
+                        self.handleError(error)
+                    }
+                }
             } else {
                 self.uploadPitch()
             }
-            
-        }, failure: handleErrors)
-        
+        }
     }
     
     func uploadPitch() {
@@ -279,20 +285,39 @@ class JobEditController: MJPController {
         
         showLoading()
         
-        JobPitchUploader().uploadVideo(videoUrl: videoUrl, job: job.id, complete: { (pitch) in
-            self.saveFinished()
-        }) { (progress) in
-            if progress < 1 {
-                self.showLoading("Uploading Pitch...", withProgress: progress)
-            } else {
-                self.showLoading()
+        let jsPitch = JobPitchForCreation()
+        jsPitch.job = job.id
+
+        API.shared().saveJobPitch(jsPitch) { (result, error) in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
+
+            PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "job-videos", progress: { (progress) in
+                if progress < 1 {
+                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                } else {
+                    self.showLoading()
+                }
+            }) { pitch in
+                if pitch == nil {
+                    self.handleError(error)
+                } else {
+                    self.saveFinished()
+                }                
             }
         }
     }
     
     func saveFinished() {
         
-        AppData.updateJob(job.id, success: { (job) in
+        AppData.updateJob(job.id) { (result, error) in
+            
+            if error != nil {
+                self.handleError(error)
+                return
+            }
         
             if self.isNew && UserDefaults.standard.integer(forKey: "tutorial") == 2 {
                 UserDefaults.standard.removeObject(forKey: "tutorial")
@@ -300,10 +325,8 @@ class JobEditController: MJPController {
             }
             
             self.closeController()
-            self.saveComplete?(self.job)
-            
-        }, failure: handleErrors)
-        
+            self.saveComplete?(result!)
+        }        
     }
     
     static func instantiate() -> JobEditController {

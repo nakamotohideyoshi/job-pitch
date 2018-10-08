@@ -17,7 +17,12 @@ class PitchUploader: NSObject {
     var complete: ((Pitch?) -> Void)!
     var endpoint: String!
     
-    func convertVideo(_ url: URL!) {
+    func uploadVideo(_ url: URL!, pitch: Pitch!, endpoint: String!, progress:((Float) -> Void)!, complete:((Pitch?) -> Void)!) {
+        
+        self.pitch = pitch
+        self.endpoint = endpoint
+        self.progress = progress
+        self.complete = complete
         
         let avAsset = AVURLAsset(url: url)
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: avAsset)
@@ -76,12 +81,30 @@ class PitchUploader: NSObject {
         
     }
     
-    func getPitch() {}
+    func getPitch() {
+        
+        API.shared().getPitch(pitch.id, endpoint: endpoint) { (result, error) in
+            if error != nil {
+                self.uploadFailed()
+                return
+            }
+            
+            let pitch = result as! Pitch
+            
+            if pitch.video == nil {
+                Thread.sleep(forTimeInterval: 2)
+                self.getPitch()
+            } else {
+                DispatchQueue.main.async {
+                    self.complete?(pitch)
+                }
+            }
+        }
+    }
     
     func uploadFailed() {
         DispatchQueue.main.async {
             self.complete?(nil)
         }
-    }
-    
+    }    
 }

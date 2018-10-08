@@ -9,6 +9,11 @@
 import Foundation
 
 class Application: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "shortlisted", "status" ]
+    
+    static let mappingDictionary = [ "createdBy": "created_by",
+                                     "deletedBy": "deleted_by" ]
 
     var job: Job!
     var jobSeeker: JobSeeker!
@@ -68,16 +73,23 @@ class ExternalApplicationForCreation: NSObject {
 }
 
 class ExclusionJobSeeker: MJPObject {
+    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+    
     var job: NSNumber!
     var jobSeeker: NSNumber!
 }
 
 class ApplicationStatusUpdate: MJPObject {
     
+    static let mappingArray = [ "id"]
+    static let mappingDictionary = ["status": "connect"]
+    
     var status: NSNumber!
 }
 
 class ApplicationShortlistUpdate: MJPObject {
+    
+    static let mappingArray = [ "id", "shortlisted" ]
     
     var shortlisted = false    
 }

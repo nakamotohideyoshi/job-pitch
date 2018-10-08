@@ -9,6 +9,8 @@
 import Foundation
 
 class Image: MJPObject {
+    
+    static var mappingArray = [ "id", "image", "thumbnail" ]
 
     var image: String!
     var thumbnail: String!

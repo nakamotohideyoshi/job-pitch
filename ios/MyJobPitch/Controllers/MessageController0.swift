@@ -43,9 +43,13 @@ class MessageController0: MJPController {
         if application.getNewMessageCount() > 0 {
             let updated = MessageForUpdate()
             updated.id = (application.messages.lastObject as! Message).id
-            API.shared().updateMessageStatus(update: updated, success: { (_) in
-                AppData.getApplication(self.application.id, success: nil, failure: nil)
-            }, failure: nil)
+            API.shared().updateMessageStatus(updated) { (_, error) in
+                if error == nil {
+                    AppData.getApplication(self.application.id, complete: nil)
+                } else {
+                    self.handleError(error)
+                }
+            }
         }
         
         loadData()

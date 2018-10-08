@@ -25,10 +25,10 @@ class ChangePasswordController: MJPController {
                 
     }
 
-    override func getRequiredFields() -> [String: NSArray] {
+    override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "password1":[password1, pass1Error],
-            "password2":[password2, pass2Error]
+            "password1":    (password1, pass1Error),
+            "password2":    (password2, pass2Error)
         ]
     }
     
@@ -38,15 +38,19 @@ class ChangePasswordController: MJPController {
             
             showLoading()
             
-            API.shared().changePassword(password1: password1.text!,
-                                        password2: password2.text!,
-                                        success: { (_) in
-                                            self.hideLoading()
-                                            PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
-            }, failure: self.handleErrors)
+            let request = PasswordChangeRequest()
+            request.password1 = password1.text!
+            request.password2 = password2.text!
             
+            API.shared().changePassword(request) { (_, error) in
+                if error == nil {
+                    self.hideLoading()
+                    PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
+                } else {                    
+                    self.handleError(error)
+                }
+            }
         }
-        
     }
 
 }

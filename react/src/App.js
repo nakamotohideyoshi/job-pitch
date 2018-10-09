@@ -19,7 +19,7 @@ const App = props => {
   }
 
   let recruitRouters;
-  if (process.env.REACT_APP_RECRUIT) {
+  if (process.env.REACT_APP_RECRUIT && user) {
     recruitRouters = require('mjp-react-recruit').Routers(props);
     if (!recruitRouters) {
       return <Loading size="large" />;
@@ -27,7 +27,7 @@ const App = props => {
   }
 
   let hrRouters;
-  if (process.env.REACT_APP_HR && user.businesses.length) {
+  if (process.env.REACT_APP_HR && user && (user.businesses || []).length) {
     hrRouters = require('mjp-react-hr').Routers(props);
     if (!hrRouters) {
       return <Loading size="large" />;
@@ -35,7 +35,7 @@ const App = props => {
   }
 
   let employeeRouters;
-  if (process.env.REACT_APP_EMPLOYEE && user.employees.length) {
+  if (process.env.REACT_APP_EMPLOYEE && user && (user.employees || []).length) {
     employeeRouters = require('mjp-react-employee').Routers(props);
     if (!employeeRouters) {
       return <Loading size="large" />;

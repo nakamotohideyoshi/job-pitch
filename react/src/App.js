@@ -27,7 +27,7 @@ const App = props => {
   }
 
   let hrRouters;
-  if (process.env.REACT_APP_HR) {
+  if (process.env.REACT_APP_HR && user.businesses.length) {
     hrRouters = require('mjp-react-hr').Routers(props);
     if (!hrRouters) {
       return <Loading size="large" />;
@@ -35,7 +35,7 @@ const App = props => {
   }
 
   let employeeRouters;
-  if (process.env.REACT_APP_EMPLOYEE) {
+  if (process.env.REACT_APP_EMPLOYEE && user.employees.length) {
     employeeRouters = require('mjp-react-employee').Routers(props);
     if (!employeeRouters) {
       return <Loading size="large" />;

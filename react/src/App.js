@@ -55,7 +55,7 @@ const App = props => {
 export default withRouter(
   connect(
     state => {
-      const { user, status } = state.mjp;
+      const { user, status } = state.auth;
       return { user, status };
     },
     {

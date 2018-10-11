@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { MJPReducer, MJPSaga } from 'mjp-react-core';
+import { MJPReducer, MJPSagas } from 'mjp-react-core';
 
 let recruitModule;
 if (process.env.REACT_APP_RECRUIT) {
@@ -21,16 +21,16 @@ if (process.env.REACT_APP_EMPLOYEE) {
 }
 
 function* rootSaga() {
-  let sagas = [MJPSaga()];
-  recruitModule && sagas.push(recruitModule.Saga());
-  hrModule && sagas.push(hrModule.Saga());
-  employeeModule && sagas.push(employeeModule.Saga());
+  let sagas = [MJPSagas()];
+  recruitModule && sagas.push(recruitModule.Sagas());
+  hrModule && sagas.push(hrModule.Sagas());
+  employeeModule && sagas.push(employeeModule.Sagas());
   yield all(sagas);
 }
 
 export default function configureStore(history) {
   const rootReducer = combineReducers({
-    mjp: MJPReducer,
+    ...MJPReducer,
     ...(recruitModule ? recruitModule.Reducers : {}),
     ...(hrModule ? hrModule.Reducers : {}),
     ...(employeeModule ? employeeModule.Reducers : {}),

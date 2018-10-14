@@ -21,6 +21,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.html import format_html
 
+from hr.models import Employee
 from .models import (
     Sex,
     Nationality,
@@ -135,9 +136,19 @@ class LocationInline(admin.TabularInline):
 
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
-    fields = ('name', 'get_tokens')
+    fieldsets = ((
+        None,
+        {'fields': ('name', 'suspended')},
+    ), (
+        'Recruit',
+        {'fields': ('get_tokens',)}
+    ), (
+        'HR',
+        {'fields': ('hr_access', 'employee_level')},
+    ))
     readonly_fields = ('get_tokens',)
-    list_display = ('name', 'get_tokens', 'get_location_count', 'created')
+    list_display = ('name', 'get_tokens', 'get_location_count', 'created', 'get_hr_access', 'suspended')
+    list_filter = ('suspended', 'hr_access')
     search_fields = ('name',)
     inlines = (BusinessImageInline, UserInline, UserAddInline, LocationInline)
 
@@ -156,6 +167,13 @@ class BusinessAdmin(admin.ModelAdmin):
         ))
     get_tokens.short_description = 'Tokens'
     get_tokens.admin_order_field = 'token_store.tokens'
+
+    def get_hr_access(self, obj):
+        if not obj.hr_access:
+            return False
+        return "{} ({} used)".format(obj.employee_level, Employee.objects.filter(job__location__business=obj).count())
+    get_hr_access.short_description = 'HR'
+    get_hr_access.admin_order_field = 'token_store.tokens'
 
     def get_location_count(self, obj):
         return obj.location_count

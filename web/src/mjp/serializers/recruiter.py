@@ -169,7 +169,7 @@ class UserBusinessSerializerV1(serializers.ModelSerializer):  # v1
         fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
 
 
-class UserBusinessSerializer(UserBusinessSerializerV1):  # v5
+class UserBusinessSerializerV5(UserBusinessSerializerV1):  # v5
     restricted = serializers.SerializerMethodField()
 
     def get_restricted(self, business):
@@ -179,6 +179,12 @@ class UserBusinessSerializer(UserBusinessSerializerV1):  # v5
 
     class Meta(UserBusinessSerializerV1.Meta):
         fields = UserBusinessSerializerV1.Meta.fields + ('restricted',)
+
+
+class UserBusinessSerializer(UserBusinessSerializerV5):  # v7
+    class Meta(UserBusinessSerializerV5.Meta):
+        fields = UserBusinessSerializerV5.Meta.fields + ('hr_access', 'employee_level', 'suspended')
+        read_only_fields = ('hr_access', 'employee_level', 'suspended')
 
 
 class UserLocationSerializerV1(serializers.ModelSerializer):  # v1

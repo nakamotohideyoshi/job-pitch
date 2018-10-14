@@ -28,6 +28,7 @@ from mjp.serializers.recruiter import (
     BusinessUserUpdateSerializer,
     ExclusionSerializer,
     UserBusinessSerializerV1,
+    UserBusinessSerializerV5,
     UserBusinessSerializer,
     UserLocationSerializerV1,
     UserLocationSerializerV5,
@@ -65,8 +66,10 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version >= 5:
+        if version >= 7:
             return UserBusinessSerializer
+        if version >= 5:
+            return UserBusinessSerializerV5
         return UserBusinessSerializerV1
 
     def perform_create(self, serializer):

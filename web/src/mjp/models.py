@@ -315,6 +315,9 @@ class Business(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses', through='BusinessUser')
     name = models.CharField(max_length=255)
     token_store = models.ForeignKey('TokenStore', related_name='businesses', on_delete=models.DO_NOTHING)
+    hr_access = models.BooleanField(default=False)
+    employee_level = models.IntegerField(default=0)
+    suspended = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

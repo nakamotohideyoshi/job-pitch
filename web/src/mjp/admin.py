@@ -531,12 +531,14 @@ class JobSeekerAdmin(admin.ModelAdmin):
     get_search_area.short_description = 'Search Area'
 
     def get_date_joined(self, jobseeker):
-        return jobseeker.user.date_joined
+        if jobseeker.user:
+            return jobseeker.user.date_joined
     get_date_joined.short_description = 'Joined'
     get_date_joined.admin_order_field = 'user__date_joined'
 
     def get_last_login(self, jobseeker):
-        return jobseeker.user.last_login
+        if jobseeker.user:
+            return jobseeker.user.last_login
     get_last_login.short_description = 'Last Login'
     get_last_login.admin_order_field = 'user__last_login'
 

@@ -16,8 +16,9 @@ from mjp.models import (
     Location,
     JobStatus,
     Business,
+    Job,
 )
-from mjp.serializers import DummyField, RelatedImageURLField
+from mjp.serializers import DummyField, RelatedImageURLField, EmbeddedVideoSerializer
 
 
 class BusinessImageSerializer(serializers.ModelSerializer):
@@ -257,3 +258,53 @@ class UserLocationSerializer(UserLocationSerializerV5):  # v6
             'region',
             'country',
         )
+
+
+class UserJobSerializerV1(serializers.ModelSerializer):  # v1
+    location_data = UserLocationSerializerV1(source='location', read_only=True)
+    images = RelatedImageURLField(many=True, read_only=True)
+
+    def validate_location(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value.business)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists() and not business_user.locations.filter(pk=value.pk).exists():
+            raise PermissionDenied()
+        return value
+
+    class Meta:
+        model = Job
+        fields = (
+            'id',
+            'title',
+            'description',
+            'images',
+            'sector',
+            'hours',
+            'contract',
+            'status',
+            'location',
+            'location_data',
+            'created',
+            'updated',
+        )
+
+
+class UserJobSerializerV2(UserJobSerializerV1):  # v2
+    videos = EmbeddedVideoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Job
+        fields = UserJobSerializerV1.Meta.fields + ('videos',)
+
+
+class UserJobSerializerV5(UserJobSerializerV2):  # v5
+    class Meta:
+        model = Job
+        fields = UserJobSerializerV2.Meta.fields + ('requires_pitch', 'requires_cv')
+
+
+class UserJobSerializer(UserJobSerializerV5):  # v6
+    location_data = UserLocationSerializer(source='location', read_only=True)

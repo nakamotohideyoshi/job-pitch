@@ -18,12 +18,6 @@ from mjp.models import (
     JobVideo,
     Application,
 )
-from mjp.serializers import (
-    JobSerializerV1,
-    JobSerializerV2,
-    JobSerializerV5,
-    JobSerializer,
-)
 from mjp.serializers.recruiter import (
     BusinessImageSerializer,
     LocationImageSerializer,
@@ -36,8 +30,12 @@ from mjp.serializers.recruiter import (
     UserBusinessSerializerV1,
     UserBusinessSerializer,
     UserLocationSerializerV1,
-    UserLocationSerializer,
     UserLocationSerializerV5,
+    UserLocationSerializer,
+    UserJobSerializerV1,
+    UserJobSerializerV2,
+    UserJobSerializerV5,
+    UserJobSerializer,
 )
 
 
@@ -203,12 +201,12 @@ class UserJobViewSet(viewsets.ModelViewSet):
         except (TypeError, ValueError):
             version = 1
         if version >= 6:
-            return JobSerializer
+            return UserJobSerializer
         if version >= 5:
-            return JobSerializerV5
+            return UserJobSerializerV5
         if version >= 2:
-            return JobSerializerV2
-        return JobSerializerV1
+            return UserJobSerializerV2
+        return UserJobSerializerV1
 
     def get_queryset(self):
         location = self.request.query_params.get('location', None)

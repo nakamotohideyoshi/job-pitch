@@ -159,7 +159,7 @@ public class AppHelper {
 
     public static void showInterviewInfo(Interview interview, View view, Application application) {
 
-        JobSeeker jobSeeker = application.getJobSeeker();
+        JobSeeker jobSeeker = application.getJob_seeker();
         Job job = application.getJob_data();
         String status = interview.getStatus();
 

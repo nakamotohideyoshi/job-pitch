@@ -158,30 +158,30 @@ class ApplicationDetailsController: MJPController {
         }
     }
     
-    func showProfile() {
-        let controller = JobSeekerProfileController.instantiate()
-        controller.isModal = true
-        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
-    }
-    
     @IBAction func applyAction(_ sender: Any) {
+        let showProfile = {
+            let controller = JobSeekerProfileController.instantiate()
+            controller.isModal = true
+            self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+        }
+        
         if (!AppData.jobSeeker.active) {
             PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
-                self.showProfile()
+                showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return
         }
         
-        if (AppData.jobSeeker.profileImage == nil) {
+        if (AppData.jobSeeker.profileImage == nil && AppData.jobSeeker.getPitch() == nil) {
             PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
-                self.showProfile()
+                showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return
         }
         
         if (job.requiresCV && AppData.jobSeeker.cv == nil) {
             PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
-                self.showProfile()
+                showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return
         }

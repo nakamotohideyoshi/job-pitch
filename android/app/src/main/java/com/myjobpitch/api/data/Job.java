@@ -15,7 +15,7 @@ public class Job extends MJPObjectWithDates {
 
     private Location location_data;
     private List<Image> images;
-    private List<JobPitch> videos;
+    private List<Pitch> videos;
 
     // Added in API V5
     private Boolean requires_pitch;
@@ -85,13 +85,13 @@ public class Job extends MJPObjectWithDates {
         return images;
     }
 
-    public List<JobPitch> getVideos() {
+    public List<Pitch> getVideos() {
         return videos;
     }
 
-    public JobPitch getPitch() {
+    public Pitch getPitch() {
         if (videos != null)
-            for (JobPitch pitch : videos)
+            for (Pitch pitch : videos)
                 if (pitch.getVideo() != null)
                     return pitch;
         return null;

@@ -123,7 +123,7 @@ public class JobDetailFragment extends BaseFragment {
         showLoading(view);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 job = MJPApi.shared().getUserJob(job.getId());
             }
         }).addListener(new APITaskListener() {
@@ -139,7 +139,7 @@ public class JobDetailFragment extends BaseFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 String query = "job=" + job.getId();
                 data = MJPApi.shared().get(Application.class, query);
 
@@ -198,7 +198,7 @@ public class JobDetailFragment extends BaseFragment {
                 showLoading();
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().deleteJob(job.getId());
                     }
                 }).addListener(new APITaskListener() {

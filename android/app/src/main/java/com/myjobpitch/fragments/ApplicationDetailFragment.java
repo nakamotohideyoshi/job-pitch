@@ -24,18 +24,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
-import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.models.JobResourceModel;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -139,7 +136,7 @@ public class ApplicationDetailFragment extends BaseFragment {
         showLoading(view);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
             }
@@ -161,7 +158,7 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     void load() {
 
-        JobPitch pitch = job.getPitch();
+        Pitch pitch = job.getPitch();
         if (pitch != null) {
             JobResourceModel resource = new JobResourceModel();
             resource.thumbnail = pitch.getThumbnail();
@@ -179,8 +176,8 @@ public class ApplicationDetailFragment extends BaseFragment {
         resources.add(logoModel);
 
         Location location = job.getLocation_data();
-        Contract contract = AppData.get(Contract.class, job.getContract());
-        Hours hours = AppData.get(Hours.class, job.getHours());
+        Contract contract = AppData.getObjById(AppData.contracts, job.getContract());
+        Hours hours = AppData.getObjById(AppData.hours, job.getHours());
 
         titleView.setText(job.getTitle());
         distanceText.setText(AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude()));
@@ -230,6 +227,13 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     }
 
+    void showProfile() {
+        TalentProfileFragment fragment = new TalentProfileFragment();
+        fragment.jobSeeker = jobSeeker;
+        fragment.isActivation = true;
+        getApp().pushFragment(fragment);
+    }
+
     @OnClick(R.id.apply_button)
     void onApply() {
         if (application != null) {
@@ -242,7 +246,6 @@ public class ApplicationDetailFragment extends BaseFragment {
                     popup.addGreenButton("Activate", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             TalentProfileFragment fragment = new TalentProfileFragment();
                             fragment.jobSeeker = jobSeeker;
                             fragment.isActivation = true;
@@ -261,47 +264,55 @@ public class ApplicationDetailFragment extends BaseFragment {
             }
 
         } else {
-            if (jobSeeker.getPitch() == null) {
-                Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);
-                popup.addGreenButton("Record my pitch", new View.OnClickListener() {
+            if (!AppData.jobSeeker.isActive()) {
+                Popup popup = new Popup(getContext(), "To apply please activate your account", true);
+                popup.addGreenButton("Activate", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                        showProfile();
                     }
                 });
                 popup.addGreyButton("Cancel", null);
                 popup.show();
-            } else {
-                Popup popup = new Popup(getContext(), "Are you sure you want to apply to this job?", true);
-                popup.addYellowButton("Apply", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showLoading();
-                        new APITask(new APIAction() {
-                            @Override
-                            public void run() throws MJPApiException {
-                                ApplicationForCreation applicationForCreation = new ApplicationForCreation();
-                                applicationForCreation.setJob(job.getId());
-                                applicationForCreation.setJob_seeker(jobSeeker.getId());
-                                applicationForCreation.setShortlisted(false);
-                                MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-                            }
-                        }).addListener(new APITaskListener() {
-                            @Override
-                            public void onSuccess() {
-                                action.apply();
-                                getApp().popFragment();
-                            }
-                            @Override
-                            public void onError(JsonNode errors) {
-                                errorHandler(errors);
-                            }
-                        }).execute();
-                    }
-                });
-                popup.addGreyButton("Cancel", null);
-                popup.show();
+                return;
             }
+
+            if (AppData.jobSeeker.getProfile_image() == null && AppData.jobSeeker.getPitch() == null) {
+                Popup popup = new Popup(getContext(), "To apply please set your photo", true);
+                popup.addGreenButton("Edit profile", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showProfile();
+                    }
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
+                return;
+            }
+
+            if (job.getRequires_cv() && AppData.jobSeeker.getCV() == null) {
+                Popup popup = new Popup(getContext(), "This job requires your cv", true);
+                popup.addGreenButton("Edit profile", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showProfile();
+                    }
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
+                return;
+            }
+
+            JobApplyFragment fragment = new JobApplyFragment();
+            fragment.job = job;
+            fragment.callback = new JobApplyFragment.Callback() {
+                @Override
+                public void completed() {
+                    action.apply();
+                    getApp().popFragment();
+                }
+            };
+            getApp().pushFragment(fragment);
         }
     }
 

@@ -109,7 +109,7 @@ public class BaseFragment extends Fragment {
 
         ActionBar actionBar = getApp().getSupportActionBar();
 
-        if (getApp().getCurrentPageID() != -1) {
+        if (getApp().getCurrentMenuID() != -1) {
             actionBar.show();
             actionBar.setTitle(title);
         } else {

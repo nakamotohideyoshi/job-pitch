@@ -1,13 +1,12 @@
 package com.myjobpitch.fragments;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.utils.AppData;
 
 import butterknife.ButterKnife;
@@ -30,7 +29,7 @@ public class HelpFragment extends BaseFragment {
 
     @OnClick(R.id.help_how_it)
     void onHowIt() {
-        if (AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && AppData.getUserType() == AppData.JOBSEEKER)) {
+        if (AppData.userRole == Role.JOB_SEEKER_ID) {
             goWebviewFragment("How it works", "help_jobseeker");
         } else {
             goWebviewFragment("How it works", "help_recruiter");

@@ -93,12 +93,12 @@ class JobApplyController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         
-        let apply = { (pitch: Pitch?) in
+        let apply = { (pitchId: NSNumber?) in
             
-            let application = pitch == nil ? ApplicationForCreation() : ApplicationForCreationWithPitch()
+            let application = pitchId == nil ? ApplicationForCreation() : ApplicationForCreationWithPitch()
             application.job = self.job.id
             application.jobSeeker = AppData.jobSeeker.id
-            application.pitch = pitch?.id
+            application.pitch = pitchId
             
             API.shared().createApplication(application) {(_, error) in
                 if error == nil {
@@ -113,32 +113,30 @@ class JobApplyController: MJPController {
         showLoading()
         
         if self.videoUrl == nil {
-            
             apply(nil)
+            return
+        }
+        
+        let specificPitch = SpecificPitchForCreation()
+        specificPitch.jobSeeker = AppData.jobSeeker.id
+        
+        API.shared().saveSpecificPitch(specificPitch) { (result, error) in
+            if error != nil {
+                self.handleError(error)
+                return
+            }
             
-        } else {
-            
-            let specificPitch = SpecificPitchForCreation()
-            specificPitch.jobSeeker = AppData.jobSeeker.id
-            
-            API.shared().saveSpecificPitch(specificPitch) { (result, error) in
-                if error != nil {
-                    self.handleError(error)
-                    return
+            PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "application-pitches", progress: { (progress) in
+                if progress < 1 {
+                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                } else {
+                    self.showLoading()
                 }
-                                
-                PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "application-pitches", progress: { (progress) in
-                    if progress < 1 {
-                        self.showLoading("Uploading Pitch...", withProgress: progress)
-                    } else {
-                        self.showLoading()
-                    }
-                }) { pitch in
-                    if pitch == nil {
-                        self.handleError(error)
-                    } else {
-                        apply(pitch)
-                    }
+            }) { pitch in
+                if pitch == nil {
+                    self.handleError(error)
+                } else {
+                    apply(pitch?.id)
                 }
             }
         }

@@ -4,8 +4,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.api.MJPApiException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,19 @@ public class APITask extends AsyncTask<Void, Void, Boolean> {
         try {
             action.run();
             return true;
-        } catch (MJPApiException e) {
-            errors = e.getErrors();
-            Log.d("APITask", errors.toString());
+        } catch (HttpClientErrorException e) {
+            int statusCode = e.getStatusCode().value();
+            if (statusCode == 400) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    Log.e("MJPApiException", e.getResponseBodyAsString());
+                    errors = mapper.readTree(e.getResponseBodyAsByteArray());
+                } catch (IOException e1) {}
+            } else if (statusCode == 403) {
+
+            } else {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -25,12 +25,13 @@ import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickList
 import com.myjobpitch.IntroActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.auth.AuthToken;
+import com.myjobpitch.api.auth.Login;
+import com.myjobpitch.api.auth.Registration;
+import com.myjobpitch.api.auth.ResetPassword;
 import com.myjobpitch.api.auth.User;
-import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Deprecation;
-import com.myjobpitch.api.data.Message;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -38,7 +39,6 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,22 +74,15 @@ public class LoginFragment extends FormFragment {
     EditText mResetEmailView;
 
     @BindView(R.id.select_server)
-    Button mSelectServer;
+    Button mAPIButton;
 
     private enum Status {
         LOGIN, REGISTER, RESET
-    };
+    }
+
     private Status status = Status.LOGIN;
-
     private boolean isLoggedin = false;
-    private boolean showIntro = true;
-
-    public String versionName = "0.0.0";
-    public int versionCode = 0;
-
-    public Boolean depreactionError = false;
-
-    public List<Deprecation>  deprecations;
+    private List<Deprecation>  deprecations;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,8 +90,6 @@ public class LoginFragment extends FormFragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
-
-        // setting ui
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getApp().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -112,180 +103,240 @@ public class LoginFragment extends FormFragment {
         mUserEmailView.setText(AppData.getEmail());
         mRememberView.setChecked(AppData.getRemember());
 
-        // get server url
-
         if (AppData.PRODUCTION) {
-            ((ViewGroup)mSelectServer.getParent()).removeView(mSelectServer);
+            ((ViewGroup)mAPIButton.getParent()).removeView(mAPIButton);
         } else {
             String apiUrl = AppData.getServerUrl();
             if (apiUrl != null) {
                 if (MJPApi.instance == null) {
                     MJPApi.apiUrl = apiUrl;
                 }
-                mSelectServer.setText(apiUrl);
+                mAPIButton.setText(apiUrl);
             }
         }
 
-        if (MJPApi.instance == null && !depreactionError) {
-
-            checkDeprecation(view);
+        if (MJPApi.instance == null) {
+            if (!MJPApi.shared().isLogin()) {
+                checkDeprecation(view);
+            } else {
+                autoLogin(view);
+            }
+        } else {
+            AppData.saveRemember(false, "");
         }
-
-        isLoggedin = false;
 
         return view;
     }
 
-    public void isLogin(View view) {
-        // check auto login
+    public void autoLogin(View view) {
 
-        if (mRememberView.isChecked() && !depreactionError) {
+        if (AppData.getRemember()) {
+
             String token = AppData.getToken();
-            MJPApi.shared().setToken(token);
 
-            showLoading(view);
-            loading.setBackground(R.color.colorPrimary);
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    AppData.loadData();
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    if (LoginFragment.this.isResumed()) {
-                        goMain();
-                    } else {
-                        isLoggedin = true;
+            if (!token.isEmpty()) {
+
+                MJPApi.shared().setToken(new AuthToken(token));
+
+                showLoading(view);
+
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() {
+                        AppData.loadData();
                     }
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
-        }
-
-        isLoggedin = false;
-
-    }
-
-    private  void checkDeprecation(final View view) {
-        showLoading(view);
-        try {
-            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            versionName = packageInfo.versionName.replace("-beta", "");
-            versionCode = packageInfo.versionCode;
-
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    String query = null;
-                    deprecations  = MJPApi.shared().loadDeprecations();
-
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    for (int i=0; i<deprecations.size(); i++) {
-                        if (deprecations.get(i).getPlatform().equals("ANDROID")) {
-                            if (versionCompare(versionName, deprecations.get(i).getError()) <= 0) {
-                                depreactionError = true;
-                                showDeprecationError();
-                            } else if (versionCompare(versionName, deprecations.get(i).getWarning()) <= 0) {
-                                depreactionError = false;
-                                showDeprecationWarning();
-                            } else {
-                                depreactionError = false;
-                                isLogin(view);
-                            }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        if (LoginFragment.this.isResumed()) {
+                            goMain();
+                        } else {
+                            isLoggedin = true;
                         }
                     }
-                }
-
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+                return;
+            }
         }
+
+        MJPApi.shared().clearToken();
+        AppData.clearData();
     }
 
-    public void showDeprecationError() {
-        Popup popup = new Popup(getContext(), "Your app is out of date, you must upgrade to continue", true);
-        popup.addGreenButton("Update", new View.OnClickListener() {
+    private  void checkDeprecation(View view) {
+        showLoading(view);
+
+        new APITask(new APIAction() {
             @Override
-            public void onClick(View view) {
-                goToGooglePlayStore();
+            public void run() {
+                deprecations  = MJPApi.shared().loadDeprecations();
             }
-        });
-        popup.addGreyButton("Close app", new View.OnClickListener() {
+        }).addListener(new APITaskListener() {
             @Override
-            public void onClick(View v) {
-                android.os.Process.killProcess(android.os.Process.myPid());
+            public void onSuccess() {
+                hideLoading();
+
+                if (deprecations.size() == 0) {
+                    autoLogin(null);
+                    return;
+                }
+
+                int versionCode = 0;
+                try {
+                    PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+                    versionCode = packageInfo.versionCode;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                for (Deprecation deprecation : deprecations) {
+                    if (deprecation.getPlatform().equals("ANDROID")) {
+                        if (versionCode < Integer.parseInt(deprecation.getError())) {
+
+                            Popup popup = new Popup(getContext(), "Your app is out of date, you must upgrade to continue", true);
+                            popup.addGreenButton("Update", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    goToGooglePlayStore();
+                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                }
+                            });
+                            popup.addGreyButton("Close app", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                }
+                            });
+                            popup.show();
+
+                        } else if (versionCode < Integer.parseInt(deprecation.getWarning())) {
+
+                            Popup popup = new Popup(getContext(), "Your app is out of date, update now to take advantage of the latest features", true);
+                            popup.addGreenButton("Update", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    goToGooglePlayStore();
+                                }
+                            });
+                            popup.addGreyButton("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    autoLogin(null);
+                                }
+                            });
+                            popup.show();
+
+                        } else {
+                            autoLogin(null);
+                        }
+                        break;
+                    }
+                }
             }
-        });
-        popup.show();
+
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
-
-    public void showDeprecationWarning() {
-        Popup popup = new Popup(getContext(), "Your app is out of date, update now to take advantage of the latest features", true);
-        popup.addGreenButton("Update", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToGooglePlayStore();
-            }
-        });
-        popup.addGreyButton("Dismiss", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        popup.show();
-    }
-
-    public void goToGooglePlayStore() {
-
-        final String appPackageName = getContext().getPackageName(); // getPackageName() from Context or Activity object
+    void goToGooglePlayStore() {
+        final String appPackageName = getContext().getPackageName();
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
         } catch (android.content.ActivityNotFoundException e) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
-
     }
 
-    public static int versionCompare(String str1, String str2) {
-        String[] values1 = str1.split("\\.");
-        String[] values2 = str2.split("\\.");
-        int i = 0;
-        // set index to first non-equal ordinal or length of shortest version string
-        while (i < values1.length && i < values2.length && values1[i].equals(values2[i])) {
-            i++;
-        }
-        // compare first non-equal ordinal number
-        if (i < values1.length && i < values2.length) {
-            int diff = Integer.valueOf(values1[i]).compareTo(Integer.valueOf(values2[i]));
-            return Integer.signum(diff);
-        }
-        // the strings are equal or one string is a substring of the other
-        // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
-        return Integer.signum(values1.length - values2.length);
+    private void login() {
+        showLoading();
+
+        new APITask(new APIAction() {
+            @Override
+            public void run() {
+                String email = mUserEmailView.getText().toString().trim();
+                String password = mUserPassView.getText().toString();
+                Boolean remember = mRememberView.isChecked();
+
+                AuthToken token;
+                if (status == LoginFragment.Status.LOGIN) {
+                    Login login = new Login(email, password);
+                    token = MJPApi.shared().login(login);
+                } else {
+                    Registration registration = new Registration(email, password, password);
+                    token = MJPApi.shared().register(registration);
+                }
+
+                AppData.saveEmail(email);
+                AppData.saveRemember(remember, remember ? token.getKey() : "");
+
+                MJPApi.shared().setToken(token);
+                AppData.loadData();
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                if (LoginFragment.this.isResumed()) {
+                    goMain();
+                } else {
+                    isLoggedin = true;
+                }
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
+    void goMain() {
+        User user = AppData.user;
+
+        if (user.isRecruiter()) {
+            getApp().setRootFragement(R.id.menu_find_talent);
+            return;
+        }
+
+        if (user.isJobSeeker()) {
+            if (AppData.profile == null) {
+                getApp().setRootFragement(R.id.menu_job_profile);
+            } else {
+                getApp().setRootFragement(R.id.menu_find_job);
+            }
+            return;
+        }
+
+        Popup popup = new Popup(getContext(), "Choose User Type", false);
+        popup.addYellowButton("Get a Job", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppData.userRole = Role.JOB_SEEKER_ID;
+
+                Intent intent = new Intent(getApp(), IntroActivity.class);
+                startActivity(intent);
+            }
+        });
+        popup.addGreenButton("I Need Staff", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppData.userRole = Role.RECRUITER_ID;
+                getApp().setRootFragement(R.id.menu_business);
+            }
+        });
+        popup.show();
+
+    }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (isLoggedin) {
-            goMain();
-        }
+    protected void showLoading(String label, View view) {
+        super.showLoading(label, view);
+        loading.setBackground(R.color.colorPrimary);
     }
 
     @Override
@@ -304,183 +355,59 @@ public class LoginFragment extends FormFragment {
                 });
     }
 
-    private void login() {
-        showLoading();
-        loading.setBackground(R.color.colorPrimary);
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() throws MJPApiException {
-                String email = mUserEmailView.getText().toString().trim();
-                String password = mUserPassView.getText().toString();
-                Boolean remember = mRememberView.isChecked();
-
-                AuthToken token;
-                if (status == LoginFragment.Status.LOGIN) {
-                    token = MJPApi.shared().login(email, password);
-                } else {
-                    token = MJPApi.shared().register(email, password, password);
-                }
-
-                AppData.loadData();
-                AppData.saveToken(remember ? token.getKey() : "");
-                AppData.saveLoginInfo(email, remember);
-            }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                if (LoginFragment.this.isResumed()) {
-                    goMain();
-                } else {
-                    isLoggedin = true;
-                }
-            }
-            @Override
-            public void onError(JsonNode errors) {
-                errorHandler(errors);
-            }
-        }).execute();
-    }
-
-    void showIntro() {
-        showIntro = false;
-        isLoggedin = true;
-        Intent intent = new Intent(getApp(), IntroActivity.class);
-        startActivity(intent);
-    }
-
-    void goMain() {
-        User user = AppData.user;
-
-        if (user.isRecruiter()) {
-            showMainPage(AppData.PAGE_FIND_TALENT);
-            getApp().startNewMessageCount();
-            return;
+        if (isLoggedin) {
+            goMain();
         }
-
-        if (user.isJobSeeker()) {
-            if (AppData.existProfile) {
-                showMainPage(AppData.PAGE_FIND_JOB);
-                getApp().startNewMessageCount();
-            } else {
-                showMainPage(AppData.PAGE_JOB_PROFILE);
-            }
-            return;
-        }
-
-        switch (AppData.getUserType()) {
-            case AppData.JOBSEEKER:
-                if (showIntro) {
-                    showIntro();
-                } else {
-                    showMainPage(AppData.PAGE_VIEW_PROFILE);
-                }
-                break;
-            case AppData.RECRUITER:
-                showMainPage(AppData.PAGE_ADD_JOB);
-                break;
-            default:
-                Popup popup = new Popup(getContext(), "Choose User Type", false);
-                popup.addYellowButton("Get a Job", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AppData.saveUserType(AppData.JOBSEEKER);
-                        if (showIntro) {
-                            showIntro();
-                        } else {
-                            showMainPage(AppData.PAGE_VIEW_PROFILE);
-                        }
-                    }
-                });
-                popup.addGreenButton("I Need Staff", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AppData.saveUserType(AppData.RECRUITER);
-                        showMainPage(AppData.PAGE_ADD_JOB);
-                    }
-                });
-                popup.show();
-                break;
-        }
-
-    }
-
-    void showMainPage(int pageID) {
-        getApp().reloadMenu();
-        getApp().setRootFragement(pageID);
     }
 
     @OnClick(R.id.login_button)
     void onLogin() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            if (valid()) {
-                login();
-            }
-        }
-
-    }
-
-    @OnClick(R.id.register_button1)
-    void onRegister1() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            if (valid()) {
-                AppData.saveUserType(AppData.JOBSEEKER);
-                login();
-            }
+        if (valid()) {
+            login();
         }
     }
 
-    @OnClick(R.id.register_button2)
-    void onRegister2() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            if (valid()) {
-                AppData.saveUserType(AppData.RECRUITER);
-                login();
-            }
+    @OnClick(R.id.register_button)
+    void onRegister() {
+        if (valid()) {
+            login();
         }
     }
 
     @OnClick(R.id.reset_button)
     void onResetPassword() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            if (valid()) {
-                showLoading();
-                loading.setBackground(R.color.colorPrimary);
+        if (valid()) {
+            showLoading();
 
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        String email = mResetEmailView.getText().toString().trim();
-                        MJPApi.shared().resetPassword(email);
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        hideLoading();
-                        Popup popup = new Popup(getContext(), "Password reset requested, please check your email.", true);
-                        popup.addGreyButton("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                onResetCancel();
-                            }
-                        });
-                        popup.show();
-                    }
+            new APITask(new APIAction() {
+                @Override
+                public void run() {
+                    ResetPassword resetpassword = new ResetPassword(mResetEmailView.getText().toString().trim());
+                    MJPApi.shared().resetPassword(resetpassword);
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    hideLoading();
+                    Popup popup = new Popup(getContext(), "Password reset requested, please check your email.", true);
+                    popup.addGreyButton("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onResetCancel();
+                        }
+                    });
+                    popup.show();
+                }
 
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
         }
     }
 
@@ -488,44 +415,28 @@ public class LoginFragment extends FormFragment {
 
     @OnClick(R.id.go_register)
     void onShowRegister() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            status = Status.REGISTER;
-            movingView(loginPanel, registerPanel, -1);
-        }
+        status = Status.REGISTER;
+        movingView(loginPanel, registerPanel, -1);
     }
 
     @OnClick(R.id.go_login)
     void onShowLogin() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            status = Status.LOGIN;
-            movingView(registerPanel, loginPanel, 1);
-        }
+        status = Status.LOGIN;
+        movingView(registerPanel, loginPanel, 1);
     }
 
     @OnClick(R.id.forgot_password)
     void onShowReset() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            status = Status.RESET;
-            mResetEmailView.setText(mUserEmailView.getText());
-            movingView(loginContainer, resetContainer, -1);
-        }
+        status = Status.RESET;
+        mResetEmailView.setText(mUserEmailView.getText());
+        movingView(loginContainer, resetContainer, -1);
     }
 
     @OnClick(R.id.reset_cancel)
     void onResetCancel() {
-        if (depreactionError) {
-            showDeprecationError();
-        } else {
-            status = Status.LOGIN;
-            mUserEmailView.setText(mResetEmailView.getText());
-            movingView(resetContainer, loginContainer, 1);
-        }
+        status = Status.LOGIN;
+        mUserEmailView.setText(mResetEmailView.getText());
+        movingView(resetContainer, loginContainer, 1);
     }
 
     private boolean isAnimation = false;
@@ -579,15 +490,12 @@ public class LoginFragment extends FormFragment {
         });
     }
 
-    /* loading icon */
-
     /* select server */
 
     @OnClick(R.id.select_server)
     void onSelectServer() {
         new BottomSheetBuilder(getApp())
                 .setMode(BottomSheetBuilder.MODE_LIST)
-                .addTitleItem("Select")
                 .addItem(0, "https://app.myjobpitch.com/", R.drawable.ic_send)
                 .addItem(1, "https://test.sclabs.co.uk/", R.drawable.ic_send)
                 .addItem(2, "https://demo.sclabs.co.uk/", R.drawable.ic_send)
@@ -596,10 +504,10 @@ public class LoginFragment extends FormFragment {
                     @Override
                     public void onBottomSheetItemClick(MenuItem item) {
                         String apiUrl = item.getTitle().toString();
-                        mSelectServer.setText(apiUrl);
-                        AppData.saveServerUrl(apiUrl);
-                        MJPApi.apiUrl = apiUrl;
+                        mAPIButton.setText(apiUrl);
                         MJPApi.instance = null;
+                        MJPApi.apiUrl = apiUrl;
+                        AppData.saveServerUrl(apiUrl);
                     }
                 })
                 .createDialog()

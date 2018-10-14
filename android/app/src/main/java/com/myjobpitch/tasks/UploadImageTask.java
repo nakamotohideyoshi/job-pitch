@@ -23,7 +23,7 @@ public class UploadImageTask extends APITask {
         super(new APIAction() {
 
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 try {
                     File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
                     if (!dir.exists()) {
@@ -55,7 +55,7 @@ public class UploadImageTask extends APITask {
                         image.setImage(new FileSystemResource(outputFile));
                         try {
                             MJPApi.shared().uploadImage(endpoint, objectKey, image);
-                        } catch (MJPApiException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } finally {

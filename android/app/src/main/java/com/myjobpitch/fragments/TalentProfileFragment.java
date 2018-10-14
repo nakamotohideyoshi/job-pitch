@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,7 +169,7 @@ public class TalentProfileFragment extends FormFragment {
         imageSelector = new ProfileImageSelector(mProfileImage, null);
 
         // data
-        for (Sex sex : AppData.get(Sex.class)) {
+        for (Sex sex : AppData.sexes) {
             mSexNames.add(sex.getName());
         }
         mSexView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mSexNames));
@@ -179,7 +180,7 @@ public class TalentProfileFragment extends FormFragment {
                 showLoading(view);
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                         AppData.existProfile = jobSeeker.getProfile() != null;
                     }
@@ -240,11 +241,11 @@ public class TalentProfileFragment extends FormFragment {
         mAgePublicView.setChecked(jobSeeker.getAge_public());
 
         if (jobSeeker.getSex() != null) {
-            mSexView.setText(AppData.get(Sex.class, jobSeeker.getSex()).getName());
+            mSexView.setText(AppData.getNameById(AppData.sexes, jobSeeker.getSex()));
         }
         mSexPublicView.setChecked(jobSeeker.getSex_public());
         if (jobSeeker.getNationality() != null) {
-            mNationalityView.setText(AppData.get(Nationality.class, jobSeeker.getNationality()).getName());
+            mNationalityView.setText(AppData.getNameById(AppData.nationalities, jobSeeker.getNationality()));
         }
         mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
         mDescriptionView.setText(jobSeeker.getDescription());
@@ -268,16 +269,15 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_nationality_button)
     void onNationality() {
-        final List<Nationality> nationalities = AppData.get(Nationality.class);
         ArrayList<SelectItem> items = new ArrayList<>();
-        for (Nationality nationality : nationalities) {
+        for (Nationality nationality : AppData.nationalities) {
             items.add(new SelectItem(nationality.getName(), false));
         }
 
         new SelectDialog(getApp(), "Select Nationality", items, false, new SelectDialog.Action() {
             @Override
             public void apply(int selectedIndex) {
-                mNationalityView.setText(nationalities.get(selectedIndex).getName());
+                mNationalityView.setText(AppData.nationalities.get(selectedIndex).getName());
             }
         });
     }
@@ -399,10 +399,10 @@ public class TalentProfileFragment extends FormFragment {
         jobSeekerForUpdate.setAge_public(mAgePublicView.isChecked());
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
-            jobSeekerForUpdate.setSex(AppData.get(Sex.class).get(sexIndex).getId());
+            jobSeekerForUpdate.setSex(AppData.sexes.get(sexIndex).getId());
         }
         jobSeekerForUpdate.setSex_public(mSexPublicView.isChecked());
-        for (Nationality nationality : AppData.get(Nationality.class)) {
+        for (Nationality nationality : AppData.nationalities) {
             if (nationality.getName().equals(mNationalityView.getText().toString())) {
                 jobSeekerForUpdate.setNationality(nationality.getId());
                 break;
@@ -432,7 +432,7 @@ public class TalentProfileFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
 
                 jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker == null ? null : jobSeeker.getId(), jobSeekerForUpdate, null, null);
 
@@ -466,7 +466,7 @@ public class TalentProfileFragment extends FormFragment {
                             // Upload image
                             try {
                                 jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, new FileSystemResource(outputFile), null);
-                            } catch (MJPApiException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 return;
                             }
@@ -508,7 +508,7 @@ public class TalentProfileFragment extends FormFragment {
                             // Upload image
                             try {
                                 jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, null, new FileSystemResource(outputFile));
-                            } catch (MJPApiException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 return;
                             }
@@ -595,60 +595,74 @@ public class TalentProfileFragment extends FormFragment {
 
     void uploadPitch() {
 
-        AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
-        PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
-        upload.setPitchUploadListener(new PitchUploadListener() {
+        new APITask(new APIAction() {
             @Override
-            public void onStateChange(int state) {
-                switch (state) {
-                    case PitchUpload.STARTING:
-                        break;
-                    case PitchUpload.UPLOADING:
-                        loading.setType(Loading.Type.PROGRESS);
-                        break;
-                    case PitchUpload.PROCESSING:
-                        loading.setType(Loading.Type.SPIN);
-                        break;
-                    case PitchUpload.COMPLETE:
-                        new APITask(new APIAction() {
-                            @Override
-                            public void run() throws MJPApiException {
-                                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                            }
-                        }).addListener(new APITaskListener() {
-                            @Override
-                            public void onSuccess() {
-                                mPitch = jobSeeker.getPitch();
-                                mVideoPath = null;
-                                saveCompleted();
-                            }
-                            @Override
-                            public void onError(JsonNode errors) {
-                                errorHandler(errors);
-                            }
-                        }).execute();
-                        break;
-                }
+            public void run() {
+                mPitch = MJPApi.shared().create(Pitch.class, new Pitch());
             }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp(), "pitches");
+                PitchUpload upload = pitchUploader.upload(new File(mVideoPath), mPitch);
+                upload.setPitchUploadListener(new PitchUploadListener() {
+                    @Override
+                    public void onStateChange(int state) {
+                        switch (state) {
+                            case PitchUpload.STARTING:
+                                break;
+                            case PitchUpload.UPLOADING:
+                                loading.setType(Loading.Type.PROGRESS);
+                                break;
+                            case PitchUpload.PROCESSING:
+                                loading.setType(Loading.Type.SPIN);
+                                break;
+                            case PitchUpload.COMPLETE:
+                                new APITask(new APIAction() {
+                                    @Override
+                                    public void run() {
+                                        jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                                    }
+                                }).addListener(new APITaskListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        mPitch = jobSeeker.getPitch();
+                                        mVideoPath = null;
+                                        saveCompleted();
+                                    }
+                                    @Override
+                                    public void onError(JsonNode errors) {
+                                        errorHandler(errors);
+                                    }
+                                }).execute();
+                                break;
+                        }
+                    }
 
-            @Override
-            public void onProgress(double current, long total) {
-                int complete = (int) (((float) current / total) * 100);
-                if (complete < 100) {
-                    loading.setProgress(complete);
-                    loading.setLabel(Integer.toString(complete) + "%");
-                }
-            }
+                    @Override
+                    public void onProgress(double current, long total) {
+                        int complete = (int) (((float) current / total) * 100);
+                        if (complete < 100) {
+                            loading.setProgress(complete);
+                            loading.setLabel(Integer.toString(complete) + "%");
+                        }
+                    }
 
-            @Override
-            public void onError(String message) {
-                hideLoading();
-                Popup popup = new Popup(getContext(), "Error uploading video!", true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                    @Override
+                    public void onError(String message) {
+                        hideLoading();
+                        Popup popup = new Popup(getContext(), "Error uploading video!", true);
+                        popup.addGreyButton("Ok", null);
+                        popup.show();
+                    }
+                });
+                upload.start();
             }
-        });
-        upload.start();
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
     }
 
@@ -661,9 +675,9 @@ public class TalentProfileFragment extends FormFragment {
             viewFragment.jobSeeker = null;
             getApp().popFragment();
         } else {
-            getApp().reloadMenu();
+//            getApp().reloadMenu();
             AppData.user.setJob_seeker(jobSeeker.getId());
-            getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
+            getApp().setRootFragement(R.id.menu_job_profile);
         }
     }
 

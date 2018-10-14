@@ -49,7 +49,7 @@ public class MessageListFragment extends ApplicationsFragment {
         view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                getApp().setRootFragement(R.id.menu_record);
             }
         });
 
@@ -69,15 +69,11 @@ public class MessageListFragment extends ApplicationsFragment {
     }
 
     public void updateMessage() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0) {
-            updateMessage(getApp().lastMessage);
-        }
     }
 
 
     @Override
-    protected List<Application> getApplications() throws MJPApiException {
+    protected List<Application> getApplications() {
         Integer jobseekerId = AppData.user.getJob_seeker();
         if (jobseekerId != null) {
             jobSeeker = MJPApi.shared().get(JobSeeker.class, jobseekerId);
@@ -122,7 +118,7 @@ public class MessageListFragment extends ApplicationsFragment {
                 setItemTitle(view, job.getTitle());
                 setItemSubTitle(view, AppHelper.getBusinessName(job));
             } else {
-                JobSeeker jobSeeker = application.getJobSeeker();
+                JobSeeker jobSeeker = application.getJob_seeker();
                 AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
                 setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
                 setItemSubTitle(view, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
@@ -131,7 +127,7 @@ public class MessageListFragment extends ApplicationsFragment {
             SimpleDateFormat format = new SimpleDateFormat("MMM d, h:mm a");
             setItemAttributes(view, format.format(lastMessage.getCreated()));
 
-            if (lastMessage.getFrom_role() == AppData.getUserRole().getId()) {
+            if (lastMessage.getFrom_role() == AppData.userRole) {
                 setItemDesc(view, "You: " + lastMessage.getContent());
             } else {
                 setItemDesc(view, lastMessage.getContent());
@@ -146,7 +142,7 @@ public class MessageListFragment extends ApplicationsFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 105) {
-            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+            getApp().setRootFragement(R.id.menu_messages);
         } else {
             super.onMenuSelected(menuID);
         }
@@ -159,7 +155,7 @@ public class MessageListFragment extends ApplicationsFragment {
         if (AppData.user.isJobSeeker()) {
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                     AppData.existProfile = jobSeeker.getProfile() != null;
                 }
@@ -231,15 +227,12 @@ public class MessageListFragment extends ApplicationsFragment {
 
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     MJPApi.shared().update(MessageForUpdate.class, messageForUpdate);
                 }
             }).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
-
-                    getApp().newMessageCount = 0;
-                    getApp().reloadMenu();
                 }
 
                 @Override

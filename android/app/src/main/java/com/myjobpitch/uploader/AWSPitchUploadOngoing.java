@@ -11,8 +11,8 @@ public class AWSPitchUploadOngoing extends AWSPitchUploadBase {
     private final TransferUtility mTransferUtility;
     private boolean mCancelled;
 
-    public AWSPitchUploadOngoing(Pitch pitch, TransferUtility transferUtility, TransferObserver transferObserver) {
-        super(pitch);
+    public AWSPitchUploadOngoing(Pitch pitch, String endpoint, TransferUtility transferUtility, TransferObserver transferObserver) {
+        super(pitch, endpoint);
         this.mTransferUtility = transferUtility;
         this.mObserver = transferObserver;
     }

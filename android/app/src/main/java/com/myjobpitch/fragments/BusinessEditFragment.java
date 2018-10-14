@@ -77,7 +77,7 @@ public class BusinessEditFragment extends FormFragment {
             showLoading(view);
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     business = MJPApi.shared().getUserBusiness(business.getId());
                 }
             }).addListener(new APITaskListener() {
@@ -160,7 +160,7 @@ public class BusinessEditFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 if (business.getId() == null) {
                     business = MJPApi.shared().createBusiness(business);
                     AppData.user = MJPApi.shared().getUser();
@@ -199,7 +199,7 @@ public class BusinessEditFragment extends FormFragment {
 
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     MJPApi.shared().deleteBusinessImage(business.getImages().get(0).getId());
                 }
             }).addListener(new APITaskListener() {
@@ -225,7 +225,7 @@ public class BusinessEditFragment extends FormFragment {
         }
 
         if (isFirstCreate) {
-            getApp().reloadMenu();
+//            getApp().reloadMenu();
             getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                     .putBoolean("workplace", true)
                     .apply();

@@ -1,9 +1,12 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.MJPAPIObject;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pitch extends MJPAPIObject {
+
     private String token;
     private String video;
     private String thumbnail;

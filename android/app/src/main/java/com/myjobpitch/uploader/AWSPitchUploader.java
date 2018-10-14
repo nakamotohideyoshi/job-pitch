@@ -19,9 +19,11 @@ public class AWSPitchUploader implements PitchUploader {
 
     private final Context applicationContext;
     private final TransferUtility transferUtility;
+    private final String endpoint;
 
-    public AWSPitchUploader(Context applicationContext) {
+    public AWSPitchUploader(Context applicationContext, String endpoint) {
         this.applicationContext = applicationContext;
+        this.endpoint = endpoint;
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 applicationContext,
                 "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
@@ -32,8 +34,8 @@ public class AWSPitchUploader implements PitchUploader {
     }
 
     @Override
-    public PitchUpload upload(File file) {
-        return new AWSPitchUpload(transferUtility, file);
+    public PitchUpload upload(File file, Pitch pitch) {
+        return new AWSPitchUpload(transferUtility, file, pitch, endpoint);
     }
 
     @Override
@@ -45,11 +47,11 @@ public class AWSPitchUploader implements PitchUploader {
                     if (state.equals(TransferState.COMPLETED) || state.equals(TransferState.CANCELED) || state.equals(TransferState.FAILED)) {
                         transferUtility.deleteTransferRecord(transfer.getId());
                     } else {
-                        callback.uploadInProgress(new AWSPitchUploadOngoing(pitch, transferUtility, transfer));
+                        callback.uploadInProgress(new AWSPitchUploadOngoing(pitch, endpoint, transferUtility, transfer));
                         return;
                     }
                 }
-                callback.uploadInProgress(new AWSPitchUploadProcessing(pitch));
+                callback.uploadInProgress(new AWSPitchUploadProcessing(pitch, endpoint));
             }
         callback.noUploadInProgress();
     }

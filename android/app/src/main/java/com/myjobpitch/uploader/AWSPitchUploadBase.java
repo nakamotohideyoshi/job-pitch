@@ -7,10 +7,12 @@ import com.myjobpitch.api.data.Pitch;
 public abstract class AWSPitchUploadBase implements PitchUpload, TransferListener {
 
     protected Pitch pitch;
+    protected String endpoint;
     protected PitchUploadListener listener;
 
-    public AWSPitchUploadBase(Pitch pitch) {
+    public AWSPitchUploadBase(Pitch pitch, String endpoint) {
         this.pitch = pitch;
+        this.endpoint = endpoint;
     }
 
     @Override
@@ -21,7 +23,7 @@ public abstract class AWSPitchUploadBase implements PitchUpload, TransferListene
     @Override
     public synchronized void onStateChanged(int id, TransferState state) {
         if (state.equals(TransferState.COMPLETED))
-            new AWSPitchUploadProcessing(pitch).setPitchUploadListener(listener);
+            new AWSPitchUploadProcessing(pitch, endpoint).setPitchUploadListener(listener);
     }
 
     @Override

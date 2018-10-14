@@ -82,17 +82,17 @@ public class JobProfileFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         // data
-        mSectors = AppData.get(Sector.class);
+        mSectors = AppData.sectors;
 
         mContractNames.add("Any");
-        for (Contract contract : AppData.get(Contract.class)) {
+        for (Contract contract : AppData.contracts) {
             mContractNames.add(contract.getName());
         }
         mContractView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mContractNames));
         mContractView.setText(mContractNames.get(0));
 
         mHoursNames.add("Any");
-        for (Hours hours : AppData.get(Hours.class)) {
+        for (Hours hours : AppData.hours) {
             mHoursNames.add(hours.getName());
         }
         mHoursView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mHoursNames));
@@ -106,7 +106,7 @@ public class JobProfileFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 if (jobSeeker.getProfile() != null) {
                     profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
@@ -154,11 +154,11 @@ public class JobProfileFragment extends FormFragment {
         }
 
         if (profile.getContract() != null) {
-            mContractView.setText(AppData.get(Contract.class, profile.getContract()).getName());
+            mContractView.setText(AppData.getNameById(AppData.contracts, profile.getContract()));
         }
 
         if (profile.getHours() != null) {
-            mHoursView.setText(AppData.get(Hours.class, profile.getHours()).getName());
+            mHoursView.setText(AppData.getNameById(AppData.hours, profile.getHours()));
         }
 
         int index = radiusValues.indexOf(profile.getSearch_radius());
@@ -254,12 +254,12 @@ public class JobProfileFragment extends FormFragment {
 
         int contractIndex = mContractNames.indexOf(mContractView.getText().toString()) - 1;
         if (contractIndex != -1) {
-            profile.setContract(AppData.get(Sex.class).get(contractIndex).getId());
+            profile.setContract(AppData.contracts.get(contractIndex).getId());
         }
 
         int hoursIndex = mHoursNames.indexOf(mHoursView.getText().toString()) - 1;
         if (hoursIndex != -1) {
-            profile.setHours(AppData.get(Hours.class).get(hoursIndex).getId());
+            profile.setHours(AppData.hours.get(hoursIndex).getId());
         }
 
         int radiusIndex = mRadiusNames.indexOf(mRadiusView.getText().toString());
@@ -274,7 +274,7 @@ public class JobProfileFragment extends FormFragment {
         showLoading();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 if (profile.getId() == null) {
                     profile = MJPApi.shared().create(JobProfile.class, profile);
                 } else {
@@ -290,11 +290,11 @@ public class JobProfileFragment extends FormFragment {
                     @Override
                     public void onClick(View view) {
                         if (!AppData.existProfile) {
-                            getApp().reloadMenu();
+//                            getApp().reloadMenu();
                             if (jobSeeker.getPitch() == null) {
-                                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                                getApp().setRootFragement(R.id.menu_record);
                             } else {
-                                getApp().setRootFragement(AppData.PAGE_FIND_JOB);
+                                getApp().setRootFragement(R.id.menu_find_job);
                             }
                             AppData.existProfile = true;
                         }

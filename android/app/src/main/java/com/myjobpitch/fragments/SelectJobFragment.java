@@ -64,30 +64,28 @@ public class SelectJobFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_select_job, container, false);
         ButterKnife.bind(this, view);
 
-        jobActiveStatus = AppData.get(JobStatus.class, "OPEN").getId();
+        jobActiveStatus = JobStatus.OPEN_ID;
 
         // set header
 
-        MainActivity.MenuItemInfo menuItemInfo = getApp().getCurrentPageMenuInfo();
-
         pageIconView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
-        pageIconView.setImageResource(menuItemInfo.iconRes);
+        pageIconView.setImageDrawable(getApp().getCurrentMenu().getIcon());
 
-        final int pageId = getApp().getCurrentPageID();
+        final int pageId = getApp().getCurrentMenuID();
         switch (pageId) {
-            case AppData.PAGE_FIND_TALENT:
+            case R.id.menu_find_talent:
                 commentView.setText("Select job bellow to start finding talent for your business.");
                 break;
-            case AppData.PAGE_R_APPLICATIONS:
+            case R.id.menu_applications:
                 commentView.setText("Select a job below to view job seekers who have expressed interest in a job.");
                 break;
-            case AppData.PAGE_CONNECTIONS:
+            case R.id.menu_connections:
                 commentView.setText("Select a job below to view job seekers you have connected with.");
                 break;
-            case AppData.PAGE_MY_SHORTLIST:
+            case R.id.menu_shortlist:
                 commentView.setText("Select a job below to view the job seekers you have shortlisted for that role.");
                 break;
-            case AppData.PAGE_R_INTERVIEWS:
+            case R.id.menu_rc_interview:
                 commentView.setText("Select a job below to view and arrange interviews.");
                 break;
         }
@@ -122,11 +120,11 @@ public class SelectJobFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Job job = adapter.getItem(position);
-                if (pageId == AppData.PAGE_FIND_TALENT) {
+                if (pageId == R.id.menu_find_talent) {
                     FindTalentFragment fragment = new FindTalentFragment();
                     fragment.job = job;
                     getApp().pushFragment(fragment);
-                } else if (pageId == AppData.PAGE_R_INTERVIEWS) {
+                } else if (pageId == R.id.menu_rc_interview) {
                     InterviewsFragment fragment = new InterviewsFragment();
                     fragment.job = job;
                     fragment.title = title;
@@ -134,15 +132,11 @@ public class SelectJobFragment extends BaseFragment {
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
                     fragment.job = job;
-                    fragment.listKind = pageId - AppData.PAGE_R_APPLICATIONS;
+                    fragment.listKind = pageId - R.id.menu_applications;
                     getApp().pushFragment(fragment);
                 }
             }
         });
-
-        // new message indication
-        addMenuItem(MENUGROUP1, 107, "All Messages", R.drawable.menu_message10);
-        setVisibleMenuItem(107, false);
 
         // loading data
 
@@ -157,7 +151,7 @@ public class SelectJobFragment extends BaseFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 List<Job> data = MJPApi.shared().getUserJobs(null);
                 for(int i=0; i<data.size(); i++) {
                     Job job = data.get(i);
@@ -185,7 +179,7 @@ public class SelectJobFragment extends BaseFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 107) {
-            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+            getApp().setRootFragement(R.id.menu_messages);
         } else {
             super.onMenuSelected(menuID);
         }

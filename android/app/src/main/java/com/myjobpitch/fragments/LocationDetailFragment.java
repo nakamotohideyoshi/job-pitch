@@ -115,7 +115,7 @@ public class LocationDetailFragment extends BaseFragment {
         showLoading(view);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 location = MJPApi.shared().getUserLocation(location.getId());
             }
         }).addListener(new APITaskListener() {
@@ -149,7 +149,7 @@ public class LocationDetailFragment extends BaseFragment {
         final List<Job> jobs = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 jobs.addAll(MJPApi.shared().getUserJobs(location.getId()));
             }
         }).addListener(new APITaskListener() {
@@ -206,7 +206,7 @@ public class LocationDetailFragment extends BaseFragment {
         showLoading();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().deleteLocation(location.getId());
             }
         }).addListener(new APITaskListener() {
@@ -239,7 +239,7 @@ public class LocationDetailFragment extends BaseFragment {
                 showLoading(listContainer);
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().deleteJob(job.getId());
                     }
                 }).addListener(new APITaskListener() {
@@ -302,7 +302,7 @@ public class LocationDetailFragment extends BaseFragment {
             Job job = getItem(position);
             AppHelper.showJobInfo(adapter.getItem(position), convertView);
 
-            if (job.getStatus() == AppData.get(JobStatus.class, "OPEN").getId()) {
+            if (job.getStatus() == JobStatus.OPEN_ID) {
                 convertView.setAlpha(1);
                 convertView.setBackgroundColor(0xFFFFFFFF);
                 TextView textView = AppHelper.getItemTitleView(convertView);

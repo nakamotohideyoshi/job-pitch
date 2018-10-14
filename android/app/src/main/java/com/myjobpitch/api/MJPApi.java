@@ -1,7 +1,5 @@
 package com.myjobpitch.api;
 
-import android.util.Log;
-
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
@@ -21,7 +19,6 @@ import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
 import com.myjobpitch.api.data.ExcludeJobSeeker;
 import com.myjobpitch.api.data.ExternalApplication;
-import com.myjobpitch.api.data.ExternalApplicationForResponse;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
@@ -29,7 +26,7 @@ import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewForCreation;
 import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobPitch;
+import com.myjobpitch.api.data.JobPitchForCreation;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerForUpdate;
@@ -44,6 +41,7 @@ import com.myjobpitch.api.data.PurchaseInfo;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.api.data.SpecificPitchForCreation;
 import com.myjobpitch.utils.AppData;
 
 import org.springframework.core.io.Resource;
@@ -52,13 +50,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Array;
@@ -82,101 +77,106 @@ public class MJPApi {
         return instance;
     }
 
-    private static final Map<Class<? extends MJPAPIObject>, String> classEndPoints;
-    static {
-        classEndPoints = new HashMap<>();
-        classEndPoints.put(JobProfile.class, "job-profiles");
-        classEndPoints.put(JobSeeker.class, "job-seekers");
-        classEndPoints.put(Pitch.class, "pitches");
-        classEndPoints.put(Job.class, "jobs");
-        classEndPoints.put(JobPitch.class, "job-videos");
-        classEndPoints.put(Location.class, "locations");
-        classEndPoints.put(Business.class, "businesses");
-        classEndPoints.put(Sector.class, "sectors");
-        classEndPoints.put(Contract.class, "contracts");
-        classEndPoints.put(Hours.class, "hours");
-        classEndPoints.put(Sex.class, "sexes");
-        classEndPoints.put(Nationality.class, "nationalities");
-        classEndPoints.put(JobStatus.class, "job-statuses");
-        classEndPoints.put(ApplicationStatus.class, "application-statuses");
-        classEndPoints.put(Role.class, "roles");
-        classEndPoints.put(Application.class, "applications");
-        classEndPoints.put(ApplicationForCreation.class, "applications");
-        classEndPoints.put(ApplicationShortlistUpdate.class, "applications");
-        classEndPoints.put(ApplicationStatusUpdate.class, "applications");
-        classEndPoints.put(MessageForCreation.class, "messages");
-        classEndPoints.put(MessageForUpdate.class, "messages");
-        classEndPoints.put(ProductToken.class, "google-play-products");
-    }
+    private static final Map<Class<? extends MJPAPIObject>, String> classEndPoints = new HashMap<Class<? extends MJPAPIObject>, String>() {{
+        put(JobProfile.class, "job-profiles");
+        put(JobSeeker.class, "job-seekers");
+        put(Pitch.class, "pitches");
+        put(Job.class, "jobs");
+        put(JobPitchForCreation.class, "job-videos");
+        put(Location.class, "locations");
+        put(Business.class, "businesses");
+        put(Sector.class, "sectors");
+        put(Contract.class, "contracts");
+        put(Hours.class, "hours");
+        put(Sex.class, "sexes");
+        put(Nationality.class, "nationalities");
+        put(JobStatus.class, "job-statuses");
+        put(ApplicationStatus.class, "application-statuses");
+        put(Role.class, "roles");
+        put(Application.class, "applications");
+        put(ApplicationForCreation.class, "applications");
+        put(ApplicationShortlistUpdate.class, "applications");
+        put(ApplicationStatusUpdate.class, "applications");
+        put(MessageForCreation.class, "messages");
+        put(MessageForUpdate.class, "messages");
+        put(ProductToken.class, "google-play-products");
+    }};
 
     private String apiRoot;
-	private RestTemplate rest;
-    private RestTemplate unbufferedRest;
-	private AuthToken token;
+    private AuthToken token;
+    private RestTemplate rest;
 
     public MJPApi(String apiRoot) {
-		this.token = null;
-		this.apiRoot = apiRoot;
+        this.token = null;
+        this.apiRoot = apiRoot;
         this.rest = new RestTemplate();
         this.rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         this.rest.getMessageConverters().add(new FormHttpMessageConverter());
-
-        this.unbufferedRest = new RestTemplate();
-        SimpleClientHttpRequestFactory unbufferedFactory = new SimpleClientHttpRequestFactory();
-        unbufferedFactory.setBufferRequestBody(false);
-        this.unbufferedRest.setRequestFactory(unbufferedFactory);
-        this.unbufferedRest.getMessageConverters().add(new ResourceHttpMessageConverter());
-        this.unbufferedRest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-	}
-
-	public MJPApi() {
-		this(apiUrl);
-	}
-
-	private HttpHeaders getDefaultHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", String.format("application/json; version=%d", AppData.API_VERSION));
-        return headers;
     }
 
-    private URI getTypeUrl(String path) {
-        return getTypeUrl(path, null);
+    public MJPApi() {
+        this(apiUrl);
     }
 
-	private URI getTypeUrl(String path, String query) {
-		try {
-            if (query != null)
-                return new URI(apiRoot + "api/" + path + "/?" + query);
-			return new URI(apiRoot + "api/" + path + "/");
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    public String getApiRoot() {
+        return apiRoot;
+    }
 
-    private URI getObjectUrl(String path, Integer id) {
+    public void setToken(AuthToken token) {
+        this.token = token;
+    }
+
+    public boolean isLogin() {
+        return token != null;
+    }
+
+    public void clearToken() {
+        token = null;
+    }
+
+
+    // ============================ get url ============================
+
+    private URI getUrl(String path) {
+        return getUrl(path, "");
+    }
+
+    private URI getUrl(String path, String query) {
         try {
-            if (id != null) {
-                return new URI(apiRoot + "api/" + path + "/" + id + "/");
-            }
-            return new URI(apiRoot + "api/" + path + "/");
+            String url = apiRoot + "api/" + path + "/" + (query == null ||  query.isEmpty() ? "" : "?" + query);
+            return new URI(url);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-	private URI getAuthUrl(String path) {
-		try {
-			return new URI(apiRoot + "api-rest-auth/" + path + "/");
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    private URI getUrl(String path, Integer id) {
+        try {
+            String url = apiRoot + "api/" + path + "/" + (id == null ? "" : id + "/");
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	private <T> HttpEntity<T> createAuthenticatedRequest(T object) {
-        return createAuthenticatedRequest(object, getDefaultHttpHeaders());
+    private URI getAuthUrl(String path) {
+        try {
+            return new URI(apiRoot + "api-rest-auth/" + path + "/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    // ============================ request ============================
+
+    private HttpHeaders getDefaultHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json; version=" + AppData.API_VERSION);
+        return headers;
     }
 
     private <T> HttpEntity<T> createAuthenticatedRequest(T object, HttpHeaders headers) {
@@ -190,261 +190,196 @@ public class MJPApi {
             }
         });
         return new HttpEntity<>(object, headers);
-	}
+    }
+
+    private <T> HttpEntity<T> createAuthenticatedRequest(T object) {
+        return createAuthenticatedRequest(object, getDefaultHttpHeaders());
+    }
 
     private HttpEntity<Void> createAuthenticatedRequest() {
-        return createAuthenticatedRequest((Void) null);
+        return createAuthenticatedRequest(null);
     }
 
-    public void setToken(String key) {
-        this.token = new AuthToken(key);
+
+    // ============================ method ============================
+
+    private <T> T get(URI url, Class<T> responseType) {
+        return rest.exchange(url, HttpMethod.GET, createAuthenticatedRequest(), responseType).getBody();
     }
 
-    public boolean isAuthenticated() {
-        return this.token != null;
+    private <T> List<T> get(Class<T> cls, URI uri) {
+        T[] dummyArray = (T[]) Array.newInstance(cls, 0);
+        Class<T[]> arrayCls = (Class<T[]>) dummyArray.getClass();
+        return Arrays.asList(get(uri, arrayCls));
     }
 
-    public AuthToken login(String email, String password) throws MJPApiException {
-        Login login = new Login(email, password);
-        URI url = getAuthUrl("login");
-        return doAuthentication(login, url);
+    private <T> T post(URI url, Object obj, Class<T> responseType) {
+        return rest.exchange(url, HttpMethod.POST, createAuthenticatedRequest(obj), responseType).getBody();
+//        return rest.postForObject(url, createAuthenticatedRequest(obj), responseType);
     }
 
-    public AuthToken register(String email, String password1, String password2) throws MJPApiException {
-        Registration registration = new Registration(email, password1, password2);
-        URI url = getAuthUrl("registration");
-        return doAuthentication(registration, url);
+    private <T> T put(URI url, Object obj, Class<T> responseType) {
+        return rest.exchange(url, HttpMethod.PUT, createAuthenticatedRequest(obj), responseType).getBody();
     }
 
-    public void resetPassword(String email) throws MJPApiException {
-        ResetPassword resetpassword = new ResetPassword(email);
-        URI url = getAuthUrl("password/reset");
-        try {
-            rest.postForObject(url, resetpassword, Object.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    private void delete(URI url) {
+        rest.exchange(url, HttpMethod.DELETE, createAuthenticatedRequest(), Object.class);
     }
 
-    public void changePassword(String password1, String password2) throws MJPApiException {
-        ChangePassword changepassword = new ChangePassword(password1, password2);
 
-        try {
-            rest.exchange(getAuthUrl("password/change"), HttpMethod.POST, createAuthenticatedRequest(changepassword), Object.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public <T extends MJPAPIObject> T get(Class<T> cls, Integer id) {
+        return get(getUrl(classEndPoints.get(cls), id), cls);
     }
 
-    private AuthToken doAuthentication(Object credentials, URI url) throws MJPApiException {
-        if (this.token != null) {
-            Log.e("MJPApi", "Already logged in!");
-            token = null;
-        }
-        try {
-            token = rest.postForObject(url, credentials, AuthToken.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-        return token;
+    public <T extends MJPAPIObject> List<T> get(Class<T> cls) {
+        return get(cls, getUrl(classEndPoints.get(cls)));
+    }
+
+    public <T extends  MJPAPIObject> List<T> get(Class<T> cls, String query) {
+        return get(cls, getUrl(classEndPoints.get(cls), query));
+    }
+
+    public <T extends MJPAPIObject> T create(Class<T> cls, T obj) {
+        return post(getUrl(classEndPoints.get(cls)), obj, cls);
+    }
+
+    public <T extends MJPAPIObject> T update(Class<T> cls, T obj) {
+        return put(getUrl(classEndPoints.get(cls), obj.getId()), obj, cls);
+    }
+
+    public <T extends MJPAPIObject> void delete(Class<T> cls, Integer id) {
+        delete(getUrl(classEndPoints.get(cls), id));
+    }
+
+
+    // ============================ api ============================
+
+    public List<Deprecation> loadDeprecations() {
+        return Arrays.asList(rest.getForObject(getUrl("deprecation"), Deprecation[].class));
+    }
+
+    public AuthToken login(Login object) {
+        return rest.postForObject(getAuthUrl("login"), object, AuthToken.class);
+    }
+
+    public AuthToken register(Registration object) {
+        return rest.postForObject(getAuthUrl("registration"), object, AuthToken.class);
+    }
+
+    public void resetPassword(ResetPassword object) {
+        rest.postForObject(getAuthUrl("password/reset"), object, Object.class);
+    }
+
+    public void changePassword(ChangePassword object) {
+        post(getAuthUrl("password/change"), object, Object.class);
     }
 
     public void logout() {
-        try {
-            Log.d("API", "Logging out");
-            rest.exchange(getAuthUrl("logout"), HttpMethod.POST, createAuthenticatedRequest(), Object.class);
-        } catch (Exception e){
-            Log.e("API", "Couldn't contact server to log out", e);
-        } finally {
-            this.token = null;
-        }
-	}
-
-	public User getUser() throws MJPApiException {
-        try {
-            return rest.exchange(getAuthUrl("user"), HttpMethod.GET, createAuthenticatedRequest(), User.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-	}
-
-    public User updateUser(User user) {
-        return rest.exchange(getAuthUrl("user"), HttpMethod.PUT, createAuthenticatedRequest(user), User.class).getBody();
+        post(getAuthUrl("logout"), null, Object.class);
     }
 
-    public List<Business> getUserBusinesses() throws MJPApiException {
-        return Arrays.asList(rest.exchange(getTypeUrl("user-businesses"), HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
+    public User getUser() {
+        return get(getAuthUrl("user"), User.class);
     }
 
-    public Business getUserBusiness(Integer id) throws MJPApiException {
-        return rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
+    public List<Business> getUserBusinesses() {
+        return Arrays.asList(get(getUrl("user-businesses"), Business[].class));
     }
 
-    public InitialTokens getInitialTokens() throws MJPApiException {
-        return rest.exchange(getTypeUrl("initial-tokens"), HttpMethod.GET, createAuthenticatedRequest(), InitialTokens.class).getBody();
-    }
-    public Business createBusiness(Business business) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl("user-businesses"), HttpMethod.POST, createAuthenticatedRequest(business), Business.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public Business getUserBusiness(Integer id) {
+        return get(getUrl("user-businesses", id), Business.class);
     }
 
-    public Business updateBusiness(Business business) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl("user-businesses", business.getId()), HttpMethod.PUT, createAuthenticatedRequest(business), Business.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public InitialTokens getInitialTokens() {
+        return get(getUrl("initial-tokens"), InitialTokens.class);
+    }
+    public Business createBusiness(Business business) {
+        return post(getUrl("user-businesses"), business, Business.class);
     }
 
-    public void deleteBusiness(Integer id) throws MJPApiException {
-        rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    public Business updateBusiness(Business business) {
+        return put(getUrl("user-businesses", business.getId()), business, Business.class);
     }
 
-    public Location createLocation(Location location) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl("user-locations"), HttpMethod.POST, createAuthenticatedRequest(location), Location.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void deleteBusiness(Integer id) {
+        delete(getUrl("user-businesses", id));
     }
 
-    public Location updateLocation(Location location) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl("user-locations", location.getId()), HttpMethod.PUT, createAuthenticatedRequest(location), Location.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public Location createLocation(Location location) {
+        return post(getUrl("user-locations"), location, Location.class);
     }
 
-    public List<Location> getUserLocations(Integer business_id) throws MJPApiException {
-        URI uri = getTypeUrl("user-locations", business_id != null ? String.format("business=%s", business_id) : null);
-        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Location[].class).getBody());
+    public Location updateLocation(Location location) {
+        return put(getUrl("user-locations", location.getId()), location, Location.class);
     }
 
-    public Location getUserLocation(Integer id) throws MJPApiException {
-        return rest.exchange(getObjectUrl("user-locations", id), HttpMethod.GET, createAuthenticatedRequest(), Location.class).getBody();
+    public List<Location> getUserLocations(Integer business_id) {
+        URI uri = getUrl("user-locations", business_id != null ? "business=" + business_id : null);
+        return Arrays.asList(get(uri, Location[].class));
     }
 
-    public void deleteLocation(Integer id) throws MJPApiException {
-        rest.exchange(getObjectUrl("user-locations", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    public Location getUserLocation(Integer id) {
+        return get(getUrl("user-locations", id), Location.class);
     }
 
-    public List<Job> getUserJobs(Integer location_id) throws MJPApiException {
-        URI uri = getTypeUrl("user-jobs", location_id != null ? String.format("location=%s", location_id) : null);
-        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Job[].class).getBody());
+    public void deleteLocation(Integer id) {
+        delete(getUrl("user-locations", id));
     }
 
-    public Job getUserJob(Integer job_id) throws MJPApiException {
-        return rest.exchange(getObjectUrl("user-jobs", job_id), HttpMethod.GET, createAuthenticatedRequest(), Job.class).getBody();
+    public List<Job> getUserJobs(Integer location_id) {
+        URI uri = getUrl("user-jobs", location_id != null ? "location=" + location_id : null);
+        return Arrays.asList(get(uri, Job[].class));
     }
 
-    public void updateApplicationShortlist(ApplicationShortlistUpdate update) throws MJPApiException {
-        try {
-            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationShortlistUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationShortlistUpdate.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public Job getUserJob(Integer job_id) {
+        return get(getUrl("user-jobs", job_id), Job.class);
     }
 
-    public void updateApplicationStatus(ApplicationStatusUpdate update) throws MJPApiException {
-        try {
-            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationStatusUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationStatusUpdate.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void updateApplicationShortlist(ApplicationShortlistUpdate update) {
+        put(getUrl(classEndPoints.get(ApplicationShortlistUpdate.class), update.getId()), update, Object.class);
     }
 
-    public Job createJob(Job job) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl("user-jobs"), HttpMethod.POST, createAuthenticatedRequest(job), Job.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void updateApplicationStatus(ApplicationStatusUpdate update) {
+        put(getUrl(classEndPoints.get(ApplicationStatusUpdate.class), update.getId()), update, Object.class);
     }
 
-    public Job updateJob(Job job) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl("user-jobs", job.getId()), HttpMethod.PUT, createAuthenticatedRequest(job), Job.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public Job createJob(Job job) {
+        return post(getUrl("user-jobs"), job, Job.class);
     }
 
-    public void deleteJob(Integer id) throws MJPApiException {
-        rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    public Job updateJob(Job job) {
+        return put(getUrl("user-jobs", job.getId()), job, Job.class);
     }
 
-    public void uploadImage(String endpoint, String objectKey, ImageUpload image) throws MJPApiException {
+    public void deleteJob(Integer id) {
+        delete (getUrl("user-jobs", id));
+    }
+
+    public void uploadImage(String endpoint, String objectKey, ImageUpload image) {
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         parts.put("image", Arrays.asList(new Object[] {image.getImage()}));
         parts.put(objectKey, Arrays.asList(new Object[] {image.getObject().toString()}));
         parts.put("order", Arrays.asList(new Object[]{image.getOrder().toString()}));
 
-        try {
-            HttpHeaders headers = getDefaultHttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-            rest.postForObject(getTypeUrl(endpoint), request, Object.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+        HttpHeaders headers = getDefaultHttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+        rest.postForObject(getUrl(endpoint), request, Object.class);
     }
 
     public void deleteBusinessImage(Integer id) {
-        rest.exchange(getObjectUrl("user-business-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+        delete(getUrl("user-business-images", id));
     }
 
     public void deleteLocationImage(Integer id) {
-        rest.exchange(getObjectUrl("user-location-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+        delete(getUrl("user-location-images", id));
     }
 
     public void deleteJobImage(Integer id) {
-        rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+        delete(getUrl("user-job-images", id));
     }
 
-    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv) throws MJPApiException {
+    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv) {
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         for (Field field : jobSeeker.getClass().getDeclaredFields()) {
@@ -464,237 +399,85 @@ public class MJPApi {
         if (cv != null) {
             parts.put("cv", Arrays.asList(new Object[] {cv}));
         }
-        try {
-            HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PATCH;
-            HttpHeaders headers = getDefaultHttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-            return rest.exchange(getObjectUrl("job-seekers", jobSeekerId), method, request, JobSeeker.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+
+        HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PATCH;
+        HttpHeaders headers = getDefaultHttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity request = createAuthenticatedRequest(parts, headers);
+        return rest.exchange(getUrl("job-seekers", jobSeekerId), method, request, JobSeeker.class).getBody();
     }
 
 
-    public List<Deprecation> loadDeprecations() throws MJPApiException {
-        return Arrays.asList(rest.exchange(getTypeUrl("deprecation"), HttpMethod.GET, null, Deprecation[].class).getBody());
+    public List<BusinessUser> getBusinessUsers(Integer business_id) {
+        return Arrays.asList(get(getUrl(String.format("user-businesses/%s/users", business_id)), BusinessUser[].class));
     }
 
-    public List<BusinessUser> getBusinessUsers(Integer business_id) throws MJPApiException {
-        URI uri = getTypeUrl(String.format("user-businesses/%s/users", business_id));
-        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), BusinessUser[].class).getBody());
+    public BusinessUserForCreation createBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id) {
+        return post(getUrl(String.format("user-businesses/%s/users", business_id)), businessUserForCreation, BusinessUserForCreation.class);
     }
 
-    public BusinessUserForCreation createBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl(String.format("user-businesses/%s/users", business_id)), HttpMethod.POST, createAuthenticatedRequest(businessUserForCreation), BusinessUserForCreation.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void reCreateBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id, Integer user_id) {
+        post(getUrl(String.format("user-businesses/%s/users/%s/resend-invitation", business_id, user_id)), businessUserForCreation, Object.class);
     }
 
-    public void reCreateBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id, Integer user_id) throws MJPApiException {
-        try {
-            rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s/resend-invitation", business_id, user_id)), HttpMethod.POST, createAuthenticatedRequest(businessUserForCreation), Void.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public BusinessUser getBusinessUser(Integer businessId, Integer userId) {
+        return get(getUrl(String.format("user-businesses/%s/users/%s", businessId, userId)), BusinessUser.class);
     }
 
-    public BusinessUserForUpdate updateBusinessUser(BusinessUserForUpdate businessUserForUpdate, Integer business_id, Integer user_id) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.PUT, createAuthenticatedRequest(businessUserForUpdate), BusinessUserForUpdate.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public BusinessUserForUpdate updateBusinessUser(BusinessUserForUpdate businessUserForUpdate, Integer business_id, Integer user_id) {
+        return put(getUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), businessUserForUpdate, BusinessUserForUpdate.class);
     }
 
-    public void deleteBusinessUser(Integer business_id, Integer user_id) throws MJPApiException {
-        rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    public void deleteBusinessUser(Integer business_id, Integer user_id) {
+        delete(getUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)));
     }
 
-    public List<Interview> getAllInterviews() throws MJPApiException {
-        URI uri = getTypeUrl("interviews");
-        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Interview[].class).getBody());
+    public Interview getInterview(Integer interviewId) {
+        return get(getUrl(String.format("interviews/%s", interviewId)), Interview.class);
     }
 
-    public Interview getInterview(Integer interviewId) throws MJPApiException {
-        URI uri = getTypeUrl(String.format("interviews/%s", interviewId));
-        return rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Interview.class).getBody();
+    public InterviewForCreation createInterview(InterviewForCreation interviewForCreation) {
+        return post(getUrl("interviews"), interviewForCreation, InterviewForCreation.class);
     }
 
-    public InterviewForCreation createInterview(InterviewForCreation interviewForCreation) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl("interviews"), HttpMethod.POST, createAuthenticatedRequest(interviewForCreation), InterviewForCreation.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public InterviewForUpdate updateInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl(String.format("interviews/%s", interviewId)), HttpMethod.PUT, createAuthenticatedRequest(interviewForUpdate), InterviewForUpdate.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public InterviewForUpdate updateInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) {
+        return put(getUrl(String.format("interviews/%s", interviewId)), interviewForUpdate, InterviewForUpdate.class);
     }
 
     public void deleteInterview(Integer interviewId) {
-        rest.exchange(getObjectUrl("interviews", interviewId), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+        delete(getUrl("interviews", interviewId));
     }
 
-
-    public void completeInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) throws MJPApiException {
-        try {
-            rest.exchange(getTypeUrl(String.format("interviews/%s/complete", interviewId)), HttpMethod.POST, createAuthenticatedRequest(interviewForUpdate), InterviewForUpdate.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void completeInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) {
+        post(getUrl(String.format("interviews/%s/complete", interviewId)), interviewForUpdate, Object.class);
     }
 
-    public void acceptInterview(Integer interviewId) throws MJPApiException {
-        try {
-            rest.exchange(getTypeUrl(String.format("interviews/%s/accept", interviewId)), HttpMethod.POST, createAuthenticatedRequest(), Void.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void acceptInterview(Integer interviewId) {
+        post(getUrl(String.format("interviews/%s/accept", interviewId)), null, Object.class);
     }
 
-    public void addExternalApplication(ExternalApplication externalApplication) throws MJPApiException {
-        try {
-            rest.exchange(getTypeUrl("applications/external"), HttpMethod.POST, createAuthenticatedRequest(externalApplication), ExternalApplicationForResponse.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void addExternalApplication(ExternalApplication externalApplication) {
+        post(getUrl("applications/external"), externalApplication, Object.class);
     }
 
-    public void excludeJobSeeker(ExcludeJobSeeker data) throws MJPApiException {
-        try {
-            rest.exchange(getTypeUrl(String.format("user-jobs/%s/exclude", data.getJob())), HttpMethod.POST, createAuthenticatedRequest(data), ExcludeJobSeeker.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+    public void excludeJobSeeker(ExcludeJobSeeker data) {
+        post(getUrl(String.format("user-jobs/%s/exclude", data.getJob())), data, Object.class);
     }
 
-    public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) throws MJPApiException {
+    public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) {
         PurchaseInfo purchaseInfo = new PurchaseInfo(businessId, productId, purchaseToken);
-
-        try {
-            return rest.exchange(getTypeUrl("android/purchase"), HttpMethod.POST, createAuthenticatedRequest(purchaseInfo), Business.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
+        return post(getUrl("android/purchase"), purchaseInfo, Business.class);
     }
 
-    public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {
-        return get(cls, getTypeUrl(classEndPoints.get(cls)));
+    public Pitch createJobPitch(JobPitchForCreation obj) {
+        return post(getUrl("job-videos"), obj, Pitch.class);
     }
 
-    public <T extends MJPAPIObject> List<T> get(Class<T> cls, String query) throws MJPApiException {
-        return get(cls, getTypeUrl(classEndPoints.get(cls), query));
+    public Pitch createSpecificPitch(SpecificPitchForCreation obj) {
+        return post(getUrl("application-pitches"), obj, Pitch.class);
     }
 
-    private <T extends MJPAPIObject> List<T> get(Class<T> cls, URI uri) throws MJPApiException {
-        T[] dummyArray = (T[]) Array.newInstance(cls, 0);
-        Class<T[]> arrayCls = (Class<T[]>) dummyArray.getClass();
-        try {
-            return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400)
-                throw new MJPApiException(e);
-            throw e;
-        }
-    }
-
-    public <T extends MJPAPIObject> T get(Class<T> cls, Integer id) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl(classEndPoints.get(cls), id), HttpMethod.GET, createAuthenticatedRequest(), cls).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public <T extends MJPAPIObject> T create(Class<T> cls, T obj) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.POST, createAuthenticatedRequest(obj), cls).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public <T extends MJPAPIObject> T update(Class<T> cls, T obj) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl(classEndPoints.get(cls), obj.getId()), HttpMethod.PUT, createAuthenticatedRequest(obj), cls).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public <T extends MJPAPIObject> void delete(Class<T> cls, Integer id) throws MJPApiException {
-        try {
-            rest.exchange(getObjectUrl(classEndPoints.get(cls), id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public String getApiRoot() {
-        return apiRoot;
-    }
-
-    public void setApiRoot(String apiRoot) {
-        this.apiRoot = apiRoot;
-    }
-
-    public boolean isLogin() {
-        return token != null;
-    }
-    public void clearToken() {
-        token = null;
+    public Pitch getPitch(Integer pitchId, String endpoint) {
+        return get(getUrl(endpoint, pitchId), Pitch.class);
     }
 }

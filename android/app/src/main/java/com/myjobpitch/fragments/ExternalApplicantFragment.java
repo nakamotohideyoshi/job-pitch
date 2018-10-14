@@ -110,7 +110,7 @@ public class ExternalApplicantFragment extends FormFragment {
         title = "Add Application";
 
         // data
-        for (Sex sex : AppData.get(Sex.class)) {
+        for (Sex sex : AppData.sexes) {
             mSexNames.add(sex.getName());
         }
         mSexView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mSexNames));
@@ -138,7 +138,7 @@ public class ExternalApplicantFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_nationality_button)
     void onNationality() {
-        final List<Nationality> nationalities = AppData.get(Nationality.class);
+        final List<Nationality> nationalities = AppData.nationalities;
         ArrayList<SelectItem> items = new ArrayList<>();
         for (Nationality nationality : nationalities) {
             items.add(new SelectItem(nationality.getName(), false));
@@ -173,9 +173,9 @@ public class ExternalApplicantFragment extends FormFragment {
         }
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
-            jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
+            jobSeeker.setSex(AppData.sexes.get(sexIndex).getId());
         }
-        for (Nationality nationality : AppData.get(Nationality.class)) {
+        for (Nationality nationality : AppData.nationalities) {
             if (nationality.getName().equals(mNationalityView.getText().toString())) {
                 jobSeeker.setNationality(nationality.getId());
                 break;
@@ -208,7 +208,7 @@ public class ExternalApplicantFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
 
                 MJPApi.shared().addExternalApplication(externalApplication);
 

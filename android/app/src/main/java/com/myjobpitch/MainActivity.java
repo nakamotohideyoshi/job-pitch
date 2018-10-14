@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -20,15 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
-import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Application;
-import com.myjobpitch.api.data.Message;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.fragments.BaseFragment;
 import com.myjobpitch.fragments.BusinessListFragment;
 import com.myjobpitch.fragments.ChangePasswordFragment;
@@ -44,23 +41,20 @@ import com.myjobpitch.fragments.MessageListFragment;
 import com.myjobpitch.fragments.PaymentFragment;
 import com.myjobpitch.fragments.PitchFragment;
 import com.myjobpitch.fragments.SelectJobFragment;
-import com.myjobpitch.tasks.APIAction;
-import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.views.Popup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -76,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     FragmentManager mFragmentManager;
 
-    int mCurrentPageID = -1;
+    int mCurrentMenuID = -1;
 
     private static final int PERMISSION_IAMGE_CAPTURE = 11000;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE1 = 11001;
@@ -88,114 +82,6 @@ public class MainActivity extends AppCompatActivity
         return instance;
     }
 
-    Handler timerHandler = new Handler();
-    public long newMessageCount = 0;
-    public List <Application>  applications;
-    public List <Message> newMessages;
-    public Message startMessage;
-    public Message lastMessage;
-    public Boolean refresh = true;
-
-    Runnable timerRunnable = new Runnable() {
-        @Override
-        public void run() {
-
-            if (refresh && AppData.getUserType() != 0) {
-
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        String query = null;
-                        applications = MJPApi.shared().get(Application.class, query);
-
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-
-                        newMessages = new ArrayList<Message>();
-                        Integer from_role = AppData.user.isJobSeeker() ? AppData.JOBSEEKER : AppData.RECRUITER;
-
-                        for (Application application: applications) {
-
-                            List<Message> messages = application.getMessages();
-                            if (messages.size() > 0) {
-
-                                for (int j = messages.size() - 1; j >= 0; j--) {
-                                    if (messages.get(j).getFrom_role() == from_role) {
-                                        if (!messages.get(j).getRead()) {
-                                            // New Message
-                                            newMessages.add(messages.get(j));
-                                        } else {
-                                            // find start Message
-                                            if (startMessage == null) {
-                                                startMessage = messages.get(j);
-                                            } else {
-                                                if (startMessage.getCreated().compareTo(messages.get(j).getCreated()) < 0) {
-                                                    startMessage = messages.get(j);
-                                                }
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-
-                        newMessageCount = startMessage == null ? newMessages.size() : 0;
-                        if (newMessages.size() > 0) {
-                            for (int i = 0; i < newMessages.size() - 1; i++) {
-                                if (startMessage != null) {
-                                    if (startMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
-                                        newMessageCount++;
-                                        if (lastMessage == null) {
-                                            lastMessage = newMessages.get(i);
-                                        } else {
-                                            if (lastMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
-                                                lastMessage = newMessages.get(i);
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if (lastMessage == null) {
-                                        lastMessage = newMessages.get(i);
-                                    } else {
-                                        if (lastMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
-                                            lastMessage = newMessages.get(i);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        reloadMenu();
-                    }
-
-                    @Override
-                    public void onError(JsonNode errors) {
-
-                    }
-                }).execute();
-            }
-
-            timerHandler.postDelayed(this, 30000);
-        }
-    };
-
-    public  void isRefresh(Boolean isRefresh) {
-        refresh = isRefresh;
-    }
-
-    public void errorHandler(JsonNode errors) {
-
-        if (errors == null) {
-            Popup popup = new Popup(null, "Connection Error: Please check your internet connection", true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,40 +89,121 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu);
-        setSupportActionBar(mToolbar);
-
         instance = this;
 
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        setSupportActionBar(mToolbar);
+
+        mFragmentManager = getSupportFragmentManager();
+        setRootFragement(-1);
+
+        mDrawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == 2 && !mDrawer.isDrawerOpen(GravityCompat.START)) {
+                    Menu menu = mNavigationView.getMenu();
+
+                    for (Integer key : menuItemData.keySet()) {
+                        MenuItem item = menu.findItem(key);
+                        MenuItemInfo info = menuItemData.get(key);
+
+                        if (AppData.userRole == Role.JOB_SEEKER_ID) {
+                            if (info.flags.contains("J")) {
+                                boolean f = (info.flags.contains("1") && AppData.user.getJob_seeker() == null) || (info.flags.contains("2") && !AppData.existProfile);
+                                item.setEnabled(!f);
+                                item.setVisible(true);
+                            } else {
+                                item.setVisible(false);
+                            }
+                        } else {
+                            if (info.flags.contains("R")) {
+                                boolean f = info.flags.contains("1") && AppData.user.getBusinesses().size() == 0;
+                                item.setEnabled(!f);
+                                item.setVisible(true);
+                            } else {
+                                item.setVisible(false);
+                            }
+                        }
+                    }
+
+                    int msgCount = AppData.newMessageCount;
+                    TextView badgeLabel = menu.findItem(R.id.menu_messages).getActionView().findViewById(R.id.badge_label);
+                    badgeLabel.setVisibility(msgCount == 0 ? View.INVISIBLE : View.VISIBLE);
+                    badgeLabel.setText(msgCount > 9 ? "9+" : String.valueOf(msgCount));
+
+                    if (mCurrentMenuID != -1) {
+                        menu.findItem(mCurrentMenuID).setChecked(true);
+                    }
+                }
+            }
+        });
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int menuId = item.getItemId();
+                if (mCurrentMenuID != menuId) {
+                    if (menuId == R.id.menu_share) {
+                        String link = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("text/html");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+                        startActivity(Intent.createChooser(sharingIntent,"Share using"));
+                        return false;
+                    }
+
+                    if (menuId == R.id.menu_contact_us) {
+                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                        emailIntent.setData(Uri.parse("mailto:support@myjobpitch.com"));
+                        startActivity(emailIntent);
+                        return false;
+                    }
+
+                    if (menuId == R.id.menu_logout) {
+                        logout();
+                        return false;
+                    }
+
+                    setRootFragement(menuId);
+                }
+
+                mDrawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         // image loaders
         Fresco.initialize(getApplicationContext());
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
-
-        mFragmentManager = getSupportFragmentManager();
-        replaceFragment(new LoginFragment());
     }
 
-    public void startNewMessageCount() {
-        timerHandler.postDelayed(timerRunnable, 0);
+    public Menu getToolbarMenu() {
+        return mToolbar.getMenu();
     }
 
-    public  void stopNewMessageCount() {
-        timerHandler.removeCallbacks(timerRunnable);
+    public int getCurrentMenuID() {
+        return mCurrentMenuID;
     }
 
-    public int getCurrentPageID() {
-        return mCurrentPageID;
+    public MenuItem getCurrentMenu() {
+        return mNavigationView.getMenu().findItem(mCurrentMenuID);
     }
 
-    public void setRootFragement(int pageID) {
-
-        if (mCurrentPageID == -1) {
-            mContentView.setBackgroundColor(0xFFFFFF);
-        }
+    public void setRootFragement(int menuId) {
+        mCurrentMenuID = menuId;
 
         // remove all fragments
 
@@ -246,49 +213,41 @@ public class MainActivity extends AppCompatActivity
 
         // new fragment
 
-        int pid = pageID == AppData.PAGE_VIEW_PROFILE && AppData.user.getJob_seeker() == null ? AppData.PAGE_USER_PROFILE : pageID;
-        MenuItemInfo info = menuItemData[pid];
-
         try {
-            BaseFragment fragment = (BaseFragment) info.fragmentClass.newInstance();
-            fragment.title = info.title;
-            replaceFragment(fragment);
+            if (mCurrentMenuID == -1) {
+                replaceFragment(new LoginFragment());
+            } else {
+                MenuItemInfo info = menuItemData.get(mCurrentMenuID);
+                Class fragmentClass = info.fragmentClass;
+                if (menuId == R.id.menu_user_profile && AppData.user.getJob_seeker() == null) {
+                    fragmentClass = TalentProfileFragment.class;
+                }
+
+                BaseFragment fragment = (BaseFragment) fragmentClass.newInstance();
+                fragment.title = mNavigationView.getMenu().findItem(menuId).getTitle().toString();
+                replaceFragment(fragment);
+            }
         } catch (Exception e) {
-
         }
-
-        // update sidemenu item
-
-        Menu menu = mNavigationView.getMenu();
-
-        if (mCurrentPageID != -1) {
-            menu.findItem(mCurrentPageID).setChecked(false);
-        }
-        mCurrentPageID = pageID;
-
-        menu.findItem(mCurrentPageID).setChecked(true);
 
         // update toolbar
 
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
-
     }
 
     public void replaceFragment(BaseFragment fragment) {
-        String tag = "" + (mFragmentManager.getBackStackEntryCount());
-
+        String tag = String.valueOf(mFragmentManager.getBackStackEntryCount());
         mFragmentManager
                 .beginTransaction()
                 .replace(R.id.content_main, fragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
-        mToolbar.getMenu().clear();
+        getToolbarMenu().clear();
     }
 
     public void pushFragment(BaseFragment fragment) {
-        String tag = "" + (mFragmentManager.getBackStackEntryCount() + 1);
-
+        String tag = String.valueOf(mFragmentManager.getBackStackEntryCount() + 1);
         mFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -301,7 +260,7 @@ public class MainActivity extends AppCompatActivity
             mToolbar.setNavigationIcon(R.drawable.ic_back);
         }
 
-        mToolbar.getMenu().clear();
+        getToolbarMenu().clear();
     }
 
     public void popFragment() {
@@ -311,57 +270,12 @@ public class MainActivity extends AppCompatActivity
             mToolbar.setNavigationIcon(R.drawable.ic_menu);
         }
 
-        mToolbar.getMenu().clear();
+        getToolbarMenu().clear();
     }
 
     BaseFragment getCurrentFragment() {
-        String tag = "" + mFragmentManager.getBackStackEntryCount();
+        String tag = String.valueOf(mFragmentManager.getBackStackEntryCount());
         return (BaseFragment) mFragmentManager.findFragmentByTag(tag);
-    }
-
-    public Menu getToolbarMenu() {
-        return mToolbar.getMenu();
-    }
-
-    public void reloadMenu() {
-
-        Menu menu = mNavigationView.getMenu();
-        menu.clear();
-
-        boolean isJobSeeker = AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && AppData.getUserType() == AppData.JOBSEEKER);
-        int[] data = isJobSeeker ? jobSeekerMenu : recruiterMenu;
-
-        for (int id : data) {
-            MenuItemInfo info = menuItemData[id];
-            if (info != null) {
-                MenuItem menuItem = menu.add(0, id, Menu.NONE, info.title);
-                if (id != AppData.PAGE_MESSAGES) {
-                    menuItem.setIcon(info.iconRes);
-                } else {
-                    int newIconRes = R.drawable.menu_message;
-                    if (newMessageCount > 0 && newMessageCount < 10) {
-                        newIconRes = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + newMessageCount,null, null);
-                    } else if (newMessageCount >= 10) {
-                        newIconRes = R.drawable.menu_message10;
-                    }
-                    menuItem.setIcon(newIconRes);
-                }
-                if (isJobSeeker) {
-                    if ((info.flags.contains("J") && AppData.user.getJob_seeker() == null) || (info.flags.contains("P") && !AppData.existProfile)) {
-                        menuItem.setEnabled(false);
-                    } else {
-                        menuItem.setEnabled(true);
-                    }
-                } else {
-                    if (info.flags.contains("B") && AppData.user.getBusinesses().size() == 0) {
-                        menuItem.setEnabled(false);
-                    } else {
-                        menuItem.setEnabled(true);
-                    }
-                }
-            }
-        }
-
     }
 
     public void logout() {
@@ -369,19 +283,8 @@ public class MainActivity extends AppCompatActivity
         popup.addGreenButton("Log Out", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopNewMessageCount();
-                //MJPApi.shared().logout();
-                MJPApi.shared().clearToken();
-                AppData.clearData();
-
+                setRootFragement(-1);
                 mDrawer.closeDrawer(GravityCompat.START);
-
-                mContentView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-                mNavigationView.getMenu().clear();
-                mCurrentPageID = -1;
-
-                replaceFragment(new LoginFragment());
             }
         });
         popup.addGreyButton("Cancel", null);
@@ -489,14 +392,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             if (mFragmentManager.getBackStackEntryCount() == 0) {
                 if (AppData.user != null) {
-                    if (mCurrentPageID == AppData.PAGE_ADD_RECORD || mCurrentPageID == AppData.PAGE_JOB_PROFILE || mCurrentPageID == AppData.PAGE_CHANGE_PASS) {
-                        setRootFragement(AppData.PAGE_FIND_JOB);
+                    if (mCurrentMenuID == R.id.menu_record || mCurrentMenuID == R.id.menu_job_profile || mCurrentMenuID == R.id.menu_change_pass) {
+                        setRootFragement(R.id.menu_find_job);
                     } else {
                         logout();
                     }
@@ -512,9 +414,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
+        int menuId = item.getItemId();
 
-        if (id == android.R.id.home) {
+        if (menuId == android.R.id.home) {
             if (mFragmentManager.getBackStackEntryCount() == 0) {
                 mDrawer.openDrawer(GravityCompat.START);
                 hideKeyboard();
@@ -522,100 +424,46 @@ public class MainActivity extends AppCompatActivity
                 popFragment();
             }
         } else {
-            getCurrentFragment().onMenuSelected(id);
+            getCurrentFragment().onMenuSelected(menuId);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (mCurrentPageID != id) {
-            if (id == AppData.PAGE_SHARE) {
-                String link = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/html");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
-                startActivity(Intent.createChooser(sharingIntent,"Share using"));
-                return false;
-            }
-            if (id == AppData.PAGE_CONTACT_UP) {
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                emailIntent.setData(Uri.parse("mailto:support@myjobpitch.com"));
-                startActivity(emailIntent);
-                return false;
-            }
-            if (id == AppData.PAGE_LOGOUT) {
-                logout();
-                return false;
-            }
-            setRootFragement(id);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
     /************ sidebar menu item data ***********/
 
-    public class MenuItemInfo {
-
-        public int id;
-        public String title;
-        public int iconRes;
+    class MenuItemInfo {
         public Class fragmentClass;
         public String flags;
 
-        public MenuItemInfo(int id, String title, int iconRes, Class fragmentClass, String flags) {
-            this.id = id;
-            this.title = title;
-            this.iconRes = iconRes;
+        public MenuItemInfo(Class fragmentClass, String flags) {
             this.fragmentClass = fragmentClass;
             this.flags = flags;
         }
-
     }
 
-    public MenuItemInfo getCurrentPageMenuInfo() {
-        return menuItemData[mCurrentPageID];
-    }
+    Map<Integer, MenuItemInfo> menuItemData = new HashMap<Integer, MenuItemInfo>() {{
+        put(R.id.menu_find_job, new MenuItemInfo(FindJobFragment.class, "J2"));
+        put(R.id.menu_js_applications, new MenuItemInfo(TalentApplicationsFragment.class, "J2"));
+        put(R.id.menu_js_interview, new MenuItemInfo(InterviewsFragment.class, "J2"));
+        put(R.id.menu_job_profile, new MenuItemInfo(JobProfileFragment.class, "J1"));
+        put(R.id.menu_record, new MenuItemInfo(PitchFragment.class, "J1"));
+        put(R.id.menu_user_profile, new MenuItemInfo(TalentDetailFragment.class, "J"));
 
-    MenuItemInfo[] menuItemData = {
-        new MenuItemInfo(AppData.PAGE_FIND_JOB, "Find Job", R.drawable.menu_search, FindJobFragment.class, "P"),
-        new MenuItemInfo(AppData.PAGE_JS_APPLICATIONS, "My Applications", R.drawable.menu_applications2, TalentApplicationsFragment.class, "P"),
-        new MenuItemInfo(AppData.PAGE_MESSAGES, "Messages", R.drawable.menu_message, MessageListFragment.class, "PB"),
-        new MenuItemInfo(AppData.PAGE_JOB_PROFILE, "Job Profile", R.drawable.menu_job_profile, JobProfileFragment.class, "J"),
-        new MenuItemInfo(AppData.PAGE_ADD_RECORD, "Record Pitch", R.drawable.menu_record, PitchFragment.class, "J"),
-        new MenuItemInfo(AppData.PAGE_VIEW_PROFILE, "Profile", R.drawable.menu_user_profile, TalentDetailFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_USER_PROFILE, "Profile", R.drawable.menu_user_profile, TalentProfileFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_FIND_TALENT, "Find Talent", R.drawable.menu_search, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_R_APPLICATIONS, "New Applications", R.drawable.menu_new_applications, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_CONNECTIONS, "My Connections", R.drawable.menu_applications1, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_MY_SHORTLIST, "My Shortlist", R.drawable.menu_shortlist, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_ADD_JOB, "Add or Edit Jobs", R.drawable.menu_business, BusinessListFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_PAYMENT, "Payment", R.drawable.menu_payment, PaymentFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_CHANGE_PASS, "Change Password", R.drawable.menu_key, ChangePasswordFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_HELP, "Help", R.drawable.menu_help, HelpFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_LOGOUT, "Log Out", R.drawable.menu_logout, null, ""),
-        new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
-        new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
-        new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_users, BusinessListFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_R_INTERVIEWS, "Interviews", R.drawable.menu_interview, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_interview, InterviewsFragment.class, "P"),
-    };
+        put(R.id.menu_find_talent, new MenuItemInfo(SelectJobFragment.class, "R1"));
+        put(R.id.menu_applications, new MenuItemInfo(SelectJobFragment.class, "R1"));
+        put(R.id.menu_connections, new MenuItemInfo(SelectJobFragment.class, "R1"));
+        put(R.id.menu_shortlist, new MenuItemInfo(SelectJobFragment.class, "R1"));
+        put(R.id.menu_rc_interview, new MenuItemInfo(SelectJobFragment.class, "R1"));
+        put(R.id.menu_business, new MenuItemInfo(BusinessListFragment.class, "R"));
+        put(R.id.menu_users, new MenuItemInfo(BusinessListFragment.class, "R"));
+        put(R.id.menu_payment, new MenuItemInfo(PaymentFragment.class, "R"));
 
-    int[] jobSeekerMenu = {
-            AppData.PAGE_FIND_JOB, AppData.PAGE_JS_APPLICATIONS, AppData.PAGE_MESSAGES, AppData.PAGE_JS_INTERVIEWS, AppData.PAGE_JOB_PROFILE, AppData.PAGE_ADD_RECORD,
-            AppData.PAGE_VIEW_PROFILE, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
-    };
-
-    int[] recruiterMenu = {
-            AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES, AppData.PAGE_R_INTERVIEWS,
-            AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_USERS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
-    };
-
+        put(R.id.menu_messages, new MenuItemInfo(MessageListFragment.class, "JR"));
+        put(R.id.menu_change_pass, new MenuItemInfo(ChangePasswordFragment.class, "JR"));
+        put(R.id.menu_help, new MenuItemInfo(HelpFragment.class, "JR"));
+        put(R.id.menu_share, new MenuItemInfo(null, "JR"));
+        put(R.id.menu_contact_us, new MenuItemInfo(null, "JR"));
+        put(R.id.menu_logout, new MenuItemInfo(null, "JR"));
+    }};
 }

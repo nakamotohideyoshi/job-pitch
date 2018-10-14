@@ -125,7 +125,7 @@ public class ApplicationsFragment extends BaseFragment {
         final List<Application> applications = new ArrayList();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 applications.addAll(getApplications());
                 if (AppData.user.isJobSeeker()) {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
@@ -216,7 +216,7 @@ public class ApplicationsFragment extends BaseFragment {
 
     // override method ========================================
 
-    protected List<Application> getApplications() throws MJPApiException {
+    protected List<Application> getApplications() {
         return new ArrayList<>();
     }
 

@@ -97,7 +97,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     void loadData() {
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 List<ProductToken> productTokens = MJPApi.shared().get(ProductToken.class);
                 products = new ArrayList<>();
                 for (ProductToken pt : productTokens) {
@@ -119,7 +119,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     void loadBusinesses() {
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 businesses = MJPApi.shared().getUserBusinesses();
             }
         }).addListener(new APITaskListener() {
@@ -375,7 +375,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             try {
                 try {
                     return MJPApi.shared().sendPurchaseInfo(businessId, productId, purchaseToken);
-                } catch (MJPApiException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } catch (RestClientException e) {

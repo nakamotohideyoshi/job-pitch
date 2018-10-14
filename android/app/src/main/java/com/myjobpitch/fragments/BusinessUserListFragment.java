@@ -151,7 +151,7 @@ public class BusinessUserListFragment extends BaseFragment {
         locations = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 locations.addAll(MJPApi.shared().getUserLocations(business.getId()));
             }
         }).addListener(new APITaskListener() {
@@ -171,7 +171,7 @@ public class BusinessUserListFragment extends BaseFragment {
         final List<BusinessUser> businessUsers = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 businessUsers.addAll(MJPApi.shared().getBusinessUsers(business.getId()));
             }
         }).addListener(new APITaskListener() {

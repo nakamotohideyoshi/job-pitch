@@ -1,6 +1,7 @@
 package com.myjobpitch.api.auth;
 
 public class Registration {
+
     private String email;
     private String password1;
     private String password2;
@@ -14,12 +15,11 @@ public class Registration {
     public String getEmail() {
         return email;
     }
-
     public String getPassword1() {
         return password1;
     }
-
     public String getPassword2() {
         return password2;
     }
+
 }

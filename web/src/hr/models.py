@@ -17,7 +17,8 @@ class Job(models.Model):
 
 
 class Employee(models.Model):
-    job = models.ForeignKey(Job, related_name='employees')
+    job = models.ForeignKey(Job, related_name='employees', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='employees', null=True, on_delete=models.SET_NULL)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     telephone = models.CharField(max_length=100, blank=True)
@@ -42,9 +43,3 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.get_full_name()
-
-
-class EmployeeUser(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='employee_users')
-    employee = models.OneToOneField(Employee)
-    email = models.EmailField(null=True)

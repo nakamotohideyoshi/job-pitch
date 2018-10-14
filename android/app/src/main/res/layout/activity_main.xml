@@ -32,7 +32,7 @@
             android:id="@+id/content_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </FrameLayout>
 
@@ -51,6 +51,7 @@
         app:itemBackground="@drawable/menu_item"
         app:itemIconTint="@color/menu_item"
         app:itemTextColor="@color/menu_item"
-        app:theme="@style/NavigationTheme" />
+        app:theme="@style/NavigationTheme"
+        app:menu="@menu/menu"/>
 
 </android.support.v4.widget.DrawerLayout>

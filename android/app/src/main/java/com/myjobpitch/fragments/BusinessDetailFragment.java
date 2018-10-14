@@ -82,7 +82,7 @@ public class BusinessDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
         ButterKnife.bind(this, view);
 
-        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
+        isAddMode = getApp().getCurrentMenuID() != R.id.menu_business;
 
         // header view
 
@@ -143,7 +143,7 @@ public class BusinessDetailFragment extends BaseFragment {
         showLoading(view);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 business = MJPApi.shared().getUserBusiness(businessId);
             }
         }).addListener(new APITaskListener() {
@@ -189,7 +189,7 @@ public class BusinessDetailFragment extends BaseFragment {
         final List<Location> locations = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 locations.addAll(MJPApi.shared().getUserLocations(businessId));
             }
         }).addListener(new APITaskListener() {
@@ -245,7 +245,7 @@ public class BusinessDetailFragment extends BaseFragment {
         showLoading();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().deleteBusiness(business.getId());
             }
         }).addListener(new APITaskListener() {
@@ -301,7 +301,7 @@ public class BusinessDetailFragment extends BaseFragment {
         showLoading(listContainer);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().deleteLocation(location.getId());
             }
         }).addListener(new APITaskListener() {

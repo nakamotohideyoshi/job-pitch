@@ -70,10 +70,10 @@ public class BusinessListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_business_list, container, false);
         ButterKnife.bind(this, view);
 
-        isUserMode = getApp().getCurrentPageID() == AppData.PAGE_USERS;
+        isUserMode = getApp().getCurrentMenuID() == R.id.menu_users;
 
         canCreateBusinesses = (AppData.user.getCan_create_businesses() && !isUserMode);
-        isAddMode = (getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB && !isUserMode);
+        isAddMode = (getApp().getCurrentMenuID() != R.id.menu_business && !isUserMode);
 
 
         // header view
@@ -155,7 +155,7 @@ public class BusinessListFragment extends BaseFragment {
         final List<Business> businesses = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 businesses.addAll(MJPApi.shared().getUserBusinesses());
             }
         }).addListener(new APITaskListener() {
@@ -238,7 +238,7 @@ public class BusinessListFragment extends BaseFragment {
         showLoading(listContainer);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().deleteBusiness(business.getId());
                 AppData.user = MJPApi.shared().getUser();
             }

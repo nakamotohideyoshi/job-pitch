@@ -2,59 +2,32 @@ package com.myjobpitch.uploader;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.tasks.APIAction;
-import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.APITaskListener;
 
 import java.io.File;
 
 public class AWSPitchUpload extends AWSPitchUploadBase {
-    private final File file;
     private final TransferUtility transferUtility;
+    private final File file;
     private TransferObserver mObserver;
     private boolean mCancelled = false;
 
-    public AWSPitchUpload(TransferUtility transferUtility, File file) {
-        super(null);
+    public AWSPitchUpload(TransferUtility transferUtility, File file, Pitch pitch, String endpoint) {
+        super(pitch, endpoint);
         this.transferUtility = transferUtility;
         this.file = file;
     }
 
     @Override
     public void start() {
-        synchronized (this) {
-            listener.onStateChange(PitchUpload.STARTING);
-        }
-        new APITask(new APIAction() {
-            @Override
-            public void run() throws MJPApiException {
-                pitch = MJPApi.shared().create(Pitch.class, new Pitch());
-            }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                synchronized (this) {
-                    if (mCancelled)
-                        return;
-                    mObserver = transferUtility.upload(
-                            "mjp-android-uploads",
-                            String.format("%s/%s.%s.pitches.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
-                            file
-                    );
-                    mObserver.setTransferListener(AWSPitchUpload.this);
-                    listener.onStateChange(PitchUpload.UPLOADING);
-                }
-            }
-
-            @Override
-            public void onError(JsonNode errors) {
-                listener.onError(errors.asText());
-            }
-        }).execute();
+        mObserver = transferUtility.upload(
+                "mjp-android-uploads",
+                String.format("%s/%s.%s.%s.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), endpoint, file.getName()),
+                file
+        );
+        mObserver.setTransferListener(AWSPitchUpload.this);
+        listener.onStateChange(PitchUpload.UPLOADING);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -65,8 +66,9 @@ public class ChangePasswordFragment extends FormFragment {
         showLoading();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
-                MJPApi.shared().changePassword(password1, password2);
+            public void run()  {
+                ChangePassword changepassword = new ChangePassword(password1, password2);
+                MJPApi.shared().changePassword(changepassword);
             }
         }).addListener(new APITaskListener() {
             @Override

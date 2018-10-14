@@ -96,7 +96,7 @@ public class LocationEditFragment extends FormFragment {
         showLoading(view);
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 if (location != null) {
                     location = MJPApi.shared().getUserLocation(location.getId());
                 } else if (isFirstCreate) {
@@ -242,7 +242,7 @@ public class LocationEditFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 if (location.getId() == null) {
                     location = MJPApi.shared().createLocation(location);
                 } else {
@@ -281,7 +281,7 @@ public class LocationEditFragment extends FormFragment {
 
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     MJPApi.shared().deleteLocationImage(location.getImages().get(0).getId());
                 }
             }).addListener(new APITaskListener() {
@@ -314,7 +314,7 @@ public class LocationEditFragment extends FormFragment {
 
         getApp().getSupportFragmentManager().popBackStackImmediate();
 
-        if (getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB) {
+        if (getApp().getCurrentMenuID() != R.id.menu_business) {
             JobEditFragment fragment = new JobEditFragment();
             fragment.location = location;
             getApp().pushFragment(fragment);

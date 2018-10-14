@@ -109,7 +109,7 @@ public class MessageFragment extends BaseFragment {
             }
         }
 
-        JobSeeker jobSeeker = application.getJobSeeker();
+        JobSeeker jobSeeker = application.getJob_seeker();
         String jobSeekerImage = "icon_no_img";
         if (jobSeeker.getPitch() != null) {
             jobSeekerImage = jobSeeker.getPitch().getThumbnail();
@@ -146,26 +146,17 @@ public class MessageFragment extends BaseFragment {
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
 
-            String statusName = ApplicationStatus.ESTABLISHED;
-            Integer status = AppData.get(ApplicationStatus.class, statusName).getId();
-
-            if (application.getStatus().intValue() != status.intValue()) {
+            if (application.getStatus().intValue() != ApplicationStatus.ESTABLISHED_ID) {
                 input.getInputEditText().setEnabled(false);
                 input.getButton().setEnabled(false);
 
-                statusName = ApplicationStatus.CREATED;
-                status = AppData.get(ApplicationStatus.class, statusName).getId();
-
-                if (application.getStatus().intValue() == status.intValue()) {
+                if (application.getStatus().intValue() == ApplicationStatus.CREATED_ID) {
                     Popup popup = new Popup(getContext(), "You cannot send message until your application is accepted.", true);
                     popup.addGreyButton("Ok", null);
                     popup.show();
                 }
 
-                statusName = ApplicationStatus.DELETED;
-                status = AppData.get(ApplicationStatus.class, statusName).getId();
-
-                if (application.getStatus().intValue() == status.intValue()) {
+                if (application.getStatus().intValue() == ApplicationStatus.DELETED_ID) {
                     Popup popup = new Popup(getContext(), "This application has been deleted.", true);
                     popup.addGreyButton("Ok", null);
                     popup.show();
@@ -231,7 +222,7 @@ public class MessageFragment extends BaseFragment {
             }
 
             MessageItem messageItem = new MessageItem(i,
-                    message.getFrom_role() == AppData.getUserRole().getId() ? "0" : "1",
+                    message.getFrom_role() == AppData.userRole ? "0" : "1",
                     content,
                     message.getCreated(),
                     isInterview);
@@ -270,7 +261,7 @@ public class MessageFragment extends BaseFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().create(MessageForCreation.class, messageForCreation);
             }
         }).addListener(new APITaskListener() {

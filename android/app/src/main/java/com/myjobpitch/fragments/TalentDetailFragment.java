@@ -108,8 +108,8 @@ public class TalentDetailFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         if (application != null) {
-            jobSeeker = application.getJobSeeker();
-            connected = application.getStatus() == AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+            jobSeeker = application.getJob_seeker();
+            connected = application.getStatus() == ApplicationStatus.ESTABLISHED_ID;
 
             loadApplications();
 
@@ -127,7 +127,7 @@ public class TalentDetailFragment extends BaseFragment {
             showLoading(view);
             new APITask(new APIAction() {
                 @Override
-                public void run() throws MJPApiException {
+                public void run() {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 }
             }).addListener(new APITaskListener() {
@@ -152,7 +152,7 @@ public class TalentDetailFragment extends BaseFragment {
         applications = new ArrayList();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 String query = "job=" + application.getJob() + "&status=" + application.getStatus();
                 query += application.getShortlisted() ? "&shortlisted=1" : "&shortlisted=0";
                 applications.addAll(MJPApi.shared().get(Application.class, query));
@@ -199,7 +199,7 @@ public class TalentDetailFragment extends BaseFragment {
         AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(imageView));
 
         nameView.setText(AppHelper.getJobSeekerName(jobSeeker));
-        Sex sex = AppData.get(Sex.class, jobSeeker.getSex());
+        Sex sex = AppData.getObjById(AppData.sexes, jobSeeker.getSex());
 
         String subTitle = "";
         if (jobSeeker.getAge() != null && jobSeeker.getAge_public()) {
@@ -243,7 +243,7 @@ public class TalentDetailFragment extends BaseFragment {
                     showLoading();
                     new APITask(new APIAction() {
                         @Override
-                        public void run() throws MJPApiException {
+                        public void run() {
                             application.setShortlisted(shortlistedView.isChecked());
                             ApplicationShortlistUpdate update = new ApplicationShortlistUpdate(application);
                             MJPApi.shared().updateApplicationShortlist(update);
@@ -340,7 +340,7 @@ public class TalentDetailFragment extends BaseFragment {
                 public void onClick(View view) {
                     new APITask(new APIAction() {
                         @Override
-                        public void run() throws MJPApiException {
+                        public void run() {
                             if (application == null) {
 
                                 ApplicationForCreation applicationForCreation = new ApplicationForCreation();
@@ -352,9 +352,8 @@ public class TalentDetailFragment extends BaseFragment {
 
                             } else {
 
-                                Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
                                 Application application1 = SerializationUtils.clone(application);
-                                application1.setStatus(established);
+                                application1.setStatus(ApplicationStatus.ESTABLISHED_ID);
                                 ApplicationStatusUpdate applicationStatusUpdate1 = new ApplicationStatusUpdate(application1);
                                 MJPApi.shared().updateApplicationStatus(applicationStatusUpdate1);
 
@@ -403,7 +402,7 @@ public class TalentDetailFragment extends BaseFragment {
                     showLoading();
                     new APITask(new APIAction() {
                         @Override
-                        public void run() throws MJPApiException {
+                        public void run() {
                             MJPApi.shared().delete(Application.class, application.getId());
                         }
                     }).addListener(new APITaskListener() {

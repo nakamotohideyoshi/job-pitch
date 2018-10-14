@@ -119,7 +119,7 @@ public class InterviewsFragment extends BaseFragment {
         applications = new ArrayList();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 String query = job == null ? null : "job=" + job.getId();
                 applications.addAll(MJPApi.shared().get(Application.class, query));
             }

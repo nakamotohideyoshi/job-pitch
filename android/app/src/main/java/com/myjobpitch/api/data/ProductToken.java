@@ -9,13 +9,11 @@ import com.myjobpitch.api.MJPAPIObject;
 public class ProductToken extends MJPAPIObject {
 
     private String sku;
-
     private Integer tokens;
 
     public String getSku() {
         return sku;
     }
-
     public Integer getTokens() {
         return tokens;
     }

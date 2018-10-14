@@ -55,7 +55,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         showLoading();
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 job = MJPApi.shared().getUserJob(job.getId());
                 data.addAll(MJPApi.shared().get(JobSeeker.class, "job=" + job.getId()));
             }
@@ -84,7 +84,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     protected void swipedLeft(final JobSeeker jobSeeker) {
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 ExcludeJobSeeker data = new ExcludeJobSeeker();
                 data.setJob(job.getId());
                 data.setJob_seeker(jobSeeker.getId());
@@ -106,7 +106,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     protected void swipedRight(final JobSeeker jobSeeker) {
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 ApplicationForCreation applicationForCreation = new ApplicationForCreation();
                 applicationForCreation.setJob(job.getId());
                 applicationForCreation.setJob_seeker(jobSeeker.getId());

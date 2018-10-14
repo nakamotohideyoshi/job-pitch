@@ -1,6 +1,7 @@
 package com.myjobpitch.api;
 
 public class MJPObjectWithNameFriendlyNameDesc extends MJPObjectWithNameDesc {
+
 	private String friendly_name;
 
 	public String getFriendly_name() {
@@ -11,4 +12,5 @@ public class MJPObjectWithNameFriendlyNameDesc extends MJPObjectWithNameDesc {
 	public String toString() {
 		return String.format("%d - %s (%s): %s", this.getId(), this.getName(), this.friendly_name, this.getDescription());
 	}
+
 }

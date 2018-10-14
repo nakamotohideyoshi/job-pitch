@@ -31,13 +31,9 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
         view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                getApp().setRootFragement(R.id.menu_record);
             }
         });
-
-        // new message indication
-        addMenuItem(MENUGROUP1, 109, "All Messages", R.drawable.menu_message10);
-        setVisibleMenuItem(109, false);
 
         return  view;
     }
@@ -45,13 +41,13 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 109) {
-            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+            getApp().setRootFragement(R.id.menu_messages);
         } else {
             super.onMenuSelected(menuID);
         }
     }
     @Override
-    protected List<Application> getApplications() throws MJPApiException {
+    protected List<Application> getApplications() {
         JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
         if (jobSeeker.getPitch() == null) {
             Handler mainHandler = new Handler(TalentApplicationsFragment.this.getContext().getMainLooper());

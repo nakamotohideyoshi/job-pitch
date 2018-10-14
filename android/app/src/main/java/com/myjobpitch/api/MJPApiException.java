@@ -19,7 +19,6 @@ public class MJPApiException extends Exception {
     public MJPApiException(HttpClientErrorException e) {
         super(e);
         ObjectMapper mapper = new ObjectMapper();
-        JsonFactory factory = mapper.getFactory();
         try {
             Log.e("MJPApiException", e.getResponseBodyAsString());
             errors = mapper.readTree(e.getResponseBodyAsByteArray());

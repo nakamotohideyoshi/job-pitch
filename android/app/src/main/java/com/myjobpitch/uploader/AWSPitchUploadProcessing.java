@@ -1,12 +1,11 @@
 package com.myjobpitch.uploader;
 
-import android.os.AsyncTask;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
-
-import org.springframework.web.client.HttpClientErrorException;
+import com.myjobpitch.tasks.APIAction;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,48 +15,51 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
     private boolean mCancelled = false;
     private boolean mStopped = false;
 
-    public AWSPitchUploadProcessing(Pitch pitch) {
-        super(pitch);
+    public AWSPitchUploadProcessing(Pitch pitch, String endpoint) {
+        super(pitch, endpoint);
     }
 
     @Override
     public void setPitchUploadListener(final PitchUploadListener listener) {
         super.setPitchUploadListener(listener);
         listener.onStateChange(PitchUpload.PROCESSING);
-        AsyncTask<Void, Void, Void> pollPitch = new AsyncTask<Void, Void, Void>() {
+
+        APITask pollPitch = new APITask(new APIAction() {
             @Override
-            protected Void doInBackground(Void... params) {
-                int iterations = 0;
+            public void run() {
                 while (true) {
                     synchronized (this) {
                         if (mCancelled || mStopped)
-                            return null;
+                            return;
                     }
-                    if (iterations % 5 == 0) {
-                        try {
-                            Pitch update = MJPApi.shared().get(Pitch.class, pitch.getId());
-                            if (update.getVideo() != null)
-                                return null;
-                        } catch (MJPApiException e) {
 
-                        } catch (HttpClientErrorException e) {
-                            mStopped = true;
-                            return null;
-                        }
-                    }
                     try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {}
-                    iterations++;
-                }
-            }
+                        pitch = MJPApi.shared().getPitch(pitch.getId(), endpoint);
+                        if (pitch.getVideo() != null)
+                            return;
+                    } catch (Exception e) {
+                        mStopped = true;
+                        return;
+                    }
 
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {}
+                }
+
+            }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onPostExecute(Void result) {
+            public void onSuccess() {
                 if (!mStopped && !mCancelled)
                     listener.onStateChange(PitchUpload.COMPLETE);
             }
-        };
+
+            @Override
+            public void onError(JsonNode errors) {
+            }
+        });
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         pollPitch.executeOnExecutor(executor);
         executor.shutdown();

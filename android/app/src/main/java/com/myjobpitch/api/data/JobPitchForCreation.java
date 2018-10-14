@@ -2,7 +2,7 @@ package com.myjobpitch.api.data;
 
 import com.myjobpitch.api.MJPAPIObject;
 
-public class JobPitch extends MJPAPIObject {
+public class JobPitchForCreation extends MJPAPIObject {
     private String token;
     private String video;
     private String thumbnail;

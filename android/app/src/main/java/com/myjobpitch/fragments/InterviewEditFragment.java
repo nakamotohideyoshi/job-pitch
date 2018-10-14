@@ -1,73 +1,40 @@
 package com.myjobpitch.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Iterables;
-import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
-import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.Contract;
-import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewForCreation;
 import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobSeeker;
-import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
-import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.UploadImageTask;
-import com.myjobpitch.uploader.AWSJobPitchUploader;
-import com.myjobpitch.uploader.PitchUpload;
-import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageSelector;
-import com.myjobpitch.utils.Loading;
 import com.myjobpitch.views.Popup;
-import com.myjobpitch.views.SelectDialog;
-import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import java.io.File;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -141,7 +108,7 @@ public class InterviewEditFragment extends FormFragment {
     }
 
     private void loadDetail() {
-        JobSeeker jobSeeker = application.getJobSeeker();
+        JobSeeker jobSeeker = application.getJob_seeker();
         Job job = application.getJob_data();
 
         AppHelper.loadJobSeekerImage(jobSeeker, imageView);
@@ -281,7 +248,7 @@ public class InterviewEditFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().createInterview(interviewForCreation);
             }
         }).addListener(new APITaskListener() {
@@ -308,7 +275,7 @@ public class InterviewEditFragment extends FormFragment {
 
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().updateInterview(interviewForUpdate, interview.getId());
             }
         }).addListener(new APITaskListener() {
@@ -338,7 +305,7 @@ public class InterviewEditFragment extends FormFragment {
             public void onClick(View view) {
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().completeInterview(interviewForUpdate, interview.getId());
                     }
                 }).addListener(new APITaskListener() {

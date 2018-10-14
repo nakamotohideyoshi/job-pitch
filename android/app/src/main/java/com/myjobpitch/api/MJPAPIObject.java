@@ -3,7 +3,9 @@ package com.myjobpitch.api;
 import java.io.Serializable;
 
 public class MJPAPIObject implements Serializable {
+
     protected Integer id;
+
     public Integer getId() {
         return id;
     }
@@ -14,4 +16,5 @@ public class MJPAPIObject implements Serializable {
             return this.getId().equals(((MJPAPIObject)other).getId());
         return false;
     }
+
 }

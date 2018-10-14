@@ -1,59 +1,29 @@
 package com.myjobpitch.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.BusinessUserForCreation;
 import com.myjobpitch.api.data.BusinessUserForUpdate;
-import com.myjobpitch.api.data.Contract;
-import com.myjobpitch.api.data.Hours;
-import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobPitch;
-import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
-import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.UploadImageTask;
-import com.myjobpitch.uploader.AWSJobPitchUploader;
-import com.myjobpitch.uploader.PitchUpload;
-import com.myjobpitch.uploader.PitchUploadListener;
-import com.myjobpitch.utils.AppData;
-import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageSelector;
-import com.myjobpitch.utils.Loading;
 import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import org.apache.commons.lang3.ObjectUtils;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -183,7 +153,7 @@ public class BusinessUserEditFragment extends FormFragment {
                 showLoading();
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().deleteBusinessUser(businessId, businessUser.getId());
                     }
                 }).addListener(new APITaskListener() {
@@ -216,7 +186,7 @@ public class BusinessUserEditFragment extends FormFragment {
         businessUserForCreation.setEmail(businessUser.getEmail());
         new APITask(new APIAction() {
             @Override
-            public void run() throws MJPApiException {
+            public void run() {
                 MJPApi.shared().reCreateBusinessUser(businessUserForCreation, businessId, businessUser.getId());
             }
         }).addListener(new APITaskListener() {
@@ -250,7 +220,7 @@ public class BusinessUserEditFragment extends FormFragment {
                 businessUserForUpdate.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedLocations);
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().updateBusinessUser(businessUserForUpdate, businessId, businessUser.getId());
                     }
                 }).addListener(new APITaskListener() {
@@ -269,7 +239,7 @@ public class BusinessUserEditFragment extends FormFragment {
                 businessUserForCreation.setEmail(emailView.getText().toString());
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().createBusinessUser(businessUserForCreation, businessId);
                     }
                 }).addListener(new APITaskListener() {

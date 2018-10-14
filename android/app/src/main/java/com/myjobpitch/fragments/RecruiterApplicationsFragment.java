@@ -63,9 +63,8 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     }
 
     @Override
-    protected List<Application> getApplications() throws MJPApiException {
-        String statusName = listKind == APPLICATIONS ? ApplicationStatus.CREATED: ApplicationStatus.ESTABLISHED;
-        Integer status = AppData.get(ApplicationStatus.class, statusName).getId();
+    protected List<Application> getApplications() {
+        Integer status = listKind == APPLICATIONS ? ApplicationStatus.CREATED_ID: ApplicationStatus.ESTABLISHED_ID;
         String query = "job=" + job.getId() + "&status=" + status;
         if (listKind == MY_SHORTLIST) {
             query += "&shortlisted=1";
@@ -75,7 +74,7 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void showApplicationInfo(Application application, View view) {
-        JobSeeker jobSeeker = application.getJobSeeker();
+        JobSeeker jobSeeker = application.getJob_seeker();
         AppHelper.loadJobSeekerImage(jobSeeker, view);
         setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
         setItemSubTitle(view, job.getTitle());
@@ -114,10 +113,9 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
                     showLoading();
                     new APITask(new APIAction() {
                         @Override
-                        public void run() throws MJPApiException {
-                            Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+                        public void run() {
                             Application updatedApplication = SerializationUtils.clone(application);
-                            updatedApplication.setStatus(established);
+                            updatedApplication.setStatus(ApplicationStatus.ESTABLISHED_ID);
                             final ApplicationStatusUpdate update = new ApplicationStatusUpdate(application);
                             MJPApi.shared().updateApplicationStatus(update);
                         }
@@ -161,7 +159,7 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
                 showLoading();
                 new APITask(new APIAction() {
                     @Override
-                    public void run() throws MJPApiException {
+                    public void run() {
                         MJPApi.shared().delete(Application.class, application.getId());
                     }
                 }).addListener(new APITaskListener() {

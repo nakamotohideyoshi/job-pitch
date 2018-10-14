@@ -4,12 +4,12 @@
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->
 
-    <color name="colorPrimary">#424242</color>
-    <color name="colorPrimaryDark">#424242</color>
+    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimaryDark">#333333</color>
     <color name="colorAccent">#333333</color>
 
     <color name="colorYellow">#ff9300</color>
-    <color name="colorGreen">#00bba8</color>
+    <color name="colorGreen">#00b6a4</color>
     <color name="colorBlue">#00619c</color>
     <color name="colorLightGrey">#d6d6d6</color>
     <color name="colorPopup">#f2232323</color>

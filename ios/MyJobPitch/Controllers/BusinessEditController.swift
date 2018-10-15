@@ -46,7 +46,7 @@ class BusinessEditController: MJPController {
     
     override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "business_name":    (nameField, nameErrorLabel)
+            "name":    (nameField, nameErrorLabel)
         ]
     }
     

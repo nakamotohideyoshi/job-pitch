@@ -93,6 +93,11 @@ class AppHelper: NSObject {
             return
         }
         
+        if let pitch = jobseeker.getPitch() {
+            AppHelper.loadImageURL(imageUrl: pitch.thumbnail, imageView: imageView, completion: completion)
+            return
+        }
+        
         imageView.image = UIImage(named: "avatar")
         completion?()
     }

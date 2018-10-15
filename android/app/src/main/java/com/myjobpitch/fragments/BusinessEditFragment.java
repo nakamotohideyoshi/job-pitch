@@ -110,7 +110,7 @@ public class BusinessEditFragment extends FormFragment {
     protected HashMap<String, EditText> getRequiredFields() {
         return new HashMap<String, EditText>() {
             {
-                put("business_name", nameView);
+                put("name", nameView);
             }
         };
     }

@@ -20,8 +20,16 @@ class LocationEditController: MJPController {
     @IBOutlet weak var emailPublic: UISwitch!
     @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var phonePublic: UISwitch!
-    @IBOutlet weak var addressField: UITextField!
-    @IBOutlet weak var addressError: UILabel!
+    @IBOutlet weak var countryField: UITextField!
+    @IBOutlet weak var countryError: UILabel!
+    @IBOutlet weak var regionField: UITextField!
+    @IBOutlet weak var regionError: UILabel!
+    @IBOutlet weak var cityField: UITextField!
+    @IBOutlet weak var cityError: UILabel!
+    @IBOutlet weak var streetField: UITextField!
+    @IBOutlet weak var streetError: UILabel!
+    @IBOutlet weak var postcodeField: UITextField!
+    @IBOutlet weak var postcodeError: UILabel!
     @IBOutlet weak var locationButton: YellowButton!
     @IBOutlet weak var logoView: UIImageView!
     
@@ -34,7 +42,6 @@ class LocationEditController: MJPController {
     
     var latitude: NSNumber!
     var longitude: NSNumber!
-    var placeID: String!
     var placeName: String!
     
     var addMode = false
@@ -49,8 +56,6 @@ class LocationEditController: MJPController {
         logoPicker.delegate = self
         
         addMode = SideMenuController.currentID != "businesses"
-        
-        addressField.delegate = self
         
         if workplace == nil {
             isNew = true
@@ -70,9 +75,12 @@ class LocationEditController: MJPController {
             emailPublic.isOn = workplace.emailPublic
             phoneField.text = workplace.mobile
             phonePublic.isOn = workplace.mobilePublic
-            addressField.text = workplace.placeName
-            placeID = workplace.placeID
             placeName = workplace.placeName
+            countryField.text = workplace.country
+            regionField.text = workplace.region
+            cityField.text = workplace.city
+            streetField.text = workplace.street
+            postcodeField.text = workplace.postcode
             latitude = workplace.latitude
             longitude = workplace.longitude
             
@@ -86,10 +94,11 @@ class LocationEditController: MJPController {
     
     override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "location_name":        (nameField,    nameErrorLabel),
-            "location_description": (descTextView, descError),
-            "location_email":       (emailField,   emailError),
-            "location_location":    (addressField, addressError)
+            "name":        (nameField,    nameErrorLabel),
+            "description": (descTextView, descError),
+            "email":       (emailField,   emailError),
+            "city":         (cityField, cityError),
+            "street":    (streetField, streetError)
         ]
     }
     
@@ -105,14 +114,17 @@ class LocationEditController: MJPController {
         
         let controller = MapController.instantiate()
         if latitude != nil {
-            controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
+            controller.currentPos = CLLocationCoordinate2DMake(latitude as! CLLocationDegrees, longitude as! CLLocationDegrees)
         }
-        controller.complete = { (locationCoordinate, placeID, placeName) in
+        controller.complete = { (locationCoordinate, country, region, city, street, postcode, address) in
             self.latitude = locationCoordinate.latitude as NSNumber!
             self.longitude = locationCoordinate.longitude as NSNumber!
-            self.placeID = placeID
-            self.placeName = placeName
-            self.addressField.text = placeName
+            self.countryField.text = country
+            self.regionField.text = region
+            self.cityField.text = city
+            self.streetField.text = street
+            self.postcodeField.text = postcode
+            self.placeName = address
         }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
@@ -138,11 +150,16 @@ class LocationEditController: MJPController {
         workplace.telephonePublic = false
         workplace.mobile = phoneField.text;
         workplace.mobilePublic = phonePublic.isOn
-        workplace.placeID = placeID
-        workplace.placeName = placeName
         workplace.latitude = latitude
         workplace.longitude = longitude
-        workplace.address = ""
+        workplace.placeID = ""
+        workplace.placeName = placeName        
+        workplace.country = (countryField.text?.isEmpty)! ? "" : countryField.text
+        workplace.region = (regionField.text?.isEmpty)! ? "" : regionField.text
+        workplace.city = cityField.text
+        workplace.street = streetField.text
+        workplace.streetNumber = streetField.text
+        workplace.postcode = (postcodeField.text?.isEmpty)! ? "" : postcodeField.text
         
         API.shared().saveLocation(workplace) { (result, error) in
             
@@ -200,15 +217,6 @@ class LocationEditController: MJPController {
         return AppHelper.instantiate("LocationEdit") as! LocationEditController
     }
     
-}
-
-extension LocationEditController: UITextFieldDelegate {
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if addressField == textField {
-            myLocationAction(textField)
-        }
-        return false
-    }
 }
 
 extension LocationEditController: ImagePickerDelegate {

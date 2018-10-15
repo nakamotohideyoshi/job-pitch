@@ -1,9 +1,11 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPObjectWithDates;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Business extends MJPObjectWithDates {
     private String name;
     private List<Integer> users;

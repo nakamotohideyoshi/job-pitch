@@ -187,15 +187,14 @@ class JobProfileController: MJPController {
         
         let controller = MapController.instantiate()
         if latitude != nil {
-            controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
+            controller.currentPos = CLLocationCoordinate2DMake(latitude as! CLLocationDegrees, longitude as! CLLocationDegrees)
         }
         controller.radius = radius * 1609.34;
-        controller.complete = { (locationCoordinate, placeID, placeName) in
+        controller.complete = { (locationCoordinate, country, region, city, street, postcode, address) in
             self.latitude = locationCoordinate.latitude as NSNumber!
             self.longitude = locationCoordinate.longitude as NSNumber!
-            self.placeID = placeID
-            self.placeName = placeName
-            self.addressField.text = placeName
+            self.placeName = address
+            self.addressField.text = address
         }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
@@ -235,7 +234,7 @@ class JobProfileController: MJPController {
         
         profile.latitude = latitude
         profile.longitude = longitude
-        profile.placeID = placeID
+        profile.placeID = ""
         profile.placeName = placeName
         profile.postcodeLookup = ""
         

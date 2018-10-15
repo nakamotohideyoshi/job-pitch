@@ -8,14 +8,19 @@ public class User extends MJPAPIObject {
 
 	private String email;
     private List<Integer> businesses;
+    private List<Integer> employees;
     private Integer job_seeker;
     private boolean can_create_businesses;
+
 
     public String getEmail() {
 		return email;
 	}
     public List<Integer> getBusinesses() {
         return businesses;
+    }
+    public List<Integer> getEmployees() {
+        return employees;
     }
     public Integer getJob_seeker() {
         return this.job_seeker;

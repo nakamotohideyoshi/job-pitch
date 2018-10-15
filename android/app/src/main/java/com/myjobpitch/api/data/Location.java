@@ -1,9 +1,11 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPObjectWithDates;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Location extends MJPObjectWithDates {
     private Integer business;
     private List<Integer> jobs;
@@ -16,12 +18,16 @@ public class Location extends MJPObjectWithDates {
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
-    private String place_name;
-    private String place_id;
-    private String postcode_lookup;
     private Double longitude;
     private Double latitude;
-    private String address;
+    private String place_name;
+    private String place_id;
+    private String country;
+    private String region;
+    private String city;
+    private String street;
+    private String street_number;
+    private String postcode;
     private List<Image> images;
 
     private Business business_data;
@@ -118,14 +124,6 @@ public class Location extends MJPObjectWithDates {
         return place_id;
     }
 
-    public String getPostcode_lookup() {
-        return postcode_lookup;
-    }
-
-    public void setPostcode_lookup(String postcode_lookup) {
-        this.postcode_lookup = postcode_lookup;
-    }
-
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
@@ -142,12 +140,52 @@ public class Location extends MJPObjectWithDates {
         return latitude;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCountry() {
+        return country;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet_number(String street_number) {
+        this.street_number = street_number;
+    }
+
+    public String getStreet_number() {
+        return street_number;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getPostcode() {
+        return postcode;
     }
 
     public List<Image> getImages() {

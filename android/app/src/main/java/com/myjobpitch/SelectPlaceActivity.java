@@ -40,6 +40,11 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
+    public static final String COUNTRY = "country";
+    public static final String REGION = "region";
+    public static final String CITY = "city";
+    public static final String STREET = "street";
+    public static final String POSTCODE = "postcode";
     public static final String ADDRESS = "address";
     public static final String RADIUS = "radius";
 
@@ -108,24 +113,20 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
     void updatePosition(double latitude, double longitude) {
         mCurrentPos = new LatLng(latitude, longitude);
 
+        if (marker == null) {
+            marker = mMap.addMarker(new MarkerOptions());
+        }
+        marker.setPosition(mCurrentPos);
 
-        if (radius == 0) {
-            if (marker == null) {
-                marker = mMap.addMarker(new MarkerOptions().position(mCurrentPos));
-            } else {
-                marker.setPosition(mCurrentPos);
-            }
-        } else {
+        if (radius != 0) {
             if (circle == null) {
                 circle = mMap.addCircle(new CircleOptions()
-                        .center(mCurrentPos)
                         .radius(radius)
                         .strokeWidth(2)
                         .strokeColor(Color.argb(255, 0, 182, 164))
                         .fillColor(Color.argb(51, 255, 147, 0)));
-            } else {
-                circle.setCenter(mCurrentPos);
             }
+            circle.setCenter(mCurrentPos);
         }
     }
 
@@ -168,11 +169,23 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     void selectLocation() {
         Geocoder geocoder = new Geocoder(this);
-        String str = "address unknown";
+        String country = null,
+                region = null,
+                city = null,
+                street = null,
+                postcode = null,
+                line = null;
+
         try {
             List<Address> addresses = geocoder.getFromLocation(mCurrentPos.latitude, mCurrentPos.longitude, 1);
             if (addresses.size() > 0) {
-                str = addresses.get(0).getAddressLine(0);
+                Address address = addresses.get(0);
+                country = address.getCountryName();
+                region = address.getAdminArea();
+                city = address.getLocality();
+                street = address.getThoroughfare();
+                postcode = address.getPostalCode();
+                line = address.getAddressLine(0);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -181,7 +194,12 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
         Intent intent = new Intent();
         intent.putExtra(LATITUDE, mCurrentPos.latitude);
         intent.putExtra(LONGITUDE, mCurrentPos.longitude);
-        intent.putExtra(ADDRESS, str);
+        intent.putExtra(COUNTRY, country);
+        intent.putExtra(REGION, region);
+        intent.putExtra(CITY, city);
+        intent.putExtra(STREET, street);
+        intent.putExtra(POSTCODE, postcode);
+        intent.putExtra(ADDRESS, line);
         setResult(RESULT_OK, intent);
         finish();
     }

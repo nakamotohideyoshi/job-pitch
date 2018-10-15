@@ -106,31 +106,77 @@
                     android:theme="@style/CheckBox" />
             </LinearLayout>
 
-            <FrameLayout
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
-
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/location_street"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Street"
+                    android:enabled="false"
+                    app:met_floatingLabel="normal"
+                    app:met_primaryColor="@color/colorGreen"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
                     <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/location_address"
-                        android:layout_width="match_parent"
+                        android:id="@+id/location_city"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Address"
-                        android:focusable="false"/>
-                    <TextView
-                        android:text="Set My Location"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_gravity="bottom"
-                        android:gravity="center"
-                        android:background="@drawable/button_yellow"
-                        android:theme="@style/Button"/>
+                        android:layout_weight="1"
+                        android:layout_marginRight="15dp"
+                        android:hint="City"
+                        android:enabled="false"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/colorGreen"/>
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/location_region"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Region"
+                        android:enabled="false"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/colorGreen"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/location_postcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="15dp"
+                        android:hint="Postcode"
+                        android:enabled="false"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/colorGreen"/>
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/location_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Country"
+                        android:enabled="false"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/colorGreen"/>
+                </LinearLayout>
+            </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_yellow"
+                android:layout_marginTop="10dp">
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -140,13 +186,13 @@
                     android:layout_marginBottom="5dp"
                     android:src="@drawable/icon_location"
                     android:scaleType="centerCrop"/>
-
                 <Button
+                    android:text="Set My Location"
                     android:id="@+id/location_address_button"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:textColor="@color/white"
                     android:background="@color/transparent"/>
-
             </FrameLayout>
 
             <include

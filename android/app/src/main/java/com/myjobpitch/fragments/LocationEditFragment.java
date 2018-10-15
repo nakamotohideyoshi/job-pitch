@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.APIAction;
@@ -55,8 +54,16 @@ public class LocationEditFragment extends FormFragment {
     @BindView(R.id.location_phone_public)
     CheckBox phonePublicView;
 
-    @BindView(R.id.location_address)
-    MaterialEditText addressView;
+    @BindView(R.id.location_street)
+    MaterialEditText streetView;
+    @BindView(R.id.location_city)
+    MaterialEditText cityView;
+    @BindView(R.id.location_region)
+    MaterialEditText regionView;
+    @BindView(R.id.location_postcode)
+    MaterialEditText postcodeView;
+    @BindView(R.id.location_country)
+    MaterialEditText countryView;
 
     @BindView(R.id.location_logo)
     View logoView;
@@ -65,7 +72,6 @@ public class LocationEditFragment extends FormFragment {
 
     private Double latitude;
     private Double longitude;
-    private String placeID = "";
     private String placeName;
 
     private boolean isFirstCreate;
@@ -138,11 +144,14 @@ public class LocationEditFragment extends FormFragment {
             emailPublicView.setChecked(location.getEmail_public());
             phoneView.setText(location.getMobile());
             phonePublicView.setChecked(location.getMobile_public());
-            addressView.setText(location.getPlace_name());
-            placeID = location.getPlace_id();
-            placeName = location.getPlace_name();
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            placeName = location.getPlace_name();
+            streetView.setText(location.getStreet());
+            cityView.setText(location.getCity());
+            regionView.setText(location.getRegion());
+            postcodeView.setText(location.getPostcode());
+            countryView.setText(location.getCountry());
 
             if (location.getImages().size() > 0) {
                 imageSelector.loadImage(location.getImages().get(0).getImage());
@@ -159,10 +168,11 @@ public class LocationEditFragment extends FormFragment {
     protected HashMap<String, EditText> getRequiredFields() {
         return new HashMap<String, EditText>() {
             {
-                put("location_name", nameView);
-                put("location_description", descView);
-                put("location_email", emailView);
-                put("location_location", addressView);
+                put("name", nameView);
+                put("description", descView);
+                put("email", emailView);
+                put("street", streetView);
+                put("city", cityView);
             }
         };
     }
@@ -180,7 +190,6 @@ public class LocationEditFragment extends FormFragment {
         if (latitude != null) {
             intent.putExtra(SelectPlaceActivity.LATITUDE, latitude);
             intent.putExtra(SelectPlaceActivity.LONGITUDE, longitude);
-            intent.putExtra(SelectPlaceActivity.ADDRESS, placeName);
         }
         startActivityForResult(intent, 1);
     }
@@ -200,8 +209,12 @@ public class LocationEditFragment extends FormFragment {
             } else {
                 latitude = data.getDoubleExtra(SelectPlaceActivity.LATITUDE, 0);
                 longitude = data.getDoubleExtra(SelectPlaceActivity.LONGITUDE, 0);
+                countryView.setText(data.getStringExtra(SelectPlaceActivity.COUNTRY));
+                regionView.setText(data.getStringExtra(SelectPlaceActivity.REGION));
+                cityView.setText(data.getStringExtra(SelectPlaceActivity.CITY));
+                streetView.setText(data.getStringExtra(SelectPlaceActivity.STREET));
+                postcodeView.setText(data.getStringExtra(SelectPlaceActivity.POSTCODE));
                 placeName = data.getStringExtra(SelectPlaceActivity.ADDRESS);
-                addressView.setText(placeName);
             }
         }
     }
@@ -231,12 +244,15 @@ public class LocationEditFragment extends FormFragment {
         location.setTelephone_public(false);
         location.setMobile(phoneView.getText().toString().trim());
         location.setMobile_public(phonePublicView.isChecked());
-        location.setPlace_id(placeID);
-        location.setPlace_name(placeName);
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        location.setAddress("");
-        location.setPostcode_lookup("");
+        location.setPlace_id("");
+        location.setCountry(countryView.getText().toString().isEmpty() ? "" : countryView.getText().toString());
+        location.setRegion(countryView.getText().toString().isEmpty() ? "" : countryView.getText().toString());
+        location.setCity(cityView.getText().toString());
+        location.setStreet(streetView.getText().toString());
+        location.setStreet_number(streetView.getText().toString());
+        location.setPostcode(postcodeView.getText().toString());
 
         showLoading();
 

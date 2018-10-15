@@ -10,10 +10,6 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-protocol LocationMapDelegate {
-    func selectedLocationMap(_ pos: CLLocationCoordinate2D, placeID: String, placeName: String)
-}
-
 class MapController: UIViewController {
 
     @IBOutlet weak var mapView: GMSMapView!
@@ -23,7 +19,7 @@ class MapController: UIViewController {
     var placeID: String!
     var placeName: String!
     
-    var complete: ((CLLocationCoordinate2D, String, String) -> Void)!
+    var complete: ((CLLocationCoordinate2D, String?, String?, String?, String?, String?, String?) -> Void)!
     
     var searchController: UISearchController!
     var myPos: CLLocationCoordinate2D!
@@ -39,10 +35,8 @@ class MapController: UIViewController {
         mapView.settings.myLocationButton = true
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         
-        if (radius == nil) {
-            marker = GMSMarker()
-            marker.map = mapView
-        }
+        marker = GMSMarker()
+        marker.map = mapView
         
         if currentPos != nil {
             updatePosition(currentPos)
@@ -71,18 +65,16 @@ class MapController: UIViewController {
     func updatePosition(_ position: CLLocationCoordinate2D) {
         
         currentPos = position
+        marker.position = position
         
-        if circ == nil && radius != nil {
-            circ = GMSCircle(position: currentPos!, radius: radius)
-            circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
-            circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
-            circ.strokeWidth = 2
-            circ.map = mapView
-        }
-        
-        if (marker != nil) {
-            marker.position = position
-        } else {
+        if radius != nil {
+            if circ == nil {
+                circ = GMSCircle(position: currentPos!, radius: radius)
+                circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
+                circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
+                circ.strokeWidth = 2
+                circ.map = mapView
+            }
             circ.position = position
         }
     }
@@ -142,22 +134,31 @@ class MapController: UIViewController {
             
             loading.view.removeFromSuperview()
             
-            var address = "address unknown"
-            if let firstAddress = response?.firstResult() {
-                let lines = firstAddress.lines!
-                if lines.count > 0 {
-                    address = ""
-                    let line = lines[0]
-                    if line != "" {
-                        address = line
+            var country: String? = nil
+            var region: String? = nil
+            var city: String? = nil
+            var street: String? = nil
+            var postcode: String? = nil
+            var line: String? = nil
+            
+            if let address = response?.firstResult() {
+                country = address.country
+                region = address.administrativeArea
+                city = address.locality
+                street = address.thoroughfare
+                postcode = address.postalCode
+                line = address.lines![0]
+                if street == nil {
+                    let arr = line?.components(separatedBy: ", ")
+                    if (arr?.count)! > 4 {
+                        street = arr?[0]
                     }
                 }
             }
             
             self.dismiss(animated: true, completion: {
-                self.complete?(self.currentPos, "", address)
+                self.complete?(self.currentPos, country, region, city, street, postcode, line)
             })
-            
         }
     }
 

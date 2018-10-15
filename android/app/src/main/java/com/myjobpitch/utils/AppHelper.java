@@ -412,12 +412,18 @@ public class AppHelper {
     }
 
     public static void loadJobSeekerImage(JobSeeker jobSeeker, ImageView imageView) {
+        if (jobSeeker.getProfile_thumb() != null) {
+            loadImage(jobSeeker.getProfile_thumb(), imageView);
+            return;
+        }
+
         Pitch pitch = jobSeeker.getPitch();
         if (pitch != null) {
             loadImage(pitch.getThumbnail(), imageView);
-        } else {
-            imageView.setImageResource(R.drawable.avatar);
+            return;
         }
+
+        imageView.setImageResource(R.drawable.avatar);
     }
 
     public static void loadJobLogo(Job job, View container) {

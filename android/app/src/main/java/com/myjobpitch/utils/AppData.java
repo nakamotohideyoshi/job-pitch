@@ -32,7 +32,7 @@ import java.util.TimerTask;
 
 public class AppData {
 
-    public static final int API_VERSION = 5;
+    public static final int API_VERSION = 6;
     public static final boolean PRODUCTION = false;
 
     public static final int DEFAULT_REFRESH_TIME = 30;

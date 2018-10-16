@@ -1,66 +1,30 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Switch, withRouter } from 'react-router-dom';
-import { MJPRouters, getUserDataAction, setStatusAction, Loading } from 'mjp-react-core';
+import { MJPRouters } from 'mjp-react-core';
 
-/* eslint-disable react/prop-types */
-const App = props => {
-  const { status, user } = props;
-
-  if (!user && status !== 'auth') {
-    // load user data
-    props.getUserDataAction();
-    return <Loading size="large" />;
+const App = () => {
+  let RCRouters;
+  if (process.env.REACT_APP_RECRUIT) {
+    RCRouters = require('mjp-react-recruit').Routers;
   }
 
-  if (user && status === 'auth') {
-    // set logged in status
-    props.setStatusAction('select');
+  let HRRouters;
+  if (process.env.REACT_APP_HR) {
+    HRRouters = require('mjp-react-hr').Routers;
   }
 
-  let recruitRouters;
-  if (process.env.REACT_APP_RECRUIT && user) {
-    recruitRouters = require('mjp-react-recruit').Routers(props);
-    if (!recruitRouters) {
-      return <Loading size="large" />;
-    }
-  }
-
-  let hrRouters;
-  if (process.env.REACT_APP_HR && user && (user.businesses || []).length) {
-    hrRouters = require('mjp-react-hr').Routers(props);
-    if (!hrRouters) {
-      return <Loading size="large" />;
-    }
-  }
-
-  let employeeRouters;
-  if (process.env.REACT_APP_EMPLOYEE && user && (user.employees || []).length) {
-    employeeRouters = require('mjp-react-employee').Routers(props);
-    if (!employeeRouters) {
-      return <Loading size="large" />;
-    }
+  let EMRouters;
+  if (process.env.REACT_APP_EMPLOYEE) {
+    EMRouters = require('mjp-react-employee').Routers;
   }
 
   return (
-    <Switch>
-      {recruitRouters}
-      {hrRouters}
-      {employeeRouters}
-      {MJPRouters(props)}
-    </Switch>
+    <div>
+      <MJPRouters />
+      {RCRouters && <RCRouters />}
+      {HRRouters && <HRRouters />}
+      {EMRouters && <EMRouters />}
+    </div>
   );
 };
 
-export default withRouter(
-  connect(
-    state => {
-      const { user, status } = state.auth;
-      return { user, status };
-    },
-    {
-      getUserDataAction,
-      setStatusAction
-    }
-  )(App)
-);
+export default App;

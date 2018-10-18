@@ -145,7 +145,7 @@ class PayPalPurchaseView(APIView):
             # Redirect URLs
             "redirect_urls": {
                 "return_url": reverse("paypal-confirm", request=request),
-                "cancel_url": request.build_absolute_uri('/recruiter/credits/purchase-cancel'),
+                "cancel_url": request.build_absolute_uri('/recruiter/settings/credits/purchase-cancel'),
             },
             "transactions": [{
                 "custom": json.dumps({"tokens": product.tokens, "business": business.id}),
@@ -180,12 +180,12 @@ class PayPalPurchaseConfirmView(View):
                     TokenStore.objects.filter(pk=business.token_store_id).update(
                         tokens=F('tokens') + data['tokens'],
                     )
-                    return HttpResponseRedirect('/recruiter/credits/purchase-success')
+                    return HttpResponseRedirect('/recruiter/settings/credits/purchase-success')
             else:
-                return HttpResponseRedirect('/recruiter/credits/purchase-error?error={}'.format(payment.error))
+                return HttpResponseRedirect('/recruiter/settings/credits/purchase-error?error={}'.format(payment.error))
         except Exception:
             logging.exception("Error processing paypal payment")
-            return HttpResponseRedirect('/recruiter/credits/purchase-error?error={}'.format("Unknown error"))
+            return HttpResponseRedirect('/recruiter/settings/credits/purchase-error?error={}'.format("Unknown error"))
 
 
 class InitialTokensView(APIView):

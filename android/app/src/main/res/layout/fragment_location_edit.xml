@@ -110,14 +110,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="Match area"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:theme="@style/BoldLabel" />
+                <ImageButton
+                    android:id="@+id/address_help"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/icon_help"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/location_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Street"
-                    android:enabled="false"
                     app:met_floatingLabel="normal"
                     app:met_primaryColor="@color/colorGreen"/>
                 <LinearLayout
@@ -132,7 +150,6 @@
                         android:layout_weight="1"
                         android:layout_marginRight="15dp"
                         android:hint="City"
-                        android:enabled="false"
                         app:met_floatingLabel="normal"
                         app:met_primaryColor="@color/colorGreen"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -141,7 +158,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Region"
-                        android:enabled="false"
                         app:met_floatingLabel="normal"
                         app:met_primaryColor="@color/colorGreen"/>
                 </LinearLayout>
@@ -157,7 +173,6 @@
                         android:layout_weight="1"
                         android:layout_marginRight="15dp"
                         android:hint="Postcode"
-                        android:enabled="false"
                         app:met_floatingLabel="normal"
                         app:met_primaryColor="@color/colorGreen"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -166,7 +181,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Country"
-                        android:enabled="false"
                         app:met_floatingLabel="normal"
                         app:met_primaryColor="@color/colorGreen"/>
                 </LinearLayout>

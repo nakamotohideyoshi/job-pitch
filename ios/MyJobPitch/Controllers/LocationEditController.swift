@@ -94,16 +94,23 @@ class LocationEditController: MJPController {
     
     override func getRequiredFields() -> [String: (UIView, UILabel)] {
         return [
-            "name":        (nameField,    nameErrorLabel),
-            "description": (descTextView, descError),
-            "email":       (emailField,   emailError),
+            "name":         (nameField,    nameErrorLabel),
+            "description":  (descTextView, descError),
+            "email":        (emailField,   emailError),
+            "street":       (streetField, streetError),
             "city":         (cityField, cityError),
-            "street":    (streetField, streetError)
+            "region":       (regionField, regionError),
+            "postcode":       (postcodeField, postcodeError),
+            "country":       (countryField, countryError)
         ]
     }
     
     @IBAction func emailHelp(_ sender: Any) {
         PopupController.showGray("The is the email that notifications will be sent to, it can be different to your login email address.", ok: "Close")
+    }
+    
+    @IBAction func addressHelpAction(_ sender: Any) {
+        PopupController.showGray("Search for a place name, street, postcode, etc. or click the map to select location.", ok: "Close")
     }
     
     @IBAction func addLogoAction(_ sender: Any) {

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.CameraActivity;
@@ -51,6 +52,9 @@ public class PitchFragment extends BaseFragment {
     @BindView(R.id.upload_button)
     Button mUploadButton;
 
+    @BindView(R.id.skip_button)
+    TextView mSkipButton;
+
     JobSeeker jobSeeker;
     Pitch mPitch;
     String mVideoPath;
@@ -60,6 +64,8 @@ public class PitchFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pitch, container, false);
         ButterKnife.bind(this, view);
+
+        mUploadButton.setVisibility(View.INVISIBLE);
 
         if (jobSeeker == null) {
             showLoading(view);
@@ -105,6 +111,8 @@ public class PitchFragment extends BaseFragment {
                 mPlayIcon.setVisibility(View.INVISIBLE);
             }
         }
+
+        mSkipButton.setVisibility(mPitch == null ? View.VISIBLE : View.INVISIBLE);
     }
 
     void completePitchUpload() {
@@ -130,14 +138,14 @@ public class PitchFragment extends BaseFragment {
     @OnClick(R.id.new_record)
     void onNewRecord() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
-        startActivityForResult(intent, 10000);
+        getActivity().startActivityForResult(intent, 1);
     }
 
     @OnClick(R.id.example_video)
     void onPlayExamle() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("https://vimeo.com/255467562"));
-        startActivity(intent);
+        getActivity().startActivity(intent);
     }
 
     @OnClick(R.id.upload_button)

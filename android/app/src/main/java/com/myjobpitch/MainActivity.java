@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
         put(R.id.menu_users, new MenuItemInfo(BusinessListFragment.class, "R"));
         put(R.id.menu_payment, new MenuItemInfo(PaymentFragment.class, "R"));
 
-        put(R.id.menu_messages, new MenuItemInfo(MessageListFragment.class, "JR"));
+        put(R.id.menu_messages, new MenuItemInfo(MessageListFragment.class, "JR12"));
         put(R.id.menu_change_pass, new MenuItemInfo(ChangePasswordFragment.class, "JR"));
         put(R.id.menu_help, new MenuItemInfo(HelpFragment.class, "JR"));
         put(R.id.menu_share, new MenuItemInfo(null, "JR"));

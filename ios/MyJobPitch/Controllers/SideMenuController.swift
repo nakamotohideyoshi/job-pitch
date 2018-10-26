@@ -69,17 +69,10 @@ class SideMenuController: UIViewController {
         super.viewDidAppear(animated)
         
         data = [String]()
-        if let user = AppData.user {
-            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
-            if user.isJobSeeker() {
-                data = SideMenuController.jobSeekerMenu
-            } else if user.isRecruiter() {
-                data = SideMenuController.recruiterMenu
-            } else if LoginController.userType == 1 {
-                data = SideMenuController.jobSeekerMenu
-            } else if LoginController.userType == 2 {
-                data = SideMenuController.recruiterMenu
-            }
+        if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
+            data = SideMenuController.jobSeekerMenu
+        } else {
+            data = SideMenuController.recruiterMenu
         }
         
         tableView.reloadData()
@@ -144,8 +137,8 @@ extension SideMenuController: UITableViewDataSource {
             cell.nameLabel.textColor = AppData.greenColor
         } else {
             cell.isUserInteractionEnabled = true
-            let pers = item["per"]?.characters
-            if AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && LoginController.userType == 1) {
+            let pers = item["per"]
+            if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
                 if (pers!.contains("J") && AppData.user.jobSeeker == nil) || (pers!.contains("P") && AppData.profile == nil) {
                     cell.isUserInteractionEnabled = false
                 }
@@ -157,14 +150,7 @@ extension SideMenuController: UITableViewDataSource {
             
             cell.iconView.image = image
             cell.iconView.alpha = cell.isUserInteractionEnabled ? 0.8 : 0.3
-            cell.nameLabel.textColor = UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: cell.isUserInteractionEnabled ? 0.8 : 0.3)
-        }
-        
-        if indexPath.row == 0 {
-            cell.addLine(frame: CGRect(x: 10, y: 0, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                         color: UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.1))
-            cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                         color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.06))
+            cell.nameLabel.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: cell.isUserInteractionEnabled ? 0.8 : 0.3)
         }
         
         let newMessageCount = AppData.newMessageCount
@@ -175,10 +161,18 @@ extension SideMenuController: UITableViewDataSource {
             cell.badge.isHidden = true
         }
         
-        cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                     color: UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.1))
-        cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                     color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.06))
+        if (cell.layer.sublayers?.count)! <= 2 {
+            if indexPath.row == 0 {
+                cell.addLine(frame: CGRect(x: 10, y: 0, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+                             color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
+                cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+                             color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
+            }
+            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+                         color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
+            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+                         color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
+        }
         
         return cell
     }

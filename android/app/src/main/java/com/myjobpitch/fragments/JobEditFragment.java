@@ -55,7 +55,7 @@ import butterknife.OnClick;
 
 public class JobEditFragment extends FormFragment {
 
-    static final int REQUEST_NEW_PITCH = 2;
+    static final int REQUEST_NEW_PITCH = 1;
 
     @BindView(R.id.job_active)
     CheckBox activeView;
@@ -101,7 +101,6 @@ public class JobEditFragment extends FormFragment {
 
     Pitch mPitch;
     String mVideoPath;
-    int requestCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -257,8 +256,7 @@ public class JobEditFragment extends FormFragment {
     @OnClick(R.id.job_record_new)
     void onRecordNew() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
-        startActivityForResult(intent, REQUEST_NEW_PITCH);
-        requestCode = REQUEST_NEW_PITCH;
+        getActivity().startActivityForResult(intent, REQUEST_NEW_PITCH);
     }
 
     @OnClick(R.id.job_video_play)
@@ -311,7 +309,7 @@ public class JobEditFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (this.requestCode == REQUEST_NEW_PITCH) {
+            if (requestCode == REQUEST_NEW_PITCH) {
                 mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
                 mRecordVideoPlay.setVisibility(View.VISIBLE);
             } else if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {

@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"
-            android:background="@drawable/button_green"
+            android:background="@drawable/button_yellow"
             android:theme="@style/Button"
             android:id="@+id/new_record"/>
 
@@ -83,10 +83,20 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"
-            android:background="@drawable/button_yellow"
+            android:background="@drawable/button_green"
             android:theme="@style/Button"
-            android:id="@+id/upload_button"
-            android:visibility="invisible"/>
+            android:id="@+id/upload_button"/>
+
+        <TextView
+            android:id="@+id/skip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Record later"
+            android:layout_gravity="center"
+            android:textSize="@dimen/default_fontsize"
+            android:textStyle="bold"
+            android:textColor="@color/colorGreen"/>
 
     </LinearLayout>
 

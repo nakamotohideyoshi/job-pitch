@@ -79,13 +79,13 @@ public class IntroActivity extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent();
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        onSkip();
     }
 
     @OnClick(R.id.skip)
     void onSkip() {
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

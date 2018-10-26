@@ -137,6 +137,8 @@ class AppData: NSObject {
                             }
                         }
                     }
+                } else {
+                    complete(nil)
                 }
             }
         }

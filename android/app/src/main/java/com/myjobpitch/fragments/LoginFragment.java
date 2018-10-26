@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -22,6 +24,7 @@ import android.widget.LinearLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
+import com.myjobpitch.CameraActivity;
 import com.myjobpitch.IntroActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -39,6 +42,7 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -317,9 +321,9 @@ public class LoginFragment extends FormFragment {
             @Override
             public void onClick(View view) {
                 AppData.userRole = Role.JOB_SEEKER_ID;
-
                 Intent intent = new Intent(getApp(), IntroActivity.class);
-                startActivity(intent);
+                getActivity().startActivityForResult(intent, 1);
+                getApp().setRootFragement(R.id.menu_user_profile);
             }
         });
         popup.addGreenButton("I Need Staff", new View.OnClickListener() {
@@ -331,6 +335,13 @@ public class LoginFragment extends FormFragment {
         });
         popup.show();
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+//            getApp().setRootFragement(R.id.menu_user_profile);
+        }
     }
 
     @Override

@@ -20,16 +20,6 @@ class LoginController: MJPController {
     
     @IBOutlet weak var apiButton: UIButton!
     
-    static var userType: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: AppData.email)
-        }
-        set(newUserType) {
-            UserDefaults.standard.set(newUserType, forKey: AppData.email)
-            UserDefaults.standard.synchronize()
-        }
-    }
-    
     var remember: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "remember")
@@ -50,10 +40,13 @@ class LoginController: MJPController {
 
         navigationController?.navigationBar.isHidden = true
         
+        emailField.text = AppData.email
+        rememberSwitch.isOn = true
+        
         if (AppData.production) {
             apiButton.removeFromSuperview()
         } else {
-            if let url = UserDefaults.standard.string(forKey: "api") {
+            if let url = UserDefaults.standard.string(forKey: "server") {
                 if API.instance == nil {
                     API.apiRoot = URL(string: url)!
                 }
@@ -61,28 +54,24 @@ class LoginController: MJPController {
             }
         }
         
-        if loginButton != nil {
+        if API.instance == nil {
             if !API.shared().isLogin() {
-                // Check API deprecation
                 checkDeprecation()
             } else {
-                isLogin()
+                autoLogin()
             }
+        } else {
+            remember = false
         }
     }
     
-    func isLogin() {
-        emailField.text = AppData.email
+    func autoLogin() {
         if remember {
-            rememberSwitch.isOn = true
-            
-            if !API.shared().isLogin() {
-                let token = UserDefaults.standard.string(forKey: "token")
-                if token != nil {
-                    API.shared().setToken(token!)
-                    loadData()
-                    return
-                }
+            let token = UserDefaults.standard.string(forKey: "token")
+            if token != nil {
+                API.shared().setToken(token!)
+                loadData()
+                return
             }
         }
         
@@ -91,9 +80,8 @@ class LoginController: MJPController {
     }
     
     func checkDeprecation(){
-     
-        // Call Deprecation API
         showLoading()
+     
         API.shared().loadDepreactions() { (result, error) in
             if error != nil {
                 self.handleError(error)
@@ -103,7 +91,7 @@ class LoginController: MJPController {
             self.hideLoading()
             
             if result!.count == 0 {
-                self.isLogin()
+                self.autoLogin()
                 return
             }
             
@@ -111,42 +99,38 @@ class LoginController: MJPController {
             if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                 let deprecation = ((result as! [Deprecation]).filter {$0.platform == "IOS"})[0]
                 if  Int(version)! <= Int(deprecation.error)! {
-                    self.showDeprecationError()
+                    
+                    PopupController.showGreen("Your app is out of date, you must upgrade to continue", ok: "Update", okCallback: {
+                        let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(url!, options: [:], completionHandler: { (_) in
+                                exit(0)
+                            })
+                        } else {
+                            UIApplication.shared.openURL(url!)
+                        }
+                    }, cancel: "Close app", cancelCallback: {
+                        exit(0)
+                    })
+                    
                 } else if Int(version)! <= Int(deprecation.warning)! {
-                    self.showDeprecationWarning()
+                    
+                    PopupController.showGreen("Your app is out of date, update now to take advantage of the latest features", ok: "Update", okCallback: {
+                        let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+                        } else {
+                            UIApplication.shared.openURL(url!)
+                        }
+                    }, cancel: "Dismiss", cancelCallback: {
+                        self.autoLogin()
+                    })
+                    
                 } else {
-                    self.isLogin()
+                    self.autoLogin()
                 }
             }
         }
-    }
-    
-    func showDeprecationError() {
-        PopupController.showGreen("Your app is out of date, you must upgrade to continue", ok: "Update", okCallback: {
-            let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url!, options: [:], completionHandler: { (_) in
-                    exit(0)
-                })
-            } else {
-                UIApplication.shared.openURL(url!)
-            }
-        }, cancel: "Close app", cancelCallback: {
-            exit(0)
-        })
-    }
-    
-    func showDeprecationWarning() {
-        PopupController.showGreen("Your app is out of date, update now to take advantage of the latest features", ok: "Update", okCallback: {
-            let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.shared.openURL(url!)
-            }
-        }, cancel: "Dismiss", cancelCallback: {
-            self.isLogin()
-        })
     }
     
     override func showLoading() {
@@ -199,11 +183,10 @@ class LoginController: MJPController {
                 } else {
                     
                     let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
-                        LoginController.userType = 1
                         AppData.userRole = Role.ROLE_JOB_SEEKER_ID
-                        self.showIntro()
+                        let controller = AppHelper.instantiate("Intro")
+                        self.navigationController?.pushViewController(controller, animated: true)
                     }, cancel: "I Need Staff", cancelCallback: {
-                        LoginController.userType = 2
                         AppData.userRole = Role.ROLE_RECRUITER_ID
                         SideMenuController.pushController(id: "businesses")
                     })
@@ -212,11 +195,6 @@ class LoginController: MJPController {
                 }
             }
         }
-    }
-    
-    func showIntro() {
-        let controller = AppHelper.instantiate("Intro")
-        navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func loginAction(_ sender: Any) {
@@ -265,57 +243,42 @@ class LoginController: MJPController {
     }
 
     @IBAction func goSignupAction(_ sender: Any) {
-        
         view.endEditing(true)
         let controller = AppHelper.instantiate("Signup")
         navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func goSigninAction(_ sender: Any) {
-        
         view.endEditing(true)
         _ = navigationController?.popViewController(animated: true)
     }
    
     @IBAction func selectAPIAction(_ sender: Any) {
+        let setServerUrl = { (action: UIAlertAction) in
+            let url = action.title
+            API.instance = nil
+            API.apiRoot = URL(string: url!)!
+            self.apiButton.setTitle(url, for: .normal)
+            UserDefaults.standard.set(url, forKey: "server")
+            UserDefaults.standard.synchronize()
+        }
+
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let api1Action = UIAlertAction(title: "app.myjobpitch.com", style: .default) { (_) in
-            self.setApiUrl("https://app.myjobpitch.com")
-        }
+        let api1Action = UIAlertAction(title: "https://app.myjobpitch.com", style: .default, handler: setServerUrl)
         actionSheet.addAction(api1Action)
         
-        let api2Action = UIAlertAction(title: "test.sclabs.co.uk", style: .default) { (_) in
-            self.setApiUrl("https://test.sclabs.co.uk")
-        }
+        let api2Action = UIAlertAction(title: "https://test.sclabs.co.uk", style: .default, handler: setServerUrl)
         actionSheet.addAction(api2Action)
         
-        let api3Action = UIAlertAction(title: "demo.sclabs.co.uk", style: .default) { (_) in
-            self.setApiUrl("https://demo.sclabs.co.uk")
-        }
+        let api3Action = UIAlertAction(title: "https://demo.sclabs.co.uk", style: .default, handler: setServerUrl)
         actionSheet.addAction(api3Action)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         
-        if let popoverController = actionSheet.popoverPresentationController {
-            let sourceView = sender as! UIView
-            popoverController.sourceView = sourceView
-            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
-            popoverController.permittedArrowDirections = .down
-        }
-        
         present(actionSheet, animated: true, completion: nil)
     }
-    
-    func setApiUrl(_ url: String) {
-        API.instance = nil
-        API.apiRoot = URL(string: url)!
-        apiButton.setTitle(url, for: .normal)
-        UserDefaults.standard.set(url, forKey: "api")
-        UserDefaults.standard.synchronize()        
-    }
-    
 }
 
 extension LoginController: UITextFieldDelegate {

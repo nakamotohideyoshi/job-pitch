@@ -93,7 +93,7 @@ public class JobApplyFragment extends FormFragment {
     @OnClick(R.id.new_record)
     void onNewRecord() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
-        startActivityForResult(intent, 10000);
+        getActivity().startActivityForResult(intent, 1);
     }
 
     void createApplication(final Integer pitchId) {

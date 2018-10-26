@@ -77,7 +77,7 @@ import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 public class TalentProfileFragment extends FormFragment {
 
-    static final int REQUEST_NEW_PITCH = 2;
+    static final int REQUEST_NEW_PITCH = 1;
 
     @BindView(R.id.job_seeker_active)
     CheckBox mActiveView;
@@ -150,7 +150,6 @@ public class TalentProfileFragment extends FormFragment {
 
     Pitch mPitch;
     String mVideoPath;
-    int requestCode;
     boolean isActivation = false;
     boolean isProfileImage = false;
 
@@ -342,8 +341,7 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_record_new)
     void onRecordNew() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
-        startActivityForResult(intent, REQUEST_NEW_PITCH);
-        requestCode = REQUEST_NEW_PITCH;
+        getActivity().startActivityForResult(intent, REQUEST_NEW_PITCH);
     }
 
     @OnClick(R.id.job_seeker_video_play)
@@ -543,7 +541,7 @@ public class TalentProfileFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (this.requestCode == REQUEST_NEW_PITCH) {
+            if (requestCode == REQUEST_NEW_PITCH) {
                 mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
                 mRecordVideoPlay.setVisibility(View.VISIBLE);
             } else {

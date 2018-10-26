@@ -16,6 +16,7 @@ class PitchController: MJPController {
     @IBOutlet weak var playIcon: UIImageView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var uploadButton: GreenButton!
+    @IBOutlet weak var skipButton: UIButton!
     @IBOutlet weak var noRecording: UILabel!
 
     var videoUrl: URL!
@@ -26,15 +27,19 @@ class PitchController: MJPController {
         super.viewDidLoad()
         
         //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
+        
+        uploadButton.isHidden = true
 
-        self.pitch = AppData.jobSeeker.getPitch()
+        pitch = AppData.jobSeeker.getPitch()
         if let thumbnail = self.pitch?.thumbnail {
             AppHelper.loadImageURL(imageUrl: thumbnail, imageView: self.imgView, completion: {
                 self.playIcon.isHidden = false
                 self.playButton.isEnabled = true
             })
+            skipButton.isHidden = true
         } else {
-            self.noRecording.isHidden = false
+            noRecording.isHidden = false
+            skipButton.isHidden = false
         }
     }
     
@@ -69,7 +74,6 @@ class PitchController: MJPController {
             self.videoUrl = videoUrl
             self.playIcon.isHidden = false
             self.playButton.isEnabled = true
-            self.uploadButton.alpha = 1
             self.uploadButton.isHidden = false
             self.noRecording.isHidden = true
             
@@ -128,6 +132,10 @@ class PitchController: MJPController {
                 PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
             }
         }
+    }
+    
+    @IBAction func skipRecord(_ sender: Any) {
+        SideMenuController.pushController(id: "find_job")
     }
     
     @IBAction func helpAction(_ sender: Any) {

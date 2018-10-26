@@ -184,6 +184,13 @@ public class LocationEditFragment extends FormFragment {
         popup.show();
     }
 
+    @OnClick(R.id.address_help)
+    void onAddressHelp() {
+        Popup popup = new Popup(getContext(), "Search for a place name, street, postcode, etc. or click the map to select location.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
+    }
+
     @OnClick(R.id.location_address_button)
     void onSelectLocation() {
         Intent intent = new Intent(getApp(), SelectPlaceActivity.class);
@@ -191,7 +198,7 @@ public class LocationEditFragment extends FormFragment {
             intent.putExtra(SelectPlaceActivity.LATITUDE, latitude);
             intent.putExtra(SelectPlaceActivity.LONGITUDE, longitude);
         }
-        startActivityForResult(intent, 1);
+        getActivity().startActivityForResult(intent, 1);
     }
 
     @Override
@@ -246,6 +253,7 @@ public class LocationEditFragment extends FormFragment {
         location.setMobile_public(phonePublicView.isChecked());
         location.setLatitude(latitude);
         location.setLongitude(longitude);
+        location.setPlace_name(placeName);
         location.setPlace_id("");
         location.setCountry(countryView.getText().toString().isEmpty() ? "" : countryView.getText().toString());
         location.setRegion(countryView.getText().toString().isEmpty() ? "" : countryView.getText().toString());

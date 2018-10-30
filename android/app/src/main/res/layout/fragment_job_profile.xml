@@ -4,12 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.myjobpitch.fragments.JobProfileFragment">
+    tools:context=".fragments.JobProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +24,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
-                    android:imeOptions="actionDone"
                     android:hint="Sectors"
                     app:met_floatingLabel="normal"
                     app:met_primaryColor="@color/colorGreen"/>
@@ -40,7 +38,7 @@
                 android:id="@+id/job_profile_contract"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:hint="Contract"
                 app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
@@ -49,7 +47,7 @@
                 android:id="@+id/job_profile_hours"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:hint="Hours"
                 app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
@@ -58,21 +56,20 @@
                 android:text="Job match area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="20dp"
-                android:theme="@style/BoldLabel" />
+                android:layout_marginTop="16dp"
+                android:theme="@style/GreyLabel" />
 
             <TextView
                 android:text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/default_fontsize"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -88,7 +85,6 @@
                         android:text="Set My Location"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/button_height"
-                        android:layout_gravity="bottom"
                         android:gravity="center"
                         android:background="@drawable/button_yellow"
                         android:theme="@style/Button"/>
@@ -116,7 +112,7 @@
                 android:id="@+id/job_profile_radius"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:hint="Radius"
                 app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
@@ -126,17 +122,14 @@
                 android:text="Save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/button_green"
                 android:theme="@style/Button"/>
 
         </LinearLayout>
 
     </ScrollView>
-
-
-
 
 </FrameLayout>
 

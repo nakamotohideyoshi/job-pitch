@@ -38,9 +38,9 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var cvComment: UILabel!
     @IBOutlet weak var cvRemoveButton: UIButton!
     @IBOutlet weak var cvViewButton: YellowButton!
+    @IBOutlet weak var playButtonView: UIView!
     @IBOutlet weak var hasReferences: UISwitch!
     @IBOutlet weak var tickBox: UISwitch!
-    @IBOutlet weak var playButtonView: UIView!
     
     var sexNames = [String]()
     var selectedSexNames = [String]()

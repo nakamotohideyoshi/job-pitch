@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -16,6 +16,7 @@ import com.google.api.services.drive.DriveScopes;
 
 import com.google.api.services.drive.model.*;
 import com.google.api.services.drive.model.File;
+import com.myjobpitch.R;
 import com.myjobpitch.views.Popup;
 
 import android.Manifest;

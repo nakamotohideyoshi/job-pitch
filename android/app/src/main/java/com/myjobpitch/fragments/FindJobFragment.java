@@ -9,10 +9,7 @@ import android.widget.TextView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobProfile;
-import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -26,8 +23,6 @@ import java.util.List;
 
 public class FindJobFragment extends SwipeFragment<Job> {
 
-    JobSeeker jobSeeker;
-    JobProfile profile;
     View noPitchView;
 
     @Override
@@ -45,9 +40,9 @@ public class FindJobFragment extends SwipeFragment<Job> {
             }
         });
 
-        if (jobSeeker != null) {
-            showInactiveBanner();
-        }
+//        if (AppData.jobSeeker != null) {
+//            showInactiveBanner();
+//        }
 
         return  view;
     }
@@ -60,15 +55,13 @@ public class FindJobFragment extends SwipeFragment<Job> {
         new APITask(new APIAction() {
             @Override
             public void run() {
-                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
                 data.addAll(MJPApi.shared().get(Job.class));
             }
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 hideLoading();
-                showInactiveBanner();
+//                showInactiveBanner();
 
                 checkJobSeekerPitch();
 
@@ -82,7 +75,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
     }
 
     void checkJobSeekerPitch() {
-        if (jobSeeker.getPitch() == null && jobSeeker.getProfile_thumb() == null) {
+        if (AppData.jobSeeker.getPitch() == null && AppData.jobSeeker.getProfile_thumb() == null) {
             Popup popup = new Popup(getContext(), "You cannot yet be found by potential employers until you complete your profile photo or job pitch.", true);
             popup.addYellowButton("Edit Profile", new View.OnClickListener() {
                 @Override
@@ -95,13 +88,13 @@ public class FindJobFragment extends SwipeFragment<Job> {
         }
     }
 
-    void showInactiveBanner() {
-        if (!jobSeeker.isActive()) {
-            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
-        } else {
-            AppHelper.setJobTitleViewText(jobTitleView, "");
-        }
-    }
+//    void showInactiveBanner() {
+//        if (!jobSeeker.isActive()) {
+//            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
+//        } else {
+//            AppHelper.setJobTitleViewText(jobTitleView, "");
+//        }
+//    }
 
     @Override
     protected void showDeckInfo(Job job, View view) {
@@ -110,7 +103,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
         setCardDesc(view, job.getDescription());
 
         Location location = job.getLocation_data();
-        String distance = AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude());
+        String distance = AppHelper.distance(AppData.profile.getLatitude(), AppData.profile.getLongitude(), location.getLatitude(), location.getLongitude());
         ((TextView)view.findViewById(R.id.distance)).setText(distance);
 
         ((TextView)view.findViewById(R.id.right_mark_text)).setText("Apply");
@@ -119,8 +112,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
     void showProfile() {
         cardStack.unSwipeCard();
         TalentProfileFragment fragment = new TalentProfileFragment();
-        fragment.jobSeeker = jobSeeker;
-        fragment.isActivation = true;
         getApp().pushFragment(fragment);
     }
 
@@ -224,8 +215,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
     @Override
     protected void goToEditProfile() {
         TalentProfileFragment fragment = new TalentProfileFragment();
-        fragment.jobSeeker = jobSeeker;
-        fragment.isActivation = true;
         getApp().pushFragment(fragment);
     }
 

@@ -40,19 +40,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IntroActivity" />
+        <activity android:name=".activities.IntroActivity" />
         <activity
-            android:name=".MediaPlayerActivity"
+            android:name=".activities.MediaPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen" />
         <activity
-            android:name=".SelectPlaceActivity"
+            android:name=".activities.SelectPlaceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CameraActivity"
+            android:name=".activities.CameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.FullScreen" />
-        <activity android:name=".GoogleDriveActivity" />
-        <activity android:name=".DropboxActivity" />
+        <activity android:name=".activities.GoogleDriveActivity" />
+        <activity android:name=".activities.DropboxActivity" />
+        <activity android:name=".activities.WebviewActivity" />
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"

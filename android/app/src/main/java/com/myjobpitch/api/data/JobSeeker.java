@@ -149,6 +149,10 @@ public class JobSeeker extends MJPObjectWithDates {
         return first_name;
     }
 
+    public void setProfile(Integer profile) {
+        this.profile = profile;
+    }
+
     public Integer getProfile() {
         return profile;
     }

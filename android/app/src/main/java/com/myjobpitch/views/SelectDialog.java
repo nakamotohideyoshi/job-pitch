@@ -141,5 +141,4 @@ public class SelectDialog extends ArrayAdapter<SelectDialog.SelectItem> {
             this.checked = checked;
         }
     }
-
 }

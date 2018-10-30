@@ -14,8 +14,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MediaPlayerActivity;
+import com.myjobpitch.activities.CameraActivity;
+import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;

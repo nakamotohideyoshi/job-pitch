@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import com.myjobpitch.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

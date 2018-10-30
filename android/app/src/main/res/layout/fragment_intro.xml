@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".IntroActivity$PlaceholderFragment">
+    tools:context=".activities.IntroActivity$PlaceholderFragment">
 
     <TextView
         android:text="Welcome to Reported PD, a safe, private space to share stories of police interactions."

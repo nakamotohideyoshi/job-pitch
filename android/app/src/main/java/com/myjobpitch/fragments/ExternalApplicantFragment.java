@@ -1,56 +1,32 @@
 package com.myjobpitch.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.ExternalApplication;
 import com.myjobpitch.api.data.ExternalJobSeeker;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Nationality;
-import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.uploader.AWSPitchUploader;
-import com.myjobpitch.uploader.PitchUpload;
-import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Loading;
 import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import org.springframework.core.io.FileSystemResource;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

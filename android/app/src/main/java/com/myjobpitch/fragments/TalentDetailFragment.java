@@ -13,10 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.MediaPlayerActivity;
+import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
@@ -428,7 +427,6 @@ public class TalentDetailFragment extends BaseFragment {
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
             TalentProfileFragment fragment = new TalentProfileFragment();
-            fragment.viewFragment = this;
             getApp().pushFragment(fragment);
         }
     }

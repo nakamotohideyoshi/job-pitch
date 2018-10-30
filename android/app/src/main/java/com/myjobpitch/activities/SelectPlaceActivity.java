@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.myjobpitch.R;
 import com.myjobpitch.views.Popup;
 
 import java.io.IOException;

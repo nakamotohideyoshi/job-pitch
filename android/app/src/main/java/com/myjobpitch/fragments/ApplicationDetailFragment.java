@@ -21,7 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.myjobpitch.MediaPlayerActivity;
+import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Application;
@@ -229,8 +229,6 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     void showProfile() {
         TalentProfileFragment fragment = new TalentProfileFragment();
-        fragment.jobSeeker = jobSeeker;
-        fragment.isActivation = true;
         getApp().pushFragment(fragment);
     }
 
@@ -247,8 +245,6 @@ public class ApplicationDetailFragment extends BaseFragment {
                         @Override
                         public void onClick(View view) {
                             TalentProfileFragment fragment = new TalentProfileFragment();
-                            fragment.jobSeeker = jobSeeker;
-                            fragment.isActivation = true;
                             getApp().pushFragment(fragment);
                         }
                     });

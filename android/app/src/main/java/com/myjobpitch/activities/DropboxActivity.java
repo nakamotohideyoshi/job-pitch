@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
@@ -9,6 +9,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.myjobpitch.R;
 import com.myjobpitch.views.Popup;
 
 import android.content.Context;

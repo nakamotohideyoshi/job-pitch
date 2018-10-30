@@ -25,6 +25,8 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
+import com.myjobpitch.activities.DropboxActivity;
+import com.myjobpitch.activities.GoogleDriveActivity;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.fragments.BaseFragment;
 import com.myjobpitch.fragments.BusinessListFragment;
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (AppData.userRole == Role.JOB_SEEKER_ID) {
                             if (info.flags.contains("J")) {
-                                boolean f = (info.flags.contains("1") && AppData.user.getJob_seeker() == null) || (info.flags.contains("2") && !AppData.existProfile);
+                                boolean f = (info.flags.contains("1") && AppData.user.getJob_seeker() == null) || (info.flags.contains("2") && AppData.profile == null);
                                 item.setEnabled(!f);
                                 item.setVisible(true);
                             } else {

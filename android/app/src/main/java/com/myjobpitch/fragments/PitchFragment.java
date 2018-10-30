@@ -16,14 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MediaPlayerActivity;
+import com.myjobpitch.activities.CameraActivity;
+import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.api.data.SpecificPitchForCreation;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -73,7 +71,7 @@ public class PitchFragment extends BaseFragment {
                 @Override
                 public void run() {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    AppData.existProfile = jobSeeker.getProfile() != null;
+//                    AppData.existProfile = jobSeeker.getProfile() != null;
                     mPitch = jobSeeker.getPitch();
                 }
             }).addListener(new APITaskListener() {

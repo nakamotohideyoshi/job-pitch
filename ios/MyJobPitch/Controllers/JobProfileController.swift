@@ -36,7 +36,6 @@ class JobProfileController: MJPController {
     
     var latitude: NSNumber!
     var longitude: NSNumber!
-    var placeID: String!
     var placeName: String!
     
     var locationManager: CLLocationManager!
@@ -168,7 +167,6 @@ class JobProfileController: MJPController {
         if profile != nil {
             latitude = profile?.latitude
             longitude = profile?.longitude
-            placeID = profile?.placeID
             placeName = profile?.placeName
             addressField.text = placeName
         }
@@ -205,8 +203,6 @@ class JobProfileController: MJPController {
             return
         }
         
-        showLoading()
-        
         let profile = Profile()
         profile.jobSeeker = AppData.jobSeeker.id
         
@@ -234,9 +230,11 @@ class JobProfileController: MJPController {
         
         profile.latitude = latitude
         profile.longitude = longitude
-        profile.placeID = ""
         profile.placeName = placeName
+        profile.placeID = ""
         profile.postcodeLookup = ""
+        
+        showLoading()
         
         API.shared().saveJobProfile(profile) { (result, error) in
             

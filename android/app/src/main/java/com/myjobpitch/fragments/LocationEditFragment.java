@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
-import com.myjobpitch.SelectPlaceActivity;
+import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;

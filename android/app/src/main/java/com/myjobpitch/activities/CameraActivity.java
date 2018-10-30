@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,7 +14,6 @@ import android.hardware.SensorManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,6 +25,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.myjobpitch.R;
 
 import java.io.File;
 import java.io.IOException;

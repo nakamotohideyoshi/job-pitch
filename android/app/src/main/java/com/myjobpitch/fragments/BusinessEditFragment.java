@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;

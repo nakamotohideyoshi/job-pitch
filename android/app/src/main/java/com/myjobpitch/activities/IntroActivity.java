@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.myjobpitch.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

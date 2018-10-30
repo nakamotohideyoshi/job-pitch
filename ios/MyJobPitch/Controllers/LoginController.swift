@@ -274,6 +274,9 @@ class LoginController: MJPController {
         let api3Action = UIAlertAction(title: "https://demo.sclabs.co.uk", style: .default, handler: setServerUrl)
         actionSheet.addAction(api3Action)
         
+        let api4Action = UIAlertAction(title: "https://release.sclabs.co.uk", style: .default, handler: setServerUrl)
+        actionSheet.addAction(api4Action)
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         

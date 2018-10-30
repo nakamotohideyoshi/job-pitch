@@ -4,30 +4,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.myjobpitch.fragments.TalentProfileFragment">
+    tools:context=".fragments.TalentProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <LinearLayout
+            <android.support.percent.PercentFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/image_view"
+                    app:layout_widthPercent="30%"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/avatar"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:theme="@style/ProgressBar"
+                    android:visibility="gone"
+                    style="@android:style/Widget.DeviceDefault.ProgressBar.Small"/>
+            </android.support.percent.PercentFrameLayout>
+
+            <Button
+                android:id="@+id/avata_add_button"
+                android:text="Change Profile Photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:textColor="@color/colorGreen"
+                android:theme="@style/Button"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
                     android:text="Active"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:theme="@style/GreyLabel"/>
                 <CheckBox
                     android:id="@+id/job_seeker_active"
@@ -41,6 +72,7 @@
                 android:id="@+id/job_seeker_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:inputType="textPersonName"
                 android:imeOptions="actionDone"
                 android:hint="First Name"
@@ -51,7 +83,7 @@
                 android:id="@+id/job_seeker_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:inputType="textPersonName"
                 android:imeOptions="actionDone"
                 android:hint="Last Name"
@@ -62,14 +94,14 @@
                 android:text="Public"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_gravity="right"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="end"
                 android:theme="@style/GreyLabel"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/job_seeker_email"
@@ -77,7 +109,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="textEmailAddress"
-                    android:imeOptions="actionDone"
                     android:hint="Email Addresss"
                     android:enabled="false"
                     app:met_floatingLabel="normal"
@@ -86,7 +117,7 @@
                     android:id="@+id/job_seeker_email_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -94,8 +125,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="bottom"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/job_seeker_telephone"
@@ -111,7 +142,7 @@
                     android:id="@+id/job_seeker_telephone_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -119,8 +150,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="bottom"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/job_seeker_mobile"
@@ -136,7 +167,7 @@
                     android:id="@+id/job_seeker_mobile_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -144,7 +175,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -161,7 +192,7 @@
                     android:id="@+id/job_seeker_age_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -169,7 +200,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -184,7 +215,7 @@
                     android:id="@+id/job_seeker_sex_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -192,7 +223,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <FrameLayout
@@ -218,7 +249,7 @@
                     android:id="@+id/job_seeker_nationality_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -226,7 +257,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
@@ -234,12 +265,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:theme="@style/BoldLabel" />
+                    android:theme="@style/GreyLabel" />
                 <ImageButton
                     android:id="@+id/job_seeker_national_number_help"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/icon_help"/>
             </LinearLayout>
 
@@ -247,17 +278,16 @@
                 android:id="@+id/job_seeker_national_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:hint="(optional)"
-                app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
@@ -265,12 +295,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:theme="@style/BoldLabel" />
+                    android:theme="@style/GreyLabel" />
                 <ImageButton
                     android:id="@+id/job_seeker_cv_help"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/icon_help"/>
             </LinearLayout>
 
@@ -278,7 +308,7 @@
                 android:id="@+id/job_seeker_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
                 android:hint="Enter text here"
@@ -296,27 +326,27 @@
                     android:text="CV:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/BoldLabel" />
+                    android:theme="@style/GreyLabel" />
                 <TextView
                     android:id="@+id/job_seeker_cv_comment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:singleLine="true"
                     android:textSize="14sp" />
                 <ImageButton
                     android:id="@+id/job_seeker_cv_remove"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:visibility="gone"
                     android:background="@drawable/icon_remove"/>
                 <ImageButton
                     android:id="@+id/job_seeker_cv_add_help"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/icon_help"/>
             </LinearLayout>
 
@@ -325,7 +355,7 @@
                 android:text="View CV"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button_yellow"
                 android:theme="@style/Button"/>
 
@@ -334,14 +364,14 @@
                 android:text="Upload CV"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button_blue"
                 android:theme="@style/Button"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
@@ -349,11 +379,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:theme="@style/BoldLabel" />
+                    android:theme="@style/GreyLabel" />
                 <ImageButton
                     android:id="@+id/job_seeker_pitch_help"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:background="@drawable/icon_help"/>
             </LinearLayout>
 
@@ -361,20 +391,17 @@
                 android:text="Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginTop="8dp"
-                android:textSize="@dimen/default_fontsize"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/default_fontsize" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="16dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Check out our "
-                    android:textSize="@dimen/default_fontsize"
-                    android:textStyle="bold"/>
+                    android:textSize="@dimen/default_fontsize"/>
                 <TextView
                     android:id="@+id/example_video"
                     android:layout_width="wrap_content"
@@ -394,7 +421,7 @@
                     android:id="@+id/job_seeker_record_new"
                     android:layout_width="98dp"
                     android:layout_height="98dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="vertical"
                     android:background="@color/colorPrimary"
                     android:gravity="center">
@@ -408,7 +435,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:textColor="#fff"/>
                 </LinearLayout>
                 <LinearLayout
@@ -429,25 +456,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:textColor="#fff"/>
                 </LinearLayout>
             </LinearLayout>
-
-            <include
-                android:id="@+id/job_seeker_profile_image"
-                layout="@layout/view_profile_image_selector"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_marginTop="15dp"/>
 
             <CheckBox
                 android:id="@+id/job_seeker_has_references"
                 android:text="References Available"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textColor="@color/colorAccent"
+                android:layout_marginTop="24dp"
                 android:theme="@style/CheckBox"/>
 
             <CheckBox
@@ -456,8 +475,7 @@
 If required I will give full details if I have been convicted of any criminal offence."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/colorAccent"
+                android:layout_marginTop="8dp"
                 android:theme="@style/CheckBox"
                 android:gravity="top"/>
 
@@ -466,8 +484,8 @@ If required I will give full details if I have been convicted of any criminal of
                 android:text="Save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/button_green"
                 android:theme="@style/Button"/>
 

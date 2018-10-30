@@ -104,8 +104,6 @@ public class ApplicationsFragment extends BaseFragment {
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
             TalentProfileFragment fragment = new TalentProfileFragment();
-            fragment.jobSeeker = jobSeeker;
-            fragment.isActivation = true;
             getApp().pushFragment(fragment);
         } else {
             super.onMenuSelected(menuID);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
+import com.myjobpitch.api.MJPObjectWithName;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationInterview;
 import com.myjobpitch.api.data.Business;
@@ -24,6 +25,7 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.api.data.Sex;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -33,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +52,14 @@ public class AppHelper {
 
     public static String getBusinessName(Job job) {
         return job.getLocation_data().getBusiness_data().getName() + ", " + job.getLocation_data().getName();
+    }
+
+    public static <T extends MJPObjectWithName> List<String> getNames(List<T> objects) {
+        List<String> names = new ArrayList<>();
+        for (T item : objects) {
+            names.add(item.getName());
+        }
+        return names;
     }
 
     // distance

@@ -157,7 +157,7 @@ public class MessageListFragment extends ApplicationsFragment {
                 @Override
                 public void run() {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    AppData.existProfile = jobSeeker.getProfile() != null;
+//                    AppData.existProfile = jobSeeker.getProfile() != null;
                 }
             }).addListener(new APITaskListener() {
                 @Override
@@ -169,8 +169,6 @@ public class MessageListFragment extends ApplicationsFragment {
                             public void onClick(View view) {
 
                                 TalentProfileFragment fragment = new TalentProfileFragment();
-                                fragment.jobSeeker = jobSeeker;
-                                fragment.isActivation = true;
                                 getApp().pushFragment(fragment);
                             }
                         });

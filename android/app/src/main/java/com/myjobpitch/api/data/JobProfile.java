@@ -16,6 +16,10 @@ public class JobProfile extends MJPObjectWithDates {
     private Double latitude;
     private Integer search_radius;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public List<Integer> getSectors() {
         return sectors;
     }

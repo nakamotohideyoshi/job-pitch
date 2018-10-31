@@ -115,9 +115,10 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
         mCurrentPos = new LatLng(latitude, longitude);
 
         if (marker == null) {
-            marker = mMap.addMarker(new MarkerOptions());
+            marker = mMap.addMarker(new MarkerOptions().position(mCurrentPos));
+        } else {
+            marker.setPosition(mCurrentPos);
         }
-        marker.setPosition(mCurrentPos);
 
         if (radius != 0) {
             if (circle == null) {

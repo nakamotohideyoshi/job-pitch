@@ -68,19 +68,11 @@
                         android:hint="Password"
                         android:inputType="textPassword"
                         android:theme="@style/EditText" />
-                    <CheckBox
-                        android:id="@+id/login_remember"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/input_height"
-                        android:layout_marginLeft="50dp"
-                        android:text="Remember password"
-                        android:textColor="@android:color/white"
-                        android:theme="@style/CheckBox" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginTop="30dp">
 
                         <LinearLayout
                             android:id="@+id/login_panel"
@@ -103,6 +95,7 @@
                                 android:layout_marginTop="15dp"
                                 android:background="@android:color/transparent"
                                 android:text="Forgot password?"
+                                android:textSize="@dimen/default_fontsize"
                                 android:textColor="#0095ff"
                                 android:theme="@style/Button" />
                             <Button
@@ -111,6 +104,7 @@
                                 android:layout_height="@dimen/button_height"
                                 android:background="@android:color/transparent"
                                 android:text="Don't have an account? Sign up"
+                                android:textSize="@dimen/default_fontsize"
                                 android:textColor="#0095ff"
                                 android:theme="@style/Button"/>
                             <Button
@@ -119,6 +113,7 @@
                                 android:layout_height="@dimen/button_height"
                                 android:background="@android:color/transparent"
                                 android:text="https://www.myjobpitch.com/"
+                                android:textStyle="normal"
                                 android:textColor="@color/colorYellow"
                                 android:theme="@style/Button"/>
                         </LinearLayout>
@@ -143,6 +138,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/button_height"
                                 android:background="@android:color/transparent"
+                                android:textSize="@dimen/default_fontsize"
                                 android:textColor="#0095ff"
                                 android:theme="@style/Button" />
                         </LinearLayout>

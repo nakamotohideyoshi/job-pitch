@@ -227,23 +227,21 @@ sdafsdf</string>
                                     </view>
                                 </subviews>
                             </stackView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There are no more new matches for this job. You can restore your removed matches by clicking refresh above." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oN5-3h-dvf">
-                                <rect key="frame" x="35" y="363.33333333333331" width="344" height="64.666666666666686"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eb9-x8-9Oh" customClass="EmptyView" customModule="MyJobPitch" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="102" width="414" height="587"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="25m-vf-gMa" secondAttribute="trailing" id="4VS-Iu-juQ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="oN5-3h-dvf" secondAttribute="trailing" constant="15" id="8zI-bb-cKu"/>
                             <constraint firstItem="25m-vf-gMa" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" constant="12" id="Ben-MC-E0U"/>
-                            <constraint firstItem="oN5-3h-dvf" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leadingMargin" constant="15" id="F7E-Cc-T4Y"/>
                             <constraint firstItem="25m-vf-gMa" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="GYJ-A8-8l2"/>
-                            <constraint firstItem="oN5-3h-dvf" firstAttribute="centerY" secondItem="E23-SR-OY4" secondAttribute="centerY" id="JBM-Gt-MPj"/>
-                            <constraint firstItem="oN5-3h-dvf" firstAttribute="centerX" secondItem="E23-SR-OY4" secondAttribute="centerX" id="Qg8-6g-7Sv"/>
+                            <constraint firstItem="eb9-x8-9Oh" firstAttribute="trailing" secondItem="E23-SR-OY4" secondAttribute="trailing" id="LtY-Ym-2g7"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="25m-vf-gMa" secondAttribute="bottom" constant="12" id="axD-Sm-Qgh"/>
+                            <constraint firstItem="eb9-x8-9Oh" firstAttribute="leading" secondItem="E23-SR-OY4" secondAttribute="leading" id="fsa-i5-nv5"/>
+                            <constraint firstItem="eb9-x8-9Oh" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="top" id="g2R-bA-gi5"/>
+                            <constraint firstItem="eb9-x8-9Oh" firstAttribute="bottom" secondItem="E23-SR-OY4" secondAttribute="bottom" id="gLs-g8-eWT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yIw-dg-dpG">
@@ -257,7 +255,7 @@ sdafsdf</string>
                     <connections>
                         <outlet property="cardsView" destination="E23-SR-OY4" id="MPd-9m-IKU"/>
                         <outlet property="creditsButton" destination="XQS-aA-5j0" id="hwn-2U-29M"/>
-                        <outlet property="emptyView" destination="oN5-3h-dvf" id="uJ5-6b-rKz"/>
+                        <outlet property="emptyView" destination="eb9-x8-9Oh" id="JBX-pA-Tm7"/>
                         <outlet property="infoLabel" destination="s8z-Jc-0q7" id="Zwq-6u-FHP"/>
                     </connections>
                 </viewController>
@@ -1456,18 +1454,8 @@ sdafsdf</string>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vg4-0R-yvU">
-                                                <rect key="frame" x="62" y="423" width="51" height="31"/>
-                                                <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </switch>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zle-DE-rBz">
-                                                <rect key="frame" x="121" y="427" width="175" height="22"/>
-                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gw0-Rn-TFY" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="484" width="289" height="40"/>
+                                                <rect key="frame" x="62" y="440" width="289" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Login">
@@ -1478,7 +1466,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVx-H6-QTl">
-                                                <rect key="frame" x="133" y="539" width="149" height="34"/>
+                                                <rect key="frame" x="133" y="495" width="149" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Forgot password?">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1488,7 +1476,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hqS-AM-W3P">
-                                                <rect key="frame" x="77" y="583" width="260" height="34"/>
+                                                <rect key="frame" x="77" y="539" width="260" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Don't have an account? Sign up">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1498,7 +1486,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h39-M0-soz">
-                                                <rect key="frame" x="87" y="627" width="240" height="34"/>
+                                                <rect key="frame" x="87" y="583" width="240" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="https://www.myjobpitch.com">
                                                     <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1510,14 +1498,11 @@ sdafsdf</string>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="kKQ-Mt-MiR" firstAttribute="height" secondItem="pbn-eH-oxK" secondAttribute="height" multiplier="0.3" id="1fz-Hf-Na5"/>
-                                            <constraint firstItem="zle-DE-rBz" firstAttribute="leading" secondItem="vg4-0R-yvU" secondAttribute="trailing" constant="10" id="4ap-dV-cjl"/>
                                             <constraint firstItem="ZVx-H6-QTl" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="4za-az-cBT"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="leading" secondItem="vSp-OV-dlH" secondAttribute="leading" id="6eE-gn-WWX"/>
-                                            <constraint firstItem="Gw0-Rn-TFY" firstAttribute="top" secondItem="vg4-0R-yvU" secondAttribute="bottom" constant="30" id="BUA-d9-Tc2"/>
                                             <constraint firstItem="hqS-AM-W3P" firstAttribute="top" secondItem="ZVx-H6-QTl" secondAttribute="bottom" constant="10" id="BWg-JG-19I"/>
                                             <constraint firstItem="VJE-h2-Ocj" firstAttribute="trailing" secondItem="oRJ-OX-CyF" secondAttribute="trailing" id="CHW-2B-7sd"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="height" secondItem="vSp-OV-dlH" secondAttribute="height" id="Eee-VI-ZVf"/>
-                                            <constraint firstItem="vg4-0R-yvU" firstAttribute="leading" secondItem="oRJ-OX-CyF" secondAttribute="leading" id="KEZ-X1-Jyh"/>
                                             <constraint firstItem="VJE-h2-Ocj" firstAttribute="leading" secondItem="oRJ-OX-CyF" secondAttribute="leading" id="KpM-va-43V"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="trailing" secondItem="vSp-OV-dlH" secondAttribute="trailing" id="TLQ-UJ-ogc"/>
                                             <constraint firstItem="Gw0-Rn-TFY" firstAttribute="trailing" secondItem="oRJ-OX-CyF" secondAttribute="trailing" id="WOd-gY-v8X"/>
@@ -1532,13 +1517,12 @@ sdafsdf</string>
                                             <constraint firstItem="kKQ-Mt-MiR" firstAttribute="centerY" secondItem="pbn-eH-oxK" secondAttribute="centerY" multiplier="0.45" id="n0B-ev-dyy"/>
                                             <constraint firstItem="h39-M0-soz" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="n2q-99-3Mc"/>
                                             <constraint firstItem="vSp-OV-dlH" firstAttribute="centerY" secondItem="pbn-eH-oxK" secondAttribute="centerY" constant="-25" id="nR9-hi-Z86"/>
-                                            <constraint firstItem="vg4-0R-yvU" firstAttribute="centerY" secondItem="zle-DE-rBz" secondAttribute="centerY" id="pQH-VI-ZFG"/>
                                             <constraint firstItem="Vk4-hP-xfS" firstAttribute="leading" secondItem="vSp-OV-dlH" secondAttribute="leading" id="pnD-vL-Jjb"/>
-                                            <constraint firstItem="vg4-0R-yvU" firstAttribute="top" secondItem="VJE-h2-Ocj" secondAttribute="bottom" constant="13" id="qmW-QT-jEw"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="top" secondItem="Vk4-hP-xfS" secondAttribute="bottom" constant="13" id="sIs-DE-QzS"/>
                                             <constraint firstItem="VJE-h2-Ocj" firstAttribute="top" secondItem="oRJ-OX-CyF" secondAttribute="bottom" constant="2" id="tYQ-zb-5Z2"/>
                                             <constraint firstItem="Gw0-Rn-TFY" firstAttribute="height" secondItem="oRJ-OX-CyF" secondAttribute="height" id="ugj-8d-ZMC"/>
                                             <constraint firstItem="Vk4-hP-xfS" firstAttribute="top" secondItem="vSp-OV-dlH" secondAttribute="bottom" constant="2" id="vM1-k4-1gh"/>
+                                            <constraint firstItem="Gw0-Rn-TFY" firstAttribute="top" secondItem="VJE-h2-Ocj" secondAttribute="bottom" constant="30" id="z5v-a9-oae"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1573,7 +1557,6 @@ sdafsdf</string>
                         <outlet property="loginButton" destination="Gw0-Rn-TFY" id="gFB-9z-4BO"/>
                         <outlet property="passwordErrorLabel" destination="VJE-h2-Ocj" id="p3v-7c-asQ"/>
                         <outlet property="passwordField" destination="oRJ-OX-CyF" id="K25-8R-7cj"/>
-                        <outlet property="rememberSwitch" destination="vg4-0R-yvU" id="iMe-Vv-yIU"/>
                         <outlet property="scrollView" destination="55r-Rc-gpS" id="2Y7-Qx-pvE"/>
                     </connections>
                 </viewController>
@@ -1641,18 +1624,8 @@ sdafsdf</string>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="A6H-CS-OL0">
-                                                <rect key="frame" x="62" y="423" width="51" height="31"/>
-                                                <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </switch>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4kJ-7G-BaJ">
-                                                <rect key="frame" x="121" y="427" width="175" height="22"/>
-                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atM-51-Gec" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="484" width="289" height="40"/>
+                                                <rect key="frame" x="62" y="440" width="289" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Register">
@@ -1663,7 +1636,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmg-Ov-8MQ">
-                                                <rect key="frame" x="103" y="584" width="208" height="34"/>
+                                                <rect key="frame" x="103" y="540" width="208" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Have an account? Sign in">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1673,7 +1646,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F59-JL-Hdg">
-                                                <rect key="frame" x="87" y="628" width="240" height="34"/>
+                                                <rect key="frame" x="87" y="584" width="240" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="https://www.myjobpitch.com">
                                                     <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1699,19 +1672,15 @@ sdafsdf</string>
                                             <constraint firstItem="atM-51-Gec" firstAttribute="height" secondItem="yT9-i6-o48" secondAttribute="height" id="SGn-Aa-lbB"/>
                                             <constraint firstItem="qA6-BF-6xk" firstAttribute="centerY" secondItem="Pwf-wN-z0o" secondAttribute="centerY" multiplier="0.45" id="SUL-EQ-EBl"/>
                                             <constraint firstItem="yT9-i6-o48" firstAttribute="trailing" secondItem="lbD-kd-ugr" secondAttribute="trailing" id="YJI-wM-a8L"/>
-                                            <constraint firstItem="A6H-CS-OL0" firstAttribute="leading" secondItem="yT9-i6-o48" secondAttribute="leading" id="aPS-g8-GJl"/>
-                                            <constraint firstItem="4kJ-7G-BaJ" firstAttribute="leading" secondItem="A6H-CS-OL0" secondAttribute="trailing" constant="10" id="aQZ-g3-TQT"/>
                                             <constraint firstItem="qA6-BF-6xk" firstAttribute="centerX" secondItem="Pwf-wN-z0o" secondAttribute="centerX" id="cQ9-Tn-9cb"/>
-                                            <constraint firstItem="A6H-CS-OL0" firstAttribute="top" secondItem="Aff-KS-pDf" secondAttribute="bottom" constant="13" id="cuh-Yn-woE"/>
                                             <constraint firstItem="mmg-Ov-8MQ" firstAttribute="top" secondItem="atM-51-Gec" secondAttribute="bottom" constant="60" id="dHF-0w-JIK"/>
                                             <constraint firstItem="F59-JL-Hdg" firstAttribute="centerX" secondItem="Pwf-wN-z0o" secondAttribute="centerX" id="fRR-dK-4UA"/>
                                             <constraint firstItem="Atf-TD-LNz" firstAttribute="top" secondItem="lbD-kd-ugr" secondAttribute="bottom" constant="2" id="hAn-XX-PNx"/>
                                             <constraint firstItem="atM-51-Gec" firstAttribute="trailing" secondItem="yT9-i6-o48" secondAttribute="trailing" id="lnF-KY-773"/>
-                                            <constraint firstItem="A6H-CS-OL0" firstAttribute="centerY" secondItem="4kJ-7G-BaJ" secondAttribute="centerY" id="mOF-s1-pLT"/>
                                             <constraint firstItem="Atf-TD-LNz" firstAttribute="trailing" secondItem="lbD-kd-ugr" secondAttribute="trailing" id="qWT-1a-7Vf"/>
-                                            <constraint firstItem="atM-51-Gec" firstAttribute="top" secondItem="A6H-CS-OL0" secondAttribute="bottom" constant="30" id="tsz-rS-8NN"/>
                                             <constraint firstItem="F59-JL-Hdg" firstAttribute="top" secondItem="mmg-Ov-8MQ" secondAttribute="bottom" constant="10" id="u2r-bW-YkD"/>
                                             <constraint firstItem="yT9-i6-o48" firstAttribute="leading" secondItem="lbD-kd-ugr" secondAttribute="leading" id="ynn-TT-9bt"/>
+                                            <constraint firstItem="atM-51-Gec" firstAttribute="top" secondItem="Aff-KS-pDf" secondAttribute="bottom" constant="30" id="zcL-VE-Yu8"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1745,7 +1714,6 @@ sdafsdf</string>
                         <outlet property="emailField" destination="lbD-kd-ugr" id="ueh-WE-6jH"/>
                         <outlet property="passwordErrorLabel" destination="Aff-KS-pDf" id="qDq-Se-2cg"/>
                         <outlet property="passwordField" destination="yT9-i6-o48" id="wsE-6A-q9u"/>
-                        <outlet property="rememberSwitch" destination="A6H-CS-OL0" id="Cp1-kd-3Dl"/>
                         <outlet property="scrollView" destination="moU-jZ-V40" id="PFh-19-q2K"/>
                     </connections>
                 </viewController>

@@ -32,7 +32,7 @@ public class SwipeFragment<T> extends BaseFragment {
     View jobTitleView;
 
     @BindView(R.id.empty_button)
-    View emptyButton;
+    TextView emptyButton;
 
     @BindView(R.id.credits)
     TextView creditsView;

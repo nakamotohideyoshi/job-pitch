@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ExcludeJobSeeker;
@@ -23,6 +22,8 @@ import com.myjobpitch.views.Popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.OnClick;
+
 public class FindTalentFragment extends SwipeFragment<JobSeeker> {
 
     public Job job;
@@ -32,6 +33,10 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
                              Bundle savedInstanceState) {
         View view = initView(inflater, container, "There are no more new matches for this job.");
         title = "Find Talent";
+
+        emptyButton.setText("Remove filter");
+        emptyButton.setVisibility(View.VISIBLE);
+
         showCredits();
 
         if (job != null) {
@@ -64,6 +69,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             public void onSuccess() {
                 hideLoading();
                 showCredits();
+                updateEmptyView();
                 setData(data);
             }
             @Override
@@ -78,6 +84,24 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         AppHelper.loadJobSeekerImage(jobSeeker, getCardImageContainer(view));
         setCardTitle(view, AppHelper.getJobSeekerName(jobSeeker));
         setCardDesc(view, jobSeeker.getDescription());
+    }
+
+    private void updateEmptyView() {
+        String str = "There are no more new matches for this job.";
+        if (job.getRequires_cv()) {
+            str = String.format("%s\n\n%s", str, "You are currently hiding job seekers who have not uploaded a CV");
+        }
+        if (job.getRequires_pitch()) {
+            str = String.format("%s\n%s", str, "You are currently hiding job seekers who have not uploaded a video pitch");
+        }
+        AppHelper.setEmptyViewText(emptyView, str);
+    }
+
+    @OnClick(R.id.empty_button)
+    void onJobEdit() {
+        JobEditFragment fragment = new JobEditFragment();
+        fragment.job = job;
+        getApp().pushFragment(fragment);
     }
 
     @Override

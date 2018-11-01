@@ -13,7 +13,7 @@ class SwipeController: MJPController {
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var cardsView: UIView!
     @IBOutlet weak var creditsButton: UIButton!
-    @IBOutlet weak var emptyView: UILabel!
+    @IBOutlet weak var emptyView: EmptyView!
     
     public var searchJob: Job!
     
@@ -28,14 +28,16 @@ class SwipeController: MJPController {
         if AppData.user.isJobSeeker() {
             
             title = "Find Job"
-            emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
+            emptyView.message.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
             infoLabel.superview?.isHidden = true
             creditsButton.superview?.isHidden = true
             
         } else {
-        
+            
             title = "Find Talent"
-            emptyView.text = "There are no more new matches for this job."
+            
+            emptyView.button.setTitle("Remove filter", for: .normal)
+            updateEmptyView()
             updateTokens()
         }
         
@@ -77,6 +79,32 @@ class SwipeController: MJPController {
                     self.handleError(error)
                 }
             }
+        }
+    }
+    
+    func updateEmptyView() {
+        var str = "There are no more new matches for this job."
+        if searchJob.requiresCV {
+            str = String(format: "%@\n\n%@", str, "You are currently hiding job seekers who have not uploaded a CV")
+        }
+        if searchJob.requiresPitch {
+            str = String(format: "%@\n%@", str, "You are currently hiding job seekers who have not uploaded a video pitch")
+        }
+        emptyView.message.text = str
+        
+        if searchJob.requiresCV || searchJob.requiresPitch {
+            emptyView.action = {
+                let controller = JobEditController.instantiate()
+                controller.job = self.searchJob
+                controller.saveComplete = { (job: Job) in
+                    self.searchJob = job
+                    self.updateEmptyView()
+                    self.refresh()
+                }
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+            }
+        } else {
+            emptyView.action = nil
         }
     }
     

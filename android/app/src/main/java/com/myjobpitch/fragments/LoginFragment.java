@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -68,8 +67,6 @@ public class LoginFragment extends FormFragment {
     EditText mUserEmailView;
     @BindView(R.id.user_password)
     EditText mUserPassView;
-    @BindView(R.id.login_remember)
-    CheckBox mRememberView;
 
     @BindView(R.id.reset_email)
     EditText mResetEmailView;
@@ -102,7 +99,6 @@ public class LoginFragment extends FormFragment {
         resetContainer.setX(displayMetrics.widthPixels);
 
         mUserEmailView.setText(AppData.getEmail());
-        mRememberView.setChecked(AppData.getRemember());
 
         if (AppData.PRODUCTION) {
             ((ViewGroup)mAPIButton.getParent()).removeView(mAPIButton);
@@ -123,7 +119,7 @@ public class LoginFragment extends FormFragment {
                 autoLogin(view);
             }
         } else {
-            AppData.saveRemember(false, "");
+            AppData.saveToken("");
         }
 
         return view;
@@ -131,37 +127,34 @@ public class LoginFragment extends FormFragment {
 
     public void autoLogin(View view) {
 
-        if (AppData.getRemember()) {
+        String token = AppData.getToken();
 
-            String token = AppData.getToken();
+        if (!token.isEmpty()) {
 
-            if (!token.isEmpty()) {
+            MJPApi.shared().setToken(new AuthToken(token));
 
-                MJPApi.shared().setToken(new AuthToken(token));
+            showLoading(view);
 
-                showLoading(view);
-
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() {
-                        AppData.loadData();
+            new APITask(new APIAction() {
+                @Override
+                public void run() {
+                    AppData.loadData();
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    if (LoginFragment.this.isResumed()) {
+                        goMain();
+                    } else {
+                        isLoggedin = true;
                     }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        if (LoginFragment.this.isResumed()) {
-                            goMain();
-                        } else {
-                            isLoggedin = true;
-                        }
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-                return;
-            }
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+            return;
         }
 
         MJPApi.shared().clearToken();
@@ -263,7 +256,6 @@ public class LoginFragment extends FormFragment {
             public void run() {
                 String email = mUserEmailView.getText().toString().trim();
                 String password = mUserPassView.getText().toString();
-                Boolean remember = mRememberView.isChecked();
 
                 AuthToken token;
                 if (status == LoginFragment.Status.LOGIN) {
@@ -275,7 +267,7 @@ public class LoginFragment extends FormFragment {
                 }
 
                 AppData.saveEmail(email);
-                AppData.saveRemember(remember, remember ? token.getKey() : "");
+                AppData.saveToken(token.getKey());
 
                 MJPApi.shared().setToken(token);
                 AppData.loadData();

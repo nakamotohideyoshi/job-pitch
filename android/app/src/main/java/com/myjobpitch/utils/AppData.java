@@ -90,17 +90,12 @@ public class AppData {
                 .apply();
     }
 
-    public static boolean getRemember() {
-        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getBoolean("remember", false);
-    }
-
     public static String getToken() {
         return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("token", "");
     }
 
-    public static void saveRemember(boolean remember, String key) {
+    public static void saveToken(String key) {
         MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
-                .putBoolean("remember", remember)
                 .putString("token", key)
                 .apply();
     }

@@ -14,34 +14,17 @@ class LoginController: MJPController {
     @IBOutlet weak var emailErrorLabel: UILabel!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var passwordErrorLabel: UILabel!
-    @IBOutlet weak var rememberSwitch: UISwitch!
     
     @IBOutlet weak var loginButton: GreenButton!
     
     @IBOutlet weak var apiButton: UIButton!
-    
-    var remember: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "remember")
-        }
-        set(newRemember) {
-            UserDefaults.standard.set(newRemember, forKey: "remember")
-            if newRemember {
-                UserDefaults.standard.set(API.shared().getToken(), forKey: "token")
-            } else {
-                UserDefaults.standard.removeObject(forKey: "token")
-            }
-            UserDefaults.standard.synchronize()
-        }
-    }
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationController?.navigationBar.isHidden = true
         
         emailField.text = AppData.email
-        rememberSwitch.isOn = true
         
         if (AppData.production) {
             apiButton.removeFromSuperview()
@@ -61,18 +44,17 @@ class LoginController: MJPController {
                 autoLogin()
             }
         } else {
-            remember = false
+            UserDefaults.standard.removeObject(forKey: "token")
+            UserDefaults.standard.synchronize()
         }
     }
     
     func autoLogin() {
-        if remember {
-            let token = UserDefaults.standard.string(forKey: "token")
-            if token != nil {
-                API.shared().setToken(token!)
-                loadData()
-                return
-            }
+        let token = UserDefaults.standard.string(forKey: "token")
+        if token != nil {
+            API.shared().setToken(token!)
+            loadData()
+            return
         }
         
         API.shared().clearToken()
@@ -148,7 +130,9 @@ class LoginController: MJPController {
     
     func loadData() {
         
-        remember = rememberSwitch.isOn
+        UserDefaults.standard.set(API.shared().getToken(), forKey: "token")
+        UserDefaults.standard.synchronize()
+        
         AppData.email = emailField.text
         
         showLoading()

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 from django.db import models
 
-from mjp.models import Nationality, Sex, Location, create_thumbnail
+from mjp.models import Nationality, Sex, Location, create_thumbnail, Business
 
 
 class Job(models.Model):
@@ -17,6 +17,7 @@ class Job(models.Model):
 
 
 class Employee(models.Model):
+    business = models.ForeignKey(Business, related_name='employees')
     job = models.ForeignKey(Job, related_name='employees', null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='employees', null=True, on_delete=models.SET_NULL)
     first_name = models.CharField(max_length=100)

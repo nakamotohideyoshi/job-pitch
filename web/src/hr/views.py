@@ -22,14 +22,14 @@ class JobViewSet(viewsets.ModelViewSet):
 class EmployeeViewSet(viewsets.ModelViewSet):
     class EmployeePermission(HRPermission):
         def get_business(self, employee):
-            return employee.job.location.business
+            return employee.business
 
     permission_classes = (permissions.IsAuthenticated, EmployeePermission)
     serializer_class = EmployeeSerializer
     queryset = Employee.objects.all()
 
     def get_queryset(self):
-        return super(EmployeeViewSet, self).get_queryset().filter(job__location__business__users=self.request.user)
+        return super(EmployeeViewSet, self).get_queryset().filter(business__users=self.request.user)
 
 
 router = DefaultRouter()

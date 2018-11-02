@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.views import password_reset_confirm, password_reset_complete
 
 from hr import views as hr_views
+from employee import views as employee_views
 from mjp import views
 from mjp.views import ecommerce, public, indeed, auth
 
@@ -20,6 +21,7 @@ urlpatterns = [
     url(r'^api/public/job-seekers/(?P<pk>\d+)/$', public.PublicJobSeekerListing.as_view()),
     url(r'^api/indeed/', indeed.IndeedFeedView.as_view(), name='indeed'),
     url(r'^api/hr/', include(hr_views.router.urls)),
+    url(r'^api/employee/', include(employee_views.router.urls)),
     url(r'^api/', include(views.router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-rest-auth/user/$', auth.UserDetailsView.as_view(), name='rest_user_details'),

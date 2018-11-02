@@ -27,10 +27,40 @@ class JobSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', allow_null=True)
 
+    def validate_business(self, business):
+        if not self.context['request'].user.owns_business(business):
+            raise PermissionDenied()
+        return business
+
     def validate_job(self, job):
         if not self.context['request'].user.owns_business(job.location.business):
             raise PermissionDenied()
         return job
+
+    def validate(self, attrs):
+        employee = self.instance
+        if employee:
+            if 'business' in attrs and 'job' in attrs:
+                if attrs['business'] is None:
+                    return attrs  # handled by employee validation
+                # changing both job and employee, check they match
+                if attrs['job'] is not None and attrs['business'] != attrs['job'].location.business:
+                    raise serializers.ValidationError({'job': 'Job must match business'})
+            elif 'job' in attrs:
+                # only changing job, check new job matches existing business
+                if attrs['job'] is not None and attrs['job'].location.business != employee.business:
+                    raise serializers.ValidationError({'job': 'Job must match business'})
+            elif 'business' in attrs:
+                # only changing business, clear job
+                if employee.business != attrs['business']:
+                    attrs['job'] = None
+        else:
+            if attrs.get('business') is None:
+                return attrs  # handled by employee validation
+            if attrs.get('job') is not None:
+                if attrs['job'].location.business != attrs['business']:
+                    raise serializers.ValidationError({'job': 'Job must match business'})
+        return attrs
 
     def create(self, validated_data):
         self._set_user(validated_data)
@@ -53,6 +83,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = (
             'id',
+            'business',
             'job',
             'first_name',
             'last_name',

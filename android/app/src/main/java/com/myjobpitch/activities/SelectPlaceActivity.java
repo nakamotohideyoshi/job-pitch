@@ -126,14 +126,16 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
                         .radius(radius)
                         .strokeWidth(2)
                         .strokeColor(Color.argb(255, 0, 182, 164))
-                        .fillColor(Color.argb(51, 255, 147, 0)));
+                        .fillColor(Color.argb(51, 255, 147, 0))
+                        .center(mCurrentPos));
+            } else {
+                circle.setCenter(mCurrentPos);
             }
-            circle.setCenter(mCurrentPos);
         }
     }
 
     float getZoom() {
-        if (marker != null) {
+        if (radius == 0 && marker != null) {
             return 14;
         }
         if (radius < 2000) {

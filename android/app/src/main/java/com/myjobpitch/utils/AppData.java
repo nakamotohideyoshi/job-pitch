@@ -159,13 +159,16 @@ public class AppData {
             userRole = Role.JOB_SEEKER_ID;
             getJobSeeker();
             getProfile();
+            if (profile != null) {
+                getApplications();
+                startTimer();
+            }
         } else if (user.isRecruiter()) {
             userRole = Role.RECRUITER_ID;
             getBusinesses();
+            getApplications();
+            startTimer();
         }
-
-        getApplications();
-        startTimer();
     }
 
 
@@ -323,7 +326,7 @@ public class AppData {
     static Timer timer;
     static int time = 0;
 
-    static void startTimer() {
+    public static void startTimer() {
         if (timer == null) {
             time = 0;
             timer = new Timer();

@@ -494,7 +494,7 @@ public class TalentProfileFragment extends FormFragment {
                     }
                 }
 
-                AppData.jobSeeker = MJPApi.shared().updateJobSeeker(AppData.jobSeeker.getId(), jobSeekerForUpdate, avatarFileResource, cvFileResource);
+                AppData.jobSeeker = MJPApi.shared().updateJobSeeker(AppData.user.getJob_seeker(), jobSeekerForUpdate, avatarFileResource, cvFileResource);
 
                 if (avatarFile != null) {
                     avatarFile.delete();

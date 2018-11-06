@@ -207,7 +207,7 @@ public class JobProfileFragment extends FormFragment {
         if (!valid()) return;
 
         final JobProfile profile = new JobProfile();
-        profile.setId(AppData.profile.getId());
+        profile.setId(AppData.jobSeeker.getProfile());
         profile.setJob_seeker(AppData.jobSeeker.getId());
 
         List<Integer> selectedSectors = new ArrayList<>();
@@ -254,6 +254,7 @@ public class JobProfileFragment extends FormFragment {
                     @Override
                     public void onClick(View view) {
                         if (AppData.jobSeeker.getProfile() == null) {
+                            AppData.startTimer();
                             AppData.jobSeeker.setProfile(AppData.profile.getId());
                             if (AppData.jobSeeker.getPitch() == null) {
                                 getApp().setRootFragement(R.id.menu_record);

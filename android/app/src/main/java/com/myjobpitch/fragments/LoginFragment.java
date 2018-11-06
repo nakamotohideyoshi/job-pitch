@@ -113,13 +113,11 @@ public class LoginFragment extends FormFragment {
         }
 
         if (MJPApi.instance == null) {
-            if (!MJPApi.shared().isLogin()) {
-                checkDeprecation(view);
-            } else {
-                autoLogin(view);
-            }
+            checkDeprecation(view);
         } else {
             AppData.saveToken("");
+            MJPApi.shared().clearToken();
+            AppData.clearData();
         }
 
         return view;

@@ -115,12 +115,14 @@ class AppData: NSObject {
                                 complete(error)
                                 return
                             }
-                            getApplications() { error in
-                                complete(error)
-                                if error == nil {
-                                    startTimer()
+                            if (profile != nil) {
+                                getApplications() { error in
+                                    complete(error)
+                                    if error == nil {
+                                        startTimer()
+                                    }
+                                    
                                 }
-                                
                             }
                         }
                     }
@@ -521,7 +523,7 @@ class AppData: NSObject {
     private static var timer: Timer?
     private static var time = 0
     
-    private static func startTimer() {
+    static func startTimer() {
         if timer == nil {
             time = 0
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(refreshApplications), userInfo: nil, repeats: true)

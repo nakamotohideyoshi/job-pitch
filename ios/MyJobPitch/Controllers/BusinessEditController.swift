@@ -112,6 +112,7 @@ class BusinessEditController: MJPController {
             if self.isNew && AppData.businesses.count == 1 {
                 UserDefaults.standard.set(1, forKey: "tutorial")
                 UserDefaults.standard.synchronize()
+                AppData.startTimer()
             }
             
             self.closeController()

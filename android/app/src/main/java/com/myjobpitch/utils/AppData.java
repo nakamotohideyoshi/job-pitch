@@ -181,12 +181,12 @@ public class AppData {
         return -1;
     }
 
-    public static <T extends MJPObjectWithName> String getNameById(List<T> objects, int id) {
+    public static <T extends MJPObjectWithName> String getNameById(List<T> objects, Integer id) {
         T obj = getObjById(objects, id);
         return obj != null ? obj.getName() : null;
     }
 
-    public static <T extends MJPAPIObject> T getObjById(List<T> objects, int id) {
+    public static <T extends MJPAPIObject> T getObjById(List<T> objects, Integer id) {
         for (T obj : objects) {
             if (obj.getId() == id) {
                 return obj;

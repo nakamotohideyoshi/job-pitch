@@ -38,14 +38,12 @@ class LoginController: MJPController {
         }
         
         if API.instance == nil {
-            if !API.shared().isLogin() {
-                checkDeprecation()
-            } else {
-                autoLogin()
-            }
+            checkDeprecation()
         } else {
             UserDefaults.standard.removeObject(forKey: "token")
             UserDefaults.standard.synchronize()
+            API.shared().clearToken()
+            AppData.clearData()
         }
     }
     

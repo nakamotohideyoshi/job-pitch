@@ -163,8 +163,8 @@ class JobSeekerDetailController: MJPController {
         let external = application != nil && application.messages.count == 0
         
         shortlisted.superview?.isHidden = viewMode || !connected
-        connectBtnView.isHidden = viewMode || isProfile || application?.status != ApplicationStatus.APPLICATION_CREATED_ID
-        removeBtnView.isHidden = viewMode || isProfile || application?.status == ApplicationStatus.APPLICATION_DELETED_ID
+        connectBtnView.isHidden = viewMode || isProfile || (application != nil && application?.status != ApplicationStatus.APPLICATION_CREATED_ID)
+        removeBtnView.isHidden = viewMode || isProfile || (application != nil && application?.status == ApplicationStatus.APPLICATION_DELETED_ID)
         arrangeBtnView.isHidden = viewMode || isProfile || !connected || interview != nil || external
         messageBtnView.isHidden = viewMode || isProfile || !connected || external
         

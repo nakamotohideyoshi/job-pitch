@@ -250,6 +250,7 @@ class JobProfileController: MJPController {
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
                 if AppData.jobSeeker.profile == nil {
                     AppData.jobSeeker.profile = AppData.profile.id
+                    AppData.startTimer()
                     if AppData.jobSeeker.getPitch() == nil {
                         SideMenuController.pushController(id: "add_record")
                     } else {

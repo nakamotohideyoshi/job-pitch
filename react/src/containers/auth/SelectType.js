@@ -36,7 +36,7 @@ const SelectType = ({ history }) => {
 
         <Item>
           <Button type="secondary" onClick={setJobseeker}>
-            I'm a JobSeeker
+            I'm a Jobseeker
           </Button>
         </Item>
       </Form>

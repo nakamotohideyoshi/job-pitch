@@ -78,7 +78,7 @@ class MessageController0: MJPController {
         application = (AppData.applications.filter { $0.id == application.id })[0]
         interview = application.getInterview()
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
 
             infoView.job = application.job
             infoView.touch = {
@@ -90,9 +90,9 @@ class MessageController0: MJPController {
 
         } else {
             
-            infoView.jobSeeker = application.jobSeeker
+            infoView.jobseeker = application.jobseeker
             infoView.touch = {
-                let controller = JobSeekerDetailController.instantiate()
+                let controller = JobseekerDetailsController.instantiate()
                 controller.application = self.application
                 controller.viewMode = true
                 self.navigationController?.pushViewController(controller, animated: true)
@@ -118,7 +118,7 @@ class MessageController0: MJPController {
     }
 
     @IBAction func interviewAction(_ sender: Any) {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = application
         navigationController?.pushViewController(controller, animated: true)
     }

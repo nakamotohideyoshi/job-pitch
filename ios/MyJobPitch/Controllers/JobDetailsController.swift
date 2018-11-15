@@ -1,5 +1,5 @@
 //
-//  JobDetailController.swift
+//  JobDetailsController.swift
 //  MyJobPitch
 //
 //  Created by dev on 2/27/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JobDetailController: MJPController {
+class JobDetailsController: MJPController {
 
     @IBOutlet weak var infoView: AppInfoSmallView!
     @IBOutlet weak var editRemoveView: EditRemoveView!
@@ -75,13 +75,13 @@ class JobDetailController: MJPController {
         present(controller, animated: true, completion: nil)
     }
     
-    static func instantiate() -> JobDetailController {
-        return AppHelper.instantiate("JobDetails") as! JobDetailController
+    static func instantiate() -> JobDetailsController {
+        return AppHelper.instantiate("JobDetails") as! JobDetailsController
     }    
 }
 
 
-extension JobDetailController: UITableViewDataSource {
+extension JobDetailsController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuItems.count
@@ -102,7 +102,7 @@ extension JobDetailController: UITableViewDataSource {
     }
 }
 
-extension JobDetailController: UITableViewDelegate {
+extension JobDetailsController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

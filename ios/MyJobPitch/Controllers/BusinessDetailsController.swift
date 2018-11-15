@@ -1,5 +1,5 @@
 //
-//  BusinessDetailController.swift
+//  BusinessDetailsController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/26/16.
@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeTableCell
 
-class BusinessDetailController: MJPController {
+class BusinessDetailsController: MJPController {
     
     @IBOutlet weak var infoView: AppInfoSmallView!
     @IBOutlet weak var creditCount: UILabel!
@@ -147,7 +147,7 @@ class BusinessDetailController: MJPController {
     }
     
     func workplaceDetails(_ workplace: Location, animated: Bool) {
-        let controller = LocationDetailController.instantiate()
+        let controller = LocationDetailsController.instantiate()
         controller.workplace = workplace
         navigationController?.pushViewController(controller, animated: animated)
     }
@@ -169,13 +169,13 @@ class BusinessDetailController: MJPController {
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    static func instantiate() -> BusinessDetailController {
-        return AppHelper.instantiate("WorkplaceList") as! BusinessDetailController
+    static func instantiate() -> BusinessDetailsController {
+        return AppHelper.instantiate("WorkplaceList") as! BusinessDetailsController
     }
     
 }
 
-extension BusinessDetailController: UITableViewDataSource {
+extension BusinessDetailsController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return workplaces == nil ? 0 : workplaces.count
@@ -242,7 +242,7 @@ extension BusinessDetailController: UITableViewDataSource {
     }    
 }
 
-extension BusinessDetailController: UITableViewDelegate {
+extension BusinessDetailsController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

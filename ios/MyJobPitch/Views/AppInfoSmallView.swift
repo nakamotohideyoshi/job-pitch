@@ -27,12 +27,12 @@ class AppInfoSmallView: UIView {
         }
     }
     
-    var jobSeeker: JobSeeker! {
+    var jobseeker: Jobseeker! {
         didSet {
-            if jobSeeker != nil {
-                AppHelper.loadPhoto(jobSeeker, imageView: imgView, completion: nil)
-                titleLabel.text = jobSeeker.getFullName()
-                subTitleLabel.text = jobSeeker.desc
+            if jobseeker != nil {
+                AppHelper.loadPhoto(jobseeker, imageView: imgView, completion: nil)
+                titleLabel.text = jobseeker.getFullName()
+                subTitleLabel.text = jobseeker.desc
             }
         }
     }

@@ -16,9 +16,9 @@ class Profile: MJPObjectWithDates {
                                      "placeID": "place_id",
                                      "placeName": "place_name",
                                      "postcodeLookup": "postcode_lookup",
-                                     "jobSeeker": "job_seeker" ]
+                                     "jobseeker": "job_seeker" ]
 
-    var jobSeeker: NSNumber!
+    var jobseeker: NSNumber!
     var sectors: NSArray!
     var contract: NSNumber!
     var hours: NSNumber!

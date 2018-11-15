@@ -204,7 +204,7 @@ class JobProfileController: MJPController {
         }
         
         let profile = Profile()
-        profile.jobSeeker = AppData.jobSeeker.id
+        profile.jobseeker = AppData.jobseeker.id
         
         // sector data
         
@@ -248,10 +248,10 @@ class JobProfileController: MJPController {
             AppData.profile = result as! Profile
             
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
-                if AppData.jobSeeker.profile == nil {
-                    AppData.jobSeeker.profile = AppData.profile.id
+                if AppData.jobseeker.profile == nil {
+                    AppData.jobseeker.profile = AppData.profile.id
                     AppData.startTimer()
-                    if AppData.jobSeeker.getPitch() == nil {
+                    if AppData.jobseeker.getPitch() == nil {
                         SideMenuController.pushController(id: "add_record")
                     } else {
                         SideMenuController.pushController(id: "find_job")

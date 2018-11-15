@@ -18,8 +18,8 @@ class SideMenuController: UIViewController {
         "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
         "add_record":   ["icon": "menu-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
-        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetails",   "per": ""],
-        "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
+        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobseekerDetails",   "per": ""],
+        "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobseekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
         "applications": ["icon": "menu-applications1",    "title": "Applications",            "identifier": "SelectJob",    "per": "B"],
@@ -37,7 +37,7 @@ class SideMenuController: UIViewController {
         "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
     ]
     
-    static let jobSeekerMenu = [
+    static let jobseekerMenu = [
         "find_job", "j_applications", "messages", "j_interviews", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
@@ -74,7 +74,7 @@ class SideMenuController: UIViewController {
         data = [String]()
         
         if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
-            data = SideMenuController.jobSeekerMenu
+            data = SideMenuController.jobseekerMenu
         } else {
             data = SideMenuController.recruiterMenu
             if (AppData.businesses.filter { $0.hr_access }.count != 0) {
@@ -106,8 +106,8 @@ class SideMenuController: UIViewController {
         
         var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
         if AppData.user != nil {
-            if AppData.user.jobSeeker == nil && id == "view_profile" {
-                identifier = "JobSeekerProfile"
+            if AppData.user.jobseeker == nil && id == "view_profile" {
+                identifier = "JobseekerProfile"
             }
         }
         
@@ -150,7 +150,7 @@ extension SideMenuController: UITableViewDataSource {
             cell.isUserInteractionEnabled = true
             let pers = item["per"]
             if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
-                if (pers!.contains("J") && AppData.user.jobSeeker == nil) || (pers!.contains("P") && AppData.profile == nil) {
+                if (pers!.contains("J") && AppData.user.jobseeker == nil) || (pers!.contains("P") && AppData.profile == nil) {
                     cell.isUserInteractionEnabled = false
                 }
             } else {

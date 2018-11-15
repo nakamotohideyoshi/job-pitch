@@ -37,7 +37,7 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
         
         infoView.job = job
         infoView.touch = {
-            let controller = JobDetailController.instantiate()
+            let controller = JobDetailsController.instantiate()
             controller.job = self.job
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -179,7 +179,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RCApplicationCell", for: indexPath) as! RCApplicationCell
         let application = applications[indexPath.row]
         
-        cell.infoView.jobSeeker = application.jobSeeker
+        cell.infoView.jobseeker = application.jobseeker
         cell.infoView.interview = application.getInterview()
         cell.iconView.isHidden = !application.shortlisted
         cell.drawUnderline()
@@ -255,7 +255,7 @@ extension RCApplicationSubListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let controller = JobSeekerDetailController.instantiate()
+        let controller = JobseekerDetailsController.instantiate()
         controller.application = applications[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)        
     }

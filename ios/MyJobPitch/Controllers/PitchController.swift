@@ -30,7 +30,7 @@ class PitchController: MJPController {
         
         uploadButton.isHidden = true
 
-        pitch = AppData.jobSeeker.getPitch()
+        pitch = AppData.jobseeker.getPitch()
         if let thumbnail = self.pitch?.thumbnail {
             AppHelper.loadImageURL(imageUrl: thumbnail, imageView: self.imgView, completion: {
                 self.playIcon.isHidden = false
@@ -127,7 +127,7 @@ class PitchController: MJPController {
                 self.uploadButton.isHidden = true
                 
                 self.pitch = pitch
-                AppData.jobSeeker.pitches = [self.pitch]
+                AppData.jobseeker.pitches = [self.pitch]
                 
                 PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
             }

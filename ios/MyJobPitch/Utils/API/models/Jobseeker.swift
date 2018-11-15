@@ -1,5 +1,5 @@
 //
-//  JobSeeker.swift
+//  Jobseeker.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/20/16.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class JobSeeker: MJPObjectWithDates {
+class Jobseeker: MJPObjectWithDates {
     
     static let mappingReqArray = [ "active", "email", "telephone", "mobile", "age", "sex", "nationality", "national_insurance_number" ]
     

@@ -15,7 +15,7 @@ class InterviewListController: MJPController {
     
     public var job: Job!
     
-    var jobSeeker: JobSeeker!
+    var jobseeker: Jobseeker!
     var interviews: [(Application, Interview)]! = [(Application, Interview)]()
     
     override func viewDidLoad() {
@@ -96,7 +96,7 @@ extension InterviewListController: UITableViewDataSource {
 extension InterviewListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = interviews[indexPath.row].0
         navigationController?.pushViewController(controller, animated: true)
     }

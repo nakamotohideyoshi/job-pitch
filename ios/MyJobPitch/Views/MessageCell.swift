@@ -26,13 +26,13 @@ class MessageCell: UITableViewCell {
                 let deleted = application.status == ApplicationStatus.APPLICATION_DELETED_ID
                 
                 var title: String!, subTitle: String!
-                if AppData.user.isJobSeeker() {
+                if AppData.user.isJobseeker() {
                     AppHelper.loadLogo(job, imageView: imgView, completion: nil)
                     title = job.title
                     subTitle = job.getBusinessName()
                 } else {
-                    AppHelper.loadPhoto(application.jobSeeker, imageView: imgView, completion: nil)
-                    title = application.jobSeeker.getFullName()
+                    AppHelper.loadPhoto(application.jobseeker, imageView: imgView, completion: nil)
+                    title = application.jobseeker.getFullName()
                     subTitle = String(format: "%@ (%@)", job.title, job.getBusinessName())
                 }
                 

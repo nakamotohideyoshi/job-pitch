@@ -43,7 +43,7 @@ class InterviewView: UIView {
             let accepted = interview?.status == InterviewStatus.INTERVIEW_ACCEPTED
             
             if pending {
-                statusLabel.text = AppData.user.isJobSeeker() ? "Interview request received" : "Interview request sent"
+                statusLabel.text = AppData.user.isJobseeker() ? "Interview request received" : "Interview request sent"
             } else if accepted {
                 statusLabel.text = "Interview accepted"
             } else if interview?.status == InterviewStatus.INTERVIEW_COMPLETED {
@@ -92,7 +92,7 @@ class InterviewView: UIView {
         acceptView.isHidden = acceptCallback == nil || interview?.status != InterviewStatus.INTERVIEW_PENDING || AppData.user.isRecruiter()
     }
     func updateCompleteButtonView() {
-        completeView.isHidden = completeCallback == nil || (interview?.status != InterviewStatus.INTERVIEW_PENDING && interview?.status != InterviewStatus.INTERVIEW_ACCEPTED) || AppData.user.isJobSeeker()
+        completeView.isHidden = completeCallback == nil || (interview?.status != InterviewStatus.INTERVIEW_PENDING && interview?.status != InterviewStatus.INTERVIEW_ACCEPTED) || AppData.user.isJobseeker()
     }
     func updateCancelButtonView() {
         cancelView.isHidden = cancelCallback == nil || (interview?.status != InterviewStatus.INTERVIEW_PENDING && interview?.status != InterviewStatus.INTERVIEW_ACCEPTED)

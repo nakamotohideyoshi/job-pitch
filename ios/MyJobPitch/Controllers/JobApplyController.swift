@@ -28,7 +28,7 @@ class JobApplyController: MJPController {
         
         isModal = true
         
-        self.pitch = AppData.jobSeeker.getPitch()
+        self.pitch = AppData.jobseeker.getPitch()
         if let thumbnail = self.pitch?.thumbnail {
             AppHelper.loadImageURL(imageUrl: thumbnail, imageView: self.imgView, completion: {
                 self.playIcon.isHidden = false
@@ -97,7 +97,7 @@ class JobApplyController: MJPController {
             
             let application = pitchId == nil ? ApplicationForCreation() : ApplicationForCreationWithPitch()
             application.job = self.job.id
-            application.jobSeeker = AppData.jobSeeker.id
+            application.jobseeker = AppData.jobseeker.id
             application.pitch = pitchId
             
             API.shared().createApplication(application) {(_, error) in
@@ -118,7 +118,7 @@ class JobApplyController: MJPController {
         }
         
         let specificPitch = SpecificPitchForCreation()
-        specificPitch.jobSeeker = AppData.jobSeeker.id
+        specificPitch.jobseeker = AppData.jobseeker.id
         
         API.shared().saveSpecificPitch(specificPitch) { (result, error) in
             if error != nil {

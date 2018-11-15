@@ -25,7 +25,7 @@ class SwipeController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
             
             title = "Find Job"
             emptyView.message.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
@@ -60,7 +60,7 @@ class SwipeController: MJPController {
         
         showLoading()
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
             
             AppData.searchJobs() { error in
                 if error == nil {
@@ -74,7 +74,7 @@ class SwipeController: MJPController {
             
             AppData.searchJobseekers(jobId: searchJob.id) { error in
                 if error == nil {
-                    self.refreshCompleted(AppData.jobSeekers)
+                    self.refreshCompleted(AppData.jobseekers)
                 } else {
                     self.handleError(error)
                 }
@@ -153,7 +153,7 @@ class SwipeController: MJPController {
         
         // swipe options
         let options = MDCSwipeToChooseViewOptions()
-        options.likedText = AppData.user.isJobSeeker() ? "Apply" : "Connect"
+        options.likedText = AppData.user.isJobseeker() ? "Apply" : "Connect"
         options.nopeText = "Remove"
         options.delegate = self
         options.likedColor = AppData.greenColor
@@ -165,7 +165,7 @@ class SwipeController: MJPController {
         let card = SwipeCard(frame: frame, options: options)!
         card.isUserInteractionEnabled = false
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
             
             let job = data[index] as! Job
             let workplace = job.locationData!
@@ -183,11 +183,11 @@ class SwipeController: MJPController {
             
         } else {
             
-            let jobSeeker = data[index] as! JobSeeker
+            let jobseeker = data[index] as! Jobseeker
             
-            card.setImage(imageUrl: jobSeeker.profileImage, distance: "", name: jobSeeker.getFullName(), desc: jobSeeker.desc)
+            card.setImage(imageUrl: jobseeker.profileImage, distance: "", name: jobseeker.getFullName(), desc: jobseeker.desc)
             
-            if jobSeeker.profileImage == nil {
+            if jobseeker.profileImage == nil {
                 card.imageView.image = UIImage(named: "avatar")
             }
         }
@@ -226,15 +226,15 @@ class SwipeController: MJPController {
                 
                 let item = self.data[self.currentIndex - self.cards.count]
                 
-                if AppData.user.isJobSeeker() {
+                if AppData.user.isJobseeker() {
                     let controller = ApplicationDetailsController.instantiate()
                     controller.job = item as! Job
                     controller.applyCallback = self.removeCard
                     controller.removeCallback = self.removeCard
                     self.navigationController?.pushViewController(controller, animated: true)
                 } else {
-                    let controller = JobSeekerDetailController.instantiate()
-                    controller.jobSeeker = item as! JobSeeker
+                    let controller = JobseekerDetailsController.instantiate()
+                    controller.jobseeker = item as! Jobseeker
                     controller.job = self.searchJob
                     controller.connectCallback = self.removeCard
                     controller.removeCallback = self.removeCard
@@ -268,12 +268,12 @@ class SwipeController: MJPController {
     }
     
     func editAction() {
-        if AppData.user.isJobSeeker() {
-            let controller = JobSeekerProfileController.instantiate()
+        if AppData.user.isJobseeker() {
+            let controller = JobseekerProfileController.instantiate()
             controller.isModal = true
             present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         } else {
-            let controller = JobDetailController.instantiate()
+            let controller = JobDetailsController.instantiate()
             controller.job = self.searchJob
             navigationController?.pushViewController(controller, animated: true)
         }
@@ -290,9 +290,9 @@ class SwipeController: MJPController {
     }
     
     func apply() {
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
 
-            if (!AppData.jobSeeker.active) {
+            if (!AppData.jobseeker.active) {
                 PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel") {
@@ -301,7 +301,7 @@ class SwipeController: MJPController {
                 return
             }
             
-            if (AppData.jobSeeker.profileImage == nil) {
+            if (AppData.jobseeker.profileImage == nil) {
                 PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel") {
@@ -311,7 +311,7 @@ class SwipeController: MJPController {
             }
             
             let job = self.data[self.currentIndex - self.cards.count] as! Job
-            if (job.requiresCV && AppData.jobSeeker.cv == nil) {
+            if (job.requiresCV && AppData.jobseeker.cv == nil) {
                 PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel") {
@@ -333,7 +333,7 @@ class SwipeController: MJPController {
             
             let application = ApplicationForCreation()
             application.job = searchJob?.id
-            application.jobSeeker = data[currentIndex - cards.count].id
+            application.jobseeker = data[currentIndex - cards.count].id
             
             API.shared().createApplication(application) { (result, error) in
                 
@@ -359,11 +359,11 @@ class SwipeController: MJPController {
         
         if AppData.user.isRecruiter() {
             
-            let request = ExclusionJobSeeker()
+            let request = ExclusionJobseeker()
             request.job = searchJob.id
-            request.jobSeeker = data[currentIndex - cards.count].id
+            request.jobseeker = data[currentIndex - cards.count].id
             
-            API.shared().ExclusionJobSeeker(request) { (_, error) in
+            API.shared().ExclusionJobseeker(request) { (_, error) in
                 if error == nil {
                     self.removeCard()
                 } else {

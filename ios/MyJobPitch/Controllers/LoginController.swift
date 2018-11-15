@@ -154,9 +154,9 @@ class LoginController: MJPController {
                     
                     SideMenuController.pushController(id: "find_talent")
                     
-                } else if AppData.user.isJobSeeker() {
+                } else if AppData.user.isJobseeker() {
                     
-                    if (AppData.jobSeeker.profile == nil) {
+                    if (AppData.jobseeker.profile == nil) {
                         SideMenuController.pushController(id: "job_profile")
                     } else {
                         SideMenuController.pushController(id: "find_job")

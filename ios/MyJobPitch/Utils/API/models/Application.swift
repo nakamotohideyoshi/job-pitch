@@ -16,7 +16,7 @@ class Application: MJPObjectWithDates {
                                      "deletedBy": "deleted_by" ]
 
     var job: Job!
-    var jobSeeker: JobSeeker!
+    var jobseeker: Jobseeker!
     var messages: NSArray!
     var createdBy: NSNumber!
     var deletedBy: NSNumber!
@@ -47,36 +47,36 @@ class Application: MJPObjectWithDates {
 
 class ApplicationForCreation0: MJPObject {
     var job: NSNumber!
-    var jobSeeker: NSNumber!
+    var jobseeker: NSNumber!
     var pitch: NSNumber!
     var shortlisted = false
 }
 
 class ApplicationForCreation: ApplicationForCreation0 {
     static let mappingArray = [ "id", "job", "shortlisted" ]
-    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+    static let mappingDictionary = ["jobseeker": "job_seeker"]
 }
 
 class ApplicationForCreationWithPitch: ApplicationForCreation0 {
     static let mappingArray = [ "id", "job", "pitch", "shortlisted" ]
-    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+    static let mappingDictionary = ["jobseeker": "job_seeker"]
 }
 
 class ExternalApplicationForCreation: NSObject {
     
     static let mappingArray = [ "job", "shortlisted" ]
-    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+    static let mappingDictionary = ["jobseeker": "job_seeker"]
     
     var job: NSNumber!
-    var jobSeeker: [String: Any]!
+    var jobseeker: [String: Any]!
     var shortlisted = false
 }
 
-class ExclusionJobSeeker: MJPObject {
-    static let mappingDictionary = ["jobSeeker": "job_seeker"]
+class ExclusionJobseeker: MJPObject {
+    static let mappingDictionary = ["jobseeker": "job_seeker"]
     
     var job: NSNumber!
-    var jobSeeker: NSNumber!
+    var jobseeker: NSNumber!
 }
 
 class ApplicationStatusUpdate: MJPObject {

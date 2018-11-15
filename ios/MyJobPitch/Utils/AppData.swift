@@ -49,14 +49,14 @@ class AppData: NSObject {
     static var initialTokens: InitialTokens!
     
     static var userRole: NSNumber!
-    static var jobSeeker: JobSeeker!
+    static var jobseeker: Jobseeker!
     static var profile: Profile!
     
     static var businesses = [Business]()
     static var workplaces = [Location]()
     static var jobs = [Job]()
     static var businessUsers = [BusinessUser]()
-    static var jobSeekers = [JobSeeker]()
+    static var jobseekers = [Jobseeker]()
     static var applications = [Application]()
     static var newMessageCount = 0
     
@@ -70,14 +70,14 @@ class AppData: NSObject {
     static func clearData() {
         user = nil
         userRole = nil
-        jobSeeker = nil
+        jobseeker = nil
         profile = nil
         
         businesses.removeAll()
         workplaces.removeAll()
         jobs.removeAll()
         businessUsers.removeAll()
-        jobSeekers.removeAll()
+        jobseekers.removeAll()
         applications.removeAll()
         
         stopTimer()
@@ -105,11 +105,11 @@ class AppData: NSObject {
                 roles != nil &&
                 initialTokens != nil) {
                 
-                if (user.isJobSeeker()) {
+                if (user.isJobseeker()) {
                     
                     userRole = Role.ROLE_JOB_SEEKER_ID
                     
-                    getJobSeeker() { error in
+                    getJobseeker() { error in
                         if error != nil {
                             complete(error)
                             return
@@ -259,11 +259,11 @@ class AppData: NSObject {
     
     //================ jobseeker =============
     
-    static func getJobSeeker(complete: ((Any?) -> Void)?) {
-        if (user.isJobSeeker()) {
-            API.shared().loadJobSeekerWithId(AppData.user.jobSeeker) { (result, error) in
+    static func getJobseeker(complete: ((Any?) -> Void)?) {
+        if (user.isJobseeker()) {
+            API.shared().loadJobseekerWithId(AppData.user.jobseeker) { (result, error) in
                 if result != nil {
-                    jobSeeker = result as! JobSeeker
+                    jobseeker = result as! Jobseeker
                 }
                 complete?(error)
             }
@@ -273,8 +273,8 @@ class AppData: NSObject {
     }
     
     static func getProfile(complete: ((Any?) -> Void)?) {
-        if (jobSeeker?.profile != nil) {
-            API.shared().loadJobProfileWithId(jobSeeker.profile) { (result, error) in
+        if (jobseeker?.profile != nil) {
+            API.shared().loadJobProfileWithId(jobseeker.profile) { (result, error) in
                 if result != nil {
                     profile = result as! Profile
                 }
@@ -468,18 +468,18 @@ class AppData: NSObject {
     //================ jobseekers =============
     
     static func searchJobseekers(jobId: NSNumber, complete: ((Any?) -> Void)?) {
-        API.shared().searchJobSeekersForJob(jobId) { (result, error) in
+        API.shared().searchJobseekersForJob(jobId) { (result, error) in
             if result != nil {
-                jobSeekers = result as! [JobSeeker]
+                jobseekers = result as! [Jobseeker]
             }
             complete?(error)
         }
     }
     
     static func removeJobseeker(_ jobseekerId: NSNumber) {
-        for (index, jobseeker) in jobSeekers.enumerated() {
+        for (index, jobseeker) in jobseekers.enumerated() {
             if jobseeker.id == jobseekerId {
-                jobSeekers.remove(at: index)
+                jobseekers.remove(at: index)
                 break
             }
         }

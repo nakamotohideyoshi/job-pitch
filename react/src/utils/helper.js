@@ -139,8 +139,28 @@ export function sort(objects, key) {
 |--------------------------------------------------
 */
 
+const encrypt = str => {
+  if (process.env.NODE_ENV !== 'production') {
+    return str;
+  }
+
+  var hash = 0;
+
+  if (str.length === 0) {
+    return btoa(`${hash}`);
+  }
+
+  for (var i = 0; i < str.length; i++) {
+    var char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return btoa(`${hash}`);
+};
+
 export function saveData(key, value) {
-  const k = `${DATA.email}_${key}`;
+  const k = encrypt(`${DATA.email}_${key}`);
+
   if (value) {
     localStorage.setItem(k, value);
   } else {
@@ -149,7 +169,8 @@ export function saveData(key, value) {
 }
 
 export function loadData(key) {
-  const value = localStorage.getItem(`${DATA.email}_${key}`);
+  const k = encrypt(`${DATA.email}_${key}`);
+  const value = localStorage.getItem(k);
   return value && JSON.parse(value);
 }
 

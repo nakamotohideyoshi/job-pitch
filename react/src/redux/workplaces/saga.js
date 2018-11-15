@@ -8,15 +8,15 @@ export const getWorkplaces = getRequest({
   url: `/api/user-locations/`
 });
 
-function* saveWorkplace(action) {
-  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
+function* saveWorkplace({ payload }) {
+  const { id, logo, onProgress, onSuccess, onFail } = payload;
 
   const workplace = yield call(
     request({
-      method: data.id ? 'put' : 'post',
-      url: data.id ? `/api/user-locations/${data.id}/` : '/api/user-locations/'
+      method: id ? 'put' : 'post',
+      url: id ? `/api/user-locations/${id}/` : '/api/user-locations/'
     }),
-    action
+    { payload }
   );
 
   if (workplace === null) {
@@ -49,8 +49,8 @@ function* saveWorkplace(action) {
     }
   }
 
-  yield put({ type: C.UPDATE_WORKPLACE, workplace });
-  yield put({ type: C.UPDATE_BUSINESS, business: workplace.business_data });
+  yield put({ type: C.UPDATE_WORKPLACE, payload: workplace });
+  yield put({ type: C.UPDATE_BUSINESS, payload: workplace.business_data });
 
   onSuccess && onSuccess(workplace);
 }

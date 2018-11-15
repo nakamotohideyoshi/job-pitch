@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 export const uploadVideoToAWS = (endpoint, { id, token }, pitchData, onUploadProgress) =>
   new Promise(resolve => {
     const folder = window.location.origin.replace('//', '');
+
     const s3 = new AWS.S3({
       apiVersion: '2006-03-01',
       credentials: new AWS.CognitoIdentityCredentials(
@@ -14,6 +15,7 @@ export const uploadVideoToAWS = (endpoint, { id, token }, pitchData, onUploadPro
         }
       )
     });
+
     s3.upload(
       {
         Bucket: 'mjp-android-uploads',
@@ -21,10 +23,8 @@ export const uploadVideoToAWS = (endpoint, { id, token }, pitchData, onUploadPro
         Body: pitchData,
         ContentType: 'video/webm'
       },
-      (error, data) => {
-        if (error) {
-          throw error;
-        }
+      error => {
+        if (error) throw error;
         resolve();
       }
     ).on('httpUploadProgress', progress => {

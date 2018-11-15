@@ -1,5 +1,4 @@
 import { message } from 'antd';
-
 import DATA from 'utils/data';
 
 /**
@@ -8,41 +7,34 @@ import DATA from 'utils/data';
 |--------------------------------------------------
 */
 
-const DEFAULT_LOGO = 'assets/job_logo.jpg';
-
-export function getBusinessLogo(business, original) {
+export function getBusinessLogo(business) {
   const { images } = business || {};
 
+  if (!(images || []).length) {
+    return require('assets/job_logo.jpg');
+  }
+
+  return images[0].thumbnail;
+}
+
+export function getWorkplaceLogo(workplace) {
+  const { images, business_data } = workplace || {};
+
   if (!images) {
-    return require(DEFAULT_LOGO);
+    return require('assets/job_logo.jpg');
   }
 
-  if (images.length > 0) {
-    return original ? images[0].image : images[0].thumbnail;
-  }
-  return require(DEFAULT_LOGO);
+  return (images[0] || {}).thumbnail || getBusinessLogo(business_data);
 }
 
-export function getWorkplaceLogo(workplace, original) {
-  if (!workplace || !workplace.images) {
-    return require(DEFAULT_LOGO);
-  }
-  const { images, business_data } = workplace;
-  if (images.length > 0) {
-    return original ? images[0].image : images[0].thumbnail;
-  }
-  return getBusinessLogo(business_data, original);
-}
+export function getJobLogo(job) {
+  const { images, location_data } = job || {};
 
-export function getJobLogo(job, original) {
-  if (!job || !job.images) {
-    return require(DEFAULT_LOGO);
+  if (!images) {
+    return require('assets/job_logo.jpg');
   }
-  const { images, location_data } = job;
-  if (images.length > 0) {
-    return original ? images[0].image : images[0].thumbnail;
-  }
-  return getWorkplaceLogo(location_data, original);
+
+  return (images[0] || {}).thumbnail || getWorkplaceLogo(location_data);
 }
 
 export function getJobSubName(job) {
@@ -56,15 +48,10 @@ export function getJobSubName(job) {
 */
 
 export function getPitch(object) {
-  if (object) {
-    const pitches = object.pitches || object.videos;
-    if (pitches) {
-      const pitch = pitches.filter(({ video }) => video)[0];
-      if (pitch) return pitch;
-    }
-  }
+  if (!object) return undefined;
 
-  return null;
+  const pitches = object.pitches || object.videos;
+  return (pitches || []).filter(({ video }) => video)[0];
 }
 
 /**
@@ -75,6 +62,7 @@ export function getPitch(object) {
 
 export function getFullName(user) {
   if (!user) return undefined;
+
   return `${user.first_name} ${user.last_name}`;
 }
 
@@ -95,12 +83,54 @@ export function getAvatar(user) {
 
 /**
 |--------------------------------------------------
-| get item
+| item
 |--------------------------------------------------
 */
 
 export function getItemById(objects, id) {
   return (objects || []).filter(item => item.id === id)[0];
+}
+
+export function getNameByID(objects, id) {
+  return (getItemById(objects, id) || {}).name;
+}
+
+export function getIdByName(objects, name) {
+  return ((objects || []).filter(item => item.name === name)[0] || {}).id;
+}
+
+export function updateItem(objects, newItem, addMode) {
+  let items = objects || [];
+
+  if (addMode) {
+    if (!getItemById(items, newItem.id)) {
+      items = items.slice(0);
+      items.unshift(newItem);
+      return items;
+    }
+  }
+
+  return items.map(item => (item.id === newItem.id ? { ...item, ...newItem } : item));
+}
+
+export function removeItem(objects, id) {
+  return (objects || []).filter(item => item.id !== id);
+}
+
+export function sort(objects, key) {
+  objects.sort((a, b) => {
+    let a1 = a[key];
+    let b1 = b[key];
+
+    if (typeof a1 === 'string') {
+      a1 = a1.toUpperCase();
+      b1 = b1.toUpperCase();
+    }
+
+    if (a1 < b1) return -1;
+    if (a1 > b1) return 1;
+    return 0;
+  });
 }
 
 /**
@@ -111,58 +141,16 @@ export function getItemById(objects, id) {
 
 export function saveData(key, value) {
   const k = `${DATA.email}_${key}`;
-  if (value === null || value === undefined) {
-    localStorage.removeItem(k);
-  } else {
+  if (value) {
     localStorage.setItem(k, value);
+  } else {
+    localStorage.removeItem(k);
   }
 }
 
 export function loadData(key) {
   const value = localStorage.getItem(`${DATA.email}_${key}`);
-  return value && value !== 'undefined' && JSON.parse(value);
-}
-
-/**
-|--------------------------------------------------
-| clone
-|--------------------------------------------------
-*/
-
-export function updateItem(objects, newItem, addMode) {
-  let items = objects || [];
-  if (addMode) {
-    if (!getItemById(items, newItem.id)) {
-      items = items.slice(0);
-      items.unshift(newItem);
-      return items;
-    }
-  }
-  return items.map(item => (item.id === newItem.id ? { ...item, ...newItem } : item));
-}
-
-export function removeItem(objects, id) {
-  return objects && objects.filter(item => item.id !== id);
-}
-
-export function sort(arr, key) {
-  arr.sort((a, b) => {
-    let a1 = a[key];
-    let b1 = b[key];
-    if (typeof a1 === 'string') {
-      a1 = a1.toUpperCase();
-      b1 = b1.toUpperCase();
-      if (a1 < b1) {
-        return -1;
-      }
-      if (a1 > b1) {
-        return 1;
-      }
-      return 0;
-    }
-
-    return 0;
-  });
+  return value && JSON.parse(value);
 }
 
 /**
@@ -204,36 +192,18 @@ export function str2int(str) {
   return isNaN(val) ? undefined : val;
 }
 
-export function parseUrlParams(str) {
-  if (str[0] === '?') {
-    str = str.slice(1);
-  }
+// export function parseUrlParams(data) {
+//   const params = {};
+//   let str = data[0] === '?' ? data.slice(1) : data;
+//   if (str !== '') {
+//     str.split('&').forEach(str => {
+//       const arr = str.split('=');
+//       params[arr[0]] = arr[1];
+//     });
+//   }
 
-  const params = {};
-  if (str !== '') {
-    str.split('&').forEach(str => {
-      const arr = str.split('=');
-      params[arr[0]] = arr[1];
-    });
-  }
-
-  return params;
-}
-
-/**
-|--------------------------------------------------
-| check string (email and phone number)
-|--------------------------------------------------
-*/
-
-export function checkIfEmailInString(str) {
-  const re = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
-  return re.test(str);
-}
-
-export function checkIfPhoneNumberInString(str) {
-  return /\d{7,}/.test(str.replace(/[\s-]/g, ''));
-}
+//   return params;
+// }
 
 /**
 |--------------------------------------------------
@@ -270,10 +240,15 @@ export function getDistanceFromLatLonEx(p1, p2) {
 
 /**
 |--------------------------------------------------
-| get item
+| check string (email and phone number)
 |--------------------------------------------------
 */
 
-export function getNameByID(objects, id) {
-  return (getItemById(objects, id) || {}).name;
+export function checkIfEmailInString(str) {
+  const re = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+  return re.test(str);
+}
+
+export function checkIfPhoneNumberInString(str) {
+  return /\d{7,}/.test(str.replace(/[\s-]/g, ''));
 }

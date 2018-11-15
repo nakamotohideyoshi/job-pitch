@@ -15,8 +15,7 @@ export const removeBannerAction = createAction(C.REMOVE_BANNER);
 // ------------------------------------
 
 const initialState = {
-  banners: [],
-  visibleFooter: true
+  banners: []
 };
 
 export default handleActions(

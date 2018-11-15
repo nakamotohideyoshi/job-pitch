@@ -1,6 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
 
-import { requestSuccess } from 'utils/request';
 import DATA from 'utils/data';
 import * as C from 'redux/constants';
 
@@ -23,7 +22,7 @@ export const updateAuthAction = createAction(C.UPDATE_AUTH);
 const initialState = {
   user: null,
   jobseeker: null,
-  jobProfile: null
+  jobprofile: null
 };
 
 export default handleActions(
@@ -33,7 +32,7 @@ export default handleActions(
       ...payload
     }),
 
-    [requestSuccess(C.LOGOUT)]: () => {
+    [C.LOGOUT]: () => {
       DATA.userKey = undefined;
       DATA.email = undefined;
       DATA.userRole = undefined;

@@ -29,7 +29,7 @@ const JobseekerDetails = ({ jobseekerData, application, actions, defaultTab }) =
   const connected = application && status !== DATA.APP.CREATED;
   const { id: interviewId, status: interviewStatus } = interview || {};
   const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
-  const isExternal = application && application.messages.length == 0;
+  const isExternal = application && application.messages.length === 0;
 
   return (
     <Wrapper>
@@ -129,51 +129,49 @@ const JobseekerDetails = ({ jobseekerData, application, actions, defaultTab }) =
           )}
         </TabPane>
 
-        {connected &&
-          !isExternal && (
-            <TabPane tab="Interview" key="interview">
-              <Interview application={application} />
-            </TabPane>
-          )}
+        {connected && !isExternal && (
+          <TabPane tab="Interview" key="interview">
+            <Interview application={application} />
+          </TabPane>
+        )}
 
-        {connected &&
-          !isExternal && (
-            <TabPane tab="Previous interviews" key="history">
-              <Collapse bordered={false}>
-                {histories.map(({ id, at, feedback, status, notes, cancelled_by }) => {
-                  let statusComment;
-                  let statusLabel;
-                  if (status === 'COMPLETED') {
-                    statusLabel = 'Completed';
-                    statusComment = 'This interview is done';
-                  } else if (status === 'CANCELLED') {
-                    statusLabel = 'Cancelled';
-                    statusComment = `Interview cancelled by ${
-                      cancelled_by === DATA.userRole ? 'Recruiter' : 'Jobseeker'
-                    }`;
-                  }
-                  return (
-                    <Panel
-                      key={id}
-                      showArrow={false}
-                      header={
-                        <div>
-                          <span>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</span>
-                          <span className={status}>{statusLabel}</span>
-                        </div>
-                      }
-                    >
-                      <p>Status: {statusComment}</p>
-                      <p>Recruiter's notes: {notes}</p>
-                      {status === 'COMPLETED' && (
-                        <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
-                      )}
-                    </Panel>
-                  );
-                })}
-              </Collapse>
-            </TabPane>
-          )}
+        {connected && !isExternal && (
+          <TabPane tab="Previous interviews" key="history">
+            <Collapse bordered={false}>
+              {histories.map(({ id, at, feedback, status, notes, cancelled_by }) => {
+                let statusComment;
+                let statusLabel;
+                if (status === 'COMPLETED') {
+                  statusLabel = 'Completed';
+                  statusComment = 'This interview is done';
+                } else if (status === 'CANCELLED') {
+                  statusLabel = 'Cancelled';
+                  statusComment = `Interview cancelled by ${
+                    cancelled_by === DATA.userRole ? 'Recruiter' : 'Jobseeker'
+                  }`;
+                }
+                return (
+                  <Panel
+                    key={id}
+                    showArrow={false}
+                    header={
+                      <div>
+                        <span>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</span>
+                        <span className={status}>{statusLabel}</span>
+                      </div>
+                    }
+                  >
+                    <p>Status: {statusComment}</p>
+                    <p>Recruiter's notes: {notes}</p>
+                    {status === 'COMPLETED' && (
+                      <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
+                    )}
+                  </Panel>
+                );
+              })}
+            </Collapse>
+          </TabPane>
+        )}
       </Tabs>
     </Wrapper>
   );

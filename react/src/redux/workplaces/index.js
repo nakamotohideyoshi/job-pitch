@@ -30,9 +30,9 @@ export default handleActions(
 
     // ---- update workplace ----
 
-    [C.UPDATE_WORKPLACE]: (state, { workplace }) => ({
+    [C.UPDATE_WORKPLACE]: (state, { payload }) => ({
       ...state,
-      workplaces: helper.updateItem(state.workplaces, workplace, true)
+      workplaces: helper.updateItem(state.workplaces, payload, true)
     }),
 
     // ---- remove workplace ----

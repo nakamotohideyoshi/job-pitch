@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Switch, Redirect, Route } from 'react-router-dom';
 import { notification } from 'antd';
-import { Loading } from 'components';
 
 import DATA from 'utils/data';
+import { enabledHRSelector, enabledEmployeeSelector } from 'redux/selectors';
+import { Loading } from 'components';
 
 import Layout from './Layout';
 
@@ -61,59 +62,101 @@ const AuthRoute = ({ component, ...rest }) => (
   />
 );
 
-const RcRoute = ({ component, ...rest }) => (
+const RcRoute = connect(state => ({
+  businesses: state.businesses.businesses
+}))(({ component, businesses, ...rest }) => (
   <Route
     {...rest}
     render={props => {
-      if (DATA.userKey) {
+      if (!DATA.userKey) {
+        return <Redirect to={{ pathname: '/auth', state: { from: props.location } }} />;
+      }
+
+      if (!DATA.isRecruiter) {
+        return <Redirect to="/select" />;
+      }
+
+      if (businesses.length === 0) {
+        const path2 = rest.location.pathname.split('/')[2];
+        if (path2 !== 'jobs') {
+          return <Redirect to="/recruiter/jobs" />;
+        }
+      }
+
+      return <Layout content={component} {...props} />;
+    }}
+  />
+));
+
+const JsRoute = connect(state => ({
+  jobseeker: state.auth.jobseeker,
+  jobprofile: state.auth.jobprofile
+}))(({ component, jobseeker, jobprofile, addBannerAction, removeBannerAction, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => {
+      if (!DATA.userKey) {
+        return <Redirect to={{ pathname: '/auth', state: { from: props.location } }} />;
+      }
+
+      if (!DATA.isJobseeker) {
+        return <Redirect to="/select" />;
+      }
+
+      const paths = rest.location.pathname.split('/');
+
+      if (!jobseeker && (paths[2] !== 'settings' || paths[3] !== 'profile')) {
+        return <Redirect to="/jobseeker/settings/profile" />;
+      }
+
+      if (!jobprofile && paths[2] !== 'settings') {
+        return <Redirect to="/jobseeker/settings/jobprofile" />;
+      }
+
+      return <Layout content={component} {...props} />;
+    }}
+  />
+));
+
+const HrRoute = connect(state => ({
+  enabledHR: enabledHRSelector(state)
+}))(({ component, enabledHR, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => {
+      if (!DATA.userKey) {
+        return <Redirect to={{ pathname: '/auth', state: { from: props.location } }} />;
+      }
+
+      if (!enabledHR) {
         return <Redirect to="/select" />;
       }
 
       return <Layout content={component} {...props} />;
     }}
   />
-);
+));
 
-const JsRoute = ({ component, ...rest }) => (
+const EmRoute = connect(state => ({
+  enabledEmployee: enabledEmployeeSelector(state)
+}))(({ component, enabledEmployee, ...rest }) => (
   <Route
     {...rest}
     render={props => {
-      if (DATA.userKey) {
+      if (!DATA.userKey) {
+        return <Redirect to={{ pathname: '/auth', state: { from: props.location } }} />;
+      }
+
+      if (!enabledEmployee) {
         return <Redirect to="/select" />;
       }
 
       return <Layout content={component} {...props} />;
     }}
   />
-);
+));
 
-const HrRoute = ({ component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => {
-      if (DATA.userKey) {
-        return <Redirect to="/select" />;
-      }
-
-      return <Layout content={component} {...props} />;
-    }}
-  />
-);
-
-const EmRoute = ({ component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => {
-      if (DATA.userKey) {
-        return <Redirect to="/select" />;
-      }
-
-      return <Layout content={component} {...props} />;
-    }}
-  />
-);
-
-const Routers = ({ user, location }) => {
+const Routers = ({ user }) => {
   if (DATA.userKey && !user) {
     return <Loading size="large" />;
   }
@@ -212,6 +255,7 @@ const Routers = ({ user, location }) => {
         exact
         path="/recruiter/settings/credits/purchase-error"
         render={({ history, location }) => {
+          console.log(history, location, 9999);
           let error = (location.search || 'There was an error').replace('?error=', '');
           notification.error({
             message: 'Error',

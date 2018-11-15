@@ -62,6 +62,15 @@ export default styled.div`
         }
       }
     }
+
+    .alert-msg {
+      text-align: center;
+      padding: 50px;
+      div {
+        margin-bottom: 5px;
+        color: ${colors.text3};
+      }
+    }
   }
 
   form {

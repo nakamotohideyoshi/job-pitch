@@ -5,6 +5,7 @@ import { List, Drawer } from 'antd';
 
 import * as helper from 'utils/helper';
 import { getEmployeesSelector } from 'redux/selectors';
+import { getEmployeesAction } from 'redux/employee/employees';
 import { PageHeader, ListEx, Logo } from 'components';
 import Details from './Details';
 import Wrapper from './styled';
@@ -14,6 +15,12 @@ class EmployeeList extends React.Component {
   state = {
     selectedId: null
   };
+
+  componentDidMount() {
+    if (!this.props.employees) {
+      this.props.getEmployeesAction();
+    }
+  }
 
   onSelect = selectedId => this.setState({ selectedId });
 
@@ -58,6 +65,11 @@ class EmployeeList extends React.Component {
   }
 }
 
-export default connect(state => ({
-  employees: getEmployeesSelector(state)
-}))(EmployeeList);
+export default connect(
+  state => ({
+    employees: getEmployeesSelector(state)
+  }),
+  {
+    getEmployeesAction
+  }
+)(EmployeeList);

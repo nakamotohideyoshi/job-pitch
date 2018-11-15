@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, Upload, message, Tooltip } from 'antd';
 
 import * as helper from 'utils/helper';
-import { VideoPlayerModal, VideoRecorder, Icons } from 'components';
+import { VideoPlayerModal, VideoRecorder, Icons, LinkButton } from 'components';
 import Wrapper from './PitchSelector.styled';
 
 const { confirm } = Modal;
@@ -90,7 +90,7 @@ class PitchSelector extends React.Component {
               <Icons.CloudUpload /> Click or drag to upload video file
             </p>
             <p className="ant-upload-hint">
-              or you can record <a onClick={this.openRecorder}>New Video</a>
+              or you can record <LinkButton onClick={this.openRecorder}>New Video</LinkButton>
             </p>
             {/* <Dropdown
               overlay={
@@ -112,16 +112,16 @@ class PitchSelector extends React.Component {
                 e.stopPropagation();
               }}
             >
-              <a className="ant-dropdown-link">Click me</a>
+              <LinkButton className="ant-dropdown-link">Click me</LinkButton>
             </Dropdown> */}
           </Upload.Dragger>
         </div>
 
         {url && (
           <div className="newInfo">
-            <a onClick={() => this.playPitch(url)}>New video</a>
+            <LinkButton onClick={() => this.playPitch(url)}>New video</LinkButton>
             {' save to upload and click '}
-            <a onClick={this.removeVideo}>here</a>
+            <LinkButton onClick={this.removeVideo}>here</LinkButton>
             {' to cancel'}
           </div>
         )}

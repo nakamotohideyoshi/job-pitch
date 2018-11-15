@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga';
 import { takeLatest, call, put } from 'redux-saga/effects';
 
-import { request, getRequest, postRequest, deleteRequest } from 'utils/request';
+import { request, getRequest, postRequest, patchRequest, deleteRequest, requestSuccess } from 'utils/request';
 import { uploadVideoToAWS } from 'utils/aws';
 import * as C from 'redux/constants';
 
@@ -10,21 +10,15 @@ export const getJobs = getRequest({
   url: '/api/user-jobs/'
 });
 
-export function* updateJob(job) {
-  yield put({ type: C.RC_UPDATE_JOB, job });
-  yield put({ type: C.UPDATE_WORKPLACE, workplace: job.location_data });
-  yield put({ type: C.UPDATE_BUSINESS, business: job.location_data.business_data });
-}
-
-function* saveJob(action) {
-  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
+function* saveJob({ payload }) {
+  const { id, logo, onProgress, onSuccess, onFail } = payload;
 
   const job = yield call(
     request({
-      method: data.id ? 'put' : 'post',
-      url: data.id ? `/api/user-jobs/${data.id}/` : '/api/user-jobs/'
+      method: id ? 'put' : 'post',
+      url: id ? `/api/user-jobs/${id}/` : '/api/user-jobs/'
     }),
-    action
+    { payload }
   );
 
   if (job === null) {
@@ -57,7 +51,9 @@ function* saveJob(action) {
     }
   }
 
-  yield call(updateJob, job);
+  yield put({ type: requestSuccess(C.RC_UPDATE_JOB), payload: job });
+  yield put({ type: C.UPDATE_WORKPLACE, payload: job.location_data });
+  yield put({ type: C.UPDATE_BUSINESS, payload: job.location_data.business_data });
 
   onSuccess && onSuccess(job);
 }
@@ -93,13 +89,18 @@ function* uploadPitch(action) {
     yield delay(2000);
     newPitch = yield call(getRequest({ url: `/api/job-videos/${pitchId}/` }));
   } while (!newPitch.video);
-  yield put({ type: C.RC_UPDATE_JOB, payload: { id: job, videos: [newPitch] } });
+  yield put({ type: requestSuccess(C.RC_UPDATE_JOB), payload: { id: job, videos: [newPitch] } });
 
   onSuccess && onSuccess('Job is saved successfully.');
 }
 
+const updateJob = patchRequest({
+  url: ({ id }) => `/api/user-jobs/${id}/`
+});
+
 export default function* sagas() {
   yield takeLatest(C.RC_SAVE_JOB, saveJob);
+  yield takeLatest(C.RC_UPDATE_JOB, updateJob);
   yield takeLatest(C.RC_REMOVE_JOB, removeJob);
   yield takeLatest(C.RC_UPLOAD_JOBPITCH, uploadPitch);
 }

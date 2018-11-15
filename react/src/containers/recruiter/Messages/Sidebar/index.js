@@ -46,8 +46,7 @@ class Sidebar extends React.PureComponent {
     if (lastMessage) {
       date = new Date(lastMessage.created);
       date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear() - 2000}`;
-      const userRole = helper.getNameByID(DATA.roles, lastMessage.from_role);
-      comment = `${userRole === 'RECRUITER' ? 'You: ' : ''}${lastMessage.content}`;
+      comment = `${lastMessage.from_role === DATA.ROLE.RECRUITER ? 'You: ' : ''}${lastMessage.content}`;
     }
     const deleted = status === DATA.APP.DELETED ? 'deleted' : '';
     const selected = id === this.props.selectedId ? 'selected' : '';

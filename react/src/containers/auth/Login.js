@@ -24,7 +24,7 @@ class LoginForm extends React.Component {
   login = e => {
     e.preventDefault();
 
-    const { form, loginAction, history } = this.props;
+    const { form, loginAction, location, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -35,7 +35,12 @@ class LoginForm extends React.Component {
         data: values,
 
         success: () => {
-          history.push('/select');
+          const { from } = location.state || {};
+          if (from) {
+            history.push(from.pathname);
+          } else {
+            history.push('/select');
+          }
         },
 
         fail: data => {

@@ -17,7 +17,7 @@ function* connectJobseeker({ payload }) {
     const application = yield call(getRequest({ url: `/api/applications/${result.id}/` }));
     yield put({ type: requestSuccess(C.RC_CONNECT_JOBSEEKER), job_seeker });
     if (application !== null) {
-      yield put({ type: C.UPDATE_BUSINESS, business: application.job_data.location_data.business_data });
+      yield put({ type: C.UPDATE_BUSINESS, payload: application.job_data.location_data.business_data });
       yield put({ type: requestSuccess(C.UPDATE_APPLICATION), application });
       onSuccess && onSuccess();
     } else {

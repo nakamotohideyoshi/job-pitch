@@ -23,8 +23,8 @@ const Main = styled(Layout)`
   }
 `;
 
-const MainLayout = ({ banners, location, content: Content, ...rest }) => {
-  const path2 = location.pathname.split('/')[2];
+const MainLayout = ({ banners, content: Content, ...rest }) => {
+  const path2 = rest.location.pathname.split('/')[2];
 
   return (
     <RootLayer>

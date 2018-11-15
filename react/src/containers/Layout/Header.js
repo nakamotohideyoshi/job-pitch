@@ -33,18 +33,19 @@ const MenuItem = Menu.Item;
 /* eslint-disable react/prop-types */
 class Header extends React.Component {
   state = {
-    visible: false
+    visibleUserMenu: false
   };
 
-  hide = () => this.setState({ visible: false });
+  handleVisibleChange = visibleUserMenu => {
+    this.setState({ visibleUserMenu });
+  };
 
   onSettings = () => {
     this.props.history.push(DATA.isJobseeker ? '/jobseeker/settings' : '/recruiter/settings');
   };
 
   onSignOut = () => {
-    this.show(false);
-
+    this.handleVisibleChange(false);
     confirm({
       title: 'Are you sure you want to log out?',
       okText: 'Log Out',
@@ -95,9 +96,11 @@ class Header extends React.Component {
   };
 
   DropMenu = () => {
-    const { jobseeker, avatar, businesses, location } = this.props;
+    const { jobseeker, jobprofile, avatar, businesses, location } = this.props;
     const path1 = location.pathname.split('/')[1];
     const name = helper.getFullName(jobseeker) || (businesses[0] || {}).name || 'noname';
+
+    const hideSettings = businesses.length === 0 && !jobprofile;
 
     return (
       <UserMenu>
@@ -110,7 +113,9 @@ class Header extends React.Component {
         </div>
 
         <div className="buttons">
-          {(path1 === 'jobseeker' || path1 === 'recruiter') && <Button onClick={this.onSettings}>Settings</Button>}
+          {!hideSettings && (path1 === 'jobseeker' || path1 === 'recruiter') && (
+            <Button onClick={this.onSettings}>Settings</Button>
+          )}
           <Button onClick={this.onSignOut}>Log Out</Button>
         </div>
       </UserMenu>
@@ -154,8 +159,8 @@ class Header extends React.Component {
 
               <Popover
                 placement="bottomRight"
-                visible={this.state.visible}
-                onVisibleChange={this.show}
+                visible={this.state.visibleUserMenu}
+                onVisibleChange={this.handleVisibleChange}
                 content={<this.DropMenu />}
                 trigger="click"
                 overlayStyle={{ position: 'fixed' }}
@@ -175,11 +180,12 @@ class Header extends React.Component {
 export default withRouter(
   connect(
     state => {
-      const { user, jobseeker } = state.auth;
+      const { user, jobseeker, jobprofile } = state.auth;
       const avatar = helper.getAvatar(jobseeker);
       return {
         user,
         jobseeker,
+        jobprofile,
         avatar,
         businesses: state.businesses.businesses
       };

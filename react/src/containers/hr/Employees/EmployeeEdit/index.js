@@ -107,14 +107,16 @@ class EmployeeEdit extends React.Component {
           this.setState({ loading: null });
           helper.setErrors(form, data, values);
         },
-        onUploadProgress: progress => {
-          this.setState({
-            loading: {
-              label: 'Saving...',
-              progress: Math.floor((progress.loaded / progress.total) * 100)
+        onUploadProgress: data.profile_image
+          ? progress => {
+              this.setState({
+                loading: {
+                  label: 'Uploading...',
+                  progress: Math.floor((progress.loaded / progress.total) * 100)
+                }
+              });
             }
-          });
-        }
+          : null
       });
     });
   };

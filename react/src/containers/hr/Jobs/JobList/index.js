@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { List, Tooltip, Modal } from 'antd';
 
 import { getHrJobsSelector } from 'redux/selectors';
-import { removeJobAction } from 'redux/hr/jobs';
+import { getJobsAction, removeJobAction } from 'redux/hr/jobs';
 import { PageHeader, ListEx, Loading, Icons, AlertMsg } from 'components';
 import Wrapper from './styled';
 
@@ -13,6 +13,12 @@ const { confirm } = Modal;
 
 /* eslint-disable react/prop-types */
 class JobList extends React.Component {
+  componentDidMount() {
+    if (!this.props.jobs) {
+      this.props.getJobsAction();
+    }
+  }
+
   onEdit = id => {
     this.props.history.push(`/hr/jobs/${id}`);
   };
@@ -93,6 +99,7 @@ export default connect(
     jobs: getHrJobsSelector(state)
   }),
   {
+    getJobsAction,
     removeJobAction
   }
 )(JobList);

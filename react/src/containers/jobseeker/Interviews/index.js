@@ -99,9 +99,7 @@ class Interviews extends React.Component {
       PENDING: 'Interview request received',
       ACCEPTED: 'Interview accepted',
       COMPLETED: 'This interview is done',
-      CANCELLED: `Interview cancelled by ${
-        helper.getNameByID(DATA.roles, interview.cancelled_by) === 'RECRUITER' ? 'Recruiter' : 'Jobseeker'
-      }`
+      CANCELLED: `Interview cancelled by ${interview.cancelled_by === DATA.ROLE.RECRUITER ? 'Recruiter' : 'Jobseeker'}`
     };
 
     let actions = [

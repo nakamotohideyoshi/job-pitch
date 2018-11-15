@@ -12,6 +12,10 @@ const { Item } = Form;
 const { TextArea } = Input;
 const { confirm } = Modal;
 
+const disabledDate = current => {
+  return current && current < moment().endOf('day');
+};
+
 class Interview extends React.Component {
   state = {
     visibleCompleteDialog: false
@@ -135,6 +139,7 @@ class Interview extends React.Component {
                 })(
                   <DatePicker
                     allowClear={false}
+                    disabledDate={disabledDate}
                     showTime={{ format: 'H:mm' }}
                     format="ddd DD MMM, YYYY [at] H:mm A"
                     placeholder="Select"

@@ -26,45 +26,44 @@ class UserList extends React.Component {
     if (businessId !== business.id) {
       history.replace(`/recruiter/users/${business.id}`);
     } else {
-      this.selectBusiness(business);
+      this.selectedBusiness(business);
     }
   }
 
   componentWillReceiveProps({ businessId, business }) {
     if (businessId !== this.props.businessId) {
-      this.selectBusiness(business);
+      this.selectedBusiness(business);
     }
   }
 
-  selectBusiness = ({ id, restricted }) => {
+  selectedBusiness = ({ id, restricted }) => {
     if (!restricted) {
       this.props.getUsersAction(id);
     }
     this.props.selectBusinessAction(id);
-    helper.saveData('users/businessId', id);
+    helper.saveData('users_bid', id);
   };
 
-  onSelectBusiness = id => {
+  selectBusiness = id => {
     this.props.history.replace(`/recruiter/users/${id}`);
   };
 
-  onAddUser = () => {
+  addUser = () => {
     this.props.history.push(`/recruiter/users/add/${this.props.businessId}`);
   };
 
-  onSelect = ({ id, email }) => {
+  selectUser = ({ id, email }) => {
     if (DATA.email === email) {
       warning({
-        content: 'Cannot edit currently logged in user',
+        title: 'Cannot edit currently logged in user',
         maskClosable: true
       });
-      return;
+    } else {
+      this.props.history.push(`/recruiter/users/edit/${id}`);
     }
-
-    this.props.history.push(`/recruiter/users/edit/${id}`);
   };
 
-  onRemove = (id, event) => {
+  removeUser = (id, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -88,7 +87,9 @@ class UserList extends React.Component {
     });
   };
 
-  onChangeSearchText = searchText => this.setState({ searchText });
+  changeSearchText = searchText => {
+    this.setState({ searchText });
+  };
 
   filterOption = ({ email, comment }) => {
     const searchText = this.state.searchText.toLowerCase();
@@ -104,14 +105,14 @@ class UserList extends React.Component {
           DATA.email !== email
             ? [
                 <Tooltip placement="bottom" title="Remove">
-                  <span onClick={e => this.onRemove(id, e)}>
+                  <span onClick={e => this.removeUser(id, e)}>
                     <Icons.TrashAlt />
                   </span>
                 </Tooltip>
               ]
             : []
         }
-        onClick={() => this.onSelect(user)}
+        onClick={() => this.selectUser(user)}
         className={`${loading ? 'loading' : ''}`}
       >
         <List.Item.Meta
@@ -135,7 +136,7 @@ class UserList extends React.Component {
         ) : (
           <Fragment>
             <span>This busniness doesn't seem to have any user yet!</span>
-            <a onClick={this.onAddUser}>Create user</a>
+            <LinkButton onClick={this.addUser}>Create user</LinkButton>
           </Fragment>
         )}
       </AlertMsg>
@@ -154,7 +155,7 @@ class UserList extends React.Component {
         </PageHeader>
 
         <PageSubHeader>
-          <Select value={business.id} onChange={this.onSelectBusiness}>
+          <Select value={business.id} onChange={this.selectBusiness}>
             {businesses.map(b => {
               const logo = helper.getBusinessLogo(b);
               return (
@@ -165,12 +166,12 @@ class UserList extends React.Component {
               );
             })}
           </Select>
-          <SearchBox width="200px" onChange={this.onChangeSearchText} />
+          <SearchBox width="200px" onChange={this.changeSearchText} />
         </PageSubHeader>
 
         <PageSubHeader>
-          <div style={{ display: 'inline' }} />
-          {!business.restricted && <LinkButton onClick={this.onAddUser}>Add new user</LinkButton>}
+          <div />
+          {!business.restricted && <LinkButton onClick={this.addUser}>Add new user</LinkButton>}
         </PageSubHeader>
 
         <div className="content">
@@ -190,7 +191,7 @@ export default connect(
   (state, { match }) => {
     const { businesses } = state.businesses;
     const businessId = helper.str2int(match.params.businessId);
-    const businessId1 = businessId || helper.loadData('users/businessId');
+    const businessId1 = businessId || helper.loadData('users_bid');
     const business = helper.getItemById(businesses, businessId1) || businesses[0];
 
     return {

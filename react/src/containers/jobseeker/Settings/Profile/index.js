@@ -1,15 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Popover, Upload, message, Drawer } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { saveJobseekerAction, uploadPitchAction } from 'redux/jobseeker/profile';
-import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, ImageSelector, JobseekerDetails } from 'components';
-import imgIntro0 from 'assets/intro0.png';
-import imgIntro1 from 'assets/intro1.png';
-import imgIntro2 from 'assets/intro2.png';
-import imgIntro3 from 'assets/intro3.png';
+import {
+  NoLabelField,
+  PitchSelector,
+  PopupProgress,
+  Intro,
+  Icons,
+  ImageSelector,
+  JobseekerDetails,
+  LinkButton
+} from 'components';
 import DefaultAvatar from 'assets/avatar.png';
 import FormWrapper from './styled';
 
@@ -18,37 +24,14 @@ const { Item } = Form;
 const { TextArea } = Input;
 const { Option } = Select;
 
-const INTRO_DATA = [
-  {
-    title: 'Welcome!',
-    image: imgIntro0,
-    comment: `You're just a few steps away from your next job!`
-  },
-  {
-    title: 'Complete your profile',
-    image: imgIntro1,
-    comment: `It only takes a few seconds but will save you countless hours of searching!`
-  },
-  {
-    title: 'Record Your Pitch',
-    image: imgIntro2,
-    comment: `Quick and easy! Use your phone camera to record a quick video introduction for yourself.`
-  },
-  {
-    title: 'Get hired',
-    image: imgIntro3,
-    comment: `You will be able to apply and recruiters will be able to search and see your profile the moment it's complete, what are you waiting for!`
-  }
-];
-
 class Profile extends React.Component {
   state = {
-    dontShowIntro: false,
-    showPreview: false,
+    visibleIntro: false,
+    visiblePreview: false,
     cvData: null,
     pitchData: null,
     avatar: {
-      url: null,
+      url: DefaultAvatar,
       file: null,
       exist: false
     },
@@ -57,6 +40,8 @@ class Profile extends React.Component {
 
   componentDidMount() {
     const { jobseeker, form } = this.props;
+
+    this.setState({ visibleIntro: !jobseeker && DATA.tutorial === 1 });
 
     if (jobseeker) {
       this.setState({
@@ -87,31 +72,42 @@ class Profile extends React.Component {
         has_references: jobseeker.has_references,
         truth_confirmation: jobseeker.truth_confirmation
       });
-    } else {
-      this.setState({
-        avatar: {
-          url: DefaultAvatar,
-          exist: false
-        }
-      });
     }
-
-    this.setState({
-      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`]
-    });
   }
 
-  openPreview = () => {
-    this.setState({ showPreview: true });
-  };
-
-  closePreview = () => {
-    this.setState({ showPreview: false });
+  showIntro = () => {
+    const INTRO_DATA = [
+      {
+        title: 'Welcome!',
+        image: require('assets/intro0.png'),
+        comment: `You're just a few steps away from your next job!`
+      },
+      {
+        title: 'Complete your profile',
+        image: require('assets/intro1.png'),
+        comment: `It only takes a few seconds but will save you countless hours of searching!`
+      },
+      {
+        title: 'Record Your Pitch',
+        image: require('assets/intro2.png'),
+        comment: `Quick and easy! Use your phone camera to record a quick video introduction for yourself.`
+      },
+      {
+        title: 'Get hired',
+        image: require('assets/intro3.png'),
+        comment: `You will be able to apply and recruiters will be able to search and see your profile the moment it's complete, what are you waiting for!`
+      }
+    ];
+    return <Intro data={INTRO_DATA} onClose={this.closeIntro} />;
   };
 
   closeIntro = () => {
-    DATA[`dontShowIntro_${DATA.email}`] = true;
-    this.setState({ dontShowIntro: true });
+    DATA.tutorial = 2;
+    this.setState({ visibleIntro: false });
+  };
+
+  showPreview = visiblePreview => {
+    this.setState({ visiblePreview });
   };
 
   setAvatar = (file, url) => {
@@ -188,6 +184,7 @@ class Profile extends React.Component {
         isFormData: true,
         id: (jobseeker || {}).id,
         data,
+
         success: () => {
           if (this.state.pitchData) {
             this.uploadPitch();
@@ -195,10 +192,23 @@ class Profile extends React.Component {
             this.saveCompleted();
           }
         },
+
         fail: data => {
           this.setState({ loading: null });
           helper.setErrors(form, data, values);
-        }
+        },
+
+        onUploadProgress:
+          data.profile_image || cvData
+            ? progress => {
+                this.setState({
+                  loading: {
+                    label: 'Uploading...',
+                    progress: Math.floor((progress.loaded / progress.total) * 100)
+                  }
+                });
+              }
+            : null
       });
     });
   };
@@ -206,13 +216,16 @@ class Profile extends React.Component {
   uploadPitch = () => {
     this.props.uploadPitchAction({
       data: this.state.pitchData,
+
       onSuccess: () => {
         this.saveCompleted();
       },
+
       onFail: () => {
         this.setState({ loading: null });
         message.error('Uploading is failed.');
       },
+
       onProgress: (label, progress) => {
         this.setState({
           loading: { label, progress }
@@ -238,13 +251,14 @@ class Profile extends React.Component {
     if (!active) {
       message.info('Your profile will not be visible and will not be able to apply for job or send message');
     }
+
     if (!profile) {
-      setTimeout(() => this.props.history.push('/jobseeker/settings/jobprofile'));
+      this.props.history.push('/jobseeker/settings/jobprofile');
     }
   };
 
   render() {
-    const { dontShowIntro, loading, showPreview, avatar, cvData } = this.state;
+    const { visibleIntro, loading, visiblePreview, avatar, cvData } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -439,9 +453,9 @@ class Profile extends React.Component {
                     it doesn’t matter, and you can re-record as many times
                     <br />
                     times as you want. Check out our{' '}
-                    <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
+                    <LinkButton href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
                       example video
-                    </a>
+                    </LinkButton>
                   </span>
                 }
               >
@@ -470,26 +484,29 @@ class Profile extends React.Component {
             Save
           </Button>
           {pitch && (
-            <Button className="btn-preview" onClick={this.openPreview}>
+            <Button className="btn-preview" onClick={() => this.showPreview(true)}>
               Preview
             </Button>
           )}
         </NoLabelField>
 
-        {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
-        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-
-        <Drawer placement="right" onClose={this.closePreview} visible={showPreview}>
+        <Drawer placement="right" onClose={() => this.showPreview()} visible={visiblePreview}>
           {jobseeker && <JobseekerDetails jobseekerData={jobseeker} />}
         </Drawer>
+
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+
+        {visibleIntro && this.showIntro()}
       </FormWrapper>
     );
   }
 }
 
-export default connect(
-  state => ({
-    jobseeker: state.auth.jobseeker
-  }),
-  { saveJobseekerAction, uploadPitchAction }
-)(Form.create()(Profile));
+export default withRouter(
+  connect(
+    state => ({
+      jobseeker: state.auth.jobseeker
+    }),
+    { saveJobseekerAction, uploadPitchAction }
+  )(Form.create()(Profile))
+);

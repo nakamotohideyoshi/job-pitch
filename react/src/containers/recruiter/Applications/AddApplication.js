@@ -8,7 +8,6 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { getJobsSelector } from 'redux/selectors';
 import { newApplicationAction } from 'redux/applications';
-import { saveJobseekerAction } from 'redux/jobseeker/profile';
 import { PageHeader, PageSubHeader, NoLabelField, Logo, Icons, PopupProgress } from 'components';
 import Wrapper from './AddApplication.styled';
 
@@ -58,28 +57,9 @@ class AddApplication extends React.Component {
           job_seeker,
           shortlisted: values.shortlisted
         },
-        onSuccess: application => {
-          const { cvData } = this.state;
-          // if (cvData) {
-          //   this.props.saveJobseekerAction({
-          //     isFormData: true,
-          //     id: application.job_seeker.id,
-          //     data: {
-          //       cv: cvData
-          //     },
-          //     success: () => {
-          //       message.success('The application is saved');
-          //       this.goApplicationList();
-          //     },
-          //     fail: () => {
-          //       this.setState({ loading: null });
-          //       message.error('error');
-          //     }
-          //   });
-          // } else {
+        onSuccess: () => {
           message.success('The application is saved');
-          this.goApplicationList();
-          // }
+          this.props.history.push(`/recruiter/applications/conns/${values.job}`);
         },
         onFail: error => {
           this.setState({ loading: null });
@@ -285,5 +265,5 @@ export default connect(
   state => ({
     jobs: getJobsSelector(state).filter(({ status }) => status === DATA.JOB.OPEN)
   }),
-  { newApplicationAction, saveJobseekerAction }
+  { newApplicationAction }
 )(Form.create()(AddApplication));

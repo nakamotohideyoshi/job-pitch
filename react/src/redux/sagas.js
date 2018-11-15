@@ -1,6 +1,5 @@
 import { all } from 'redux-saga/effects';
 
-// import common from './common/saga';
 import auth from './auth/saga';
 import businesses from './businesses/saga';
 import workplaces from './workplaces/saga';
@@ -21,7 +20,6 @@ import em_employees from './employee/employees/saga';
 
 export default function*() {
   yield all([
-    // common(),
     auth(),
     businesses(),
     workplaces(),

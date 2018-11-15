@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Button, Tooltip, Tabs, Alert } from 'antd';
 
 import * as helper from 'utils/helper';
+import DATA from 'utils/data';
 import colors from 'utils/colors';
 import { getPublicJobAction, findJobsAction } from 'redux/jobseeker/find';
 import { getApplicationsSelector } from 'redux/selectors';
@@ -15,9 +16,9 @@ const TabPane = Tabs.TabPane;
 /* eslint-disable react/prop-types */
 class PublicJob extends React.Component {
   componentWillMount() {
-    const { match, history, status, jobs, getPublicJobAction, findJobsAction, jobseeker } = this.props;
+    const { match, history, jobs, getPublicJobAction, findJobsAction, jobseeker } = this.props;
 
-    if (status === 'jobseeker' && !jobs) {
+    if (DATA.isJobseeker && !jobs) {
       if (!jobseeker) {
         history.replace(`/jobseeker/settings/profile?redirect=${match.url}`);
         return;
@@ -30,7 +31,7 @@ class PublicJob extends React.Component {
   }
 
   componentWillReceiveProps({ jsJob, jsApplication, history }) {
-    if (this.props.status === 'jobseeker') {
+    if (DATA.isJobseeker) {
       if (jsJob) {
         history.replace(`/jobseeker/find/`, { jobId: jsJob.id });
       } else if (jsApplication) {
@@ -48,7 +49,7 @@ class PublicJob extends React.Component {
   };
 
   render() {
-    const { job, jobs, error, status } = this.props;
+    const { job, jobs, error } = this.props;
 
     if (error) {
       return (
@@ -62,7 +63,7 @@ class PublicJob extends React.Component {
       return <Loading size="large" />;
     }
 
-    if (status === 'jobseeker' && !jobs) {
+    if (DATA.isJobseeker && !jobs) {
       return <Loading size="large" />;
     }
 
@@ -92,8 +93,8 @@ class PublicJob extends React.Component {
       <Wrapper className="container">
         <Helmet title="Job Details" />
 
-        {status === 'recruiter' && <Alert message="Job ad preview" type="success" />}
-        {status === 'recruiter' && <Alert message="API details to follow" type="success" />}
+        {DATA.isRecruiter && <Alert message="Job ad preview" type="success" />}
+        {DATA.isRecruiter && <Alert message="API details to follow" type="success" />}
 
         <div className="content">
           <Row gutter={32}>
@@ -125,7 +126,7 @@ class PublicJob extends React.Component {
                   </div>
                 </Col>
 
-                {status === 'auth' && (
+                {!DATA.userRole && (
                   <Col md={10} lg={9}>
                     <h3>Login or Register to Apply</h3>
                     <Button type="primary" onClick={this.onLogin}>
@@ -177,10 +178,9 @@ class PublicJob extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const { status, jobseeker } = state.auth;
-    if (status !== 'jobseeker') {
+    const { jobseeker } = state.auth;
+    if (!DATA.isJobseeker) {
       return {
-        status,
         job: state.js_find.publicJob,
         error: state.js_find.error
       };
@@ -192,7 +192,6 @@ export default connect(
     const applications = getApplicationsSelector(state);
     const jsApplication = (applications || []).filter(({ job_data }) => job_data.id === jobId)[0];
     return {
-      status,
       job: state.js_find.publicJob,
       jobs,
       error: state.js_find.error,

@@ -25,6 +25,7 @@ class PasswordForm extends React.Component {
       if (err) return;
 
       this.setState({ loading: true });
+
       this.props.changePasswordAction({
         data: values,
         success: ({ success }) => {

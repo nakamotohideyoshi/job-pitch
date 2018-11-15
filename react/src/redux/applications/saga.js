@@ -12,6 +12,11 @@ import {
 
 import * as C from 'redux/constants';
 
+export const getApplications = getRequest({
+  type: C.GET_APPLICATIONS,
+  url: '/api/applications/'
+});
+
 function* _updateApplication(process, payload) {
   const { appId, onSuccess, onFail } = payload;
   yield put({ type: requestPending(C.UPDATE_APPLICATION), appId });
@@ -87,9 +92,9 @@ function* autoUpdateAppliciations() {
     yield call(delay, 1000);
     second++;
 
-    let { auth, router } = yield select();
+    let { auth, businesses, router } = yield select();
 
-    if (!auth.user || auth.status === 'select') {
+    if (!auth.user || (!auth.jobprofile && !businesses.businesses.length)) {
       second = 0;
       continue;
     }

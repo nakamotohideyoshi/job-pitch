@@ -1,59 +1,58 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Tabs } from 'antd';
 
 import { PageHeader, PasswordForm } from 'components';
 import Profile from './Profile';
 import PitchRecord from './PitchRecord';
 import JobProfile from './JobProfile';
-import { TabMenu, Content } from './styled';
+import Wrapper from './styled';
+
+const TabPane = Tabs.TabPane;
 
 /* eslint-disable react/prop-types */
-const Settings = ({ location, jobseeker }) => {
-  const selectedKey = location.pathname.split('/')[3];
+const Settings = ({ location, history, jobseeker }) => {
+  const activeKey = location.pathname.split('/')[3];
 
-  if (!jobseeker && (selectedKey === 'jobprofile' || selectedKey === 'record')) {
-    return <Redirect to="/jobseeker/settings/profile" />;
-  }
+  const selecteTab = tab => {
+    const paths = location.pathname.split('/');
+    paths[3] = tab;
+    history.push(paths.join('/'));
+  };
 
   return (
-    <div className="container">
+    <Wrapper className="container">
       <Helmet title="Settings" />
 
       <PageHeader>
         <h2>Settings</h2>
       </PageHeader>
 
-      <TabMenu mode="horizontal" selectedKeys={[selectedKey]}>
-        <Menu.Item key="profile">
-          <Link to="/jobseeker/settings/profile">My Profile</Link>
-        </Menu.Item>
-        {jobseeker && (
-          <Menu.Item key="jobprofile">
-            <Link to="/jobseeker/settings/jobprofile">Job Profile</Link>
-          </Menu.Item>
-        )}
-        {jobseeker && (
-          <Menu.Item key="record">
-            <Link to="/jobseeker/settings/record">Record Pitch</Link>
-          </Menu.Item>
-        )}
-        <Menu.Item key="password">
-          <Link to="/jobseeker/settings/password">Change Password</Link>
-        </Menu.Item>
-      </TabMenu>
+      <Tabs activeKey={activeKey} animated={false} onChange={selecteTab}>
+        <TabPane tab="My Profile" key="profile">
+          <Profile />
+        </TabPane>
 
-      <Content>
-        <Switch>
-          <Route exact path="/jobseeker/settings/profile" component={Profile} />
-          <Route exact path="/jobseeker/settings/record" component={PitchRecord} />
-          <Route exact path="/jobseeker/settings/jobprofile" component={JobProfile} />
-          <Route exact path="/jobseeker/settings/password" component={PasswordForm} />
-        </Switch>
-      </Content>
-    </div>
+        {jobseeker && (
+          <TabPane tab="Job Profile" key="jobprofile">
+            <JobProfile />
+          </TabPane>
+        )}
+
+        {jobseeker && (
+          <TabPane tab="Record Pitch" key="record">
+            <PitchRecord />
+          </TabPane>
+        )}
+
+        {jobseeker && (
+          <TabPane tab="Change Password" key="password">
+            <PasswordForm />
+          </TabPane>
+        )}
+      </Tabs>
+    </Wrapper>
   );
 };
 

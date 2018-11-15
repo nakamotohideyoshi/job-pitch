@@ -53,6 +53,7 @@ export const request = ({ type: type1, method, url, payloadOnSuccess, payloadOnF
           payload: payloadOnSuccess ? payloadOnSuccess(payload, data) : data,
           request: payload
         }));
+
       success && success(data);
 
       successMsg && message.success(successMsg);
@@ -90,6 +91,7 @@ export const requestFail = type => `${type}/fail`;
 export const getRequest = params => request({ ...params, method: 'get' });
 export const postRequest = params => request({ ...params, method: 'post' });
 export const putRequest = params => request({ ...params, method: 'put' });
+export const patchRequest = params => request({ ...params, method: 'patch' });
 export const deleteRequest = params => request({ ...params, method: 'delete' });
 
 export const weakRequest = api =>

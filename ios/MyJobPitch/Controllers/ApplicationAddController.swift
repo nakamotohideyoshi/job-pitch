@@ -25,8 +25,7 @@ class ApplicationAddController: MJPController {
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
     @IBOutlet weak var cvComment: UILabel!
-    @IBOutlet weak var cvRemoveButton: UIButton!
-    @IBOutlet weak var cvViewButton: YellowButton!
+    @IBOutlet weak var cvCancelButton: UIButton!
     @IBOutlet weak var shortlisted: UISwitch!
     
     public var job: Job!
@@ -99,23 +98,14 @@ class ApplicationAddController: MJPController {
         PopupController.showGray("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", ok: "Close")
     }
     
-    @IBAction func cvViewAction(_ sender: Any) {
-        let url = URL(string: AppData.jobSeeker.cv)!
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
-    }
-    
     @IBAction func cvAddHelpAction(_ sender: Any) {
         PopupController.showGray("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", ok: "Close")
     }
     
-    @IBAction func cvRemoveAction(_ sender: Any) {
+    @IBAction func cvCancelAction(_ sender: Any) {
         cvdata = nil
         cvComment.text = ""
-        cvRemoveButton.isHidden = true
+        cvCancelButton.isHidden = true
     }
     
     @IBAction func cvAddAction(_ sender: Any) {
@@ -218,7 +208,7 @@ extension ApplicationAddController: ImagePickerDelegate {
     func imageSelected(_ picker: ImagePicker, image: UIImage) {
         cvdata = UIImagePNGRepresentation(image)
         cvComment.text = "CV added: save to upload."
-        cvRemoveButton.isHidden = false
+        cvCancelButton.isHidden = false
     }
 }
 

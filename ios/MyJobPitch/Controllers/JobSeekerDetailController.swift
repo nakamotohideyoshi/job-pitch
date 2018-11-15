@@ -189,6 +189,10 @@ class JobSeekerDetailController: MJPController {
     func editProfile() {
         let controller = JobSeekerProfileController.instantiate()
         controller.isModal = true
+        controller.saveComplete = {
+            self.jobSeeker = AppData.jobSeeker
+            self.loadData()
+        }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     

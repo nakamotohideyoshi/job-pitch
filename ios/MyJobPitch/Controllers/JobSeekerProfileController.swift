@@ -36,7 +36,8 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
     @IBOutlet weak var cvComment: UILabel!
-    @IBOutlet weak var cvRemoveButton: UIButton!
+    @IBOutlet weak var cvCancelButton: UIButton!
+    @IBOutlet weak var cvRemoveButton: GreyButton!
     @IBOutlet weak var cvViewButton: YellowButton!
     @IBOutlet weak var playButtonView: UIView!
     @IBOutlet weak var hasReferences: UISwitch!
@@ -53,6 +54,8 @@ class JobSeekerProfileController: MJPController {
     var cvPicker: ImagePicker!
     var cvdata: Data!
     var videoUrl: URL!
+    
+    public var saveComplete: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,7 +154,8 @@ class JobSeekerProfileController: MJPController {
         descView.text = jobSeeker.desc
         
         cvViewButton.isHidden = jobSeeker.cv == nil
-        
+        cvRemoveButton.isHidden = jobSeeker.cv == nil
+                
         playButtonView.isHidden = jobSeeker.getPitch() == nil
         
         hasReferences.isOn = jobSeeker.hasReferences
@@ -192,9 +196,14 @@ class JobSeekerProfileController: MJPController {
         PopupController.showGray("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", ok: "Close")
     }
     
-    @IBAction func cvRemoveAction(_ sender: Any) {
+    @IBAction func cvCancelAction(_ sender: Any) {
         cvdata = nil
         cvComment.text = ""
+        cvCancelButton.isHidden = true
+    }
+    
+    @IBAction func cvRemoveAction(_ sender: Any) {
+        cvViewButton.isHidden = true
         cvRemoveButton.isHidden = true
     }
     
@@ -292,6 +301,10 @@ class JobSeekerProfileController: MJPController {
         jobSeeker.hasReferences = hasReferences.isOn
         jobSeeker.truthConfirmation = tickBox.isOn
         
+        if !cvViewButton.isHidden {
+            jobSeeker.cv = AppData.jobSeeker?.cv
+        }
+        
         showLoading()
         
         API.shared().saveJobSeeker(jobSeeker, photo: photoImage, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
@@ -352,6 +365,8 @@ class JobSeekerProfileController: MJPController {
         } else {
             closeController()
         }
+        
+        saveComplete?()
     }
     
     static func instantiate() -> JobSeekerProfileController {
@@ -369,7 +384,7 @@ extension JobSeekerProfileController: ImagePickerDelegate {
         } else {
             cvdata = UIImagePNGRepresentation(image)
             cvComment.text = "CV added: save to upload."
-            cvRemoveButton.isHidden = false
+            cvCancelButton.isHidden = false
         }
     }
 }

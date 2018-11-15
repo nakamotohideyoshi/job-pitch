@@ -10,7 +10,7 @@ import Foundation
 
 class Business: MJPObjectWithDates {
     
-    static let mappingArray = [ "id", "users", "locations", "name", "tokens", "restricted" ]
+    static let mappingArray = [ "id", "users", "locations", "name", "tokens", "restricted", "hr_access" ]
 
     var name: String!
     var users: NSArray!
@@ -18,8 +18,9 @@ class Business: MJPObjectWithDates {
     var images: NSArray!
     var tokens: NSNumber!
     
-    // API V5
     var restricted = false
+    
+    var hr_access = false
     
     func getImage() -> Image? {
         if images != nil && images.count > 0 {

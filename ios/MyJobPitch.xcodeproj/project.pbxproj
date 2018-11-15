@@ -13,6 +13,15 @@
 		211B4BAA2153F5840083EDA8 /* AppInfoSmallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4BA72153F5840083EDA8 /* AppInfoSmallView.xib */; };
 		211B4BB5215420190083EDA8 /* InterviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211B4BB4215420190083EDA8 /* InterviewView.swift */; };
 		211B4BB72154202D0083EDA8 /* InterviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211B4BB62154202D0083EDA8 /* InterviewView.xib */; };
+		2130030B2198A4B000906177 /* HREmployeeEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213003072198A4B000906177 /* HREmployeeEditController.swift */; };
+		2130030C2198A4B000906177 /* HRJobListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213003082198A4B000906177 /* HRJobListController.swift */; };
+		2130030D2198A4B000906177 /* HREmployeeListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213003092198A4B000906177 /* HREmployeeListController.swift */; };
+		2130030E2198A4B000906177 /* HRJobEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2130030A2198A4B000906177 /* HRJobEditController.swift */; };
+		213003102198A6F300906177 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2130030F2198A6F300906177 /* Employee.swift */; };
+		2130031221990DA900906177 /* HRJobCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2130031121990DA900906177 /* HRJobCell.swift */; };
+		2130031421999EC300906177 /* HRController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2130031321999EC300906177 /* HRController.swift */; };
+		21300316219A1DBF00906177 /* EmployeeListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21300315219A1DBF00906177 /* EmployeeListController.swift */; };
+		21300318219A1DD900906177 /* EmployeeDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21300317219A1DD900906177 /* EmployeeDetailsController.swift */; };
 		2132E0AB214ACAD600ADB223 /* RCApplicationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2132E0AA214ACAD600ADB223 /* RCApplicationListController.swift */; };
 		214B90D6215601650037BBD0 /* SmallToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 214B90D4215601650037BBD0 /* SmallToolbar.xib */; };
 		214B90D8215601800037BBD0 /* SmallToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214B90D7215601800037BBD0 /* SmallToolbar.swift */; };
@@ -155,6 +164,15 @@
 		211B4BA82153F5840083EDA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AppInfoSmallView.xib; sourceTree = "<group>"; };
 		211B4BB4215420190083EDA8 /* InterviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterviewView.swift; path = Views/InterviewView.swift; sourceTree = "<group>"; };
 		211B4BB62154202D0083EDA8 /* InterviewView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InterviewView.xib; sourceTree = "<group>"; };
+		213003072198A4B000906177 /* HREmployeeEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HREmployeeEditController.swift; path = Controllers/HREmployeeEditController.swift; sourceTree = "<group>"; };
+		213003082198A4B000906177 /* HRJobListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HRJobListController.swift; path = Controllers/HRJobListController.swift; sourceTree = "<group>"; };
+		213003092198A4B000906177 /* HREmployeeListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HREmployeeListController.swift; path = Controllers/HREmployeeListController.swift; sourceTree = "<group>"; };
+		2130030A2198A4B000906177 /* HRJobEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HRJobEditController.swift; path = Controllers/HRJobEditController.swift; sourceTree = "<group>"; };
+		2130030F2198A6F300906177 /* Employee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Employee.swift; path = Utils/API/models/Employee.swift; sourceTree = "<group>"; };
+		2130031121990DA900906177 /* HRJobCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HRJobCell.swift; path = Views/HRJobCell.swift; sourceTree = "<group>"; };
+		2130031321999EC300906177 /* HRController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HRController.swift; path = Controllers/HRController.swift; sourceTree = "<group>"; };
+		21300315219A1DBF00906177 /* EmployeeListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EmployeeListController.swift; path = Controllers/EmployeeListController.swift; sourceTree = "<group>"; };
+		21300317219A1DD900906177 /* EmployeeDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EmployeeDetailsController.swift; path = Controllers/EmployeeDetailsController.swift; sourceTree = "<group>"; };
 		2132E0AA214ACAD600ADB223 /* RCApplicationListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RCApplicationListController.swift; path = Controllers/RCApplicationListController.swift; sourceTree = "<group>"; };
 		214B90D5215601650037BBD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SmallToolbar.xib; sourceTree = "<group>"; };
 		214B90D7215601800037BBD0 /* SmallToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SmallToolbar.swift; path = Views/SmallToolbar.swift; sourceTree = "<group>"; };
@@ -334,6 +352,27 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		213002F42198A30E00906177 /* HR */ = {
+			isa = PBXGroup;
+			children = (
+				2130031321999EC300906177 /* HRController.swift */,
+				213003082198A4B000906177 /* HRJobListController.swift */,
+				2130030A2198A4B000906177 /* HRJobEditController.swift */,
+				213003092198A4B000906177 /* HREmployeeListController.swift */,
+				213003072198A4B000906177 /* HREmployeeEditController.swift */,
+			);
+			name = HR;
+			sourceTree = "<group>";
+		};
+		213002F52198A31900906177 /* Employees */ = {
+			isa = PBXGroup;
+			children = (
+				21300315219A1DBF00906177 /* EmployeeListController.swift */,
+				21300317219A1DD900906177 /* EmployeeDetailsController.swift */,
+			);
+			name = Employees;
+			sourceTree = "<group>";
+		};
 		21B87573216BB730007BA409 /* API */ = {
 			isa = PBXGroup;
 			children = (
@@ -378,6 +417,7 @@
 				21B8758E216BB75A007BA409 /* Sector.swift */,
 				21B8758D216BB75A007BA409 /* Sex.swift */,
 				21B8757E216BB756007BA409 /* User.swift */,
+				2130030F2198A6F300906177 /* Employee.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -438,6 +478,7 @@
 			isa = PBXGroup;
 			children = (
 				D7896AEC1E0C85BF00533884 /* JobCell.swift */,
+				2130031121990DA900906177 /* HRJobCell.swift */,
 				D72AE4181E1057B0004C3F02 /* MessageCell.swift */,
 				D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */,
 				D76C903F1E238AAF009C35E4 /* SideMenuCell.swift */,
@@ -589,6 +630,8 @@
 				D72AE4141E104E99004C3F02 /* Base */,
 				D749E35D1E0B6ACA000FD0B1 /* Recruiter */,
 				D749E35C1E0B6AC0000FD0B1 /* JobSeeker */,
+				213002F42198A30E00906177 /* HR */,
+				213002F52198A31900906177 /* Employees */,
 				D7F770261E0918FF00ECB684 /* LoginController.swift */,
 				D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */,
 				D7F4DE2F202383700018B3A9 /* IntroController.swift */,
@@ -847,6 +890,7 @@
 				D7896AF11E0F0D6300533884 /* ApplicationDetailsController.swift in Sources */,
 				D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */,
 				D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */,
+				2130030B2198A4B000906177 /* HREmployeeEditController.swift in Sources */,
 				21B8759C216BB75E007BA409 /* MJPObjectWithName.swift in Sources */,
 				D78834291ECAAF3400D99F4B /* MDCSwipeOptions.m in Sources */,
 				214B90DD215606500037BBD0 /* EditRemoveView.swift in Sources */,
@@ -857,6 +901,7 @@
 				D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */,
 				D787F63F1E287D1400C47A88 /* LocationCell.swift in Sources */,
 				21B87570216B3E65007BA409 /* PitchUploader.swift in Sources */,
+				2130031221990DA900906177 /* HRJobCell.swift in Sources */,
 				2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */,
 				21B875B5216BB75E007BA409 /* Profile.swift in Sources */,
 				214B90E22156D1810037BBD0 /* EmptyView.swift in Sources */,
@@ -907,7 +952,10 @@
 				D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */,
 				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
 				D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */,
+				21300318219A1DD900906177 /* EmployeeDetailsController.swift in Sources */,
 				21CF19352141883D003185F0 /* String+Timepiece.swift in Sources */,
+				2130030C2198A4B000906177 /* HRJobListController.swift in Sources */,
+				213003102198A6F300906177 /* Employee.swift in Sources */,
 				D76C903E1E23858C009C35E4 /* SWRevealViewController.m in Sources */,
 				D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */,
 				D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */,
@@ -924,6 +972,7 @@
 				D742268D20ACC579002D3F4C /* iCarousel.m in Sources */,
 				D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */,
 				21B87599216BB75E007BA409 /* Business.swift in Sources */,
+				2130030D2198A4B000906177 /* HREmployeeListController.swift in Sources */,
 				21AE3C27214A4FE700E73BAC /* ApplicationAddController.swift in Sources */,
 				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
 				21E79F7B2150B522004CEED6 /* ApplicationListController.swift in Sources */,
@@ -934,9 +983,11 @@
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				21B875A6216BB75E007BA409 /* Nationality.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
+				21300316219A1DBF00906177 /* EmployeeListController.swift in Sources */,
 				21B87577216BB749007BA409 /* APIConfigure.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
 				2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */,
+				2130030E2198A4B000906177 /* HRJobEditController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,
 				D76C90401E238AAF009C35E4 /* SideMenuCell.swift in Sources */,
 				D76C90551E2540D1009C35E4 /* HelpController.swift in Sources */,
@@ -946,6 +997,7 @@
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
+				2130031421999EC300906177 /* HRController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
 				211B4B9E21533A390083EDA8 /* AppInfoMiddleView.swift in Sources */,

@@ -304,6 +304,8 @@ class API: NSObject {
                                                                              name: "cv",
                                                                              fileName: "cv_file",
                                                                              mimeType: "application/octet-stream")
+                                                    } else if jobSeeker.cv == nil {
+                                                        formData?.appendPart(withForm: Data(), name: "cv")
                                                     }
         })
         
@@ -387,7 +389,6 @@ class API: NSObject {
         } else {
             putObject(String(format: "/api/user-jobs/%@/", job.id), object: job, complete: complete)
         }
-
     }
 
     func loadJobsForLocation(_ locationId: NSNumber?, complete: (([Any]?, Any?) -> Void)!) {
@@ -523,6 +524,68 @@ class API: NSObject {
     
     func deleteInterview(_ id: NSNumber, complete: ((Any?) -> Void)!) {
         deleteObject(String(format: "/api/interviews/%@/", id), complete: complete)
+    }
+    
+    // ================== HR ============================
+    
+    func loadHRJobs(complete: (([Any]?, Any?) -> Void)!) {
+        getObjects("/api/hr/jobs/", complete: complete)
+    }
+    
+    func saveHRJob(_ job: HRJob, complete: ((Any?, Any?) -> Void)!) {
+        if job.id == nil {
+            postObject("/api/hr/jobs/", object: job, complete: complete)
+        } else {
+            putObject(String(format: "/api/hr/jobs/%@/", job.id), object: job, complete: complete)
+        }
+    }
+    
+    func deleteHRJob(_ id: NSNumber, complete: ((Any?) -> Void)!) {
+        deleteObject(String(format: "/api/hr/jobs/%@/", id), complete: complete)
+    }
+    
+    func loadHREmployees(complete: (([Any]?, Any?) -> Void)!) {
+        getObjects("/api/hr/employees/", complete: complete)
+    }
+    
+    func saveHREmployee(_ employee: HREmployee, photo: UIImage!, progress:((UInt, Int64, Int64) -> Void)!, complete: ((HREmployee?, Any?) -> Void)!) {
+        clearCookies()
+        
+        let id = employee.id
+        let method = id == nil ? RKRequestMethod.POST : RKRequestMethod.PATCH
+        let path = id == nil ? "/api/hr/employees/" : String(format: "/api/hr/employees/%@/", id!)
+        let request = manager.multipartFormRequest(with: employee,
+                                                   method: method,
+                                                   path: path,
+                                                   parameters: nil,
+                                                   constructingBodyWith: { (formData) in
+                                                    if photo != nil {
+                                                        formData?.appendPart(withFileData: UIImagePNGRepresentation(photo),
+                                                                             name: "profile_image",
+                                                                             fileName: "photo",
+                                                                             mimeType: "image/png")
+                                                    }
+                                      
+        })
+        
+        let operation = manager.objectRequestOperation(with: request as URLRequest!, success: { (_, mappingResult) in
+            complete((mappingResult?.firstObject as! HREmployee), nil)
+        }, failure: { (_, error) in
+            complete(nil, self.getError(error))
+        })
+        
+        operation?.httpRequestOperation.setUploadProgressBlock(progress)
+        manager.enqueue(operation)
+    }
+    
+    func deleteHREmployee(_ id: NSNumber, complete: ((Any?) -> Void)!) {
+        deleteObject(String(format: "/api/hr/employees/%@/", id), complete: complete)
+    }
+    
+    // ================== Employee ============================
+    
+    func loadEmployee(_ id: NSNumber, complete: ((Any?, Any?) -> Void)!) {
+        getObject(String(format: "/api/employee/employees/%@/", id), complete: complete)
     }
     
 }

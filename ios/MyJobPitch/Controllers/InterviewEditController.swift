@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
+class InterviewEditController: MJPController {
     
     @IBOutlet weak var infoView: AppInfoSmallView!
     
@@ -141,24 +141,6 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         }
     }
     
-    func showDateTimePicker() {
-        
-        let selector = WWCalendarTimeSelector.instantiate()
-        selector.delegate = self
-        selector.optionTopPanelTitle = "Choose Date/Time"
-        selector.optionCurrentDate = dateTime
-        selector.optionStyles.showYear(true)
-        selector.optionStyles.showDateMonth(true)
-        selector.optionStyles.showTime(true)
-        
-        present(selector, animated: true, completion: nil)
-    }
-    
-    func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
-        dateTime = date
-        dateTimeField.text = AppHelper.dateToLongString(dateTime)
-    }
-    
     static func instantiate() -> InterviewEditController {
         return AppHelper.instantiate("InterviewEdit") as! InterviewEditController
     }
@@ -167,8 +149,24 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
 extension InterviewEditController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if dateTimeField == textField {
-            showDateTimePicker()
+            let selector = WWCalendarTimeSelector.instantiate()
+            selector.delegate = self
+            selector.optionTopPanelTitle = "Choose Date/Time"
+            selector.optionCurrentDate = dateTime
+            selector.optionStyles.showYear(true)
+            selector.optionStyles.showDateMonth(true)
+            selector.optionStyles.showTime(true)
+            
+            present(selector, animated: true, completion: nil)
         }
         return false
+    }
+}
+
+extension InterviewEditController: WWCalendarTimeSelectorProtocol {
+    
+    func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
+        dateTime = date
+        dateTimeField.text = AppHelper.dateToLongString(dateTime)
     }
 }

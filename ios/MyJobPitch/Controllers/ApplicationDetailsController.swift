@@ -180,7 +180,7 @@ class ApplicationDetailsController: MJPController {
         }
         
         if (job.requiresCV && AppData.jobSeeker.cv == nil) {
-            PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
+            PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
                 showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return

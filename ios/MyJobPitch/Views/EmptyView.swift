@@ -34,6 +34,12 @@ class EmptyView: UIView {
         action?()
     }
     
+    func setData(message: String!, button: String!, action: (() -> Void)!) {
+        self.message.text = message
+        self.button.setTitle(button, for: .normal)
+        self.action = action
+    }
+    
     func loadViewFromNib() {
         Bundle.main.loadNibNamed("EmptyView", owner: self, options: nil)
         addSubview(contentView)

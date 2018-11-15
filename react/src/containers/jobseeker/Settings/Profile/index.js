@@ -29,6 +29,7 @@ class Profile extends React.Component {
     visibleIntro: false,
     visiblePreview: false,
     cvData: null,
+    isRemovedCV: false,
     pitchData: null,
     avatar: {
       url: DefaultAvatar,
@@ -128,6 +129,10 @@ class Profile extends React.Component {
     window.open(this.props.jobseeker.cv);
   };
 
+  removeCV = () => {
+    this.setState({ isRemovedCV: true });
+  };
+
   changePitch = pitchData => {
     this.setState({ pitchData });
   };
@@ -169,14 +174,14 @@ class Profile extends React.Component {
         }
       });
 
-      const { avatar, cvData } = this.state;
+      const { avatar, cvData, isRemovedCV } = this.state;
       const data = {
         ...values
       };
       if (avatar.file || ((jobseeker || {}).profile_image && !avatar.exist)) {
         data.profile_image = avatar.file;
       }
-      if (cvData) {
+      if (cvData || isRemovedCV) {
         data.cv = cvData;
       }
 
@@ -258,7 +263,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { visibleIntro, loading, visiblePreview, avatar, cvData } = this.state;
+    const { visibleIntro, loading, visiblePreview, avatar, cvData, isRemovedCV } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -420,10 +425,11 @@ class Profile extends React.Component {
         </Item>
 
         <NoLabelField>
-          {jobseeker.cv && (
-            <Button style={{ marginBottom: '12px' }} onClick={this.viewCV}>
-              View CV
-            </Button>
+          {jobseeker.cv && !isRemovedCV && (
+            <div style={{ marginBottom: '12px' }}>
+              <Button onClick={this.viewCV}>View CV</Button>
+              <Button onClick={this.removeCV}>Remove CV</Button>
+            </div>
           )}
 
           <Upload.Dragger beforeUpload={() => false} fileList={cvData ? [cvData] : []} onChange={this.changedCV}>

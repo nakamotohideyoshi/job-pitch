@@ -19,7 +19,8 @@ import {
   PitchSelector,
   PopupProgress,
   JobDetails,
-  LinkButton
+  LinkButton,
+  VideoPlayerModal
 } from 'components';
 import Wrapper from './styled';
 
@@ -33,7 +34,8 @@ class FindJob extends React.Component {
     visibleDetail: false,
     pitchData: null,
     visibleApply: false,
-    loading: null
+    loading: null,
+    playUrl: null
   };
 
   componentWillMount() {
@@ -174,6 +176,10 @@ class FindJob extends React.Component {
     }
   };
 
+  videoPlay = playUrl => {
+    this.setState({ playUrl });
+  };
+
   changePitch = pitchData => {
     this.setState({ pitchData });
   };
@@ -237,7 +243,7 @@ class FindJob extends React.Component {
 
   render() {
     const { jobs, jobseeker, error } = this.props;
-    const { visibleDetail, visibleApply, selectedId, pitchData, loading } = this.state;
+    const { visibleDetail, visibleApply, selectedId, pitchData, playUrl, loading } = this.state;
 
     const selectedJob = jobs && helper.getItemById(jobs, selectedId);
     const pitch = helper.getPitch(jobseeker);
@@ -311,25 +317,30 @@ class FindJob extends React.Component {
               <div style={{ marginBottom: '20px' }}>
                 <h4>Job Specific Pitch (optional)</h4>
                 <p>
-                  You can apply now with your <LinkButton>existing standard pitch</LinkButton> or you can really impress
-                  by creating a video pitch for this specific job!
+                  You can apply now with your{' '}
+                  <LinkButton onClick={() => this.videoPlay(pitch.video)}>existing standard pitch</LinkButton> or you
+                  can really impress by creating a video pitch for this specific job!
                 </p>
-                {/* <VideoPlayer
-                  controls
-                  poster={pitch.thumbnail}
-                  sources={[
-                    {
-                      src: pitch.video,
-                      type: 'video/mp4'
-                    }
-                  ]}
-                /> */}
               </div>
             )}
 
             <h4>Specific Pitch</h4>
             <PitchSelector onChange={this.changePitch} />
           </Modal>
+        )}
+
+        {playUrl && (
+          <VideoPlayerModal
+            autoplay
+            controls
+            sources={[
+              {
+                src: playUrl,
+                type: 'video/mp4'
+              }
+            ]}
+            onClose={() => this.videoPlay()}
+          />
         )}
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}

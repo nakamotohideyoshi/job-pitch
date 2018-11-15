@@ -7,8 +7,7 @@ export default styled.div`
   }
 
   .ant-calendar-picker {
-    width: 100%;
-    max-width: 250px;
+    width: 250px !important;
   }
 
   .controls {

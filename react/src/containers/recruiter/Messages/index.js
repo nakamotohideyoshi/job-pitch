@@ -49,9 +49,9 @@ class Page extends React.Component {
   }
 
   setSelectedID = ({ applications, match: { params } }) => {
-    const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
+    const appId = helper.str2int(params.appId) || helper.loadData('msgs_appId');
     const app = helper.getItemById(applications, appId) || applications[0] || {};
-    helper.saveData('messages/appId', app.id);
+    helper.saveData('msgs_appId', app.id);
     this.setState({ selectedId: app.id, open: false });
     this.props.history.replace(`/recruiter/messages/${app.id}`);
   };

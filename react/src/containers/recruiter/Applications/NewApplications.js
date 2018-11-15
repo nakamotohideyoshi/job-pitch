@@ -23,7 +23,9 @@ class NewApplications extends React.Component {
     }
   }
 
-  onSelect = selectedId => this.setState({ selectedId });
+  onSelect = selectedId => {
+    this.setState({ selectedId });
+  };
 
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
@@ -149,6 +151,7 @@ class NewApplications extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
+
         <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
             <JobseekerDetails

@@ -24,7 +24,9 @@ class MyConnections extends React.Component {
     }
   }
 
-  onSelect = selectedId => this.setState({ selectedId });
+  onSelect = selectedId => {
+    this.setState({ selectedId });
+  };
 
   onMessage = ({ id }, event) => {
     event && event.stopPropagation();
@@ -139,6 +141,7 @@ class MyConnections extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
+
         <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
             <JobseekerDetails

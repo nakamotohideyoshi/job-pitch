@@ -18,8 +18,8 @@ import {
   Logo,
   PitchSelector,
   PopupProgress,
-  VideoPlayer,
-  JobDetails
+  JobDetails,
+  LinkButton
 } from 'components';
 import Wrapper from './styled';
 
@@ -92,7 +92,8 @@ class FindJob extends React.Component {
 
     if (job.requires_cv && !jobseeker.cv) {
       confirm({
-        title: 'This job requires your cv',
+        title:
+          'Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.',
         okText: 'Edit Profile',
         cancelText: 'Cancel',
         maskClosable: true,
@@ -120,6 +121,7 @@ class FindJob extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
+        this.onSelect();
         this.props.removeJobAction({
           id
         });
@@ -189,7 +191,7 @@ class FindJob extends React.Component {
     const contractName = helper.getItemById(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemById(DATA.hours, hours).short_name;
     const sector = helper.getNameByID(DATA.sectors, job.sector);
-    job.distance = helper.getDistanceFromLatLonEx(location_data, this.props.profile);
+    job.distance = helper.getDistanceFromLatLonEx(location_data, this.props.jobprofile);
 
     return (
       <List.Item
@@ -226,10 +228,10 @@ class FindJob extends React.Component {
         {`There are no more jobs that match your profile.
           You can restore your removed matches by clicking refresh.`}
       </span>
-      <a onClick={() => this.props.findJobsAction()}>
+      <LinkButton onClick={() => this.props.findJobsAction()}>
         <Icons.SyncAlt />
         Refresh
-      </a>
+      </LinkButton>
     </AlertMsg>
   );
 
@@ -285,7 +287,7 @@ class FindJob extends React.Component {
 
         {visibleApply && selectedJob && (
           <Modal
-            title="Job Appy"
+            title="Apply for Job"
             visible
             onOk={this.apply}
             onCancel={this.hideApplyDialog}
@@ -300,15 +302,19 @@ class FindJob extends React.Component {
                 disabled={selectedJob.requires_pitch && !pitch && !pitchData}
                 onClick={this.apply}
               >
-                Apply
+                Apply now!
               </Button>
             ]}
             bodyStyle={{ paddingTop: '12px' }}
           >
             {pitch && (
               <div style={{ marginBottom: '20px' }}>
-                <h4>Video Pitch</h4>
-                <VideoPlayer
+                <h4>Job Specific Pitch (optional)</h4>
+                <p>
+                  You can apply now with your <LinkButton>existing standard pitch</LinkButton> or you can really impress
+                  by creating a video pitch for this specific job!
+                </p>
+                {/* <VideoPlayer
                   controls
                   poster={pitch.thumbnail}
                   sources={[
@@ -317,7 +323,7 @@ class FindJob extends React.Component {
                       type: 'video/mp4'
                     }
                   ]}
-                />
+                /> */}
               </div>
             )}
 
@@ -335,7 +341,7 @@ class FindJob extends React.Component {
 export default connect(
   state => ({
     jobseeker: state.auth.jobseeker,
-    profile: state.auth.jobprofile,
+    jobprofile: state.auth.jobprofile,
     jobs: state.js_find.jobs,
     error: state.js_find.error
   }),

@@ -1,6 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Modal, Tooltip } from 'antd';
 
 import DATA from 'utils/data';
@@ -8,100 +9,70 @@ import * as helper from 'utils/helper';
 import colors from 'utils/colors';
 import { getApplicationsSelector } from 'redux/selectors';
 import { removeBusinessAction } from 'redux/businesses';
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro, Logo } from 'components';
-import imgIntro0 from 'assets/intro0.png';
-import imgIntro1 from 'assets/intro1.png';
-import imgIntro2 from 'assets/intro2.png';
-import imgIntro3 from 'assets/intro3.png';
+import { PageHeader, PageSubHeader, AlertMsg, Loading, ListEx, Icons, Intro, Logo } from 'components';
 import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
-const INTRO_DATA = [
-  {
-    title: 'Welcome!',
-    image: imgIntro0,
-    comment: `Faster Screening of Candidates, no more piles of CVs and remember adverts are always free.`
-  },
-  {
-    title: 'Post your first job',
-    image: imgIntro1,
-    comment: `Get started by creating your workplaces and jobs.`
-  },
-  {
-    title: 'Screen potential candidates',
-    image: imgIntro2,
-    comment: `Our simple candidate selection system lets you quickly find the right person!`
-  },
-  {
-    title: 'Reusable ads',
-    image: imgIntro3,
-    comment: `Your job ads can be quickly reactivated to save effort next time.`
-  }
-];
-
 /* eslint-disable react/prop-types */
 class BusinessList extends React.Component {
   state = {
-    dontShowIntro: false
+    visibleIntro: false
   };
 
   componentDidMount() {
-    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
+    this.setState({ visibleIntro: !this.props.businesses.length && DATA.tutorial === 1 });
   }
 
-  onCloseIntro = () => {
-    DATA[`dontShowIntro_${DATA.email}`] = true;
-    this.setState({ dontShowIntro: true });
+  showIntro = () => {
+    const INTRO_DATA = [
+      {
+        title: 'Welcome!',
+        image: require('assets/intro0.png'),
+        comment: `Faster Screening of Candidates, no more piles of CVs and remember adverts are always free.`
+      },
+      {
+        title: 'Post your first job',
+        image: require('assets/intro1.png'),
+        comment: `Get started by creating your workplaces and jobs.`
+      },
+      {
+        title: 'Screen potential candidates',
+        image: require('assets/intro2.png'),
+        comment: `Our simple candidate selection system lets you quickly find the right person!`
+      },
+      {
+        title: 'Reusable ads',
+        image: require('assets/intro3.png'),
+        comment: `Your job ads can be quickly reactivated to save effort next time.`
+      }
+    ];
+    return <Intro data={INTRO_DATA} onClose={this.closeIntro} />;
   };
 
-  onSselectBusiness = id => {
+  closeIntro = () => {
+    DATA.tutorial = 2;
+    this.setState({ visibleIntro: false });
+  };
+
+  selectBusiness = id => {
     this.props.history.push(`/recruiter/jobs/workplace/${id}`);
   };
 
-  onAddBusiness = () => {
-    const tutorial = helper.loadData('tutorial');
-    if (tutorial === 1) {
-      helper.saveData('tutorial', 2);
-    }
-
-    const { can_create_businesses, businesses, history } = this.props;
-    if (can_create_businesses || businesses.length === 0) {
-      history.push('/recruiter/jobs/business/add');
-    } else {
-      confirm({
-        title: 'Got more that one business?',
-        content: (
-          <span>
-            Get in touch to talk about how we can help you.
-            <br />
-            Remember, you can always create additional workplaces under your existing business.
-          </span>
-        ),
-        okText: `Contact Us`,
-        cancelText: 'Cancel',
-        maskClosable: true,
-        onOk: () => {
-          window.open('https://www.myjobpitch.com/contact/');
-        }
-      });
-    }
-  };
-
-  onEditBusiness = (id, event) => {
+  editBusiness = (id, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/business/edit/${id}`);
   };
 
-  onRemoveBusiness = ({ id, name, locations }, event) => {
+  removeBusiness = ({ id, name, locations }, event) => {
     event && event.stopPropagation();
 
-    const count = locations.length;
+    const wCount = locations.length;
     confirm({
-      title: count
-        ? `Deleting this business will also delete ${count} workplace${count !== 1 ? 's' : ''} and all their jobs.`
+      title: wCount
+        ? `Deleting this business will also delete ${wCount} workplace${wCount !== 1 ? 's' : ''} and all their jobs.`
         : `Are you sure you want to delete ${name}`,
-      content: count ? `If you want to hide the jobs instead you can deactive them.` : null,
+      content: wCount ? `If you want to hide the jobs instead you can deactive them.` : null,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -120,15 +91,14 @@ class BusinessList extends React.Component {
     const { id, name, tokens, locations, restricted, newApps, loading } = business;
     const logo = helper.getBusinessLogo(business);
     const strTokens = `${tokens} credit${tokens !== 1 ? 's' : ''}`;
-    const count = locations.length;
-    const strWorkplaces = `Includes ${count} workplace${count !== 1 ? 's' : ''}`;
+    const strWorkplaces = `Includes ${locations.length} workplace${locations.length !== 1 ? 's' : ''}`;
     const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
 
     const actions = [];
     if (!restricted) {
       actions.push(
         <Tooltip placement="bottom" title="Edit">
-          <span onClick={e => this.onEditBusiness(id, e)}>
+          <span onClick={e => this.editBusiness(id, e)}>
             <Icons.Pen />
           </span>
         </Tooltip>
@@ -137,7 +107,7 @@ class BusinessList extends React.Component {
       if (this.props.businesses.length > 1) {
         actions.push(
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.onRemoveBusiness(business, e)}>
+            <span onClick={e => this.removeBusiness(business, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
@@ -149,7 +119,7 @@ class BusinessList extends React.Component {
       <List.Item
         key={id}
         actions={actions}
-        onClick={() => this.onSselectBusiness(id)}
+        onClick={() => this.selectBusiness(id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={name} />
@@ -166,23 +136,22 @@ class BusinessList extends React.Component {
   };
 
   renderEmpty = () => {
-    const tutorial = helper.loadData('tutorial');
+    const tutorial = DATA.tutorial;
     return (
       <AlertMsg>
         <span>
-          {tutorial === 1
+          {tutorial === 2
             ? `Hi, Welcome to My Job Pitch
                Let's start by easily adding your business!`
             : `You have not added any businesses yet.`}
         </span>
-        <a onClick={this.onAddBusiness}>{tutorial === 1 ? 'Get started!' : 'Create business'}</a>
+        <Link to="/recruiter/jobs/business/add">{tutorial === 2 ? 'Get started!' : 'Create business'}</Link>
       </AlertMsg>
     );
   };
 
   render() {
-    const { businesses } = this.props;
-    const { dontShowIntro } = this.state;
+    const { canCreate, businesses } = this.props;
 
     return (
       <Wrapper className="container">
@@ -196,14 +165,24 @@ class BusinessList extends React.Component {
           <Breadcrumb>
             <Breadcrumb.Item>Businesses</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.onAddBusiness}>Add new business</LinkButton>
+
+          {canCreate && <Link to="/recruiter/jobs/business/add">Add new business</Link>}
         </PageSubHeader>
 
         <div className="content">
-          <ListEx data={this.props.businesses} renderItem={this.renderBusiness} emptyRender={this.renderEmpty} />
+          <ListEx data={businesses} renderItem={this.renderBusiness} emptyRender={this.renderEmpty} />
+
+          {!canCreate && (
+            <div className="alert-msg">
+              <div>Got more that one business?</div>
+              <a href="https://www.myjobpitch.com/contact/" target="_blank" rel="noopener noreferrer">
+                Contact Us
+              </a>
+            </div>
+          )}
         </div>
 
-        {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.onCloseIntro} />}
+        {this.state.visibleIntro && this.showIntro()}
       </Wrapper>
     );
   }
@@ -220,7 +199,7 @@ export default connect(
     });
 
     return {
-      can_create_businesses: state.auth.user.can_create_businesses,
+      canCreate: state.auth.user.can_create_businesses || !businesses.length,
       businesses
     };
   },

@@ -38,9 +38,7 @@ class Interviews extends React.Component {
       PENDING: 'Interview request sent',
       ACCEPTED: 'Interview accepted',
       COMPLETED: 'This interview is done',
-      CANCELLED: `Interview cancelled by ${
-        helper.getNameByID(DATA.roles, interview.cancelled_by) === 'RECRUITER' ? 'Recruiter' : 'Jobseeker'
-      }`
+      CANCELLED: `Interview cancelled by ${interview.cancelled_by === DATA.ROLE.RECRUITER ? 'Recruiter' : 'Jobseeker'}`
     };
 
     return (
@@ -92,6 +90,7 @@ class Interviews extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
+
         <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
             <JobseekerDetails

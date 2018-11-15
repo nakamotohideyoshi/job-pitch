@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Menu, Badge } from 'antd';
-import { Icons } from 'components';
 
 import { enabledEmployeeSelector, getAllNewMsgsSelector } from 'redux/selectors';
+import { Icons } from 'components';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -23,8 +23,8 @@ const StyledMenu = styled(Menu)`
 `;
 
 /* eslint-disable react/prop-types */
-const JsMenu = ({ enabledEmployee, jobProfile, newMsgs, location }) => {
-  if (!jobProfile) return null;
+const JsMenu = ({ enabledEmployee, jobseeker, jobprofile, newMsgs, location, addBannerAction, removeBannerAction }) => {
+  if (!jobprofile) return null;
 
   const path2 = location.pathname.split('/')[2];
 
@@ -70,7 +70,8 @@ export default withRouter(
   connect(state => {
     return {
       enabledEmployee: enabledEmployeeSelector(state),
-      jobProfile: state.auth.jobProfile,
+      jobseeker: state.auth.jobseeker,
+      jobprofile: state.auth.jobprofile,
       newMsgs: getAllNewMsgsSelector(state)
     };
   })(JsMenu)

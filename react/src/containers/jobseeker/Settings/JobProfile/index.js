@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Form, Input, Button, Select, Popover, message } from 'antd';
 
 import DATA from 'utils/data';
@@ -12,6 +13,8 @@ import FormWrapper from './styled';
 const { Item } = Form;
 const { Option } = Select;
 
+const ZOOM = { 1: 13, 2: 12, 5: 11, 10: 10, 50: 7 };
+
 /* eslint-disable react/prop-types */
 class JobProfile extends React.Component {
   state = {
@@ -23,30 +26,31 @@ class JobProfile extends React.Component {
   contracts = [{ id: -1, name: 'Any' }].concat(DATA.contracts);
 
   componentDidMount() {
-    const { profile } = this.props;
+    const { jobprofile } = this.props;
 
-    if (profile) {
+    if (jobprofile) {
       this.props.form.setFieldsValue({
-        sectors: profile.sectors,
-        contract: profile.contract || -1,
-        hours: profile.hours || -1,
-        place_name: profile.place_name,
-        search_radius: profile.search_radius
+        sectors: jobprofile.sectors,
+        contract: jobprofile.contract || -1,
+        hours: jobprofile.hours || -1,
+        place_name: jobprofile.place_name,
+        search_radius: jobprofile.search_radius
       });
 
-      this.selectLocation(profile.latitude, profile.longitude, profile);
+      this.selectLocation(jobprofile.latitude, jobprofile.longitude, jobprofile);
     }
   }
 
   save = () => {
-    const { form, saveJobProfileAction, jobseeker, profile } = this.props;
+    const { form, saveJobProfileAction, jobseeker, jobprofile } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
 
       this.setState({ loading: true });
+
       saveJobProfileAction({
-        id: (profile || {}).id,
+        id: (jobprofile || {}).id,
         data: {
           ...values,
           ...this.state.location,
@@ -54,14 +58,16 @@ class JobProfile extends React.Component {
           hours: values.hours !== -1 ? values.hours : null,
           job_seeker: jobseeker.id
         },
+
         success: () => {
           this.setState({ loading: false });
           message.success('Job Profile saved successfully!!');
 
-          if (!profile) {
-            setTimeout(() => this.props.history.push('/jobseeker/find'));
+          if (!jobprofile) {
+            this.props.history.push('/jobseeker/find');
           }
         },
+
         fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
@@ -81,9 +87,7 @@ class JobProfile extends React.Component {
     const marker = latitude && { lat: latitude, lng: longitude };
 
     const search_radius = this.props.form.getFieldValue('search_radius');
-    if (!this.zoom) {
-      this.zoom = { 1: 13, 2: 12, 5: 11, 10: 10, 50: 7 }[search_radius];
-    }
+
     const circle = {
       center: marker,
       radius: 1609.344 * search_radius,
@@ -161,7 +165,12 @@ class JobProfile extends React.Component {
           )}
           <div className="map">
             <div>
-              <GoogleMap marker={marker} circle={circle} zoom={this.zoom} onSelectedLocation={this.selectLocation} />
+              <GoogleMap
+                marker={marker}
+                circle={circle}
+                zoom={ZOOM[search_radius]}
+                onSelectedLocation={this.selectLocation}
+              />
             </div>
           </div>
         </Item>
@@ -188,10 +197,12 @@ class JobProfile extends React.Component {
   }
 }
 
-export default connect(
-  state => ({
-    jobseeker: state.auth.jobseeker,
-    profile: state.auth.jobprofile
-  }),
-  { saveJobProfileAction }
-)(Form.create()(JobProfile));
+export default withRouter(
+  connect(
+    state => ({
+      jobseeker: state.auth.jobseeker,
+      jobprofile: state.auth.jobprofile
+    }),
+    { saveJobProfileAction }
+  )(Form.create()(JobProfile))
+);

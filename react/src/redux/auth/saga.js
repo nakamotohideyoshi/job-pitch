@@ -5,6 +5,8 @@ import DATA from 'utils/data';
 import * as C from 'redux/constants';
 import { getBusinesses } from 'redux/businesses/saga';
 import { getWorkplaces } from 'redux/workplaces/saga';
+import { getJobs } from 'redux/recruiter/jobs/saga';
+import { getApplications } from 'redux/applications/saga';
 
 const register = postRequest({
   url: '/api-rest-auth/registration/'
@@ -14,9 +16,9 @@ const login = postRequest({
   url: '/api-rest-auth/login/'
 });
 
-const logout = postRequest({
-  url: '/api-rest-auth/logout/'
-});
+// const logout = postRequest({
+//   url: '/api-rest-auth/logout/'
+// });
 
 const resetPassword = postRequest({
   url: '/api-rest-auth/password/reset/'
@@ -60,25 +62,26 @@ function* loadData(action) {
     DATA.paypalProducts = result[9];
   }
 
-  let jobseeker, jobProfile;
+  let jobseeker, jobprofile;
   if (user.job_seeker) {
     jobseeker = yield call(getRequest({ url: `/api/job-seekers/${user.job_seeker}/` }));
     if ((jobseeker || {}).profile) {
-      jobProfile = yield call(getRequest({ url: `/api/job-profiles/${jobseeker.profile}/` }));
+      jobprofile = yield call(getRequest({ url: `/api/job-profiles/${jobseeker.profile}/` }));
+      yield call(getApplications);
     }
-    DATA.userRole = DATA.JOBSEEKER;
+    DATA.userRole = DATA.ROLE.JOBSEEKER;
   } else if (user.businesses.length) {
-    yield all([call(getBusinesses), call(getWorkplaces)]);
-    DATA.userRole = DATA.RECRUITER;
+    yield all([call(getBusinesses), call(getWorkplaces), call(getJobs), call(getApplications)]);
+    DATA.userRole = DATA.ROLE.RECRUITER;
   }
 
-  yield put({ type: C.UPDATE_AUTH, payload: { user, jobseeker, jobProfile } });
+  yield put({ type: C.UPDATE_AUTH, payload: { user, jobseeker, jobprofile } });
 }
 
 export default function*() {
   yield takeLatest(C.REGISTER, register);
   yield takeLatest(C.LOGIN, login);
-  yield takeLatest(C.LOGOUT, logout);
+  // yield takeLatest(C.LOGOUT, logout);
   yield takeLatest(C.RESET_PASSWORD, resetPassword);
   yield takeLatest(C.CHANGE_PASSWORD, changePassword);
   yield takeLatest([requestSuccess(C.LOGIN), requestSuccess(C.REGISTER)], loadData);

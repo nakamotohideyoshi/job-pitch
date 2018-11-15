@@ -8,7 +8,7 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { getJobsSelector } from 'redux/selectors';
 import { selectBusinessAction } from 'redux/businesses';
-import { saveJobAction } from 'redux/recruiter/jobs';
+import { updateJobAction } from 'redux/recruiter/jobs';
 import { PageHeader, PageSubHeader } from 'components';
 import DeleteDialog from '../JobList/DeleteDialog';
 import Wrapper from '../styled';
@@ -17,43 +17,42 @@ import Details from './styled';
 /* eslint-disable react/prop-types */
 class JobInterface extends React.Component {
   state = {
-    showDialog: false
+    visibleDialog: false
   };
 
   componentDidMount() {
     const { job, selectBusinessAction, history } = this.props;
-    if (!job) {
-      history.push('/recruiter/jobs/business');
-    } else {
+    if (job) {
       selectBusinessAction(job.location_data.business);
-      this.workplaceId = job.location;
+    } else {
+      history.replace('/recruiter/jobs/business');
     }
   }
 
-  componentWillReceiveProps({ job }) {
-    if (!job) {
-      this.props.history.push(`/recruiter/jobs/job/${this.workplaceId}`);
+  componentWillReceiveProps(nextProps) {
+    const { job, history } = this.props;
+    if (job && !nextProps.job) {
+      history.push(`/recruiter/jobs/job/${job.location}`);
     }
   }
 
-  showRemoveDialog = show => {
-    this.setState({ showDialog: show });
+  showDeleteDialog = visibleDialog => {
+    this.setState({ visibleDialog });
   };
 
   reactivateJob = () => {
-    const { job } = this.props;
-    this.props.saveJobAction({
+    const { id, title } = this.props.job;
+    this.props.updateJobAction({
+      id,
       data: {
-        ...job,
         status: DATA.JOB.OPEN
       },
-      successMsg: `${job.title} is opened.`,
-      failMsg: `Opening ${job.title} is failed.`
+      successMsg: `${title} is opened.`,
+      failMsg: `Opening ${title} is failed.`
     });
   };
 
   renderDetails = () => {
-    const { showDialog } = this.state;
     const { job, history } = this.props;
     const { id, status, title } = job;
     const closed = status === DATA.JOB.CLOSED;
@@ -69,7 +68,7 @@ class JobInterface extends React.Component {
           Edit
         </Button>
 
-        <Button type="primary" onClick={() => this.showRemoveDialog(true)}>
+        <Button type="primary" onClick={() => this.showDeleteDialog(true)}>
           Delete
         </Button>
 
@@ -98,20 +97,16 @@ class JobInterface extends React.Component {
         >
           Shortlist
         </Button>
-
-        <DeleteDialog job={showDialog && job} onCancel={() => this.showRemoveDialog()} />
       </Details>
     );
   };
 
   render() {
     const { job } = this.props;
-    if (!job) {
-      return null;
-    }
 
-    const { location_data, loading } = job;
-    const { business_data } = location_data;
+    if (!job) return null;
+
+    const { location_data, location, loading } = job;
 
     return (
       <Wrapper className="container">
@@ -126,17 +121,22 @@ class JobInterface extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>
-              <Link to={`/recruiter/jobs/workplace/${business_data.id}`}>Workplaces</Link>
+              <Link to={`/recruiter/jobs/workplace/${location_data.business}`}>Workplaces</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>
-              <Link to={`/recruiter/jobs/job/${location_data.id}`}>Jobs</Link>
+              <Link to={`/recruiter/jobs/job/${location}`}>Jobs</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>Details</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 
         {loading ? <Spin>{this.renderDetails()}</Spin> : this.renderDetails()}
+
+        <DeleteDialog job={job} visible={this.state.visibleDialog} onCancel={() => this.showDeleteDialog()} />
       </Wrapper>
     );
   }
@@ -152,6 +152,6 @@ export default connect(
   },
   {
     selectBusinessAction,
-    saveJobAction
+    updateJobAction
   }
 )(JobInterface);

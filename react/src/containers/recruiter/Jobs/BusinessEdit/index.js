@@ -6,7 +6,7 @@ import { Breadcrumb, Form, Input, Button, message } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { saveBusinessAction, selectBusinessAction } from 'redux/businesses';
+import { selectBusinessAction, saveBusinessAction } from 'redux/businesses';
 import { PageHeader, PageSubHeader, PopupProgress, ImageSelector, NoLabelField } from 'components';
 import Wrapper from '../styled';
 
@@ -24,7 +24,11 @@ class BusinessEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { user, business, form, selectBusinessAction, history } = this.props;
+    const { canCreate, business, businesses, form, selectBusinessAction, history } = this.props;
+
+    if (businesses.length === 0 && DATA.tutorial === 2) {
+      DATA.tutorial = 3;
+    }
 
     if (business) {
       if (business.restricted) {
@@ -33,6 +37,7 @@ class BusinessEdit extends React.Component {
       }
 
       selectBusinessAction(business.id);
+
       this.setState({
         logo: {
           url: helper.getBusinessLogo(business),
@@ -44,7 +49,7 @@ class BusinessEdit extends React.Component {
         name: business.name
       });
     } else {
-      if (user.businesses.length > 0 && !user.can_create_businesses) {
+      if (!canCreate) {
         history.replace('/recruiter/jobs/business');
         return;
       }
@@ -67,12 +72,12 @@ class BusinessEdit extends React.Component {
       }
     });
 
-  addCredit = () => {
-    this.props.history.push(`/recruiter/settings/credits/${this.props.business.id}`);
-  };
-
   goBuisinessList = () => {
     this.props.history.push('/recruiter/jobs/business');
+  };
+
+  addCredit = () => {
+    this.props.history.push(`/recruiter/settings/credits/${this.props.business.id}`);
   };
 
   save = () => {
@@ -88,11 +93,10 @@ class BusinessEdit extends React.Component {
       });
 
       saveBusinessAction({
-        data: {
-          ...values,
-          id: (business || {}).id
-        },
+        id: (business || {}).id,
+        data: values,
         logo: this.state.logo,
+
         onSuccess: ({ id }) => {
           message.success('The business is saved');
           if (business) {
@@ -101,18 +105,22 @@ class BusinessEdit extends React.Component {
             history.push(`/recruiter/jobs/workplace/${id}`);
           }
         },
+
         onFail: error => {
           this.setState({ loading: null });
           message.error(error);
         },
-        onProgress: progress => {
-          this.setState({
-            loading: {
-              label: 'Logo uploading...',
-              progress: Math.floor((progress.loaded / progress.total) * 100)
+
+        onProgress: this.state.logo.file
+          ? progress => {
+              this.setState({
+                loading: {
+                  label: 'Logo uploading...',
+                  progress: Math.floor((progress.loaded / progress.total) * 100)
+                }
+              });
             }
-          });
-        }
+          : null
       });
     });
   };
@@ -121,10 +129,9 @@ class BusinessEdit extends React.Component {
     const { logo, loading } = this.state;
     const { business, form } = this.props;
     const { getFieldDecorator } = form;
-    const creditsLabel = (business || {}).id
+    const creditsLabel = business
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
       : `${DATA.initTokens.tokens} free credits`;
-
     const title = business ? 'Edit' : 'Add';
 
     return (
@@ -140,6 +147,7 @@ class BusinessEdit extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
@@ -157,7 +165,7 @@ class BusinessEdit extends React.Component {
 
             <Item label="Credits">
               <div>{creditsLabel}</div>
-              {(business || {}).id && <Button onClick={this.addCredit}>Add Credits</Button>}
+              {business && <Button onClick={this.addCredit}>Add Credits</Button>}
             </Item>
 
             <Item label="Logo">
@@ -181,15 +189,17 @@ class BusinessEdit extends React.Component {
 
 export default connect(
   (state, { match }) => {
+    const { businesses } = state.businesses;
     const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemById(state.businesses.businesses, businessId);
+    const business = helper.getItemById(businesses, businessId);
     return {
-      user: state.auth.user,
-      business
+      businesses,
+      business,
+      canCreate: state.auth.user.can_create_businesses || !businesses.length
     };
   },
   {
-    saveBusinessAction,
-    selectBusinessAction
+    selectBusinessAction,
+    saveBusinessAction
   }
 )(Form.create()(BusinessEdit));

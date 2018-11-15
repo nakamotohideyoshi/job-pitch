@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Select, Button, List } from 'antd';
 
 import DATA from 'utils/data';
@@ -26,7 +27,7 @@ class Credits extends React.Component {
   selectBusiness = businessId => {
     const { selectBusinessAction, history } = this.props;
     selectBusinessAction(businessId);
-    helper.saveData('credits/businessId', businessId);
+    helper.saveData('credits_bid', businessId);
     history.replace(`/recruiter/settings/credits/${businessId}`);
   };
 
@@ -49,13 +50,13 @@ class Credits extends React.Component {
     return (
       <Wrapper>
         <Select value={business.id} onChange={this.selectBusiness}>
-          {businesses.map(b => {
-            const logo = helper.getBusinessLogo(b);
-            const n = b.tokens;
+          {businesses.map(item => {
+            const logo = helper.getBusinessLogo(item);
+            const n = item.tokens;
             return (
-              <Option key={b.id} value={b.id}>
+              <Option key={item.id} value={item.id}>
                 <Logo src={logo} className="logo" size="22px" />
-                {b.name}
+                {item.name}
                 <span className="credits">{`(${n} credit${n !== 1 ? 's' : ''})`}</span>
               </Option>
             );
@@ -84,18 +85,20 @@ class Credits extends React.Component {
   }
 }
 
-export default connect(
-  (state, { match }) => {
-    const businessId = helper.str2int(match.params.businessId) || helper.loadData('credits/businessId');
-    const { businesses } = state.businesses;
-    const business = helper.getItemById(businesses, businessId) || businesses[0];
-    return {
-      businesses,
-      business
-    };
-  },
-  {
-    selectBusinessAction,
-    purchaseAction
-  }
-)(Credits);
+export default withRouter(
+  connect(
+    (state, { match }) => {
+      const businessId = helper.str2int(match.params.businessId) || helper.loadData('credits_bid');
+      const { businesses } = state.businesses;
+      const business = helper.getItemById(businesses, businessId) || businesses[0];
+      return {
+        businesses,
+        business
+      };
+    },
+    {
+      selectBusinessAction,
+      purchaseAction
+    }
+  )(Credits)
+);

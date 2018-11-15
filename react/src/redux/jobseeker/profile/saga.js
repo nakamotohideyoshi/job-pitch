@@ -1,9 +1,13 @@
+import React from 'react';
 import { delay } from 'redux-saga';
 import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { Link } from 'react-router-dom';
 
 import { request, getRequest, postRequest } from 'utils/request';
 import { uploadVideoToAWS } from 'utils/aws';
 import * as C from 'redux/constants';
+import * as helper from 'utils/helper';
 
 function* saveJobseeker(action) {
   const jobseeker = yield call(
@@ -60,8 +64,57 @@ function* uploadPitch(action) {
   onSuccess && onSuccess();
 }
 
+function* checkProfile() {
+  const { auth, router } = yield select();
+  const { jobseeker } = auth;
+  const paths = router.location.pathname.split('/');
+
+  if (!auth.jobseeker) return;
+
+  const isProfilePage = paths[2] === 'settings' && paths[3] === 'profile';
+
+  if (paths[1] === 'jobseeker' && !jobseeker.active) {
+    yield put({
+      type: C.ADD_BANNER,
+      payload: {
+        id: 'active',
+        type: 'warning',
+        message: (
+          <span>
+            Your profile is not active!
+            {` `}
+            {!isProfilePage && <Link to="/jobseeker/settings/profile">Activate</Link>}
+          </span>
+        )
+      }
+    });
+  } else {
+    yield put({ type: C.REMOVE_BANNER, payload: 'active' });
+  }
+
+  if (paths[1] === 'jobseeker' && !jobseeker.profile_thumb && !helper.getPitch(jobseeker)) {
+    yield put({
+      type: C.ADD_BANNER,
+      payload: {
+        id: 'photo_pitch',
+        type: 'warning',
+        message: (
+          <span>
+            You cannot yet be found by potential employers until you complete your profile photo or job pitch
+            {` `}
+            {!isProfilePage && <Link to="/jobseeker/settings/profile">edit profile</Link>}
+          </span>
+        )
+      }
+    });
+  } else {
+    yield put({ type: C.REMOVE_BANNER, payload: 'photo_pitch' });
+  }
+}
+
 export default function* sagas() {
   yield takeLatest(C.JS_SAVE_PROFILE, saveJobseeker);
   yield takeLatest(C.JS_SAVE_JOBPROFILE, saveJobProfile);
   yield takeLatest(C.JS_UPLOAD_PITCH, uploadPitch);
+  yield takeLatest([C.UPDATE_AUTH, LOCATION_CHANGE], checkProfile);
 }

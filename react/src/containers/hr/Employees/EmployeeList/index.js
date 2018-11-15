@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { List, Tooltip, Modal } from 'antd';
 
 import * as helper from 'utils/helper';
-import { getHrEmployeesSelector } from 'redux/selectors';
-import { removeEmployeeAction } from 'redux/hr/employees';
+import { getHrJobsSelector, getHrEmployeesSelector } from 'redux/selectors';
+import { getJobsAction } from 'redux/hr/jobs';
+import { getEmployeesAction, removeEmployeeAction } from 'redux/hr/employees';
 import { PageHeader, ListEx, Loading, Icons, AlertMsg, Logo } from 'components';
 import Wrapper from './styled';
 
@@ -14,6 +15,15 @@ const { confirm } = Modal;
 
 /* eslint-disable react/prop-types */
 class EmployeeList extends React.Component {
+  componentDidMount() {
+    if (!this.props.jobs) {
+      this.props.getJobsAction();
+    }
+    if (!this.props.employees) {
+      this.props.getEmployeesAction();
+    }
+  }
+
   onEdit = id => {
     this.props.history.push(`/hr/employees/${id}`);
   };
@@ -77,7 +87,7 @@ class EmployeeList extends React.Component {
   };
 
   render() {
-    const { employees } = this.props;
+    const { jobs, employees } = this.props;
 
     return (
       <Wrapper className="container">
@@ -89,7 +99,7 @@ class EmployeeList extends React.Component {
         </PageHeader>
 
         <div className="content">
-          <ListEx data={employees} renderItem={this.renderEmployee} emptyRender={this.renderEmpty} />
+          <ListEx data={jobs && employees} renderItem={this.renderEmployee} emptyRender={this.renderEmpty} />
         </div>
       </Wrapper>
     );
@@ -98,9 +108,12 @@ class EmployeeList extends React.Component {
 
 export default connect(
   state => ({
+    jobs: getHrJobsSelector(state),
     employees: getHrEmployeesSelector(state)
   }),
   {
+    getJobsAction,
+    getEmployeesAction,
     removeEmployeeAction
   }
 )(EmployeeList);

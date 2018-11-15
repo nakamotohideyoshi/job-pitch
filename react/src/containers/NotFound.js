@@ -1,7 +1,8 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { LinkButton } from 'components';
 import logoImage from '../assets/logo.png';
 
 /* eslint-disable react/prop-types */
@@ -33,11 +34,11 @@ const NotFound = ({ history }) => (
     <img src={logoImage} alt="" />
     <h1>This page doesn't exist</h1>
     <div>
-      Please <a onClick={() => history.goBack()}>return</a> to the previous page, or visit our{' '}
+      Please <LinkButton onClick={() => history.goBack()}>return</LinkButton> to the previous page, or visit our{' '}
       <Link to="/">home page</Link>
     </div>
     <p>Error 404</p>
   </Wrapper>
 );
 
-export default withRouter(NotFound);
+export default NotFound;

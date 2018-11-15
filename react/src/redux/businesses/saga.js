@@ -9,12 +9,12 @@ export const getBusinesses = getRequest({
 });
 
 function* saveBusiness({ payload }) {
-  const { data, logo, onProgress, onSuccess, onFail } = payload;
+  const { id, logo, onProgress, onSuccess, onFail } = payload;
 
   const business = yield call(
     request({
-      method: data.id ? 'put' : 'post',
-      url: data.id ? `/api/user-businesses/${data.id}/` : '/api/user-businesses/'
+      method: id ? 'put' : 'post',
+      url: id ? `/api/user-businesses/${id}/` : '/api/user-businesses/'
     }),
     { payload }
   );
@@ -49,7 +49,7 @@ function* saveBusiness({ payload }) {
     }
   }
 
-  yield put({ type: C.UPDATE_BUSINESS, business });
+  yield put({ type: C.UPDATE_BUSINESS, payload: business });
 
   onSuccess && onSuccess(business);
 }

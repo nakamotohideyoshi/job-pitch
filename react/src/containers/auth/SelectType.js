@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import { Form, Button } from 'antd';
 
 import DATA from 'utils/data';
-import * as helper from 'utils/helper';
 import Wrapper from './styled';
 
 const { Item } = Form;
@@ -11,13 +10,14 @@ const { Item } = Form;
 /* eslint-disable react/prop-types */
 const SelectType = ({ history }) => {
   const setRecruiter = () => {
-    helper.saveData('tutorial', 1);
-    DATA.userRole = DATA.RECRUITER;
+    DATA.tutorial = 1;
+    DATA.userRole = DATA.ROLE.RECRUITER;
     history.push('/recruiter');
   };
 
   const setJobseeker = () => {
-    DATA.userRole = DATA.JOBSEEKER;
+    DATA.tutorial = 1;
+    DATA.userRole = DATA.ROLE.JOBSEEKER;
     history.push('/jobseeker');
   };
 

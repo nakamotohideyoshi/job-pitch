@@ -39,9 +39,9 @@ export default handleActions(
 
     // ---- update business ----
 
-    [C.UPDATE_BUSINESS]: (state, { business }) => ({
+    [C.UPDATE_BUSINESS]: (state, { payload }) => ({
       ...state,
-      businesses: helper.updateItem(state.businesses, business, true)
+      businesses: helper.updateItem(state.businesses, payload, true)
     }),
 
     // ---- remove business ----

@@ -3,47 +3,37 @@ import { connect } from 'react-redux';
 import { Modal, Icon, Button } from 'antd';
 
 import DATA from 'utils/data';
-import { removeJobAction, saveJobAction } from 'redux/recruiter/jobs';
+import { removeJobAction, updateJobAction } from 'redux/recruiter/jobs';
 
 /* eslint-disable react/prop-types */
 class DeleteDialog extends React.Component {
-  state = {
-    job: null
-  };
-
-  componentWillReceiveProps(nextProps) {
-    const { job } = nextProps;
-    job && this.setState({ job });
-  }
-
-  onDeactivateJob = () => {
-    const { job, saveJobAction, onCancel } = this.props;
-    const { title } = job;
-    saveJobAction({
+  deactivateJob = () => {
+    const { job, updateJobAction, onCancel } = this.props;
+    const { id, title } = job;
+    updateJobAction({
+      id,
       data: {
-        ...job,
         status: DATA.JOB.CLOSED
       },
-      successMsg: `The job(${title}) is closed`,
-      failMsg: `There was an error closing the job(${title})`
+      successMsg: `${title} is closed`,
+      failMsg: `There was an error closing ${title}`
     });
     onCancel();
   };
 
-  onRemoveJob = () => {
+  removeJob = () => {
     const { job, removeJobAction, onCancel } = this.props;
     const { id, title } = job;
     removeJobAction({
       id,
-      successMsg: `The job(${title}) is removed`,
-      failMsg: `There was an error removing the job(${title})`
+      successMsg: `${title} is removed`,
+      failMsg: `There was an error removing ${title}`
     });
     onCancel();
   };
 
   render() {
-    const { removeJobAction, saveJobAction, onCancel, ...rest } = this.props;
-    const job = this.props.job || this.state.job;
+    const { job, removeJobAction, updateJobAction, onCancel, ...rest } = this.props;
 
     const isOpen = (job || {}).status === DATA.JOB.OPEN;
     let comment = 'Removing this job will permanently delete all related applications and messages.';
@@ -53,7 +43,7 @@ class DeleteDialog extends React.Component {
 
     return (
       <Modal
-        className="ant-confirm ant-confirm-confirm"
+        className="ant-modal-confirm ant-modal-confirm-confirm"
         closable={false}
         maskClosable={true}
         title={null}
@@ -61,19 +51,19 @@ class DeleteDialog extends React.Component {
         onCancel={onCancel}
         {...rest}
       >
-        <div className="ant-confirm-body-wrapper">
-          <div className="ant-confirm-body">
+        <div className="ant-modal-confirm-body-wrapper">
+          <div className="ant-modal-confirm-body">
             <Icon type="question-circle" />
-            <div className="ant-confirm-content">{comment}</div>
+            <div className="ant-modal-confirm-title">{comment}</div>
           </div>
 
-          <div className="ant-confirm-btns">
+          <div className="ant-modal-confirm-btns">
             <Button onClick={onCancel}>Cancel</Button>
-            <Button type="danger" onClick={this.onRemoveJob}>
+            <Button type="danger" onClick={this.removeJob}>
               Remove
             </Button>
             {isOpen && (
-              <Button type="danger" onClick={this.onDeactivateJob}>
+              <Button type="danger" onClick={this.deactivateJob}>
                 Deactivate
               </Button>
             )}
@@ -87,7 +77,7 @@ class DeleteDialog extends React.Component {
 export default connect(
   null,
   {
-    saveJobAction,
+    updateJobAction,
     removeJobAction
   }
 )(DeleteDialog);

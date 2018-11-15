@@ -12,7 +12,7 @@ const SubMenu = Menu.SubMenu;
 
 /* eslint-disable react/prop-types */
 const RcMenu = ({ enabledHR, enabledEmployee, businesses, selectedBusiness, newMsgs, location }) => {
-  if (!businesses.length) return;
+  if (!businesses.length) return null;
 
   let path2 = location.pathname.split('/')[2];
   if (location.pathname.indexOf('/recruiter/settings/credits') === 0) {
@@ -83,11 +83,11 @@ export default withRouter(
     const { businesses, selectedId } = state.businesses;
     const selectedBusiness = helper.getItemById(businesses, selectedId);
     return {
-      enabledHR: enabledHRSelector(state),
-      enabledEmployee: enabledEmployeeSelector(state),
       businesses,
       selectedBusiness,
-      newMsgs: getAllNewMsgsSelector(state)
+      newMsgs: getAllNewMsgsSelector(state),
+      enabledHR: enabledHRSelector(state),
+      enabledEmployee: enabledEmployeeSelector(state)
     };
   })(RcMenu)
 );

@@ -14,8 +14,10 @@ const StyledModal = styled(Modal)`
 `;
 
 const ShareLinkDialog = ({ url, ...rest }) => {
+  let inputRef;
+
   const copyLink = () => {
-    this.inputRef.input.select();
+    inputRef.input.select();
     document.execCommand('Copy');
   };
 
@@ -26,7 +28,7 @@ const ShareLinkDialog = ({ url, ...rest }) => {
         addonAfter={<div onClick={copyLink}>Copy link</div>}
         defaultValue={url}
         ref={ref => {
-          this.inputRef = ref;
+          inputRef = ref;
         }}
       />
       <div className="ant-form-explain">Share this link on your website, in an email, or anywhere else.</div>

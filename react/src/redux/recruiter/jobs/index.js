@@ -10,6 +10,7 @@ import * as C from 'redux/constants';
 
 export const removeJobAction = createAction(C.RC_REMOVE_JOB);
 export const saveJobAction = createAction(C.RC_SAVE_JOB);
+export const updateJobAction = createAction(C.RC_UPDATE_JOB);
 export const uploadPitchAction = createAction(C.RC_UPLOAD_JOBPITCH);
 
 // ------------------------------------
@@ -31,18 +32,26 @@ export default handleActions(
 
     // ---- update job ----
 
-    [C.RC_UPDATE_JOB]: (state, { job }) => {
-      // let jobs = helper.updateItem(state.jobs, job, true);
-      // jobs.sort((a, b) => {
-      //   const sort1 = a.status - b.status;
-      //   if (sort1 !== 0) return sort1;
-      //   return new Date(b.created).getTime() - new Date(a.created).getTime();
-      // });
-      return {
-        ...state,
-        jobs: helper.updateItem(state.jobs, job, true)
-      };
-    },
+    [requestPending(C.RC_UPDATE_JOB)]: (state, { payload }) => ({
+      ...state,
+      jobs: helper.updateItem(state.jobs, {
+        id: payload.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.RC_UPDATE_JOB)]: (state, { payload }) => ({
+      ...state,
+      jobs: helper.updateItem(state.jobs, { ...payload, loading: false }, true)
+    }),
+
+    [requestFail(C.RC_UPDATE_JOB)]: (state, { request }) => ({
+      ...state,
+      jobs: helper.updateItem(state.jobs, {
+        id: request.id,
+        loading: false
+      })
+    }),
 
     // ---- remove job ----
 

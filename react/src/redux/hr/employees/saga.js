@@ -3,7 +3,7 @@ import { takeLatest } from 'redux-saga/effects';
 import { request, getRequest, deleteRequest } from 'utils/request';
 import * as C from 'redux/constants';
 
-export const getEmployees = getRequest({
+const getEmployees = getRequest({
   type: C.HR_GET_EMPLOYEES,
   url: '/api/hr/employees/'
 });
@@ -18,6 +18,7 @@ const removeEmployee = deleteRequest({
 });
 
 export default function* sagas() {
+  yield takeLatest(C.HR_GET_EMPLOYEES, getEmployees);
   yield takeLatest(C.HR_SAVE_EMPLOYEE, saveEmployee);
   yield takeLatest(C.HR_REMOVE_EMPLOYEE, removeEmployee);
 }

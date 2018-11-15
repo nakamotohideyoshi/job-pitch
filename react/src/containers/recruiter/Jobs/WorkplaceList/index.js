@@ -10,7 +10,7 @@ import colors from 'utils/colors';
 import { getWorkplacesSelector, getApplicationsSelector } from 'redux/selectors';
 import { selectBusinessAction } from 'redux/businesses';
 import { removeWorkplaceAction } from 'redux/workplaces';
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, Loading, ListEx, Icons, Logo } from 'components';
 import Wrapper from '../styled';
 
 const { confirm } = Modal;
@@ -19,40 +19,31 @@ const { confirm } = Modal;
 class WorkplaceList extends React.Component {
   componentDidMount() {
     const { business, selectBusinessAction, history } = this.props;
-    if (!business) {
+    if (business) {
+      selectBusinessAction(business.id);
+    } else {
       history.replace('/recruiter/jobs/business');
-      return;
     }
-    selectBusinessAction(business.id);
   }
 
-  onSelectWorkplace = id => {
+  selectWorkplace = id => {
     this.props.history.push(`/recruiter/jobs/job/${id}`);
   };
 
-  onAddWorkplace = () => {
-    const tutorial = helper.loadData('tutorial');
-    if (tutorial === 2) {
-      helper.saveData('tutorial', 3);
-    }
-
-    this.props.history.push(`/recruiter/jobs/workplace/add/${this.props.business.id}`);
-  };
-
-  onEditWorkplace = (id, event) => {
+  editWorkplace = (id, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/workplace/edit/${id}`);
   };
 
-  onRemoveWorkplace = ({ id, name, jobs }, event) => {
+  removeWorkplace = ({ id, name, jobs }, event) => {
     event && event.stopPropagation();
 
-    const count = jobs.length;
+    const jCount = jobs.length;
     confirm({
-      title: count
-        ? `Deleting this workplace will also delete ${count} job${count !== 1 ? 's' : ''}.`
+      title: jCount
+        ? `Deleting this workplace will also delete ${jCount} job${jCount !== 1 ? 's' : ''}.`
         : `Are you sure you want to delete ${name}`,
-      content: count ? 'If you want to hide the jobs instead you can deactive them.' : null,
+      content: jCount ? 'If you want to hide the jobs instead you can deactive them.' : null,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -70,21 +61,20 @@ class WorkplaceList extends React.Component {
   renderWorkplace = workplace => {
     const { id, name, jobs, active_job_count, newApps, loading } = workplace;
     const logo = helper.getWorkplaceLogo(workplace);
-    const count = jobs.length;
-    const strJobs = `Includes ${count} job${count !== 1 ? 's' : ''}`;
-    const strInactiveJobs = `${count - active_job_count} inactive`;
+    const strJobs = `Includes ${jobs.length} job${jobs.length !== 1 ? 's' : ''}`;
+    const strInactiveJobs = `${jobs.length - active_job_count} inactive`;
     const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
 
     const actions = this.props.business.restricted
       ? []
       : [
           <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.onEditWorkplace(id, e)}>
+            <span onClick={e => this.editWorkplace(id, e)}>
               <Icons.Pen />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.onRemoveWorkplace(workplace, e)}>
+            <span onClick={e => this.removeWorkplace(workplace, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
@@ -94,7 +84,7 @@ class WorkplaceList extends React.Component {
       <List.Item
         key={id}
         actions={actions}
-        onClick={() => this.onSelectWorkplace(id)}
+        onClick={() => this.selectWorkplace(id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={name} />
@@ -111,23 +101,22 @@ class WorkplaceList extends React.Component {
     );
   };
 
-  renderEmpty = () => {
-    const tutorial = helper.loadData('tutorial');
-    return (
-      <AlertMsg>
-        <span>
-          {tutorial === 2
-            ? `Great, you've created your business!
-               Now let's create your work place`
-            : `This business doesn't seem to have a workplace for your staff`}
-        </span>
-        <a onClick={this.onAddWorkplace}>Create workplace</a>
-      </AlertMsg>
-    );
-  };
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {DATA.tutorial === 3
+          ? `Great, you've created your business!
+             Now let's create your work place`
+          : `This business doesn't seem to have a workplace for your staff`}
+      </span>
+      <Link to={`/recruiter/jobs/workplace/add/${this.props.business.id}`}>Create workplace</Link>
+    </AlertMsg>
+  );
 
   render() {
-    const { business } = this.props;
+    const { business, workplaces } = this.props;
+
+    if (!business) return null;
 
     return (
       <Wrapper className="container">
@@ -142,14 +131,15 @@ class WorkplaceList extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
           </Breadcrumb>
 
-          {!business.restricted && <LinkButton onClick={this.onAddWorkplace}>Add new workplace</LinkButton>}
+          {!business.restricted && <Link to={`/recruiter/jobs/workplace/add/${business.id}`}>Add new workplace</Link>}
         </PageSubHeader>
 
         <div className="content">
-          <ListEx data={this.props.workplaces} renderItem={this.renderWorkplace} emptyRender={this.renderEmpty} />
+          <ListEx data={workplaces} renderItem={this.renderWorkplace} emptyRender={this.renderEmpty} />
         </div>
       </Wrapper>
     );

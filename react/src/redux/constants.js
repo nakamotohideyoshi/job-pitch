@@ -22,8 +22,6 @@ export const REMOVE_WORKPLACE = 'REMOVE_WORKPLACE';
 
 // general
 
-export const GET_DATA = 'GET_DATA';
-
 export const GET_APPLICATIONS = 'GET_APPLICATIONS';
 export const UPDATE_APPLICATION = 'UPDATE_APPLICATION';
 export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
@@ -67,8 +65,6 @@ export const JS_UPLOAD_PITCH = 'JS_UPLOAD_PITCH';
 export const JS_UPLOAD_SPEC_PITCH = 'JS_UPLOAD_SPEC_PITCH';
 
 // hr
-
-export const HR_GET_DATA = 'HR_GET_DATA';
 
 export const HR_GET_JOBS = 'HR_GET_JOBS';
 export const HR_SAVE_JOB = 'HR_SAVE_JOB';

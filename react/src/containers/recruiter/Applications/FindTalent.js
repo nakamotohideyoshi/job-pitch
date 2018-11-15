@@ -5,7 +5,7 @@ import { List, Modal, Tooltip, Button, Drawer, message } from 'antd';
 
 import * as helper from 'utils/helper';
 import { findJobseekersAction, connectJobseekerAction, removeJobseekerAction } from 'redux/recruiter/find';
-import { AlertMsg, Loading, ListEx, Icons, Logo, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, Logo, JobseekerDetails, LinkButton } from 'components';
 
 const { confirm } = Modal;
 
@@ -23,16 +23,18 @@ class FindTalent extends React.Component {
   }
 
   findJobseekers = () => {
-    const jobId = (this.props.job || {}).id;
-    jobId &&
+    const { job } = this.props;
+    job &&
       this.props.findJobseekersAction({
         params: {
-          job: jobId
+          job: job.id
         }
       });
   };
 
-  onSelect = selectedId => this.setState({ selectedId });
+  onSelect = selectedId => {
+    this.setState({ selectedId });
+  };
 
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
@@ -89,7 +91,9 @@ class FindTalent extends React.Component {
           job: this.props.job.id,
           data: {
             job_seeker: id
-          }
+          },
+          successMsg: 'The talent is removed',
+          failMsg: 'There was an error removing the talent'
         });
       }
     });
@@ -139,10 +143,11 @@ class FindTalent extends React.Component {
     return (
       <AlertMsg>
         <span>There are no more new matches for this job.</span>
-        <a onClick={this.findJobseekers}>
+        <LinkButton onClick={this.findJobseekers}>
           <Icons.SyncAlt />
           Refresh
-        </a>
+        </LinkButton>
+
         {requires_cv && <span>You are currently hiding job seekers who have not uploaded a CV</span>}
         {requires_pitch && <span>You are currently hiding job seekers who have not uploaded a video pitch</span>}
         {(requires_cv || requires_pitch) && <Link to={`/recruiter/jobs/job/edit/${id}`}>Remove filter</Link>}
@@ -164,6 +169,7 @@ class FindTalent extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
+
         <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedJobseeker}>
           {selectedJobseeker && (
             <JobseekerDetails

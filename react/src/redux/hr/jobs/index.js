@@ -8,6 +8,7 @@ import * as C from 'redux/constants';
 // Actions
 // ------------------------------------
 
+export const getJobsAction = createAction(C.HR_GET_JOBS);
 export const saveJobAction = createAction(C.HR_SAVE_JOB);
 export const removeJobAction = createAction(C.HR_REMOVE_JOB);
 

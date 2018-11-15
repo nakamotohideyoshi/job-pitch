@@ -37,14 +37,18 @@ class JobEdit extends React.Component {
     },
     loading: null,
     pitchData: null,
-    showPreview: false
+    visiblePreview: false
   };
 
   componentDidMount() {
     const { workplace, job, form, selectBusinessAction } = this.props;
 
+    if (DATA.tutorial === 4) {
+      DATA.tutorial = undefined;
+    }
+
     if (!workplace) {
-      this.goBuisinessList();
+      this.props.history.replace('/recruiter/jobs/business');
       return;
     }
 
@@ -87,20 +91,16 @@ class JobEdit extends React.Component {
       }
     });
 
-  goBuisinessList = () => {
-    this.props.history.push('/recruiter/jobs/business');
-  };
-
   goJobList = () => {
     this.props.history.push(`/recruiter/jobs/job/${this.props.workplace.id}`);
   };
 
-  openPreview = () => {
-    this.setState({ showPreview: true });
+  showPreview = visiblePreview => {
+    this.setState({ visiblePreview });
   };
 
-  closePreview = () => {
-    this.setState({ showPreview: false });
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
   save = () => {
@@ -136,18 +136,19 @@ class JobEdit extends React.Component {
       });
 
       saveJobAction({
+        id: (job || {}).id,
         data: {
           ...values,
           status: values.status ? DATA.JOB.OPEN : DATA.JOB.CLOSED,
-          location: workplace.id,
-          id: (job || {}).id
+          location: workplace.id
         },
         logo: this.state.logo,
+
         onSuccess: ({ id }) => {
           if (this.state.pitchData) {
             this.uploadPitch(id);
           } else {
-            message.success('Job is saved successfully.');
+            message.success('The job is saved');
             if (job) {
               this.goJobList();
             } else {
@@ -155,18 +156,22 @@ class JobEdit extends React.Component {
             }
           }
         },
+
         onFail: error => {
           this.setState({ loading: null });
           message.error(error);
         },
-        onProgress: progress => {
-          this.setState({
-            loading: {
-              label: 'Logo uploading...',
-              progress: Math.floor((progress.loaded / progress.total) * 100)
+
+        onProgress: this.state.logo.file
+          ? progress => {
+              this.setState({
+                loading: {
+                  label: 'Logo uploading...',
+                  progress: Math.floor((progress.loaded / progress.total) * 100)
+                }
+              });
             }
-          });
-        }
+          : null
       });
     });
   };
@@ -176,18 +181,21 @@ class JobEdit extends React.Component {
     uploadPitchAction({
       job: id,
       data: this.state.pitchData,
-      onSuccess: msg => {
-        message.success('Job is saved successfully.');
+
+      onSuccess: () => {
+        message.success('Job is saved');
         if (job) {
           this.goJobList();
         } else {
           history.push(`/recruiter/jobs/job/view/${id}`);
         }
       },
+
       onFail: error => {
         this.setState({ loading: null });
         message.error(error);
       },
+
       onProgress: (label, progress) => {
         this.setState({
           loading: { label, progress }
@@ -196,13 +204,12 @@ class JobEdit extends React.Component {
     });
   };
 
-  changePitch = pitchData => {
-    this.setState({ pitchData });
-  };
-
   render() {
-    const { logo, loading, showPreview } = this.state;
     const { workplace, job, form } = this.props;
+
+    if (!workplace) return null;
+
+    const { logo, loading, visiblePreview } = this.state;
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job);
     const title = job ? 'Edit' : 'Add';
@@ -220,12 +227,15 @@ class JobEdit extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>
-              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
+              <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>
-              {workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}
+              <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
@@ -370,9 +380,13 @@ class JobEdit extends React.Component {
               <Button type="primary" onClick={this.save}>
                 Save
               </Button>
-              <Button className="btn-preview" onClick={this.openPreview}>
-                Preview
-              </Button>
+
+              {job && (
+                <Button className="btn-preview" onClick={() => this.showPreview(true)}>
+                  Preview
+                </Button>
+              )}
+
               <Button onClick={this.goJobList}>Cancel</Button>
             </NoLabelField>
           </StyledForm>
@@ -381,7 +395,7 @@ class JobEdit extends React.Component {
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
 
         {job && (
-          <Drawer placement="right" onClose={this.closePreview} visible={showPreview}>
+          <Drawer placement="right" onClose={() => this.showPreview()} visible={visiblePreview}>
             <JobDetails jobData={job} />
           </Drawer>
         )}
@@ -395,17 +409,15 @@ export default connect(
     const workplaceId = helper.str2int(match.params.workplaceId);
     const workplace = helper.getItemById(getWorkplacesSelector(state), workplaceId);
     const jobId = helper.str2int(match.params.jobId);
-    const jobs = getJobsSelector(state);
-    const job = helper.getItemById(jobs, jobId);
-
+    const job = helper.getItemById(getJobsSelector(state), jobId);
     return {
       workplace: workplace || (job || {}).location_data,
       job
     };
   },
   {
+    selectBusinessAction,
     saveJobAction,
-    uploadPitchAction,
-    selectBusinessAction
+    uploadPitchAction
   }
 )(Form.create()(JobEdit));

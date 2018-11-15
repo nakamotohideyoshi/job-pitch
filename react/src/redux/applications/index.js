@@ -26,7 +26,7 @@ export const removeInterviewAction = createAction(C.REMOVE_INTERVIEW);
 // ------------------------------------
 
 const initialState = {
-  applications: null
+  applications: []
 };
 
 export default handleActions(

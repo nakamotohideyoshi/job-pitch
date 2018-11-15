@@ -31,6 +31,10 @@ class WorkplaceEdit extends React.Component {
   componentDidMount() {
     const { business, workplace, form, selectBusinessAction, history } = this.props;
 
+    if (DATA.tutorial === 3) {
+      DATA.tutorial = 4;
+    }
+
     if (!business) {
       history.replace('/recruiter/jobs/business');
       return;
@@ -141,14 +145,15 @@ class WorkplaceEdit extends React.Component {
       });
 
       saveWorkplaceAction({
+        id: (workplace || {}).id,
         data: {
           ...values,
-          street_number: values.street,
           ...this.state.location,
-          business: business.id,
-          id: (workplace || {}).id
+          street_number: values.street,
+          business: business.id
         },
         logo: this.state.logo,
+
         onSuccess: ({ id }) => {
           message.success('The workplace is saved');
           if (workplace) {
@@ -157,29 +162,35 @@ class WorkplaceEdit extends React.Component {
             history.push(`/recruiter/jobs/job/${id}`);
           }
         },
+
         onFail: error => {
           this.setState({ loading: null });
           message.error(error);
         },
-        onProgress: progress => {
-          this.setState({
-            loading: {
-              label: 'Logo uploading...',
-              progress: Math.floor((progress.loaded / progress.total) * 100)
+
+        onProgress: this.state.logo.file
+          ? progress => {
+              this.setState({
+                loading: {
+                  label: 'Logo uploading...',
+                  progress: Math.floor((progress.loaded / progress.total) * 100)
+                }
+              });
             }
-          });
-        }
+          : null
       });
     });
   };
 
   render() {
-    const { logo, loading, location } = this.state;
     const { business, workplace, form } = this.props;
+
+    if (!business) return null;
+
+    const { logo, loading, location } = this.state;
     const { getFieldDecorator } = form;
     const { latitude, longitude } = location;
     const marker = latitude && { lat: latitude, lng: longitude };
-
     const title = workplace ? 'Edit' : 'Add';
 
     return (
@@ -195,9 +206,11 @@ class WorkplaceEdit extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>
-              {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
+              <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>
             </Breadcrumb.Item>
+
             <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
@@ -384,7 +397,7 @@ export default connect(
     };
   },
   {
-    saveWorkplaceAction,
-    selectBusinessAction
+    selectBusinessAction,
+    saveWorkplaceAction
   }
 )(Form.create()(WorkplaceEdit));

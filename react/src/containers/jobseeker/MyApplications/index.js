@@ -140,8 +140,6 @@ class MyApplications extends React.Component {
     const selectedApp = applications && helper.getItemById(applications, this.state.selectedId);
     const { interview } = selectedApp || {};
 
-    console.log('----', applications);
-
     return (
       <Wrapper className="container">
         <Helmet title="My Applications" />

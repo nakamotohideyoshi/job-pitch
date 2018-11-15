@@ -38,7 +38,7 @@ class SearchBox extends React.PureComponent {
         placeholder="Search"
         value={text}
         style={{ width: this.props.width || '100%' }}
-        innerRef={node => (this.refInput = node)}
+        ref={ref => (this.refInput = ref)}
         prefix={<Icons.Search />}
         suffix={text ? <Icons.TimesCircle onClick={this.clearText} /> : null}
         onChange={e => this.setText(e.target.value)}

@@ -90,10 +90,10 @@ class MessageThread extends React.Component {
 
   renderMessage = ({ id, content, from_role, created }) => {
     const { application, showInterview } = this.props;
-    const me = helper.getNameByID(DATA.roles, from_role) === DATA.userRole;
+    const me = DATA.userRole === from_role;
 
     let avatar;
-    if ((DATA.userRole === 'RECRUITER' && me) || (DATA.userRole === 'JOB_SEEKER' && !me)) {
+    if ((DATA.isRecruiter && me) || (DATA.isJobseeker && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
       avatar = helper.getAvatar(application.job_seeker);

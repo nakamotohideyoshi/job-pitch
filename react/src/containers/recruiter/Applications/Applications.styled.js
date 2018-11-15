@@ -2,10 +2,6 @@ import styled from 'styled-components';
 import colors from 'utils/colors';
 
 export default styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-
   .ant-select {
     flex: 1;
     margin-right: 20px;

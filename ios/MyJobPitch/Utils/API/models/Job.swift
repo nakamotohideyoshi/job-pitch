@@ -53,3 +53,15 @@ class Job: MJPObjectWithDates {
         return locationData.businessData.name + ", " + locationData.name
     }
 }
+
+class HRJob: MJPObjectWithDates {
+    
+    static let mappingArray = [ "id", "title", "location" ]
+    
+    static let mappingDictionary = [ "desc": "description"]
+    
+    var title: String!
+    var desc: String!
+    var location: NSNumber!
+}
+

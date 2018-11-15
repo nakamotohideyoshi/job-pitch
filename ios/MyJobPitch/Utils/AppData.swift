@@ -12,7 +12,7 @@ class AppData: NSObject {
     
     // const
     
-    static let apiVersion = 6
+    static let apiVersion = 7
     static let production = false
     
     static let greenColor = UIColor(red: 0/255.0, green: 182/255.0, blue: 164/255.0, alpha: 1)
@@ -62,6 +62,10 @@ class AppData: NSObject {
     
     static var appsRefreshTime = DEFAULT_REFRESH_TIME
     static var appsUpdateCallback: (() -> Void)?
+    
+    
+    static var hrJobs: [HRJob]!
+    static var hrEmployees: [HREmployee]!
     
     static func clearData() {
         user = nil
@@ -248,6 +252,11 @@ class AppData: NSObject {
         return filters.count > 0 ? filters[0].name : nil
     }
     
+    static func getItemByID(_ objects: [MJPObject], id: NSNumber!) -> MJPObject! {
+        let filters = objects.filter { $0.id == id }
+        return filters.count > 0 ? filters[0] : nil
+    }
+    
     //================ jobseeker =============
     
     static func getJobSeeker(complete: ((Any?) -> Void)?) {
@@ -331,7 +340,7 @@ class AppData: NSObject {
     
     //================ workplaces =============
     
-    static func getWorkplaces(businessId: NSNumber, complete: ((Any?) -> Void)?) {
+    static func getWorkplaces(businessId: NSNumber!, complete: ((Any?) -> Void)?) {
         API.shared().loadLocationsForBusiness(businessId) { (result, error) in
             if (result != nil) {
                 workplaces = result as! [Location]

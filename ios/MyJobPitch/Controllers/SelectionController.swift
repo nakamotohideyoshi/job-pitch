@@ -81,9 +81,7 @@ class SelectionController: UIViewController {
         let popupController = STPopupController(rootViewController: selectionController)
         popupController.style = STPopupStyle.bottomSheet
         popupController.present(in: frontController!)
-        
-    }
-    
+    }    
 }
 
 extension SelectionController: UISearchBarDelegate {

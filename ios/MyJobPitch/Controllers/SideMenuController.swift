@@ -27,6 +27,9 @@ class SideMenuController: UIViewController {
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "users":        ["icon": "menu-users",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
         
+        "hr":           ["icon": "menu-users",   "title": "HR",                   "identifier": "HRSystem",       "per": ""],
+        "employees":    ["icon": "menu-users",   "title": "Employees",                   "identifier": "EmployeeList",       "per": ""],
+        
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
         "share":        ["icon": "menu-share",          "title": "Tell a friend",           "identifier": "Share",              "per": ""],
@@ -69,10 +72,18 @@ class SideMenuController: UIViewController {
         super.viewDidAppear(animated)
         
         data = [String]()
+        
         if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
             data = SideMenuController.jobSeekerMenu
         } else {
             data = SideMenuController.recruiterMenu
+            if (AppData.businesses.filter { $0.hr_access }.count != 0) {
+                data.insert("hr", at: 7)
+            }
+        }
+        
+        if (AppData.user.employees.count != 0) {
+            data.insert("employees", at: 7)
         }
         
         tableView.reloadData()

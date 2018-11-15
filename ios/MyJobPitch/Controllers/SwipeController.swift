@@ -312,7 +312,7 @@ class SwipeController: MJPController {
             
             let job = self.data[self.currentIndex - self.cards.count] as! Job
             if (job.requiresCV && AppData.jobSeeker.cv == nil) {
-                PopupController.showGreen("This job requires your cv", ok: "Edit profile", okCallback: {
+                PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
                     self.editAction()
                 }, cancel: "Cancel") {
                     self.reloadCard()

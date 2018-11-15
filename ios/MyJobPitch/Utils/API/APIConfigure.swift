@@ -552,7 +552,63 @@ class APIConfigure: NSObject {
                                  path: "/api/user-businesses/:pk/users/:pk/resend-invitation/",
                                  method: .POST)
         
+        // ================= HR Job =====================
         
+        let hrJobMapping = createResponseMappingForClass(HRJob.classForCoder(),
+                                                       array: HRJob.mappingArray,
+                                                       dictionary: inverseDictionary(HRJob.mappingDictionary),
+                                                       relationships: nil)
+        
+        configureRequestMapping(HRJob.classForCoder(),
+                                requestArray: HRJob.mappingArray,
+                                requestDictionary: HRJob.mappingDictionary,
+                                requestRelationships: nil,
+                                method: [.POST, .PUT])
+        
+        configureResponseMapping(hrJobMapping,
+                                 path: "/api/hr/jobs/",
+                                 method: .any)
+        
+        configureResponseMapping(hrJobMapping,
+                                 path: "/api/hr/jobs/:pk/",
+                                 method: .any)
+        
+        // ================= HR Employee =====================
+        
+        let hrEmployeeMapping = createResponseMappingForClass(HREmployee.classForCoder(),
+                                                         array: HREmployee.mappingArray,
+                                                         dictionary: inverseDictionary(HREmployee.mappingDictionary),
+                                                         relationships: nil)
+        
+        configureRequestMapping(HREmployee.classForCoder(),
+                                requestArray: HREmployee.mappingReqArray,
+                                requestDictionary: HREmployee.mappingReqDictionary,
+                                requestRelationships: nil,
+                                method: [.POST, .PATCH])
+        
+        configureResponseMapping(hrEmployeeMapping,
+                                 path: "/api/hr/employees/",
+                                 method: .any)
+        
+        configureResponseMapping(hrEmployeeMapping,
+                                 path: "/api/hr/employees/:pk/",
+                                 method: .any)
+        
+        // ================= Employee =====================
+        
+        let employeeRelationships = [ [ "source": "job",
+                                        "destination": "job",
+                                        "mapping": hrJobMapping ] ]
+        
+        let employeeMapping = createResponseMappingForClass(Employee.classForCoder(),
+                                                              array: Employee.mappingArray,
+                                                              dictionary: inverseDictionary(Employee.mappingDictionary),
+                                                              relationships: inverseRelationships(employeeRelationships))
+        
+        configureResponseMapping(employeeMapping,
+                                 path: "/api/employee/employees/:pk/",
+                                 method: .GET)
+                
         // ================= Error =====================
 
         let errorMapping = RKObjectMapping(for: RKErrorMessage.classForCoder())

@@ -10,12 +10,13 @@ import Foundation
 
 class User: MJPObject {
     
-    static let mappingArray = [ "id", "email", "businesses" ]
+    static let mappingArray = [ "id", "email", "businesses", "employees" ]
     static let mappingDictionary = [ "jobSeeker":           "job_seeker",
                                      "canCreateBusinesses": "can_create_businesses" ]
 
     var email: String!
     var businesses: NSArray!
+    var employees: NSArray!
     var jobSeeker: NSNumber!
     var canCreateBusinesses = true
     

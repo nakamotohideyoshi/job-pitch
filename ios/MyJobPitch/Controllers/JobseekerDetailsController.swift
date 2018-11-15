@@ -1,5 +1,5 @@
 //
-//  JobSeekerDetailController.swift
+//  JobseekerDetailsController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/23/16.
@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import AVKit
 
-class JobSeekerDetailController: MJPController {
+class JobseekerDetailsController: MJPController {
     
     @IBOutlet weak var mainView: UIStackView!
     @IBOutlet weak var tableView: UITableView!
@@ -37,7 +37,7 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var cvButton: YellowButton!
     @IBOutlet weak var historyTitleView: UIView!
     
-    public var jobSeeker: JobSeeker!
+    public var jobseeker: Jobseeker!
     public var application: Application!
     public var job: Job!
     public var viewMode = false
@@ -53,13 +53,13 @@ class JobSeekerDetailController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if application == nil && jobSeeker == nil {
+        if application == nil && jobseeker == nil {
             
             title = "Profile"
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
             
             isProfile = true
-            jobSeeker = AppData.jobSeeker
+            jobseeker = AppData.jobseeker
         }
         
         loadData()
@@ -72,7 +72,7 @@ class JobSeekerDetailController: MJPController {
             self.loadData()
         }
         
-        if jobSeeker != nil || application != nil {
+        if jobseeker != nil || application != nil {
             loadData()
         }
     }
@@ -89,7 +89,7 @@ class JobSeekerDetailController: MJPController {
             application = (AppData.applications.filter { $0.id == application.id })[0]
             interview = application?.getInterview()
             interviews = (application.interviews as! [Interview]).filter { $0.id != interview?.id }
-            jobSeeker = application?.jobSeeker
+            jobseeker = application?.jobseeker
             
             shortlisted.isOn = application.shortlisted
             
@@ -101,7 +101,7 @@ class JobSeekerDetailController: MJPController {
         }
         
         resources.removeAll()
-        if let pitch = jobSeeker.getPitch() {            
+        if let pitch = jobseeker.getPitch() {            
             let resource = MediaModel()
             resource.thumbnail = pitch.thumbnail
             resource.video = pitch.video
@@ -109,37 +109,37 @@ class JobSeekerDetailController: MJPController {
         }
         
         let resource = MediaModel()
-        resource.thumbnail = jobSeeker?.profileThumb
-        resource.image = jobSeeker?.profileImage
+        resource.thumbnail = jobseeker?.profileThumb
+        resource.image = jobseeker?.profileImage
         resource.defaultImage = UIImage(named: "avatar")
         resource.isCircleView = true
         resources.append(resource)
         
-        nameLabel.text = jobSeeker.getFullName()
+        nameLabel.text = jobseeker.getFullName()
         
-        if jobSeeker.sex != nil && (jobSeeker.sexPublic || isProfile) {
-            genderLabel.text = AppData.getNameByID(AppData.sexes, id: jobSeeker.sex) + (!jobSeeker.sexPublic ? " (private)" : "")
+        if jobseeker.sex != nil && (jobseeker.sexPublic || isProfile) {
+            genderLabel.text = AppData.getNameByID(AppData.sexes, id: jobseeker.sex) + (!jobseeker.sexPublic ? " (private)" : "")
             genderLabel.superview?.isHidden = false
         } else {
             genderLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.age != nil && (jobSeeker.agePublic || isProfile) {
-            ageLabel.text = jobSeeker.age.stringValue + (!jobSeeker.agePublic ? " (private)" : "")
+        if jobseeker.age != nil && (jobseeker.agePublic || isProfile) {
+            ageLabel.text = jobseeker.age.stringValue + (!jobseeker.agePublic ? " (private)" : "")
             ageLabel.superview?.isHidden = false
         } else {
             ageLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.email != nil && ((jobSeeker.emailPublic && application != nil) || isProfile) {
-            emailLabel.text = jobSeeker.email + (!jobSeeker.emailPublic ? " (private)" : "")
+        if jobseeker.email != nil && ((jobseeker.emailPublic && application != nil) || isProfile) {
+            emailLabel.text = jobseeker.email + (!jobseeker.emailPublic ? " (private)" : "")
             emailLabel.superview?.isHidden = false
         } else {
             emailLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.mobile != nil && jobSeeker.mobile != "" && ((jobSeeker.mobilePublic && application != nil) || isProfile) {
-            mobileLabel.text = jobSeeker.mobile + (!jobSeeker.mobilePublic ? " (private)" : "")
+        if jobseeker.mobile != nil && jobseeker.mobile != "" && ((jobseeker.mobilePublic && application != nil) || isProfile) {
+            mobileLabel.text = jobseeker.mobile + (!jobseeker.mobilePublic ? " (private)" : "")
             mobileLabel.superview?.isHidden = false
         } else {
             mobileLabel.superview?.isHidden = true
@@ -153,9 +153,9 @@ class JobSeekerDetailController: MJPController {
             interviewInfo.cancelCallback = cancelInterview
         }
         
-        availableView.isHidden = !jobSeeker.hasReferences
-        nationalNumberView.isHidden = !jobSeeker.has_national_insurance_number
-        truthfulView.isHidden = !jobSeeker.truthConfirmation
+        availableView.isHidden = !jobseeker.hasReferences
+        nationalNumberView.isHidden = !jobseeker.has_national_insurance_number
+        truthfulView.isHidden = !jobseeker.truthConfirmation
         
         // contact info
         
@@ -168,8 +168,8 @@ class JobSeekerDetailController: MJPController {
         arrangeBtnView.isHidden = viewMode || isProfile || !connected || interview != nil || external
         messageBtnView.isHidden = viewMode || isProfile || !connected || external
         
-        overviewLabel.text = jobSeeker.desc
-        cvButton.isHidden = jobSeeker.cv == nil
+        overviewLabel.text = jobseeker.desc
+        cvButton.isHidden = jobseeker.cv == nil
         
         pageControl.numberOfPages = resources.count
         pageControl.isHidden = resources.count <= 1
@@ -187,10 +187,10 @@ class JobSeekerDetailController: MJPController {
     }
     
     func editProfile() {
-        let controller = JobSeekerProfileController.instantiate()
+        let controller = JobseekerProfileController.instantiate()
         controller.isModal = true
         controller.saveComplete = {
-            self.jobSeeker = AppData.jobSeeker
+            self.jobseeker = AppData.jobseeker
             self.loadData()
         }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
@@ -207,7 +207,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
-        let url = URL(string: jobSeeker.cv)!
+        let url = URL(string: jobseeker.cv)!
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
@@ -246,7 +246,7 @@ class JobSeekerDetailController: MJPController {
                 
                 let application = ApplicationForCreation()
                 application.job = self.job?.id
-                application.jobSeeker = self.jobSeeker.id
+                application.jobseeker = self.jobseeker.id
                 
                 API.shared().createApplication(application) { (result, error) in
                     if result != nil {
@@ -284,11 +284,11 @@ class JobSeekerDetailController: MJPController {
             self.showLoading()
 
             if self.application == nil {
-                let request = ExclusionJobSeeker()
+                let request = ExclusionJobseeker()
                 request.job = self.job.id
-                request.jobSeeker = self.jobSeeker.id
+                request.jobseeker = self.jobseeker.id
                 
-                API.shared().ExclusionJobSeeker(request) { (_, error) in
+                API.shared().ExclusionJobseeker(request) { (_, error) in
                     if error == nil {
                         self.removeCallback?()
                     } else {
@@ -344,12 +344,12 @@ class JobSeekerDetailController: MJPController {
     func popController() {
         _ = self.navigationController?.popViewController(animated: true)
     }
-    static func instantiate() -> JobSeekerDetailController {
-        return AppHelper.instantiate("JobSeekerDetails") as! JobSeekerDetailController
+    static func instantiate() -> JobseekerDetailsController {
+        return AppHelper.instantiate("JobseekerDetails") as! JobseekerDetailsController
     }
 }
 
-extension JobSeekerDetailController: iCarouselDataSource {
+extension JobseekerDetailsController: iCarouselDataSource {
     
     func numberOfItems(in carousel: iCarousel) -> Int {
         return resources.count
@@ -370,13 +370,13 @@ extension JobSeekerDetailController: iCarouselDataSource {
     }
 }
 
-extension JobSeekerDetailController: iCarouselDelegate {
+extension JobseekerDetailsController: iCarouselDelegate {
     func carouselCurrentItemIndexDidChange(_ carousel: iCarousel) {
         pageControl.currentPage = carousel.currentItemIndex
     }
 }
 
-extension JobSeekerDetailController: UITableViewDataSource {
+extension JobseekerDetailsController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return interviews.count
@@ -405,10 +405,10 @@ extension JobSeekerDetailController: UITableViewDataSource {
     }
 }
 
-extension JobSeekerDetailController: UITableViewDelegate {
+extension JobseekerDetailsController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = application
         controller.interviewId = interviews[indexPath.row].id
         navigationController?.pushViewController(controller, animated: true)

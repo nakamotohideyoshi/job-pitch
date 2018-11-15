@@ -55,9 +55,9 @@ class InterviewEditController: MJPController {
     }
     
     func loadData() {
-        infoView.jobSeeker = application.jobSeeker
+        infoView.jobseeker = application.jobseeker
         infoView.touch = {
-            let controller = JobSeekerDetailController.instantiate()
+            let controller = JobseekerDetailsController.instantiate()
             controller.application = self.application
             controller.viewMode = true
             self.navigationController?.pushViewController(controller, animated: true)

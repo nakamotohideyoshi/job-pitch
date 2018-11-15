@@ -88,10 +88,10 @@ extension MessageListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        
-//        if jobSeeker != nil {
-//            if (!jobSeeker.active) {
+//        if jobseeker != nil {
+//            if (!jobseeker.active) {
 //                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-//                    let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
+//                    let controller = AppHelper.instantiate("JobseekerProfile") as! JobseekerProfileController
 //                    controller.saveComplete = { () in
 //                        SideMenuController.pushController(id: "find_job")
 //                    }

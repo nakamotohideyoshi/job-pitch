@@ -85,7 +85,7 @@ class AppHelper: NSObject {
         completion?()
     }
     
-    static func loadPhoto(_ jobseeker: JobSeeker,
+    static func loadPhoto(_ jobseeker: Jobseeker,
                           imageView: UIImageView,
                           completion: (() -> Void)?) {
         if let avatar = jobseeker.profileThumb {

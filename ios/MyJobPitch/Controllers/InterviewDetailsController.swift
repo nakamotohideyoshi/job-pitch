@@ -1,5 +1,5 @@
 //
-//  TestTableView.swift
+//  InterviewDetailController.swift
 //  MyJobPitch
 //
 //  Created by bb on 9/6/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InterviewDetailController: MJPController {
+class InterviewDetailsController: MJPController {
     
     @IBOutlet weak var mainView: UIStackView!
     @IBOutlet weak var tableView: UITableView!
@@ -68,7 +68,7 @@ class InterviewDetailController: MJPController {
             
             interviews = appInterviews.filter { $0.id != interview?.id }
 
-            if AppData.user.isJobSeeker() {
+            if AppData.user.isJobseeker() {
                 infoView.job = application.job
                 infoView.touch = {
                     let controller = ApplicationDetailsController.instantiate()
@@ -77,9 +77,9 @@ class InterviewDetailController: MJPController {
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             } else {
-                infoView.jobSeeker = application.jobSeeker
+                infoView.jobseeker = application.jobseeker
                 infoView.touch = {
-                    let controller = JobSeekerDetailController.instantiate()
+                    let controller = JobseekerDetailsController.instantiate()
                     controller.application = self.application
                     controller.viewMode = true
                     self.navigationController?.pushViewController(controller, animated: true)
@@ -114,7 +114,7 @@ class InterviewDetailController: MJPController {
         badge.text = "\(newMsgs)"
         badge.isHidden = newMsgs == 0
         
-        notesLabel.superview?.isHidden = AppData.user.isJobSeeker()
+        notesLabel.superview?.isHidden = AppData.user.isJobseeker()
         feedbackLabel.superview?.isHidden = !completed
         naviationsView.isHidden = viewMode
         historyTitleView.isHidden = viewMode || interviews.count == 0
@@ -198,12 +198,12 @@ class InterviewDetailController: MJPController {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    static func instantiate() -> InterviewDetailController {
-        return AppHelper.instantiate("InterviewDetail") as! InterviewDetailController
+    static func instantiate() -> InterviewDetailsController {
+        return AppHelper.instantiate("InterviewDetails") as! InterviewDetailsController
     }
 }
 
-extension InterviewDetailController: UITableViewDataSource {
+extension InterviewDetailsController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return interviews.count
@@ -232,10 +232,10 @@ extension InterviewDetailController: UITableViewDataSource {
     }
 }
 
-extension InterviewDetailController: UITableViewDelegate {
+extension InterviewDetailsController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = application
         controller.interviewId = interviews[indexPath.row].id
         navigationController?.pushViewController(controller, animated: true)

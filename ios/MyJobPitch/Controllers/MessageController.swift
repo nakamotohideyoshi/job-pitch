@@ -36,7 +36,7 @@ class MessageController: JSQMessagesViewController {
         receiverBubbleImage = bubbleFactory?.incomingMessagesBubbleImage(with: AppData.yellowColor)
         senderBubbleImage = bubbleFactory?.outgoingMessagesBubbleImage(with: AppData.greenColor)
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
             
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
@@ -86,19 +86,19 @@ class MessageController: JSQMessagesViewController {
     func updateData() {
         
         let job = application.job!
-        let jobSeeker = application.jobSeeker!
+        let jobseeker = application.jobseeker!
         let jobLogo = job.getImage()?.thumbnail
-        let jobSeekerPhoto = jobSeeker.profileThumb
+        let jobseekerPhoto = jobseeker.profileThumb
         
         inputToolbar.isUserInteractionEnabled = true
         inputToolbar.contentView.textView.placeHolder = "New Message"
         
-        if AppData.user.isJobSeeker() {
+        if AppData.user.isJobseeker() {
             
-            senderDisplayName = jobSeeker.getFullName()
+            senderDisplayName = jobseeker.getFullName()
             receiverDisplayName = job.locationData.businessData.name
             
-            setAavatar(sender: true, path: jobSeekerPhoto, defaultAvatar: "avatar")
+            setAavatar(sender: true, path: jobseekerPhoto, defaultAvatar: "avatar")
             setAavatar(sender: false, path: jobLogo, defaultAvatar: "default-logo")
             
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
@@ -110,10 +110,10 @@ class MessageController: JSQMessagesViewController {
         } else {
             
             senderDisplayName = job.locationData.businessData.name
-            receiverDisplayName = jobSeeker.getFullName()
+            receiverDisplayName = jobseeker.getFullName()
             
             setAavatar(sender: true, path: jobLogo, defaultAvatar: "default-logo")
-            setAavatar(sender: false, path: jobSeekerPhoto, defaultAvatar: "avatar")
+            setAavatar(sender: false, path: jobseekerPhoto, defaultAvatar: "avatar")
             
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
@@ -279,7 +279,7 @@ class MessageController: JSQMessagesViewController {
     }
     
     func showInterviewInfo() {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = application
         navigationController?.pushViewController(controller, animated: true)
     }

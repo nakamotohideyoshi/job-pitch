@@ -281,14 +281,14 @@ class API: NSObject {
     
     // ================= Jobseeker =====================
 
-    func saveJobSeeker(_ jobSeeker: JobSeeker, photo: UIImage!, cvdata: Data!,
-                       progress:((UInt, Int64, Int64) -> Void)!, complete: ((JobSeeker?, Any?) -> Void)!) {
+    func saveJobseeker(_ jobseeker: Jobseeker, photo: UIImage!, cvdata: Data!,
+                       progress:((UInt, Int64, Int64) -> Void)!, complete: ((Jobseeker?, Any?) -> Void)!) {
         clearCookies()
 
-        let id = jobSeeker.id
+        let id = jobseeker.id
         let method = id == nil ? RKRequestMethod.POST : RKRequestMethod.PATCH
         let path = id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", id!)
-        let request = manager.multipartFormRequest(with: jobSeeker,
+        let request = manager.multipartFormRequest(with: jobseeker,
                                                    method: method,
                                                    path: path,
                                                    parameters: nil,
@@ -304,13 +304,13 @@ class API: NSObject {
                                                                              name: "cv",
                                                                              fileName: "cv_file",
                                                                              mimeType: "application/octet-stream")
-                                                    } else if jobSeeker.cv == nil {
+                                                    } else if jobseeker.cv == nil {
                                                         formData?.appendPart(withForm: Data(), name: "cv")
                                                     }
         })
         
         let operation = manager.objectRequestOperation(with: request as URLRequest!, success: { (_, mappingResult) in
-            complete((mappingResult?.firstObject as! JobSeeker), nil)
+            complete((mappingResult?.firstObject as! Jobseeker), nil)
         }, failure: { (_, error) in
             complete(nil, self.getError(error))
         })
@@ -319,15 +319,15 @@ class API: NSObject {
         manager.enqueue(operation)        
     }
 
-    func loadJobSeekerWithId(_ id: NSNumber, complete: ((Any?, Any?) -> Void)!) {
+    func loadJobseekerWithId(_ id: NSNumber, complete: ((Any?, Any?) -> Void)!) {
         getObject(String(format: "/api/job-seekers/%@/", id), complete: complete)
     }
 
-    func searchJobSeekersForJob(_ jobId: NSNumber, complete: (([Any]?, Any?) -> Void)!) {
+    func searchJobseekersForJob(_ jobId: NSNumber, complete: (([Any]?, Any?) -> Void)!) {
         getObjects(String(format: "/api/job-seekers/?job=%@", jobId), complete: complete)
     }
     
-    func ExclusionJobSeeker(_ object: ExclusionJobSeeker, complete: ((Any?, Any?) -> Void)!) {
+    func ExclusionJobseeker(_ object: ExclusionJobseeker, complete: ((Any?, Any?) -> Void)!) {
         postObject(String(format: "/api/user-jobs/%@/exclude/", object.job), object: object, complete: complete)
     }
     

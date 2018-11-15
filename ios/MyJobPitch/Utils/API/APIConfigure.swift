@@ -260,26 +260,26 @@ class APIConfigure: NSObject {
         
         // ================= Jobseeker =====================
         
-        let jobSeekerRelationships = [ [ "source":          "pitches",
+        let jobseekerRelationships = [ [ "source":          "pitches",
                                        "destination":     "pitches",
                                        "mapping":         pitchMapping ] ]
         
-        let jobSeekerMapping = createResponseMappingForClass(JobSeeker.classForCoder(),
-                                                             array: JobSeeker.mappingArray,
-                                                             dictionary: inverseDictionary(JobSeeker.mappingDictionary),
-                                                             relationships: inverseRelationships(jobSeekerRelationships))
+        let jobseekerMapping = createResponseMappingForClass(Jobseeker.classForCoder(),
+                                                             array: Jobseeker.mappingArray,
+                                                             dictionary: inverseDictionary(Jobseeker.mappingDictionary),
+                                                             relationships: inverseRelationships(jobseekerRelationships))
         
-        configureRequestMapping(JobSeeker.classForCoder(),
-                                requestArray: JobSeeker.mappingReqArray,
-                                requestDictionary: JobSeeker.mappingReqDictionary,
+        configureRequestMapping(Jobseeker.classForCoder(),
+                                requestArray: Jobseeker.mappingReqArray,
+                                requestDictionary: Jobseeker.mappingReqDictionary,
                                 requestRelationships: nil,
                                 method: [.POST, .PATCH])
         
-        configureResponseMapping(jobSeekerMapping,
+        configureResponseMapping(jobseekerMapping,
                                  path: "/api/job-seekers/",
                                  method: [.GET, .POST])
         
-        configureResponseMapping(jobSeekerMapping,
+        configureResponseMapping(jobseekerMapping,
                                  path: "/api/job-seekers/:pk/",
                                  method: [.GET, .PATCH])
         
@@ -378,9 +378,9 @@ class APIConfigure: NSObject {
                                  path: "/api/jobs/:pk/",
                                  method: .GET)
         
-        configureRequestMapping(ExclusionJobSeeker.classForCoder(),
+        configureRequestMapping(ExclusionJobseeker.classForCoder(),
                                 requestArray: nil,
-                                requestDictionary: ExclusionJobSeeker.mappingDictionary,
+                                requestDictionary: ExclusionJobseeker.mappingDictionary,
                                 requestRelationships: nil,
                                 method: .POST)
         
@@ -456,9 +456,9 @@ class APIConfigure: NSObject {
         let applicationRelationships = [ [ "source": "job",
                                            "destination": "job_data",
                                            "mapping": jobMapping ],
-                                         [ "source": "jobSeeker",
+                                         [ "source": "jobseeker",
                                            "destination": "job_seeker",
-                                           "mapping": jobSeekerMapping ],
+                                           "mapping": jobseekerMapping ],
                                          [ "source": "messages",
                                            "destination": "messages",
                                            "mapping": messageMapping ],

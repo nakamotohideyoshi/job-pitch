@@ -20,9 +20,9 @@ class Pitch: MJPObject {
 
 class SpecificPitchForCreation: NSObject {
     
-    static var mappingDictionary = ["jobSeeker": "job_seeker"]
+    static var mappingDictionary = ["jobseeker": "job_seeker"]
 
-    var jobSeeker: NSNumber!
+    var jobseeker: NSNumber!
 }
 
 class JobPitchForCreation: NSObject {

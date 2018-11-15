@@ -76,7 +76,7 @@ class SelectJobController: MJPController {
         
         if AppData.businesses.count == 1 {
             
-            let controller = BusinessDetailController.instantiate()
+            let controller = BusinessDetailsController.instantiate()
             controller.business = AppData.businesses[0]
             navigationController?.pushViewController(controller, animated: true)
             

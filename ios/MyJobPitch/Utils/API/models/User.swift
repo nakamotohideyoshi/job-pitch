@@ -11,17 +11,17 @@ import Foundation
 class User: MJPObject {
     
     static let mappingArray = [ "id", "email", "businesses", "employees" ]
-    static let mappingDictionary = [ "jobSeeker":           "job_seeker",
+    static let mappingDictionary = [ "jobseeker":           "job_seeker",
                                      "canCreateBusinesses": "can_create_businesses" ]
 
     var email: String!
     var businesses: NSArray!
     var employees: NSArray!
-    var jobSeeker: NSNumber!
+    var jobseeker: NSNumber!
     var canCreateBusinesses = true
     
-    func isJobSeeker() -> Bool {
-        return jobSeeker != nil
+    func isJobseeker() -> Bool {
+        return jobseeker != nil
     }
     
     func isRecruiter() -> Bool {

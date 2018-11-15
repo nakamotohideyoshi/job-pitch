@@ -23,9 +23,9 @@ class InterviewCell: MGSwipeTableCell {
         didSet {
             if application != nil {
                 if AppData.user.isRecruiter() {
-                    AppHelper.loadPhoto(application.jobSeeker, imageView: imgView, completion: nil)
-                    name.text = application.jobSeeker.getFullName()
-                    comment.text = application.jobSeeker.desc
+                    AppHelper.loadPhoto(application.jobseeker, imageView: imgView, completion: nil)
+                    name.text = application.jobseeker.getFullName()
+                    comment.text = application.jobseeker.desc
                 } else {
                     AppHelper.loadLogo(application.job, imageView: imgView, completion: nil)
                     name.text = application.job.title
@@ -41,7 +41,7 @@ class InterviewCell: MGSwipeTableCell {
         didSet {
             if interview != nil {
                 if interview.status == InterviewStatus.INTERVIEW_PENDING {
-                    status.text = AppData.user.isJobSeeker() ? "Interview request received" : "Interview request sent"
+                    status.text = AppData.user.isJobseeker() ? "Interview request received" : "Interview request sent"
                 } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
                     status.text = "Interview accepted"
                 } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {

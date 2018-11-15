@@ -118,62 +118,62 @@ class ApplicationAddController: MJPController {
             return
         }
         
-        var jobSeeker: [String: Any] = [:]
+        var jobseeker: [String: Any] = [:]
         
-        jobSeeker["first_name"] = firstName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
-        jobSeeker["last_name"] = lastName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+        jobseeker["first_name"] = firstName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+        jobseeker["last_name"] = lastName.text?.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
         
         if let str = email.text?.trimmingCharacters(in: .whitespacesAndNewlines) {
             if !str.isEmpty {
-                jobSeeker["email"] = str
+                jobseeker["email"] = str
             }
         }
         
         if let str = telephone.text {
             if !str.isEmpty {
-                jobSeeker["telephone"] = str
+                jobseeker["telephone"] = str
             }
         }
         
         if let str = mobile.text {
             if !str.isEmpty {
-                jobSeeker["mobile"] = str
+                jobseeker["mobile"] = str
             }
         }
         
         if let n = Int(age.text!) {
-            jobSeeker["age"] = NSNumber(value: n)
+            jobseeker["age"] = NSNumber(value: n)
         }
         
         if selectedSexNames.count > 0 {
-            jobSeeker["sex"] = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
+            jobseeker["sex"] = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            jobSeeker["nationality"] = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
+            jobseeker["nationality"] = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
         if let str = nationalNumber.text?.trimmingCharacters(in: .whitespacesAndNewlines) {
             if !str.isEmpty {
-                jobSeeker["national_insurance_number"] = str
+                jobseeker["national_insurance_number"] = str
             }
         }
         
-        jobSeeker["description"] = descView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        jobseeker["description"] = descView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        jobSeeker["email_public"] = true
-        jobSeeker["mobile_public"] = true
-        jobSeeker["telephone_public"] = true
-        jobSeeker["age_public"] = true
-        jobSeeker["sex_public"] = true
-        jobSeeker["nationality_public"] = true
-        jobSeeker["has_references"] = false
-        jobSeeker["truth_confirmation"] = false
+        jobseeker["email_public"] = true
+        jobseeker["mobile_public"] = true
+        jobseeker["telephone_public"] = true
+        jobseeker["age_public"] = true
+        jobseeker["sex_public"] = true
+        jobseeker["nationality_public"] = true
+        jobseeker["has_references"] = false
+        jobseeker["truth_confirmation"] = false
         
         let application = ExternalApplicationForCreation()
         application.job = job.id
         application.shortlisted = shortlisted.isOn
-        application.jobSeeker = jobSeeker
+        application.jobseeker = jobseeker
         
         showLoading()
         

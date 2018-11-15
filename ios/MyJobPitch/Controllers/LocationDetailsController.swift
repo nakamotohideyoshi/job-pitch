@@ -1,5 +1,5 @@
 //
-//  LocationDetailController.swift
+//  LocationDetailsController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/23/16.
@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeTableCell
 
-class LocationDetailController: MJPController {
+class LocationDetailsController: MJPController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var infoView: AppInfoSmallView!
@@ -112,20 +112,20 @@ class LocationDetailController: MJPController {
         let controller = JobEditController.instantiate()
         controller.workplace = workplace
         controller.saveComplete = { (job: Job) in
-            let controller = JobDetailController.instantiate()
+            let controller = JobDetailsController.instantiate()
             controller.job = job
             self.navigationController?.pushViewController(controller, animated: true)
         }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    static func instantiate() -> LocationDetailController {
-        return AppHelper.instantiate("JobList") as! LocationDetailController
+    static func instantiate() -> LocationDetailsController {
+        return AppHelper.instantiate("JobList") as! LocationDetailsController
     }
     
 }
 
-extension LocationDetailController: UITableViewDataSource {
+extension LocationDetailsController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return jobs == nil ? 0 : jobs.count
@@ -185,10 +185,10 @@ extension LocationDetailController: UITableViewDataSource {
     
 }
 
-extension LocationDetailController: UITableViewDelegate {
+extension LocationDetailsController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = JobDetailController.instantiate()
+        let controller = JobDetailsController.instantiate()
         controller.job = jobs[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)
     }

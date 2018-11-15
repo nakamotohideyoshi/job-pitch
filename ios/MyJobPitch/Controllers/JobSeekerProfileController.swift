@@ -1,5 +1,5 @@
 //
-//  JobSeekerProfileController.swift
+//  JobseekerProfileController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/28/16.
@@ -11,7 +11,7 @@ import AssetsLibrary
 import AVFoundation
 import AVKit
 
-class JobSeekerProfileController: MJPController {
+class JobseekerProfileController: MJPController {
 
     @IBOutlet weak var photoView: UIImageView!
     @IBOutlet weak var active: UISwitch!
@@ -98,7 +98,7 @@ class JobSeekerProfileController: MJPController {
         
         // load jobseeker data
         
-        if (AppData.jobSeeker == nil) {
+        if (AppData.jobseeker == nil) {
             photoView.image = UIImage(named: "avatar")
             email.text = AppData.email
             cvViewButton.isHidden = true            
@@ -117,49 +117,49 @@ class JobSeekerProfileController: MJPController {
     
     func load() {
         
-        let jobSeeker = AppData.jobSeeker!
+        let jobseeker = AppData.jobseeker!
         
-        if jobSeeker.profileThumb != nil {
-            AppHelper.loadImageURL(imageUrl: jobSeeker.profileThumb, imageView: photoView, completion: nil)
+        if jobseeker.profileThumb != nil {
+            AppHelper.loadImageURL(imageUrl: jobseeker.profileThumb, imageView: photoView, completion: nil)
         } else {
             photoView.image = UIImage(named: "avatar")
         }
         
-        active.isOn = jobSeeker.active
-        firstName.text = jobSeeker.firstName.capitalized
-        lastName.text = jobSeeker.lastName.capitalized
-        email.text = jobSeeker.email
-        emailPublic.isOn = jobSeeker.emailPublic
-        telephone.text = jobSeeker.telephone
-        telephonePublic.isOn = jobSeeker.telephonePublic
-        mobile.text = jobSeeker.mobile
-        mobilePublic.isOn = jobSeeker.mobilePublic
-        age.text = jobSeeker.age?.stringValue
-        agePublic.isOn = jobSeeker.agePublic
+        active.isOn = jobseeker.active
+        firstName.text = jobseeker.firstName.capitalized
+        lastName.text = jobseeker.lastName.capitalized
+        email.text = jobseeker.email
+        emailPublic.isOn = jobseeker.emailPublic
+        telephone.text = jobseeker.telephone
+        telephonePublic.isOn = jobseeker.telephonePublic
+        mobile.text = jobseeker.mobile
+        mobilePublic.isOn = jobseeker.mobilePublic
+        age.text = jobseeker.age?.stringValue
+        agePublic.isOn = jobseeker.agePublic
         
-        if jobSeeker.sex != nil {
-            selectedSexNames = (AppData.sexes.filter { $0.id == jobSeeker.sex }).map { $0.name }
+        if jobseeker.sex != nil {
+            selectedSexNames = (AppData.sexes.filter { $0.id == jobseeker.sex }).map { $0.name }
             sex.text = selectedSexNames.joined(separator: ", ")
         }
-        sexPublic.isOn = jobSeeker.sexPublic
+        sexPublic.isOn = jobseeker.sexPublic
         
-        if jobSeeker.nationality != nil {
-            selectedNationalityNames = (AppData.nationalities.filter { $0.id == jobSeeker.nationality }).map { $0.name }
+        if jobseeker.nationality != nil {
+            selectedNationalityNames = (AppData.nationalities.filter { $0.id == jobseeker.nationality }).map { $0.name }
             nationality.text = selectedNationalityNames.joined(separator: ", ")
         }
-        nationalityPublic.isOn = jobSeeker.nationalityPublic
+        nationalityPublic.isOn = jobseeker.nationalityPublic
         
-        nationalNumber.text = jobSeeker.national_insurance_number
+        nationalNumber.text = jobseeker.national_insurance_number
         
-        descView.text = jobSeeker.desc
+        descView.text = jobseeker.desc
         
-        cvViewButton.isHidden = jobSeeker.cv == nil
-        cvRemoveButton.isHidden = jobSeeker.cv == nil
+        cvViewButton.isHidden = jobseeker.cv == nil
+        cvRemoveButton.isHidden = jobseeker.cv == nil
                 
-        playButtonView.isHidden = jobSeeker.getPitch() == nil
+        playButtonView.isHidden = jobseeker.getPitch() == nil
         
-        hasReferences.isOn = jobSeeker.hasReferences
-        tickBox.isOn = jobSeeker.truthConfirmation
+        hasReferences.isOn = jobseeker.hasReferences
+        tickBox.isOn = jobseeker.truthConfirmation
     }
     
     @IBAction func photoAction(_ sender: Any) {
@@ -184,7 +184,7 @@ class JobSeekerProfileController: MJPController {
     }
     
     @IBAction func cvViewAction(_ sender: Any) {
-        let url = URL(string: AppData.jobSeeker.cv)!
+        let url = URL(string: AppData.jobseeker.cv)!
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
@@ -242,7 +242,7 @@ class JobSeekerProfileController: MJPController {
         var url = videoUrl
         
         if url == nil {
-            if let video = AppData.jobSeeker.getPitch()?.video {
+            if let video = AppData.jobseeker.getPitch()?.video {
                 url = URL(string: video)
             }
         }
@@ -266,48 +266,48 @@ class JobSeekerProfileController: MJPController {
             return
         }
         
-        let jobSeeker = JobSeeker()
-        jobSeeker.id = AppData.jobSeeker?.id
-        jobSeeker.active = active.isOn
-        jobSeeker.firstName = firstName.text?.capitalized
-        jobSeeker.lastName = lastName.text?.capitalized
-        jobSeeker.email = AppData.email
-        jobSeeker.telephone = telephone.text
-        jobSeeker.mobile = mobile.text
+        let jobseeker = Jobseeker()
+        jobseeker.id = AppData.jobseeker?.id
+        jobseeker.active = active.isOn
+        jobseeker.firstName = firstName.text?.capitalized
+        jobseeker.lastName = lastName.text?.capitalized
+        jobseeker.email = AppData.email
+        jobseeker.telephone = telephone.text
+        jobseeker.mobile = mobile.text
         
         if let intAge = Int(age.text!) {
-            jobSeeker.age = NSNumber(value: intAge)
+            jobseeker.age = NSNumber(value: intAge)
         }
         
         if selectedSexNames.count > 0 {
-            jobSeeker.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
+            jobseeker.sex = AppData.getIdByName(AppData.sexes, name: selectedSexNames[0])
         }
         
         if selectedNationalityNames.count > 0 {
-            jobSeeker.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
+            jobseeker.nationality = AppData.getIdByName(AppData.nationalities, name: selectedNationalityNames[0])
         }
         
         if (nationalNumber.text?.isEmpty == false) {
-            jobSeeker.national_insurance_number = nationalNumber.text
+            jobseeker.national_insurance_number = nationalNumber.text
         }
         
-        jobSeeker.emailPublic = emailPublic.isOn
-        jobSeeker.telephonePublic = telephonePublic.isOn
-        jobSeeker.mobilePublic = mobilePublic.isOn
-        jobSeeker.agePublic = agePublic.isOn
-        jobSeeker.sexPublic = sexPublic.isOn
-        jobSeeker.nationalityPublic = nationalityPublic.isOn
-        jobSeeker.desc = descView.text
-        jobSeeker.hasReferences = hasReferences.isOn
-        jobSeeker.truthConfirmation = tickBox.isOn
+        jobseeker.emailPublic = emailPublic.isOn
+        jobseeker.telephonePublic = telephonePublic.isOn
+        jobseeker.mobilePublic = mobilePublic.isOn
+        jobseeker.agePublic = agePublic.isOn
+        jobseeker.sexPublic = sexPublic.isOn
+        jobseeker.nationalityPublic = nationalityPublic.isOn
+        jobseeker.desc = descView.text
+        jobseeker.hasReferences = hasReferences.isOn
+        jobseeker.truthConfirmation = tickBox.isOn
         
         if !cvViewButton.isHidden {
-            jobSeeker.cv = AppData.jobSeeker?.cv
+            jobseeker.cv = AppData.jobseeker?.cv
         }
         
         showLoading()
         
-        API.shared().saveJobSeeker(jobSeeker, photo: photoImage, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+        API.shared().saveJobseeker(jobseeker, photo: photoImage, cvdata: cvdata, progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
             
             if self.photoImage != nil || self.cvdata != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
@@ -321,9 +321,9 @@ class JobSeekerProfileController: MJPController {
                 return
             }
             
-            AppData.jobSeeker = result
+            AppData.jobseeker = result
             
-            self.cvViewButton.isHidden = AppData.jobSeeker.cv == nil
+            self.cvViewButton.isHidden = AppData.jobseeker.cv == nil
             
             if self.videoUrl != nil {
                 
@@ -348,7 +348,7 @@ class JobSeekerProfileController: MJPController {
                         }
 
                         self.videoUrl = nil
-                        AppData.jobSeeker.pitches = [pitch!]
+                        AppData.jobseeker.pitches = [pitch!]
                         self.saveSuccess()
                     }
                 }
@@ -359,8 +359,8 @@ class JobSeekerProfileController: MJPController {
     }
     
     func saveSuccess() {
-        if AppData.user.jobSeeker == nil {
-            AppData.user.jobSeeker = AppData.jobSeeker.id
+        if AppData.user.jobseeker == nil {
+            AppData.user.jobseeker = AppData.jobseeker.id
             SideMenuController.pushController(id: "job_profile")
         } else {
             closeController()
@@ -369,13 +369,13 @@ class JobSeekerProfileController: MJPController {
         saveComplete?()
     }
     
-    static func instantiate() -> JobSeekerProfileController {
-        return AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
+    static func instantiate() -> JobseekerProfileController {
+        return AppHelper.instantiate("JobseekerProfile") as! JobseekerProfileController
     }
     
 }
 
-extension JobSeekerProfileController: ImagePickerDelegate {
+extension JobseekerProfileController: ImagePickerDelegate {
     
     func imageSelected(_ picker: ImagePicker, image: UIImage) {
         if picker == photoPicker {

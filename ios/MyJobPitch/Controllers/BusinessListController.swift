@@ -106,7 +106,7 @@ class BusinessListController: MJPController {
             
             let controller = BusinessEditController.instantiate()
             controller.saveComplete = { (business: Business) in
-                let controller = BusinessDetailController.instantiate()
+                let controller = BusinessDetailsController.instantiate()
                 controller.business = business
                 self.navigationController?.pushViewController(controller, animated: false)
             }
@@ -232,7 +232,7 @@ extension BusinessListController: UITableViewDelegate {
 
         } else {
             
-            let controller = BusinessDetailController.instantiate()
+            let controller = BusinessDetailsController.instantiate()
             controller.business = business
             navigationController?.pushViewController(controller, animated: true)
         }

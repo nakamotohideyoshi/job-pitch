@@ -160,26 +160,26 @@ class ApplicationDetailsController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         let showProfile = {
-            let controller = JobSeekerProfileController.instantiate()
+            let controller = JobseekerProfileController.instantiate()
             controller.isModal = true
             self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         }
         
-        if (!AppData.jobSeeker.active) {
+        if (!AppData.jobseeker.active) {
             PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
                 showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return
         }
         
-        if (AppData.jobSeeker.profileImage == nil && AppData.jobSeeker.getPitch() == nil) {
+        if (AppData.jobseeker.profileImage == nil && AppData.jobseeker.getPitch() == nil) {
             PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
                 showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
             return
         }
         
-        if (job.requiresCV && AppData.jobSeeker.cv == nil) {
+        if (job.requiresCV && AppData.jobseeker.cv == nil) {
             PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
                 showProfile()
             }, cancel: "Cancel", cancelCallback: nil)
@@ -232,10 +232,10 @@ class ApplicationDetailsController: MJPController {
     }
     
     @IBAction func messageAction(_ sender: Any) {
-        if AppData.jobSeeker != nil && !AppData.jobSeeker.active {
+        if AppData.jobseeker != nil && !AppData.jobseeker.active {
             
             PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-                let controller = JobSeekerProfileController.instantiate()
+                let controller = JobseekerProfileController.instantiate()
                 controller.isModal = true
                 self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             }, cancel: "Cancel", cancelCallback: nil)
@@ -325,7 +325,7 @@ extension ApplicationDetailsController: UITableViewDataSource {
 extension ApplicationDetailsController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = InterviewDetailController.instantiate()
+        let controller = InterviewDetailsController.instantiate()
         controller.application = application
         controller.interviewId = interviews[indexPath.row].id
         navigationController?.pushViewController(controller, animated: true)

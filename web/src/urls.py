@@ -5,10 +5,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import password_reset_confirm, password_reset_complete
 
-from hr import views as hr_views
 from employee import views as employee_views
+from hr import views as hr_views
 from mjp import views
 from mjp.views import ecommerce, public, indeed, auth
+from web import demo
 
 urlpatterns = [
     url(r'^api/paypal/purchase/$', ecommerce.PayPalPurchaseView.as_view()),
@@ -35,6 +36,13 @@ urlpatterns = [
     ),
     url(r'^reset/done/$', password_reset_complete, name='password_reset_complete'),
     url(r'^admin/', include(admin.site.urls)),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEMO_MODE:
+    urlpatterns += [
+        url(r'reset/$', demo.Reset.as_view(), name='demo-reset'),
+    ]
+
+urlpatterns += [
     url(r'^', include('web.urls')),
 ]

@@ -56,7 +56,10 @@ export default {
     this.APP = {
       CREATED: helper.getIdByName(data, 'CREATED'),
       ESTABLISHED: helper.getIdByName(data, 'ESTABLISHED'),
-      DELETED: helper.getIdByName(data, 'DELETED')
+      DELETED: helper.getIdByName(data, 'DELETED'),
+      OFFERED: helper.getIdByName(data, 'OFFERED'),
+      DECLINED: helper.getIdByName(data, 'DECLINED'),
+      ACCEPTED: helper.getIdByName(data, 'ACCEPTED')
     };
   },
 

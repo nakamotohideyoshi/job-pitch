@@ -1,205 +1,349 @@
 import React from 'react';
-import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Select, Tabs } from 'antd';
+import { withRouter } from 'react-router-dom';
+import moment from 'moment';
+import { List, Modal, Tooltip, Button, Switch, Drawer, message, Badge } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { getApplicationsSelector, getJobsSelector } from 'redux/selectors';
-import { selectBusinessAction } from 'redux/businesses';
-import { findJobseekersAction } from 'redux/recruiter/find';
-import { PageHeader, PageSubHeader, SearchBox, Logo, LinkButton } from 'components';
-import FindTalent from './FindTalent';
-import NewApplications from './NewApplications';
-import MyConnections from './MyConnections';
-import Interviews from './Interviews';
-import Wrapper from './Applications.styled';
+import colors from 'utils/colors';
+import { updateApplicationAction, removeApplicationAction } from 'redux/applications';
+import { AlertMsg, Loading, ListEx, Icons, Logo, JobseekerDetails, Mark } from 'components';
 
-const Option = Select.Option;
-const TabPane = Tabs.TabPane;
+const { confirm } = Modal;
+
+const TYPE_NEW = 'apps';
+const TYPE_CONNS = 'conns';
+const TYPE_INTERVIEW = 'interviews';
+const TYPE_OFFER = 'offered';
+const TYPE_HIRE = 'hired';
 
 /* eslint-disable react/prop-types */
 class Applications extends React.Component {
   state = {
-    searchText: ''
+    selectedId: null
   };
 
   componentWillMount() {
-    const { jobId, job, location, history } = this.props;
-    const { id } = job || {};
-    const { tab } = location.state || {};
-
-    if (jobId !== id) {
-      const paths = location.pathname.split('/');
-      paths[4] = id;
-      history.replace(paths.join('/'));
-    } else if (job) {
-      !tab && this.findJobseekers(this.props);
-
-      this.props.selectBusinessAction(job.location_data.business_data.id);
-      helper.saveData('apps_jobId', jobId);
+    const { pathname, state } = this.props.location;
+    this.type = pathname.split('/')[3];
+    const { tab, id } = state || {};
+    if (tab === this.type) {
+      this.setState({ selectedId: id });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.findJobseekers(nextProps);
-
-    const { jobId, job } = nextProps;
-    if (jobId !== this.props.jobId && job) {
-      this.props.selectBusinessAction(job.location_data.business_data.id);
-      helper.saveData('apps_jobId', jobId);
+    if (this.props.applications.length != nextProps.applications.length) {
+      const selectedApp = helper.getItemById(nextProps.applications, this.state.selectedId);
+      !selectedApp && this.onSelect();
     }
   }
 
-  findJobseekers = ({ jobId, location }) => {
-    const paths = location.pathname.split('/');
-    if (paths[3] === 'find' && this.filerJobId !== jobId) {
-      this.filerJobId = jobId;
-      this.props.findJobseekersAction({
-        params: {
-          job: jobId
+  onSelect = selectedId => {
+    this.setState({ selectedId });
+  };
+
+  onConnect = ({ id }, event) => {
+    event && event.stopPropagation();
+
+    const business = this.props.job.location_data.business_data;
+
+    if (business.tokens === 0) {
+      confirm({
+        title: 'You need 1 credit',
+        okText: `Credits`,
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          this.props.history.push(`/recruiter/settings/credits/${business.id}`);
         }
       });
+      return;
     }
+
+    confirm({
+      title: 'Yes, I want to make this connection (1 credit)',
+      okText: `Connect`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.updateApplicationAction({
+          appId: id,
+          data: {
+            connect: DATA.APP.ESTABLISHED
+          },
+          onSuccess: () => {
+            message.success('The application is connected');
+          },
+          onFail: () => {
+            message.error('There was an error connecting the application');
+          }
+        });
+      }
+    });
   };
 
-  selectJob = id => {
-    const paths = this.props.location.pathname.split('/');
-    paths[4] = id;
-    this.props.history.push(paths.join('/'));
+  onMessage = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  selecteTab = tab => {
-    const paths = this.props.location.pathname.split('/');
-    paths[3] = tab;
-    this.props.history.push(paths.join('/'));
+  onShortlist = ({ id, shortlisted }) => {
+    this.props.updateApplicationAction({
+      appId: id,
+      data: {
+        shortlisted: !shortlisted
+      }
+    });
   };
 
-  addApplication = () => {
-    this.props.history.push({ pathname: `/recruiter/applications/add`, state: { jobId: this.props.jobId } });
+  onOffer = ({ id }) => {
+    this.props.updateApplicationAction({
+      appId: id,
+      data: {
+        offer: true
+      }
+    });
   };
 
-  changeSearchText = searchText => {
-    this.setState({ searchText });
+  onRevoke = ({ id }) => {
+    this.props.updateApplicationAction({
+      appId: id,
+      data: {
+        revoke: true
+      }
+    });
   };
 
-  jobsFilterOption = (input, option) => option.props.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  onRemove = ({ id }, event) => {
+    event && event.stopPropagation();
 
-  render() {
-    const {
-      jobId,
-      jobs,
-      job,
-      jobseekers,
-      newApplications,
-      myConnections,
-      myShortlist,
-      location,
-      interviews
-    } = this.props;
-    const searchText = this.state.searchText.toLowerCase();
-    const activeKey = location.pathname.split('/')[3];
-    const appCount = newApplications.length;
-    const connCount = myConnections.length;
-    const shortCount = myShortlist.length;
-    const interviewCount = interviews.length;
+    confirm({
+      title: 'Are you sure you want to delete this applicaton?',
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeApplicationAction({
+          appId: id,
+          onSuccess: () => {
+            message.success('The application is removed');
+          },
+          onFail: () => {
+            message.error('There was an error removing the application');
+          }
+        });
+      }
+    });
+  };
+
+  filterOption = ({ job_seeker }) =>
+    helper
+      .getFullName(job_seeker)
+      .toLowerCase()
+      .indexOf(this.props.searchText) >= 0;
+
+  renderApplication = app => {
+    const { id, job_seeker, interview, messages, loading, status } = app;
+    const image = helper.getAvatar(job_seeker);
+    const name = helper.getFullName(job_seeker);
+    let description;
+    const actions = [
+      <Tooltip placement="bottom" title="Remove">
+        <span onClick={e => this.onRemove(app, e)}>
+          <Icons.Times />
+        </span>
+      </Tooltip>
+    ];
+
+    if (this.type === TYPE_NEW) {
+      description = <div className="single-line">{job_seeker.description}</div>;
+      actions.unshift(
+        <Tooltip placement="bottom" title="Connect">
+          <span onClick={e => this.onConnect(app, e)}>
+            <Icons.Link />
+          </span>
+        </Tooltip>
+      );
+    }
+
+    if (this.type === TYPE_CONNS) {
+      description = interview && (
+        <div className={`single-line ${interview.status}`}>
+          Interview: {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+        </div>
+      );
+      if (messages.length) {
+        actions.unshift(
+          <Tooltip placement="bottom" title="Message">
+            <span onClick={e => this.onMessage(app, e)}>
+              <Icons.CommentAlt />
+            </span>
+          </Tooltip>
+        );
+      }
+    }
+
+    if (this.type === TYPE_INTERVIEW) {
+      const interview = app.interview || app.interviews.slice(-1)[0];
+      let INTERVIEW_STATUS = {
+        PENDING: 'Interview request sent',
+        ACCEPTED: 'Interview accepted',
+        COMPLETED: 'This interview is done',
+        CANCELLED: `Interview cancelled by ${
+          interview.cancelled_by === DATA.ROLE.RECRUITER ? 'Recruiter' : 'Jobseeker'
+        }`
+      };
+      description = (
+        <div className={`single-line ${interview.status}`} style={{ fontSize: '12px' }}>
+          {`${INTERVIEW_STATUS[interview.status]} (${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')})`}
+        </div>
+      );
+    }
 
     return (
-      <Wrapper className="container">
-        <Helmet title="Applications" />
+      <List.Item key={id} actions={actions} onClick={() => this.onSelect(id)} className={loading ? 'loading' : ''}>
+        <List.Item.Meta
+          avatar={
+            <span>
+              {<Logo src={image} size="80px" />}
+              {this.type === TYPE_CONNS && app.shortlisted && <Icons.Star />}
+            </span>
+          }
+          title={name}
+          description={description}
+        />
+        {status === DATA.APP.DECLINED && <Mark>Declined</Mark>}
+        {loading && <Loading className="mask" />}
+      </List.Item>
+    );
+  };
 
-        <PageHeader>
-          <h2>Applications</h2>
-        </PageHeader>
+  renderEmpty = () => {
+    if (this.type === TYPE_NEW) {
+      return (
+        <AlertMsg>
+          <span>
+            {`No applications at the moment. Once that happens you can go trough them here,
+              shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
+          </span>
+        </AlertMsg>
+      );
+    }
 
-        <PageSubHeader>
-          <Select
-            showSearch
-            value={jobId}
-            placeholder="Select a job"
-            filterOption={this.jobsFilterOption}
-            onChange={this.selectJob}
-          >
-            {jobs.map(item => {
-              const logo = helper.getJobLogo(item);
-              return (
-                <Option key={item.id} value={item.id}>
-                  <Logo src={logo} className="logo" size="22px" />
-                  {item.title}
-                  <span className="right-menu-item">
-                    {item.location_data.name}, {item.location_data.business_data.name}
-                  </span>
-                </Option>
-              );
-            })}
-          </Select>
+    if (this.type === TYPE_CONNS) {
+      return (
+        <AlertMsg>
+          <span>
+            {this.props.shortlist
+              ? `You have not shortlisted any applications for this job,
+                turn off shortlist view to see the non-shortlisted applications.`
+              : `No candidates have applied for this job yet.
+                Once that happens, their applications will appear here.`}
+          </span>
+        </AlertMsg>
+      );
+    }
 
-          <SearchBox width="200px" onChange={this.changeSearchText} />
-        </PageSubHeader>
+    if (this.type === TYPE_INTERVIEW) {
+      return (
+        <AlertMsg>
+          <span>
+            {`You have not requested any interviews yet. Once that happens,
+              their interviews will appear here.`}
+          </span>
+        </AlertMsg>
+      );
+    }
 
-        <PageSubHeader>
-          <div />
-          <LinkButton onClick={this.addApplication}>Add application</LinkButton>
-        </PageSubHeader>
+    return null;
+  };
 
-        <Tabs activeKey={activeKey} animated={false} onChange={this.selecteTab}>
-          <TabPane tab="Find Talent" key="find">
-            <FindTalent job={job} jobseekers={jobseekers} searchText={searchText} />
-          </TabPane>
+  render() {
+    const { job, applications } = this.props;
+    const selectedApp = helper.getItemById(applications, this.state.selectedId);
+    const isExternalApp = !((selectedApp || {}).messages || []).length;
 
-          <TabPane tab={`New Applications (${appCount})`} key="apps">
-            <NewApplications job={job} applications={newApplications} searchText={searchText} />
-          </TabPane>
+    return (
+      <div className={this.type}>
+        {job && (
+          <ListEx
+            data={applications}
+            renderItem={this.renderApplication}
+            filterOption={this.filterOption}
+            emptyRender={this.renderEmpty}
+          />
+        )}
 
-          <TabPane tab={`My Connections (${connCount})`} key="conns">
-            <MyConnections job={job} applications={myConnections} searchText={searchText} />
-          </TabPane>
+        <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
+            <JobseekerDetails
+              application={selectedApp}
+              defaultTab="interview"
+              actions={
+                <div>
+                  {this.type === TYPE_NEW && (
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
+                      Connect
+                    </Button>
+                  )}
 
-          <TabPane tab={`My Shortlist (${shortCount})`} key="shortlist">
-            <MyConnections job={job} applications={myShortlist} searchText={searchText} shortlist />
-          </TabPane>
+                  {this.type === TYPE_CONNS && (
+                    <div style={{ marginBottom: '24px' }}>
+                      <span style={{ marginRight: '5px' }}>Shortlisted</span>
+                      <Switch
+                        checked={selectedApp.shortlisted}
+                        disabled={selectedApp.loading}
+                        onChange={() => this.onShortlist(selectedApp)}
+                      />
+                    </div>
+                  )}
 
-          <TabPane tab={`Interviews (${interviewCount})`} key="interviews">
-            <Interviews job={job} applications={interviews} searchText={searchText} />
-          </TabPane>
-        </Tabs>
-      </Wrapper>
+                  {this.type !== TYPE_NEW && !isExternalApp && (
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
+                      Message
+                      {selectedApp.newMsgs > 0 && (
+                        <Badge
+                          count={selectedApp.newMsgs > 9 ? '9+' : selectedApp.newMsgs}
+                          style={{ backgroundColor: colors.yellow, marginLeft: '8px' }}
+                        />
+                      )}
+                    </Button>
+                  )}
+
+                  {(this.type === TYPE_CONNS || this.type === TYPE_INTERVIEW) && !isExternalApp && (
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onOffer(selectedApp)}>
+                      Offer
+                    </Button>
+                  )}
+
+                  {(this.type === TYPE_OFFER || this.type === TYPE_HIRE) && (
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onRevoke(selectedApp)}>
+                      Revoke
+                    </Button>
+                  )}
+
+                  <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
+                    Remove
+                  </Button>
+                </div>
+              }
+            />
+          )}
+        </Drawer>
+      </div>
     );
   }
 }
 
-export default connect(
-  (state, { match }) => {
-    const jobs = getJobsSelector(state).filter(({ status }) => status === DATA.JOB.OPEN);
-    const jobId = helper.str2int(match.params.jobId);
-    const jobId1 = jobId || helper.loadData('apps_jobId');
-    const job = helper.getItemById(jobs, jobId1) || jobs[0];
-    const id = (job || {}).id;
-    const applications = getApplicationsSelector(state);
-    const filteredApplications = applications.filter(({ job_data }) => job_data.id === id);
-    const newApplications = filteredApplications.filter(({ status }) => status === DATA.APP.CREATED);
-    const myConnections = filteredApplications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
-    const myShortlist = myConnections.filter(({ shortlisted }) => shortlisted);
-    const interviews = myConnections.filter(({ interview, interviews }) => interview || interviews.length);
-    interviews.sort((a, b) => {
-      let interview1 = a.interview || a.interviews.slice(-1)[0];
-      let interview2 = b.interview || b.interviews.slice(-1)[0];
-      return interview1.at < interview2.at ? 1 : -1;
-    });
-
-    return {
-      jobs,
-      jobId,
-      job,
-      jobseekers: state.rc_find.jobseekers,
-      newApplications,
-      myConnections,
-      myShortlist,
-      interviews
-    };
-  },
-  {
-    selectBusinessAction,
-    findJobseekersAction
-  }
-)(Applications);
+export default withRouter(
+  connect(
+    null,
+    {
+      updateApplicationAction,
+      removeApplicationAction
+    }
+  )(Applications)
+);

@@ -200,14 +200,18 @@ const Routers = ({ user }) => {
       <RcRoute exact path="/recruiter/applications/find/:jobId/:jobseekerId" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/apps" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/apps/:jobId" component={RCApplications} />
+      <RcRoute exact path="/recruiter/applications/add" component={AddApplication} />
       <RcRoute exact path="/recruiter/applications/conns" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/conns/:jobId" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/shortlist" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/shortlist/:jobId" component={RCApplications} />
-      <RcRoute exact path="/recruiter/applications/add" component={AddApplication} />
-      <RcRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
+      <RcRoute exact path="/recruiter/applications/offered" component={RCApplications} />
+      <RcRoute exact path="/recruiter/applications/offered/:jobId" component={RCApplications} />
+      <RcRoute exact path="/recruiter/applications/hired" component={RCApplications} />
+      <RcRoute exact path="/recruiter/applications/hired/:jobId" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/interviews" component={RCApplications} />
       <RcRoute exact path="/recruiter/applications/interviews/:jobId" component={RCApplications} />
+      <RcRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
       <Redirect exact from="/recruiter/jobs" to="/recruiter/jobs/business" />
       <RcRoute exact path="/recruiter/jobs/business" component={BusinessList} />
       <RcRoute exact path="/recruiter/jobs/business/add" component={BusinessEdit} />

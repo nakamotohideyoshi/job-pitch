@@ -29,8 +29,13 @@ export default styled.div`
         justify-content: space-evenly;
         font-size: 12px;
 
-        .PENDING {
+        .PENDING,
+        .OFFERED {
           color: ${colors.yellow};
+        }
+
+        .DECLINED {
+          color: ${colors.error};
         }
 
         .ACCEPTED {

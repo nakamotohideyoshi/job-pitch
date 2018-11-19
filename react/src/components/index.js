@@ -33,3 +33,5 @@ export { default as JobDetails } from './JobDetails';
 export { default as MessageThread } from './MessageThread';
 
 export { default as PasswordForm } from './PasswordForm';
+
+export { default as Mark } from './Mark';

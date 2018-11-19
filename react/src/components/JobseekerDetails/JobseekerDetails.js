@@ -25,11 +25,10 @@ const JobseekerDetails = ({ jobseekerData, application, actions, defaultTab }) =
     mobile = jobseeker.mobile_public && jobseeker.mobile;
   }
 
-  const { status, interview, interviews } = application || {};
-  const connected = application && status !== DATA.APP.CREATED;
+  const { status, interview, interviews, messages } = application || {};
   const { id: interviewId, status: interviewStatus } = interview || {};
-  const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
-  const isExternal = application && application.messages.length === 0;
+  const histories = (interviews || []).filter(({ id }) => id !== interviewId);
+  const isExternal = (messages || []).length === 0;
 
   return (
     <Wrapper>
@@ -129,13 +128,13 @@ const JobseekerDetails = ({ jobseekerData, application, actions, defaultTab }) =
           )}
         </TabPane>
 
-        {connected && !isExternal && (
+        {status === DATA.APP.ESTABLISHED && !isExternal && (
           <TabPane tab="Interview" key="interview">
             <Interview application={application} />
           </TabPane>
         )}
 
-        {connected && !isExternal && (
+        {status !== DATA.APP.CREATED && !isExternal && (
           <TabPane tab="Previous interviews" key="history">
             <Collapse bordered={false}>
               {histories.map(({ id, at, feedback, status, notes, cancelled_by }) => {

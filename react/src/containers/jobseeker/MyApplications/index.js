@@ -8,7 +8,7 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import colors from 'utils/colors';
 import { getApplicationsSelector } from 'redux/selectors';
-import { changeInterviewAction, removeInterviewAction } from 'redux/applications';
+import { updateApplicationAction, changeInterviewAction, removeInterviewAction } from 'redux/applications';
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, Logo, JobDetails } from 'components';
 import Wrapper from './styled';
 
@@ -38,7 +38,58 @@ class MyApplications extends React.Component {
     this.props.history.push(`/jobseeker/messages/${id}/`);
   };
 
-  onAccept = (app, event) => {
+  onAcceptOffer = (app, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      title: 'Are you sure you want to accept this offer?',
+      okText: `Accept`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.updateApplicationAction({
+          appId: app.id,
+          data: {
+            accept: true
+          },
+          onSuccess: () => {
+            message.success('The offer is accepted');
+          },
+          onFail: () => {
+            message.error('There was an error');
+          }
+        });
+      }
+    });
+  };
+
+  onDeclineOffer = (app, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      title: 'Are you sure you want to decline this offer?',
+      okText: `Ok`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.updateApplicationAction({
+          appId: app.id,
+          data: {
+            decline: true
+          },
+          onSuccess: () => {
+            message.success('The offer is declined');
+          },
+          onFail: () => {
+            message.error('There was an error');
+          }
+        });
+      }
+    });
+  };
+
+  onAcceptInterview = (app, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -62,7 +113,7 @@ class MyApplications extends React.Component {
     });
   };
 
-  onCancel = (app, event) => {
+  onCancelInterview = (app, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -93,13 +144,31 @@ class MyApplications extends React.Component {
   };
 
   renderApplication = app => {
-    const { id, job_data, interview } = app;
+    const { id, job_data, interview, status } = app;
     const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getJobSubName(job_data);
     const contractName = helper.getItemById(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemById(DATA.hours, hours).short_name;
     const sector = helper.getNameByID(DATA.sectors, job_data.sector);
+
+    let strStatus = null;
+    let statusClass = '';
+    if (status === DATA.APP.OFFERED) {
+      strStatus = 'Offer received';
+      statusClass = 'OFFERED';
+    } else if (status === DATA.APP.DECLINED) {
+      strStatus = 'Offer declined';
+      statusClass = 'DECLINED';
+    } else if (status === DATA.APP.ACCEPTED) {
+      strStatus = 'Offer accepted';
+      statusClass = 'ACCEPTED';
+    } else if (interview) {
+      strStatus =
+        (interview.status === 'PENDING' ? 'Interview request received\n' : 'Interview accepted\n') +
+        moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm');
+      statusClass = interview.status;
+    }
 
     return (
       <List.Item
@@ -118,10 +187,9 @@ class MyApplications extends React.Component {
           title={`${title} (${name})`}
           description={`${sector} (${contractName} / ${hoursName})`}
         />
-        {interview && (
-          <div style={{ width: '160px', whiteSpace: 'pre-line' }} className={interview.status}>
-            {interview.status === 'PENDING' ? 'Interview request received\n' : 'Interview accepted\n'}
-            {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+        {strStatus && (
+          <div style={{ width: '160px', whiteSpace: 'pre-line' }} className={statusClass}>
+            {strStatus}
           </div>
         )}
       </List.Item>
@@ -173,13 +241,42 @@ class MyApplications extends React.Component {
                       />
                     )}
                   </Button>
-                  {(interview || {}).status === 'PENDING' && (
-                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onAccept(selectedApp)}>
+                  {selectedApp.status === DATA.APP.OFFERED && (
+                    <Button
+                      type="primary"
+                      disabled={selectedApp.loading}
+                      onClick={() => this.onAcceptOffer(selectedApp)}
+                    >
+                      Accept Offer
+                    </Button>
+                  )}
+
+                  {selectedApp.status === DATA.APP.OFFERED && (
+                    <Button
+                      type="danger"
+                      disabled={selectedApp.loading}
+                      onClick={() => this.onDeclineOffer(selectedApp)}
+                    >
+                      Decline Offer
+                    </Button>
+                  )}
+
+                  {selectedApp.status === DATA.APP.ESTABLISHED && (interview || {}).status === 'PENDING' && (
+                    <Button
+                      type="primary"
+                      disabled={selectedApp.loading}
+                      onClick={() => this.onAcceptInterview(selectedApp)}
+                    >
                       Accept Interview
                     </Button>
                   )}
-                  {interview && (
-                    <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onCancel(selectedApp)}>
+
+                  {selectedApp.status === DATA.APP.ESTABLISHED && interview && (
+                    <Button
+                      type="danger"
+                      disabled={selectedApp.loading}
+                      onClick={() => this.onCancelInterview(selectedApp)}
+                    >
                       Cancel Interview
                     </Button>
                   )}
@@ -198,6 +295,7 @@ export default connect(
     applications: getApplicationsSelector(state)
   }),
   {
+    updateApplicationAction,
     changeInterviewAction,
     removeInterviewAction
   }

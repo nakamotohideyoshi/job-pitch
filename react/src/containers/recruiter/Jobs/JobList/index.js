@@ -18,10 +18,10 @@ import {
   ListEx,
   Icons,
   Logo,
-  ShareLinkDialog
+  ShareLinkDialog,
+  Mark
 } from 'components';
 import DeleteDialog from './DeleteDialog';
-import Mark from './Mark';
 import Wrapper from '../styled';
 
 /* eslint-disable react/prop-types */

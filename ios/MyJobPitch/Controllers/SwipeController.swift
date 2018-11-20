@@ -338,14 +338,14 @@ class SwipeController: MJPController {
             API.shared().createApplication(application) { (result, error) in
                 
                 if result != nil {
-                    AppData.getApplication(((result as! Application).id)!) { (result, error) in
-                        if result != nil {
-                            self.searchJob = result!.job
+                    AppData.updateJob(self.searchJob.id, complete: { (job, error) in
+                        if job != nil {
+                            self.searchJob = job
                             self.updateTokens()
                         } else {
                             self.handleError(error)
                         }
-                    }
+                    })
                     self.removeCard()
                 } else {
                     self.handleError(error)

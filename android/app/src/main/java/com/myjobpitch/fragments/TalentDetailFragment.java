@@ -123,26 +123,10 @@ public class TalentDetailFragment extends BaseFragment {
         }
 
         if (jobSeeker == null) {
-            showLoading(view);
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    load();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
-        } else {
-            load();
+            jobSeeker = AppData.jobSeeker;
         }
+
+        load();
 
         return view;
     }

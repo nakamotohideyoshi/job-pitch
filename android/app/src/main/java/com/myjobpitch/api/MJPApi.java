@@ -60,6 +60,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -379,7 +380,7 @@ public class MJPApi {
         delete(getUrl("user-job-images", id));
     }
 
-    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv) {
+    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv, boolean removedCV) {
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         for (Field field : jobSeeker.getClass().getDeclaredFields()) {
@@ -387,17 +388,15 @@ public class MJPApi {
             try {
                 String name = field.getName();
                 Object value = field.get(jobSeeker);
-                if (!name.equals("pitches")) {
-                    parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
-                }
+                parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
             } catch (Exception e) {
             }
         }
         if (profileImage != null) {
             parts.put("profile_image", Arrays.asList(new Object[] {profileImage}));
         }
-        if (cv != null) {
-            parts.put("cv", Arrays.asList(new Object[] {cv}));
+        if (cv != null || removedCV) {
+            parts.put("cv", Arrays.asList(new Object[] {cv != null ? cv : ""}));
         }
 
         HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PATCH;

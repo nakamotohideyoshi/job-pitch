@@ -135,9 +135,8 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
                 applicationForCreation.setJob(job.getId());
                 applicationForCreation.setJob_seeker(jobSeeker.getId());
                 applicationForCreation.setShortlisted(false);
-                applicationForCreation = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-                Application application = MJPApi.shared().get(Application.class, applicationForCreation.getId());
-                job = application.getJob_data();
+                MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                job = MJPApi.shared().getUserJob(job.getId());
             }
         }).addListener(new APITaskListener() {
             @Override

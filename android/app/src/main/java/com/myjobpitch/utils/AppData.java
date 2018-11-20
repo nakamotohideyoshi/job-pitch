@@ -118,12 +118,12 @@ public class AppData {
         jobSeeker = null;
         profile = null;
 
-        businesses.clear();
-        workplaces.clear();
-        jobs.clear();
-        businessUsers.clear();
-        jobSeekers.clear();
-        applications.clear();
+        businesses = new ArrayList<>();
+        workplaces = new ArrayList<>();
+        jobs = new ArrayList<>();
+        businessUsers = new ArrayList<>();
+        jobSeekers = new ArrayList<>();
+        applications = new ArrayList<>();
 
         stopTimer();
     }

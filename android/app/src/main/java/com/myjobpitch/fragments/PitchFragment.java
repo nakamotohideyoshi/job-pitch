@@ -63,7 +63,7 @@ public class PitchFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pitch, container, false);
         ButterKnife.bind(this, view);
 
-        mUploadButton.setVisibility(View.INVISIBLE);
+        mUploadButton.setVisibility(View.GONE);
 
         if (jobSeeker == null) {
             showLoading(view);
@@ -96,7 +96,7 @@ public class PitchFragment extends BaseFragment {
 
     void updateInterface() {
         mPlayIcon.setVisibility(View.VISIBLE);
-        mUploadButton.setVisibility(View.INVISIBLE);
+        mUploadButton.setVisibility(View.GONE);
 
         if (mVideoPath != null) {
             mUploadButton.setVisibility(View.VISIBLE);
@@ -106,11 +106,11 @@ public class PitchFragment extends BaseFragment {
             if (mPitch != null) {
                 AppHelper.loadImage(mPitch.getThumbnail(), mImagePreview);
             } else {
-                mPlayIcon.setVisibility(View.INVISIBLE);
+                mPlayIcon.setVisibility(View.GONE);
             }
         }
 
-        mSkipButton.setVisibility(mPitch == null ? View.VISIBLE : View.INVISIBLE);
+        mSkipButton.setVisibility(mPitch == null ? View.VISIBLE : View.GONE);
     }
 
     void completePitchUpload() {
@@ -144,6 +144,11 @@ public class PitchFragment extends BaseFragment {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("https://vimeo.com/255467562"));
         getActivity().startActivity(intent);
+    }
+
+    @OnClick(R.id.skip_button)
+    void onSkip() {
+        getApp().setRootFragement(R.id.menu_find_job);
     }
 
     @OnClick(R.id.upload_button)

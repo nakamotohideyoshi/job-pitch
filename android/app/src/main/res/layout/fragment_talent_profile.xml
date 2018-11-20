@@ -336,7 +336,7 @@
                     android:singleLine="true"
                     android:textSize="14sp" />
                 <ImageButton
-                    android:id="@+id/job_seeker_cv_remove"
+                    android:id="@+id/job_seeker_cv_clear"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="8dp"
@@ -353,6 +353,15 @@
             <Button
                 android:id="@+id/job_seeker_cv_view"
                 android:text="View CV"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/button_yellow"
+                android:theme="@style/Button"/>
+
+            <Button
+                android:id="@+id/job_seeker_cv_remove"
+                android:text="Remove CV"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="8dp"

@@ -118,6 +118,8 @@ public class TalentProfileFragment extends FormFragment {
     @BindView(R.id.job_seeker_cv_view)
     Button mCVViewButton;
 
+    @BindView(R.id.job_seeker_cv_clear)
+    View mCVClearButton;
     @BindView(R.id.job_seeker_cv_remove)
     View mCVRemoveButton;
     @BindView(R.id.job_seeker_cv_comment)
@@ -136,6 +138,7 @@ public class TalentProfileFragment extends FormFragment {
     boolean isAvatarSelector = false;
     Uri avatarUri;
     Uri cvUri;
+    boolean removedCV = false;
 
     Pitch mPitch;
     String mVideoPath;
@@ -219,6 +222,7 @@ public class TalentProfileFragment extends FormFragment {
         mDescriptionView.setText(jobSeeker.getDescription());
 
         mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
+        mCVRemoveButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
         mPitch = jobSeeker.getPitch();
         mPitchPlayButton.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
@@ -303,9 +307,16 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_cv_remove)
     void onCVRemove() {
+        removedCV = true;
+        mCVViewButton.setVisibility(View.GONE);
+        mCVRemoveButton.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.job_seeker_cv_clear)
+    void onCVClear() {
         cvUri = null;
         mCVCommentView.setText("");
-        mCVRemoveButton.setVisibility(View.GONE);
+        mCVClearButton.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.job_seeker_cv_upload)
@@ -387,7 +398,7 @@ public class TalentProfileFragment extends FormFragment {
                 }
                 if (cvUri != null) {
                     mCVCommentView.setText("CV added: save to upload.");
-                    mCVRemoveButton.setVisibility(View.VISIBLE);
+                    mCVClearButton.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -494,7 +505,7 @@ public class TalentProfileFragment extends FormFragment {
                     }
                 }
 
-                AppData.jobSeeker = MJPApi.shared().updateJobSeeker(AppData.user.getJob_seeker(), jobSeekerForUpdate, avatarFileResource, cvFileResource);
+                AppData.jobSeeker = MJPApi.shared().updateJobSeeker(AppData.user.getJob_seeker(), jobSeekerForUpdate, avatarFileResource, cvFileResource, removedCV);
 
                 if (avatarFile != null) {
                     avatarFile.delete();

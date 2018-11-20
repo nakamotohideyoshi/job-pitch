@@ -32,7 +32,7 @@ export default () => {
         </div>
 
         <div className="follow">
-          <NewTabLink url="https://www.facebook.com/myjobpitchapp/" icon={Icons.FacebookF} />
+          <NewTabLink url="https://www.facebook.com/myjobpitch/" icon={Icons.FacebookF} />
           <NewTabLink url="https://twitter.com/myjobpitch/" icon={Icons.Twitter} />
           <NewTabLink url="https://www.linkedin.com/company/my-job-pitch/" icon={Icons.LinkedinIn} />
         </div>

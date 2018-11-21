@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="100" id="KAz-D5-ZWh" customClass="MessageCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="100" id="KAz-D5-ZWh" customClass="MessageCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KAz-D5-ZWh" id="ieN-cz-pu7">
@@ -1859,62 +1859,48 @@ sdafsdf</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUC-Xl-VsS">
-                                <rect key="frame" x="0.0" y="20" width="300" height="44"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jxJ-6W-QkE">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="162.5"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar" translatesAutoresizingMaskIntoConstraints="NO" id="isF-z3-7Bf">
+                                        <rect key="frame" x="20" y="30" width="60" height="60"/>
+                                        <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="isF-z3-7Bf" secondAttribute="height" multiplier="1:1" id="byJ-1Z-7OT"/>
+                                            <constraint firstAttribute="height" constant="60" id="uvu-pM-7wC"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zfh-no-53l">
+                                        <rect key="frame" x="20" y="105" width="335" height="19.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="user@email.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sId-RY-NC4">
+                                        <rect key="frame" x="20" y="129.5" width="335" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Wx1-Sk-rXg"/>
+                                    <constraint firstItem="sId-RY-NC4" firstAttribute="leading" secondItem="zfh-no-53l" secondAttribute="leading" id="ElS-XB-PxK"/>
+                                    <constraint firstItem="zfh-no-53l" firstAttribute="top" secondItem="isF-z3-7Bf" secondAttribute="bottom" constant="15" id="KDU-wY-r8f"/>
+                                    <constraint firstItem="sId-RY-NC4" firstAttribute="top" secondItem="zfh-no-53l" secondAttribute="bottom" constant="5" id="RzB-yX-xrU"/>
+                                    <constraint firstItem="sId-RY-NC4" firstAttribute="trailing" secondItem="zfh-no-53l" secondAttribute="trailing" id="TPY-GH-Acj"/>
+                                    <constraint firstAttribute="bottom" secondItem="sId-RY-NC4" secondAttribute="bottom" constant="15" id="mnP-Mx-Ub3"/>
+                                    <constraint firstItem="zfh-no-53l" firstAttribute="leading" secondItem="isF-z3-7Bf" secondAttribute="leading" id="qx5-IK-OVP"/>
+                                    <constraint firstItem="isF-z3-7Bf" firstAttribute="leading" secondItem="jxJ-6W-QkE" secondAttribute="leading" constant="20" id="rIX-aC-p6I"/>
+                                    <constraint firstAttribute="trailing" secondItem="zfh-no-53l" secondAttribute="trailing" constant="20" id="yQD-cy-2Dl"/>
+                                    <constraint firstItem="isF-z3-7Bf" firstAttribute="top" secondItem="jxJ-6W-QkE" secondAttribute="top" constant="30" id="yT7-oH-HGF"/>
                                 </constraints>
-                                <attributedString key="attributedText">
-                                    <fragment content="My Job">
-                                        <attributes>
-                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="22" name="Georgia-Bold"/>
-                                            <integer key="NSLigature" value="0"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" defaultTabInterval="34.600000000000001" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="34.599998474121094">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content=" ">
-                                        <attributes>
-                                            <color key="NSColor" red="0.85882352941176465" green="0.17254901960784313" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="22" name="Georgia-Bold"/>
-                                            <integer key="NSLigature" value="0"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" defaultTabInterval="34.600000000000001" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="34.599998474121094">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content="Pitch">
-                                        <attributes>
-                                            <color key="NSColor" red="0.0" green="0.70196078431372544" blue="0.63529411764705879" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="22" name="Georgia-Bold"/>
-                                            <integer key="NSLigature" value="0"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" defaultTabInterval="34.600000000000001" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="34.599998474121094">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="54" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D9g-hO-Rqn">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="162.5" width="375" height="504.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SideMenuCell" rowHeight="54" id="G5w-VF-CDU" customClass="SideMenuCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SideMenuCell" rowHeight="54" id="G5w-VF-CDU" customClass="SideMenuCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G5w-VF-CDU" id="hPz-8K-yfZ">
@@ -1931,7 +1917,7 @@ sdafsdf</string>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKa-jp-9PP">
                                                     <rect key="frame" x="62" y="16" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i63-Wb-hqp" customClass="BadgeIcon" customModule="MyJobPitch" customModuleProvider="target">
@@ -1942,7 +1928,6 @@ sdafsdf</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="afm-T6-kA3" firstAttribute="leading" secondItem="hPz-8K-yfZ" secondAttribute="leading" constant="15" id="8he-CV-ZxR"/>
                                                 <constraint firstItem="LKa-jp-9PP" firstAttribute="centerY" secondItem="afm-T6-kA3" secondAttribute="centerY" id="DKt-oQ-SOy"/>
@@ -1966,24 +1951,26 @@ sdafsdf</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="D9g-hO-Rqn" firstAttribute="top" secondItem="jUC-Xl-VsS" secondAttribute="bottom" id="6bx-Yu-tS7"/>
-                            <constraint firstItem="jUC-Xl-VsS" firstAttribute="leading" secondItem="cbm-M7-0PW" secondAttribute="leading" id="BAx-4m-nld"/>
-                            <constraint firstItem="jUC-Xl-VsS" firstAttribute="width" secondItem="cbm-M7-0PW" secondAttribute="width" multiplier="0.8" id="EcP-RO-tWa"/>
+                            <constraint firstItem="jxJ-6W-QkE" firstAttribute="top" secondItem="cbm-M7-0PW" secondAttribute="top" id="D9q-1j-fD8"/>
+                            <constraint firstItem="D9g-hO-Rqn" firstAttribute="top" secondItem="jxJ-6W-QkE" secondAttribute="bottom" id="DDe-qO-rUT"/>
                             <constraint firstItem="D9g-hO-Rqn" firstAttribute="leading" secondItem="cbm-M7-0PW" secondAttribute="leading" id="YJa-ER-1mn"/>
-                            <constraint firstItem="jUC-Xl-VsS" firstAttribute="top" secondItem="w0K-oh-TKe" secondAttribute="bottom" id="ZU8-ei-msO"/>
                             <constraint firstItem="D7F-at-GrA" firstAttribute="top" secondItem="D9g-hO-Rqn" secondAttribute="bottom" id="b85-UF-ENo"/>
                             <constraint firstAttribute="trailing" secondItem="D9g-hO-Rqn" secondAttribute="trailing" id="ezZ-MS-vKo"/>
+                            <constraint firstAttribute="trailing" secondItem="jxJ-6W-QkE" secondAttribute="trailing" id="lPt-W0-QRd"/>
+                            <constraint firstItem="jxJ-6W-QkE" firstAttribute="leading" secondItem="cbm-M7-0PW" secondAttribute="leading" id="sS4-Ix-gAf"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="emailView" destination="sId-RY-NC4" id="Ywq-0L-Qpt"/>
+                        <outlet property="nameView" destination="zfh-no-53l" id="YUu-5B-qfh"/>
+                        <outlet property="pictureView" destination="isF-z3-7Bf" id="z2a-Kd-IGY"/>
                         <outlet property="tableView" destination="D9g-hO-Rqn" id="nbd-gd-3N9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vlD-q1-lWC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-11784" y="-4410"/>
+            <point key="canvasLocation" x="-11784.799999999999" y="-4410.0449775112447"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="9GE-Di-5Kb">
@@ -2301,11 +2288,11 @@ sdafsdf</string>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4JO-aw-2Qv" customClass="AppInfoMiddleView" customModule="MyJobPitch" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="567" height="89"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="89"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999Credit" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fx9-wE-gEX">
-                                                            <rect key="frame" x="501" y="50" width="54" height="14"/>
+                                                            <rect key="frame" x="276" y="50" width="54" height="14"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -2431,7 +2418,7 @@ sdafsdf</string>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="moQ-f3-aeM" customClass="AppInfoMiddleView" customModule="MyJobPitch" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="567" height="89"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="89"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
@@ -4258,7 +4245,7 @@ sdafsdf</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileCell" rowHeight="50" id="nzo-B5-0ue" customClass="FileCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileCell" rowHeight="50" id="nzo-B5-0ue" customClass="FileCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nzo-B5-0ue" id="OSP-T5-Qi6">
@@ -4393,7 +4380,7 @@ sdafsdf</string>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IFc-K7-DWB" customClass="AppInfoMiddleView" customModule="MyJobPitch" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="567" height="89"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="89"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
@@ -4523,7 +4510,7 @@ sdafsdf</string>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kxb-sx-eP7" customClass="AppInfoSmallView" customModule="MyJobPitch" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="567" height="60"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="60"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
@@ -4588,7 +4575,7 @@ sdafsdf</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileCell" rowHeight="50" id="Ye8-XR-eD2" customClass="FileCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileCell" rowHeight="50" id="Ye8-XR-eD2" customClass="FileCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ye8-XR-eD2" id="d3R-MQ-WJS">
@@ -4962,7 +4949,7 @@ sdafsdf</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BusinessUserCell" rowHeight="80" id="b5N-AI-VDY" customClass="BusinessUserCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BusinessUserCell" rowHeight="80" id="b5N-AI-VDY" customClass="BusinessUserCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b5N-AI-VDY" id="QOD-En-lOG">
@@ -5320,7 +5307,7 @@ sdafsdf</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="InterviewCell" rowHeight="173" id="eUD-y2-BWn" userLabel="InterviewCell" customClass="InterviewCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="InterviewCell" rowHeight="173" id="eUD-y2-BWn" userLabel="InterviewCell" customClass="InterviewCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="173"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eUD-y2-BWn" id="c8e-eR-khU">
@@ -6433,7 +6420,7 @@ dsfasd</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RCApplicationCell" rowHeight="89" id="j8D-yM-Lzp" userLabel="ApplicationCell" customClass="RCApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RCApplicationCell" rowHeight="89" id="j8D-yM-Lzp" userLabel="ApplicationCell" customClass="RCApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="89"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j8D-yM-Lzp" id="18m-5N-pGo">
@@ -6519,7 +6506,7 @@ dsfasd</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ApplicationCell" rowHeight="89" id="SSm-fa-6yy" userLabel="ApplicationCell" customClass="ApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ApplicationCell" rowHeight="89" id="SSm-fa-6yy" userLabel="ApplicationCell" customClass="ApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="89"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SSm-fa-6yy" id="A6Q-Pi-jY8">
@@ -7738,7 +7725,7 @@ et dolore magna aliqua.</string>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m4k-Ek-YY0" customClass="AppInfoMiddleView" customModule="MyJobPitch" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="567" height="89"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="342" height="89"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
@@ -7908,7 +7895,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HRJobCell" rowHeight="89" id="BxB-lk-e7h" userLabel="ApplicationCell" customClass="HRJobCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HRJobCell" rowHeight="89" id="BxB-lk-e7h" userLabel="ApplicationCell" customClass="HRJobCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="89"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BxB-lk-e7h" id="3lt-Ql-jlG">
@@ -7994,7 +7981,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HREmployeeCell" rowHeight="89" id="Kcu-EG-JcN" userLabel="ApplicationCell" customClass="ApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="HREmployeeCell" rowHeight="89" id="Kcu-EG-JcN" userLabel="ApplicationCell" customClass="ApplicationCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="89"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kcu-EG-JcN" id="A5k-FI-gXx">
@@ -8619,7 +8606,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="EmployeeCell" rowHeight="89" id="a68-Di-9qf" userLabel="ApplicationCell" customClass="HRJobCell" customModule="MyJobPitch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="EmployeeCell" rowHeight="89" id="a68-Di-9qf" userLabel="ApplicationCell" customClass="HRJobCell" customModule="MyJobPitch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="89"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="a68-Di-9qf" id="Otv-eN-XYo">

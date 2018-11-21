@@ -50,6 +50,9 @@ class SideMenuController: UIViewController {
     }
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var pictureView: UIImageView!
+    @IBOutlet weak var nameView: UILabel!
+    @IBOutlet weak var emailView: UILabel!
     
     var maskButton: UIButton!
     
@@ -66,6 +69,9 @@ class SideMenuController: UIViewController {
                              action: #selector(SWRevealViewController.revealToggle(_:)),
                              for: .touchUpInside)
         frontController?.view.addSubview(maskButton)
+        
+        pictureView.layer.cornerRadius = 30
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,13 +80,19 @@ class SideMenuController: UIViewController {
         data = [String]()
         
         if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
+            AppHelper.loadPhoto(AppData.jobseeker, imageView: pictureView, completion: nil)
+            nameView.text = AppData.jobseeker.getFullName()
             data = SideMenuController.jobseekerMenu
         } else {
+            AppHelper.loadLogo(AppData.businesses[0], imageView: pictureView, completion: nil)
+            nameView.text = AppData.businesses[0].name
             data = SideMenuController.recruiterMenu
             if (AppData.businesses.filter { $0.hr_access }.count != 0) {
                 data.insert("hr", at: 7)
             }
         }
+
+        emailView.text = AppData.email
         
         if (AppData.user.employees.count != 0) {
             data.insert("employees", at: 7)
@@ -97,8 +109,6 @@ class SideMenuController: UIViewController {
             maskButton = nil
         }
     }
-    
-    
     
     static func pushController(id: String) {
                 
@@ -142,10 +152,13 @@ extension SideMenuController: UITableViewDataSource {
         
         let image = UIImage(named: item["icon"]!)
         
+        cell.iconView.image = image?.withRenderingMode(.alwaysTemplate)
         if SideMenuController.currentID == id {
-            cell.iconView.image = image?.withRenderingMode(.alwaysTemplate)
+            cell.backgroundColor = AppData.lightGreyColor
             cell.iconView.tintColor = AppData.greenColor
+            cell.iconView.alpha = 1
             cell.nameLabel.textColor = AppData.greenColor
+            cell.nameLabel.alpha = 1
         } else {
             cell.isUserInteractionEnabled = true
             let pers = item["per"]
@@ -159,9 +172,11 @@ extension SideMenuController: UITableViewDataSource {
                 }
             }
             
-            cell.iconView.image = image
-            cell.iconView.alpha = cell.isUserInteractionEnabled ? 0.8 : 0.3
-            cell.nameLabel.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: cell.isUserInteractionEnabled ? 0.8 : 0.3)
+            cell.backgroundColor = UIColor.white
+            cell.iconView.tintColor = AppData.darkColor
+            cell.iconView.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
+            cell.nameLabel.textColor = AppData.darkColor
+            cell.nameLabel.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
         }
         
         let newMessageCount = AppData.newMessageCount
@@ -172,18 +187,18 @@ extension SideMenuController: UITableViewDataSource {
             cell.badge.isHidden = true
         }
         
-        if (cell.layer.sublayers?.count)! <= 2 {
-            if indexPath.row == 0 {
-                cell.addLine(frame: CGRect(x: 10, y: 0, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                             color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
-                cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                             color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
-            }
-            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                         color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
-            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                         color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
-        }
+//        if (cell.layer.sublayers?.count)! <= 2 {
+//            if indexPath.row == 0 {
+//                cell.addLine(frame: CGRect(x: 10, y: 0, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+//                             color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
+//                cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+//                             color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
+//            }
+//            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+//                         color: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
+//            cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
+//                         color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.06))
+//        }
         
         return cell
     }

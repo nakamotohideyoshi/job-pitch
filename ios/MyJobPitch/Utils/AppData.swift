@@ -17,8 +17,8 @@ class AppData: NSObject {
     
     static let greenColor = UIColor(red: 0/255.0, green: 182/255.0, blue: 164/255.0, alpha: 1)
     static let yellowColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 1)
-    static let lightGreyColor = UIColor(red: 235/255.0, green: 235/255.0, blue: 235/255.0, alpha: 1)
-    static let greyColor = UIColor(red: 214/255.0, green: 214/255.0, blue: 214/255.0, alpha: 1)
+    static let lightGreyColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
+    static let greyColor = UIColor(red: 183/255.0, green: 183/255.0, blue: 183/255.0, alpha: 1)
     static let darkColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 1)
     
     static let DEFAULT_REFRESH_TIME = 30

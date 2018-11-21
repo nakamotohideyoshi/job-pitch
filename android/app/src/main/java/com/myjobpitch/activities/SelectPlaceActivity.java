@@ -86,9 +86,10 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
-        Popup popup = new Popup(this, "Tap on the city or location that you would like to set and tap \"select\" on the upper right corner", true);
-        popup.addGreyButton("Got it!", null);
-        popup.show();
+        new Popup(this)
+                .setMessage("Tap on the city or location that you would like to set and tap \"select\" on the upper right corner")
+                .addGreyButton("Got it!", null)
+                .show();
     }
 
     void settingMap() {
@@ -162,7 +163,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
-//        Loading.show(this, "Loading...");
+//        LoadingView.show(this, "LoadingView...");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -224,7 +225,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             }
         }
 
-//        Loading.hide();
+//        LoadingView.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }
@@ -235,7 +236,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult var1) {
-//        Loading.hide();
+//        LoadingView.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }

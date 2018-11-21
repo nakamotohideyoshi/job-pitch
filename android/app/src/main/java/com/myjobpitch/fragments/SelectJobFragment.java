@@ -1,9 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -16,10 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.tasks.APIAction;
@@ -27,8 +23,6 @@ import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +62,7 @@ public class SelectJobFragment extends BaseFragment {
 
         // set header
 
-        pageIconView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
+        pageIconView.setColorFilter(ContextCompat.getColor(getApp(), R.color.greenColor));
         pageIconView.setImageDrawable(getApp().getCurrentMenu().getIcon());
 
         final int pageId = getApp().getCurrentMenuID();
@@ -99,7 +93,7 @@ public class SelectJobFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -191,7 +185,7 @@ public class SelectJobFragment extends BaseFragment {
             BusinessListFragment fragment = new BusinessListFragment();
             getApp().pushFragment(fragment);
         } else {
-            BusinessDetailFragment fragment = new BusinessDetailFragment();
+            BusinessDetailsFragment fragment = new BusinessDetailsFragment();
             fragment.businessId = AppData.user.getBusinesses().get(0);
             getApp().pushFragment(fragment);
         }

@@ -14,7 +14,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.BusinessUserForCreation;
 import com.myjobpitch.api.data.BusinessUserForUpdate;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -52,10 +52,10 @@ public class BusinessUserEditFragment extends FormFragment {
 
     public BusinessUser businessUser;
 
-    public List<Location> locations;
+    public List<Workplace> workplaces;
     public Integer businessId;
     public Boolean isEditMode = true;
-    public List<Integer> selectedLocations;
+    public List<Integer> selectedWorkplaces;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,16 +74,16 @@ public class BusinessUserEditFragment extends FormFragment {
             deleteButton.setVisibility(View.VISIBLE);
             saveButton.setText("Save");
 
-            selectedLocations = businessUser.getLocations();
+            selectedWorkplaces = businessUser.getLocations();
 
             if (businessUser.getLocations().size() != 0) {
                 String locationTitle = "";
-                for (int i=0; i<locations.size(); i++) {
-                    if (businessUser.getLocations().indexOf(locations.get(i).getId()) > -1) {
+                for (int i = 0; i< workplaces.size(); i++) {
+                    if (businessUser.getLocations().indexOf(workplaces.get(i).getId()) > -1) {
                         if (locationTitle == "") {
-                            locationTitle = locations.get(i).getName();
+                            locationTitle = workplaces.get(i).getName();
                         } else {
-                            locationTitle = locationTitle + ", " + locations.get(i).getName();
+                            locationTitle = locationTitle + ", " + workplaces.get(i).getName();
                         }
                     }
                 }
@@ -97,7 +97,7 @@ public class BusinessUserEditFragment extends FormFragment {
             deleteButton.setVisibility(View.GONE);
             resendButton.setVisibility(View.GONE);
             saveButton.setText("Send Invitation");
-            selectedLocations = new ArrayList<Integer>();
+            selectedWorkplaces = new ArrayList<Integer>();
         }
 
         return  view;
@@ -106,25 +106,25 @@ public class BusinessUserEditFragment extends FormFragment {
 
 
     @OnClick(R.id.location_select_button)
-    void onLocation() {
+    void onWorkplace() {
         if(!activeView.isChecked()) {
             final ArrayList<SelectItem> items = new ArrayList<>();
-            for (Location location : locations) {
-                items.add(new SelectItem(location.getName(), selectedLocations.contains(location.getId())));
+            for (Workplace location : workplaces) {
+                items.add(new SelectItem(location.getName(), selectedWorkplaces.contains(location.getId())));
             }
 
             new SelectDialog(getApp(), "", items, true, new SelectDialog.Action() {
                 @Override
                 public void apply(int selectedIndex) {
                     String locationTitle = "";
-                    selectedLocations = new ArrayList<Integer>();
-                    for (int i = 0; i < locations.size(); i++) {
+                    selectedWorkplaces = new ArrayList<Integer>();
+                    for (int i = 0; i < workplaces.size(); i++) {
                         if (items.get(i).checked) {
-                            selectedLocations.add(locations.get(i).getId());
+                            selectedWorkplaces.add(workplaces.get(i).getId());
                             if (locationTitle == "") {
-                                locationTitle = locations.get(i).getName();
+                                locationTitle = workplaces.get(i).getName();
                             } else {
-                                locationTitle = locationTitle + ", " + locations.get(i).getName();
+                                locationTitle = locationTitle + ", " + workplaces.get(i).getName();
                             }
                         }
                     }
@@ -136,44 +136,45 @@ public class BusinessUserEditFragment extends FormFragment {
 
     @OnClick(R.id.administrator_active)
     void onActivate() {
-       if  (activeView.isChecked()) {
-           locationsView.setTextColor(Color.GRAY);
-       } else {
-           locationsView.setTextColor(Color.BLACK);
-       }
+        if  (activeView.isChecked()) {
+            locationsView.setTextColor(Color.GRAY);
+        } else {
+            locationsView.setTextColor(Color.BLACK);
+        }
     }
 
     @OnClick(R.id.user_delete)
     void deleteUser() {
 
-        Popup popup = new Popup(getContext(), "Delete", true);
-        popup.addGreenButton("Ok", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLoading();
-                new APITask(new APIAction() {
+        new Popup(getContext())
+                .setMessage("Delete")
+                .addGreenButton("Ok", new View.OnClickListener() {
                     @Override
-                    public void run() {
-                        MJPApi.shared().deleteBusinessUser(businessId, businessUser.getId());
+                    public void onClick(View view) {
+                        showLoading();
+                        new APITask(new APIAction() {
+                            @Override
+                            public void run() {
+                                MJPApi.shared().deleteBusinessUser(businessId, businessUser.getId());
+                            }
+                        }).addListener(new APITaskListener() {
+                            @Override
+                            public void onSuccess() {
+                                getApp().popFragment();
+                            }
+                            @Override
+                            public void onError(JsonNode errors) {
+                                errorHandler(errors);
+                            }
+                        }).execute();
                     }
-                }).addListener(new APITaskListener() {
+                })
+                .addGreyButton("Cancel", new View.OnClickListener() {
                     @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
+                    public void onClick(View v) {
                     }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
-        });
-        popup.addGreyButton("Cancel", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-        popup.show();
+                })
+                .show();
 
     }
 
@@ -205,19 +206,20 @@ public class BusinessUserEditFragment extends FormFragment {
     void saveUser() {
         showLoading();
 
-        if (!activeView.isChecked() && selectedLocations.size() < 1) {
-            Popup popup = new Popup(getContext(), "You must select at least one work place.", true);
-            popup.addGreenButton("Ok", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onLocation();
-                }
-            });
-            popup.show();
+        if (!activeView.isChecked() && selectedWorkplaces.size() < 1) {
+            new Popup(getContext())
+                    .setMessage("You must select at least one work place.")
+                    .addGreenButton("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onWorkplace();
+                        }
+                    })
+                    .show();
         } else {
             if (isEditMode) {
                 final BusinessUserForUpdate businessUserForUpdate = new BusinessUserForUpdate();
-                businessUserForUpdate.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedLocations);
+                businessUserForUpdate.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedWorkplaces);
                 new APITask(new APIAction() {
                     @Override
                     public void run() {
@@ -235,7 +237,7 @@ public class BusinessUserEditFragment extends FormFragment {
                 }).execute();
             } else {
                 final BusinessUserForCreation businessUserForCreation = new BusinessUserForCreation();
-                businessUserForCreation.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedLocations);
+                businessUserForCreation.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedWorkplaces);
                 businessUserForCreation.setEmail(emailView.getText().toString());
                 new APITask(new APIAction() {
                     @Override

@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/popup"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:id="@+id/board">
 
     <TextView
-        android:text="title"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
+        android:layout_marginBottom="8dp"
         android:ems="15"
         android:textColor="@android:color/white"
         android:textSize="@dimen/default_fontsize"/>
 
     <Button
-        android:text="Button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        style="@style/BaseButton"
         android:id="@+id/button1"
-        android:layout_marginTop="20dp"
-        android:theme="@style/Button"
-        android:visibility="gone"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#fff"
+        android:visibility="gone" />
 
     <Button
-        android:text="Button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        style="@style/BaseButton"
         android:id="@+id/button2"
-        android:layout_marginTop="20dp"
-        android:theme="@style/Button"
-        android:visibility="gone"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#fff"
+        android:visibility="gone" />
 
     <Button
-        android:text="Button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        style="@style/BaseButton"
         android:id="@+id/button3"
-        android:layout_marginTop="20dp"
-        android:theme="@style/Button"
-        android:visibility="gone"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#fff"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -7,17 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    tools:context=".pages.MainActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        tools:context=".MainActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -43,15 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:paddingLeft="@dimen/nav_horizontal_padding"
-        android:paddingRight="@dimen/nav_horizontal_padding"
         android:fitsSystemWindows="true"
-        android:background="@color/colorPrimary"
-        app:headerLayout="@layout/view_sidebar_header"
-        app:itemBackground="@drawable/menu_item"
-        app:itemIconTint="@color/menu_item"
-        app:itemTextColor="@color/menu_item"
-        app:theme="@style/NavigationTheme"
-        app:menu="@menu/menu"/>
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

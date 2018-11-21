@@ -84,7 +84,7 @@ public class DropboxActivity extends AppCompatActivity {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -118,16 +118,17 @@ public class DropboxActivity extends AppCompatActivity {
                     new GetFilesTask().execute();
                 } else {
                     String title = String.format("Do you want to download %s?", metadata.getName());
-                    Popup popup = new Popup(DropboxActivity.this, title, true);
-                    popup.addGreenButton("Download", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            selectedFile = (FileMetadata)metadata;
-                            download();
-                        }
-                    });
-                    popup.addGreyButton("Cancel", null);
-                    popup.show();
+                    new Popup(DropboxActivity.this)
+                            .setMessage(title)
+                            .addGreenButton("Download", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    selectedFile = (FileMetadata)metadata;
+                                    download();
+                                }
+                            })
+                            .addGreyButton("Cancel", null)
+                            .show();
                 }
             }
         });
@@ -294,12 +295,12 @@ public class DropboxActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-//            Loading.show(DropboxActivity.this, "Downloading...");
+//            LoadingView.show(DropboxActivity.this, "Downloading...");
         }
 
         @Override
         protected void onPostExecute(String path) {
-//            Loading.hide();
+//            LoadingView.hide();
             if (path != null) {
                 Intent intent = new Intent();
                 intent.putExtra("path", path);

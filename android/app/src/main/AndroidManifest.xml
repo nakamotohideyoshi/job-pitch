@@ -22,7 +22,6 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
-        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,23 +29,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:name=".pages.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.IntroActivity" />
+
+        <activity
+            android:name=".pages.recruiter.BusinessEditActivity" />
+
+        <activity
+            android:name=".pages.IntroActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".pages.jobseeker.JobseekerProfileActivity" />
+
+        <activity
+            android:name=".pages.jobseeker.JobProfileActivity" />
+
+        <activity
+            android:name=".pages.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.MediaPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen" />
         <activity
-            android:name=".activities.SelectPlaceActivity"
-            android:screenOrientation="portrait" />
+            android:name=".activities.SelectPlaceActivity" />
         <activity
             android:name=".activities.CameraActivity"
             android:screenOrientation="portrait"
@@ -60,7 +75,9 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <data android:scheme="db-gpwecvaun9wmvim" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -77,6 +94,10 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
+        <activity
+            android:name=".pages.hr.jobs.HRJobEditActivity"
+            android:label="@string/title_activity_hrjob_edit"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

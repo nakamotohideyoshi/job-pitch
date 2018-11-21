@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context="com.myjobpitch.fragments.BusinessUserListFragment">
+    tools:context=".pages.hr.employees.HREmployeeListFragment">
 
     <include
         android:id="@+id/job_title_view"

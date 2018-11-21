@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,15 +11,14 @@ import android.widget.TextView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.tasks.APIAction;
@@ -32,7 +30,6 @@ import com.myjobpitch.views.Popup;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
-import com.stfalcon.chatkit.commons.models.MessageContentType;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -98,21 +95,21 @@ public class MessageFragment extends BaseFragment {
         if (job.getImages().size() > 0) {
             jobImage = job.getImages().get(0).getThumbnail();
         } else {
-            Location location = job.getLocation_data();
-            if (location.getImages().size() > 0) {
-                jobImage = location.getImages().get(0).getThumbnail();
+            Workplace workplace = job.getLocation_data();
+            if (workplace.getImages().size() > 0) {
+                jobImage = workplace.getImages().get(0).getThumbnail();
             } else {
-                Business business = location.getBusiness_data();
+                Business business = workplace.getBusiness_data();
                 if (business.getImages().size() > 0) {
                     jobImage = business.getImages().get(0).getThumbnail();
                 }
             }
         }
 
-        JobSeeker jobSeeker = application.getJob_seeker();
-        String jobSeekerImage = "icon_no_img";
-        if (jobSeeker.getPitch() != null) {
-            jobSeekerImage = jobSeeker.getPitch().getThumbnail();
+        Jobseeker jobseeker = application.getJob_seeker();
+        String jobseekerImage = "icon_no_img";
+        if (jobseeker.getPitch() != null) {
+            jobseekerImage = jobseeker.getPitch().getThumbnail();
         }
 
         // show header info
@@ -135,14 +132,14 @@ public class MessageFragment extends BaseFragment {
             messageInterview.setVisibility(View.VISIBLE);
         }
 
-        if (AppData.user.isJobSeeker()) {
+        if (AppData.user.isJobseeker()) {
 
             AppHelper.loadJobLogo(job, AppHelper.getImageView(headerView));
             AppHelper.getItemTitleView(headerView).setText(job.getTitle());
             AppHelper.getItemSubTitleView(headerView).setText(AppHelper.getBusinessName(job));
 
-            myName = AppHelper.getJobSeekerName(jobSeeker);
-            myAvatar = jobSeekerImage;
+            myName = AppHelper.getJobseekerName(jobseeker);
+            myAvatar = jobseekerImage;
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
 
@@ -151,28 +148,30 @@ public class MessageFragment extends BaseFragment {
                 input.getButton().setEnabled(false);
 
                 if (application.getStatus().intValue() == ApplicationStatus.CREATED_ID) {
-                    Popup popup = new Popup(getContext(), "You cannot send message until your application is accepted.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("You cannot send message until your application is accepted.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
 
                 if (application.getStatus().intValue() == ApplicationStatus.DELETED_ID) {
-                    Popup popup = new Popup(getContext(), "This application has been deleted.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("This application has been deleted.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
             }
 
         } else {
 
-            AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(headerView));
-            AppHelper.getItemTitleView(headerView).setText(AppHelper.getJobSeekerName(jobSeeker));
+            AppHelper.loadJobseekerImage(jobseeker, AppHelper.getImageView(headerView));
+            AppHelper.getItemTitleView(headerView).setText(AppHelper.getJobseekerName(jobseeker));
             AppHelper.getItemSubTitleView(headerView).setText(String.format("%s, %s", job.getTitle(), AppHelper.getBusinessName(job)));
 
             myName = job.getLocation_data().getBusiness_data().getName();
             myAvatar = jobImage;
-            otherName = AppHelper.getJobSeekerName(jobSeeker);
-            otherAvatar = jobSeekerImage;
+            otherName = AppHelper.getJobseekerName(jobseeker);
+            otherAvatar = jobseekerImage;
 
             if (interview == null) {
                 addMenuItem(MENUGROUP1, 123, "Arrange Interview", R.drawable.menu_interview);
@@ -276,13 +275,13 @@ public class MessageFragment extends BaseFragment {
 
     @OnClick(R.id.header_view)
     void onClickHeader() {
-        if (AppData.user.isJobSeeker()) {
-            ApplicationDetailFragment fragment = new ApplicationDetailFragment();
+        if (AppData.user.isJobseeker()) {
+            ApplicationDetailsFragment fragment = new ApplicationDetailsFragment();
             fragment.application = application;
             fragment.viewMode = true;
             getApp().pushFragment(fragment);
         } else {
-            TalentDetailFragment fragment = new TalentDetailFragment();
+            TalentDetailsFragment fragment = new TalentDetailsFragment();
             fragment.application = application;
             fragment.viewMode = true;
             getApp().pushFragment(fragment);
@@ -291,7 +290,7 @@ public class MessageFragment extends BaseFragment {
 
     @OnClick(R.id.message_interview)
     void onClickInterview() {
-        InterviewDetailFragment fragment = new InterviewDetailFragment();
+        InterviewDetailsFragment fragment = new InterviewDetailsFragment();
         fragment.interviewId = interview.getId();
         fragment.application = application;
         getApp().pushFragment(fragment);

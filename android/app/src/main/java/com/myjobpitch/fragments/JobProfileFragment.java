@@ -99,7 +99,7 @@ public class JobProfileFragment extends FormFragment {
         return new HashMap<String, EditText>() {
             {
                 put("sectors", mSectorsView);
-                put("location", mAddressView);
+                put("workplace", mAddressView);
             }
         };
     }
@@ -207,8 +207,8 @@ public class JobProfileFragment extends FormFragment {
         if (!valid()) return;
 
         final JobProfile profile = new JobProfile();
-        profile.setId(AppData.jobSeeker.getProfile());
-        profile.setJob_seeker(AppData.jobSeeker.getId());
+        profile.setId(AppData.jobseeker.getProfile());
+        profile.setJob_seeker(AppData.jobseeker.getId());
 
         List<Integer> selectedSectors = new ArrayList<>();
         for (Sector sector : mSelectedSectors)
@@ -249,22 +249,23 @@ public class JobProfileFragment extends FormFragment {
             @Override
             public void onSuccess() {
                 hideLoading();
-                Popup popup = new Popup(getContext(), "Success!", true);
-                popup.addGreenButton("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (AppData.jobSeeker.getProfile() == null) {
-                            AppData.startTimer();
-                            AppData.jobSeeker.setProfile(AppData.profile.getId());
-                            if (AppData.jobSeeker.getPitch() == null) {
-                                getApp().setRootFragement(R.id.menu_record);
-                            } else {
-                                getApp().setRootFragement(R.id.menu_find_job);
+                new Popup(getContext())
+                        .setMessage("Success!")
+                        .addGreenButton("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (AppData.jobseeker.getProfile() == null) {
+                                    AppData.startTimer();
+                                    AppData.jobseeker.setProfile(AppData.profile.getId());
+                                    if (AppData.jobseeker.getPitch() == null) {
+                                        getApp().setRootFragement(R.id.menu_record);
+                                    } else {
+                                        getApp().setRootFragement(R.id.menu_find_job);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
-                popup.show();
+                        })
+                        .show();
             }
             @Override
             public void onError(JsonNode errors) {

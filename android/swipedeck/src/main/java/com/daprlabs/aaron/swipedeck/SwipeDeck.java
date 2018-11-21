@@ -173,7 +173,7 @@ public class SwipeDeck extends FrameLayout {
             }
         };
         adapter.registerDataSetObserver(observer);
-        removeAllViewsInLayout();
+//        removeAllViewsInLayout();
         requestLayout();
     }
 

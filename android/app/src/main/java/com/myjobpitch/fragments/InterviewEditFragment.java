@@ -21,7 +21,7 @@ import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewForCreation;
 import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -102,23 +102,23 @@ public class InterviewEditFragment extends FormFragment {
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
-        loadDetail();
+        loadDetails();
 
         return  view;
     }
 
-    private void loadDetail() {
-        JobSeeker jobSeeker = application.getJob_seeker();
+    private void loadDetails() {
+        Jobseeker jobseeker = application.getJob_seeker();
         Job job = application.getJob_data();
 
-        AppHelper.loadJobSeekerImage(jobSeeker, imageView);
+        AppHelper.loadJobseekerImage(jobseeker, imageView);
 
         // job seeker name
-        itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+        itemTitle.setText(jobseeker.getFirst_name() + " " + jobseeker.getLast_name());
 
         // CV
         if (AppData.user.isRecruiter()) {
-            itemSubTitle.setText(jobSeeker.getDescription());
+            itemSubTitle.setText(jobseeker.getDescription());
         } else {
             itemSubTitle.setText(job.getDescription());
         }
@@ -299,29 +299,30 @@ public class InterviewEditFragment extends FormFragment {
         interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
         interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
         interviewForUpdate.setFeedback(interviewFeedback.getText().toString() == null ? "" : interviewFeedback.getText().toString());
-        Popup popup = new Popup(getContext(), "Are you sure you want to complete this interview?", true);
-        popup.addGreenButton("Yes", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new APITask(new APIAction() {
+        new Popup(getContext())
+                .setMessage("Are you sure you want to complete this interview?")
+                .addGreenButton("Yes", new View.OnClickListener() {
                     @Override
-                    public void run() {
-                        MJPApi.shared().completeInterview(interviewForUpdate, interview.getId());
+                    public void onClick(View view) {
+                        new APITask(new APIAction() {
+                            @Override
+                            public void run() {
+                                MJPApi.shared().completeInterview(interviewForUpdate, interview.getId());
+                            }
+                        }).addListener(new APITaskListener() {
+                            @Override
+                            public void onSuccess() {
+                                getApp().popFragment();
+                            }
+                            @Override
+                            public void onError(JsonNode errors) {
+                                errorHandler(errors);
+                            }
+                        }).execute();
                     }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
-        });
-        popup.addGreyButton("No", null);
-        popup.show();
+                })
+                .addGreyButton("No", null)
+                .show();
     }
 
     @OnClick(R.id.interview_create)

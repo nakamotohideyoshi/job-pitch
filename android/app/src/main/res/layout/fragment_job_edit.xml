@@ -47,7 +47,7 @@
                 android:imeOptions="actionDone"
                 android:hint="Title"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
 
 
@@ -63,7 +63,7 @@
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     android:imeOptions="actionDone"
                     android:hint="Select Sector"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/colorGreen"/>
+                    app:met_primaryColor="@color/greenColor"/>
                 <Button
                     android:id="@+id/job_sector_button"
                     android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                 android:layout_marginTop="15dp"
                 android:hint="Select Contract"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                 android:id="@+id/job_hours"
@@ -100,7 +100,7 @@
                 android:layout_marginTop="15dp"
                 android:hint="Select Hours"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

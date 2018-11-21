@@ -11,7 +11,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 
@@ -48,8 +48,8 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
     }
     @Override
     protected List<Application> getApplications() {
-        JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-        if (jobSeeker.getPitch() == null) {
+        Jobseeker jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
+        if (jobseeker.getPitch() == null) {
             Handler mainHandler = new Handler(TalentApplicationsFragment.this.getContext().getMainLooper());
 
             Runnable myRunnable = new Runnable() {
@@ -79,7 +79,7 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void selectedApplication(Application application) {
-        ApplicationDetailFragment fragment = new ApplicationDetailFragment();
+        ApplicationDetailsFragment fragment = new ApplicationDetailsFragment();
         fragment.application = application;
         getApp().pushFragment(fragment);
     }

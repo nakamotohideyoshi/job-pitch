@@ -2,7 +2,7 @@ package com.myjobpitch.utils;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.myjobpitch.MainActivity;
+import com.myjobpitch.pages.MainActivity;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPObjectWithName;
@@ -16,9 +16,9 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
@@ -32,7 +32,7 @@ import java.util.TimerTask;
 
 public class AppData {
 
-    public static final int API_VERSION = 6;
+    public static final int API_VERSION = 7;
     public static final boolean PRODUCTION = false;
 
     public static final int DEFAULT_REFRESH_TIME = 30;
@@ -50,6 +50,11 @@ public class AppData {
     public static final int REQUEST_DROPBOX = 10003;
 
 
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_SERVER_URL = "server_url";
+    public static final String KEY_TOKEN = "token";
+
+
     public static User user;
 
     public static List<Hours> hours;
@@ -63,14 +68,14 @@ public class AppData {
     public static InitialTokens initialTokens;
 
     public static int userRole = -1;
-    public static JobSeeker jobSeeker;
+    public static Jobseeker jobseeker;
     public static JobProfile profile;
 
     public static List<Business> businesses = new ArrayList<>();
-    public static List<Location> workplaces = new ArrayList<>();
+    public static List<Workplace> workplaces = new ArrayList<>();
     public static List<Job> jobs = new ArrayList<>();
     public static List<BusinessUser> businessUsers = new ArrayList<>();
-    public static List<JobSeeker> jobSeekers = new ArrayList<>();
+    public static List<Jobseeker> jobseekers = new ArrayList<>();
     public static List<Application> applications = new ArrayList<>();
     public static int newMessageCount = 0;
 
@@ -78,51 +83,21 @@ public class AppData {
     //    public static var appsUpdateCallback: (() -> Void)?
 
 
-    /************ Shared Preferences ***********/
-
-    public static String getEmail() {
-        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("email", "");
-    }
-
-    public static void saveEmail(String email) {
-        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
-                .putString("email", email)
-                .apply();
-    }
-
-    public static String getToken() {
-        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("token", "");
-    }
-
-    public static void saveToken(String key) {
-        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
-                .putString("token", key)
-                .apply();
-    }
-
-    public static String getServerUrl() {
-        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("server", null);
-    }
-
-    public static void saveServerUrl(String url) {
-        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
-                .putString("server", url)
-                .apply();
-    }
-
     public static void clearData() {
+        MJPApi.shared().clearToken();
+
         existProfile = false;
 
         user = null;
         userRole = -1;
-        jobSeeker = null;
+        jobseeker = null;
         profile = null;
 
         businesses = new ArrayList<>();
         workplaces = new ArrayList<>();
         jobs = new ArrayList<>();
         businessUsers = new ArrayList<>();
-        jobSeekers = new ArrayList<>();
+        jobseekers = new ArrayList<>();
         applications = new ArrayList<>();
 
         stopTimer();
@@ -130,9 +105,9 @@ public class AppData {
 
     public static void loadData() {
         user = MJPApi.shared().getUser();
-        if (user.isJobSeeker()) {
-            JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, user.getJob_seeker());
-            existProfile = jobSeeker.getProfile() != null;
+        if (user.isJobseeker()) {
+            Jobseeker jobseeker = MJPApi.shared().get(Jobseeker.class, user.getJob_seeker());
+            existProfile = jobseeker.getProfile() != null;
         }
 
         if (initialTokens == null) {
@@ -155,9 +130,9 @@ public class AppData {
             Role.RECRUITER_ID = getIdByName(roles, Role.RECRUITER);
         }
 
-        if (user.isJobSeeker()) {
+        if (user.isJobseeker()) {
             userRole = Role.JOB_SEEKER_ID;
-            getJobSeeker();
+            getJobseeker();
             getProfile();
             if (profile != null) {
                 getApplications();
@@ -188,7 +163,7 @@ public class AppData {
 
     public static <T extends MJPAPIObject> T getObjById(List<T> objects, Integer id) {
         for (T obj : objects) {
-            if (obj.getId() == id) {
+            if (obj.getId().equals(id)) {
                 return obj;
             }
         }
@@ -206,15 +181,15 @@ public class AppData {
 
     //================ menu =============
 
-    static void getJobSeeker() {
-        if (user.isJobSeeker()) {
-            jobSeeker = MJPApi.shared().get(JobSeeker.class, user.getJob_seeker());
+    static void getJobseeker() {
+        if (user.isJobseeker()) {
+            jobseeker = MJPApi.shared().get(Jobseeker.class, user.getJob_seeker());
         }
     }
 
     static void getProfile() {
-        if (jobSeeker.getProfile() != null) {
-            profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
+        if (jobseeker.getProfile() != null) {
+            profile = MJPApi.shared().get(JobProfile.class, jobseeker.getProfile());
         }
     }
 
@@ -243,21 +218,21 @@ public class AppData {
     //================ workplaces =============
 
     public static void getWorkplaces(Integer businessId) {
-        workplaces = MJPApi.shared().getUserLocations(businessId);
+        workplaces = MJPApi.shared().getUserWorkplaces(businessId);
     }
 
-    public static void updateWorkplace(Location workplace) {
+    public static void updateWorkplace(Workplace workplace) {
         updateObj(workplaces, workplace);
         updateBusiness(workplace.getBusiness_data());
     }
 
     public static void getWorkplace(Integer workplaceId) {
-        Location location = MJPApi.shared().getUserLocation(workplaceId);
-        updateWorkplace(location);
+        Workplace workplace = MJPApi.shared().getUserWorkplace(workplaceId);
+        updateWorkplace(workplace);
     }
 
     public void removeWorkplace(Integer workplaceId) {
-        Location obj = getObjById(workplaces, workplaceId);
+        Workplace obj = getObjById(workplaces, workplaceId);
         if (obj != null) {
             workplaces.remove(obj);
         }
@@ -265,8 +240,8 @@ public class AppData {
 
     //================ jobs =============
 
-    public static void getJobs(Integer locationId) {
-        jobs = MJPApi.shared().getUserJobs(locationId);
+    public static void getJobs(Integer workplaceId) {
+        jobs = MJPApi.shared().getUserJobs(workplaceId);
     }
 
     public static void searchJobs() {
@@ -293,13 +268,13 @@ public class AppData {
     //================ jobseekers =============
 
     public static void searchJobseekers(Integer jobId) {
-        jobSeekers = MJPApi.shared().get(JobSeeker.class, "job=" + jobId);
+        jobseekers = MJPApi.shared().get(Jobseeker.class, "job=" + jobId);
     }
 
     public void removeJobseeker(Integer jobseekerId) {
-        JobSeeker obj = getObjById(jobSeekers, jobseekerId);
+        Jobseeker obj = getObjById(jobseekers, jobseekerId);
         if (obj != null) {
-            jobSeekers.remove(obj);
+            jobseekers.remove(obj);
         }
     }
 

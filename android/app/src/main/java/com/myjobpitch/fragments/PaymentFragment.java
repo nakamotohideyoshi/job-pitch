@@ -16,10 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.MainActivity;
+import com.myjobpitch.pages.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.ProductToken;
 import com.myjobpitch.tasks.APIAction;
@@ -158,9 +157,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             public void onIabSetupFinished(IabResult result) {
 
                 if (!result.isSuccess()) {
-                    Popup popup = new Popup(getContext(), "Problem setting up in-app billing", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("Problem setting up in-app billing")
+                            .addGreyButton("Ok", null)
+                            .show();
                     return;
                 }
 
@@ -176,9 +176,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                 try {
                     mHelper.queryInventoryAsync(true, skus, null, mGotInventoryListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
-                    Popup popup = new Popup(getContext(), "Error querying inventory. Another async operation in progress.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("Error querying inventory. Another async operation in progress.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
 
             }
@@ -213,7 +214,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Loading.hide();
+//        LoadingView.hide();
 
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -227,9 +228,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         try {
             mHelper.queryInventoryAsync(mGotInventoryListener);
         } catch (IabHelper.IabAsyncInProgressException e) {
-            Popup popup = new Popup(getContext(), "Error querying inventory. Another async operation in progress.", true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
+            new Popup(getContext())
+                    .setMessage("Error querying inventory. Another async operation in progress.")
+                    .addGreyButton("Ok", null)
+                    .show();
         }
     }
 
@@ -241,9 +243,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             if (result.isFailure()) {
-                Popup popup = new Popup(getContext(), "Failed to query inventory", true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                new Popup(getContext())
+                        .setMessage("Failed to query inventory")
+                        .addGreyButton("Ok", null)
+                        .show();
                 return;
             }
 
@@ -275,20 +278,22 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
             if (result.isFailure()) {
                 if (result.getResponse() != IabHelper.IABHELPER_USER_CANCELLED) {
-                    Popup popup = new Popup(getContext(), "purchasing Error", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("purchasing Error")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
                 return;
             }
             if (!purchase.getDeveloperPayload().equals(PAYLOAD)) {
-                Popup popup = new Popup(getContext(), "Error purchasing. Authenticity verification failed.", true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                new Popup(getContext())
+                        .setMessage("Error purchasing. Authenticity verification failed.")
+                        .addGreyButton("Ok", null)
+                        .show();
                 return;
             }
 
-            MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+            getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
                     .putInt("businessId", business.getId())
                     .apply();
 
@@ -300,15 +305,16 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
             if (result.isSuccess()) {
-                MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+                getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
                         .remove("businessId")
                         .apply();
                 currentPurchase = null;
                 loadBusinesses();
             } else {
-                Popup popup = new Popup(getContext(), "Error while consuming", true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                new Popup(getContext())
+                        .setMessage("Error while consuming")
+                        .addGreyButton("Ok", null)
+                        .show();
             }
         }
     };
@@ -340,9 +346,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                     try {
                         mHelper.launchPurchaseFlow(getApp(), product.sku, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
                     } catch (IabHelper.IabAsyncInProgressException e) {
-                        Popup popup = new Popup(getContext(), "Error launching purchase flow. Another async operation in progress.", true);
-                        popup.addGreyButton("Ok", null);
-                        popup.show();
+                        new Popup(getContext())
+                                .setMessage("Error launching purchase flow. Another async operation in progress.")
+                                .addGreyButton("Ok", null)
+                                .show();
                     }
                 }
             });
@@ -369,7 +376,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             String productId = currentPurchase.getSku();
             String purchaseToken = currentPurchase.getToken();
 
-            int businessId = MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE)
+            int businessId = getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE)
                     .getInt("businessId", businesses.get(0).getId());
 
             try {
@@ -388,9 +395,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         protected void onPostExecute(Business business) {
             if (business == null ) {
                 hideLoading();
-                Popup popup = new Popup(getContext(), "Connection Error: Please check your internet connection", true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                new Popup(getContext())
+                        .setMessage("Connection Error: Please check your internet connection")
+                        .addGreyButton("Ok", null)
+                        .show();
             } else {
                 try {
                     mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);

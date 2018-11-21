@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -40,7 +40,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
             }
         });
 
-//        if (AppData.jobSeeker != null) {
+//        if (AppData.jobseeker != null) {
 //            showInactiveBanner();
 //        }
 
@@ -63,7 +63,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
                 hideLoading();
 //                showInactiveBanner();
 
-                checkJobSeekerPitch();
+                checkJobseekerPitch();
 
                 setData(data);
             }
@@ -74,22 +74,23 @@ public class FindJobFragment extends SwipeFragment<Job> {
         }).execute();
     }
 
-    void checkJobSeekerPitch() {
-        if (AppData.jobSeeker.getPitch() == null && AppData.jobSeeker.getProfile_thumb() == null) {
-            Popup popup = new Popup(getContext(), "You cannot yet be found by potential employers until you complete your profile photo or job pitch.", true);
-            popup.addYellowButton("Edit Profile", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getApp().setRootFragement(R.id.menu_user_profile);
-                }
-            });
-            popup.addGreenButton("Continue", null);
-            popup.show();
+    void checkJobseekerPitch() {
+        if (AppData.jobseeker.getPitch() == null && AppData.jobseeker.getProfile_thumb() == null) {
+            new Popup(getContext())
+                    .setMessage("You cannot yet be found by potential employers until you complete your profile photo or job pitch.")
+                    .addYellowButton("Edit Profile", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getApp().setRootFragement(R.id.menu_user_profile);
+                        }
+                    })
+                    .addGreenButton("Continue", null)
+                    .show();
         }
     }
 
 //    void showInactiveBanner() {
-//        if (!jobSeeker.isActive()) {
+//        if (!jobseeker.isActive()) {
 //            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
 //        } else {
 //            AppHelper.setJobTitleViewText(jobTitleView, "");
@@ -102,8 +103,8 @@ public class FindJobFragment extends SwipeFragment<Job> {
         setCardTitle(view, job.getTitle());
         setCardDesc(view, job.getDescription());
 
-        Location location = job.getLocation_data();
-        String distance = AppHelper.distance(AppData.profile.getLatitude(), AppData.profile.getLongitude(), location.getLatitude(), location.getLongitude());
+        Workplace workplace = job.getLocation_data();
+        String distance = AppHelper.distance(AppData.profile.getLatitude(), AppData.profile.getLongitude(), workplace.getLatitude(), workplace.getLongitude());
         ((TextView)view.findViewById(R.id.distance)).setText(distance);
 
         ((TextView)view.findViewById(R.id.right_mark_text)).setText("Apply");
@@ -118,57 +119,60 @@ public class FindJobFragment extends SwipeFragment<Job> {
     @Override
     protected void swipedRight(final Job job) {
 
-        if (!AppData.jobSeeker.isActive()) {
-            Popup popup = new Popup(getContext(), "To apply please activate your account", true);
-            popup.addGreenButton("Activate", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showProfile();
-                }
-            });
-            popup.addGreyButton("Cancel", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cardStack.unSwipeCard();
-                }
-            });
-            popup.show();
+        if (!AppData.jobseeker.isActive()) {
+            new Popup(getContext())
+                    .setMessage("To apply please activate your account")
+                    .addGreenButton("Activate", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showProfile();
+                        }
+                    })
+                    .addGreyButton("Cancel", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cardStack.unSwipeCard();
+                        }
+                    })
+                    .show();
             return;
         }
 
-        if (AppData.jobSeeker.getProfile_image() == null) {
-            Popup popup = new Popup(getContext(), "To apply please set your photo", true);
-            popup.addGreenButton("Edit profile", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showProfile();
-                }
-            });
-            popup.addGreyButton("Cancel", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cardStack.unSwipeCard();
-                }
-            });
-            popup.show();
+        if (AppData.jobseeker.getProfile_image() == null) {
+            new Popup(getContext())
+                    .setMessage("To apply please set your photo")
+                    .addGreenButton("Edit profile", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showProfile();
+                        }
+                    })
+                    .addGreyButton("Cancel", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cardStack.unSwipeCard();
+                        }
+                    })
+                    .show();
             return;
         }
 
-        if (job.getRequires_cv() && AppData.jobSeeker.getCV() == null) {
-            Popup popup = new Popup(getContext(), "This job requires your cv", true);
-            popup.addGreenButton("Edit profile", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showProfile();
-                }
-            });
-            popup.addGreyButton("Cancel", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cardStack.unSwipeCard();
-                }
-            });
-            popup.show();
+        if (job.getRequires_cv() && AppData.jobseeker.getCV() == null) {
+            new Popup(getContext())
+                    .setMessage("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.")
+                    .addGreenButton("Edit profile", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showProfile();
+                        }
+                    })
+                    .addGreyButton("Cancel", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cardStack.unSwipeCard();
+                        }
+                    })
+                    .show();
             return;
         }
 
@@ -187,9 +191,9 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     @Override
     protected void selectedCard(Job job) {
-        ApplicationDetailFragment fragment = new ApplicationDetailFragment();
+        ApplicationDetailsFragment fragment = new ApplicationDetailsFragment();
         fragment.job = job;
-        fragment.action = new ApplicationDetailFragment.Action() {
+        fragment.action = new ApplicationDetailsFragment.Action() {
             @Override
             public void apply() {
                 topCardItemId++;

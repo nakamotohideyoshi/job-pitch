@@ -2,7 +2,7 @@ package com.myjobpitch.api.data;
 
 import com.myjobpitch.api.MJPAPIObject;
 
-public class ExcludeJobSeeker extends MJPAPIObject {
+public class ExcludeJobseeker extends MJPAPIObject {
     private Integer job_seeker;
     private Integer job;
 

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.ExternalApplication;
-import com.myjobpitch.api.data.ExternalJobSeeker;
+import com.myjobpitch.api.data.ExternalJobseeker;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Sex;
@@ -74,7 +74,7 @@ public class ExternalApplicantFragment extends FormFragment {
 
     List<String> mSexNames = new ArrayList<>();
     ExternalApplication externalApplication;
-    ExternalJobSeeker jobSeeker;
+    ExternalJobseeker jobseeker;
     public Job job;
 
     @Override
@@ -130,35 +130,36 @@ public class ExternalApplicantFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_national_number_help)
     void onNationalNumberHelp() {
-        Popup popup = new Popup(getContext(), "Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", true);
-        popup.addGreyButton("Close", null);
-        popup.show();
+        new Popup(getContext())
+                .setMessage("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.")
+                .addGreyButton("Close", null)
+                .show();
     }
 
     void saveData() {
-        if (jobSeeker == null) {
-            jobSeeker = new ExternalJobSeeker();
+        if (jobseeker == null) {
+            jobseeker = new ExternalJobseeker();
         }
-        jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
-        jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
-        jobSeeker.setEmail(mEmailView.getText().toString().trim());
-        jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
-        jobSeeker.setMobile(mMobileView.getText().toString().trim());
+        jobseeker.setFirst_name(mFirstNameView.getText().toString().trim());
+        jobseeker.setLast_name(mLastNameView.getText().toString().trim());
+        jobseeker.setEmail(mEmailView.getText().toString().trim());
+        jobseeker.setTelephone(mTelephoneView.getText().toString().trim());
+        jobseeker.setMobile(mMobileView.getText().toString().trim());
         if (!mAgeView.getText().toString().isEmpty()) {
-            jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
+            jobseeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
         }
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
-            jobSeeker.setSex(AppData.sexes.get(sexIndex).getId());
+            jobseeker.setSex(AppData.sexes.get(sexIndex).getId());
         }
         for (Nationality nationality : AppData.nationalities) {
             if (nationality.getName().equals(mNationalityView.getText().toString())) {
-                jobSeeker.setNationality(nationality.getId());
+                jobseeker.setNationality(nationality.getId());
                 break;
             }
         }
-        jobSeeker.setNational_insurance_number(mNationalNumberView.getText().toString());
-        jobSeeker.setDescription(mDescriptionView.getText().toString());
+        jobseeker.setNational_insurance_number(mNationalNumberView.getText().toString());
+        jobseeker.setDescription(mDescriptionView.getText().toString());
     }
 
     @OnClick(R.id.job_seeker_cancel)
@@ -180,7 +181,7 @@ public class ExternalApplicantFragment extends FormFragment {
 
         externalApplication.setJob(job.getId());
         externalApplication.setShortlisted(shortlisted.isChecked());
-        externalApplication.setJob_Seeker(jobSeeker);
+        externalApplication.setJob_Seeker(jobseeker);
 
         new APITask(new APIAction() {
             @Override

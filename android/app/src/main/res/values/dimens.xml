@@ -1,7 +1,11 @@
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!--<dimen name="nav_header_vertical_spacing">8dp</dimen>-->
+    <dimen name="nav_header_height">176dp</dimen>
+    <!--<dimen name="fab_margin">16dp</dimen>-->
+
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
 
@@ -15,8 +19,8 @@
     <!-- navigation view settings -->
     <dimen name="nav_header_vertical_spacing">25dp</dimen>
     <dimen name="nav_horizontal_padding">10dp</dimen>
-    <dimen tools:override="true" name="design_navigation_icon_size">30dp</dimen>
-    <dimen tools:override="true" name="design_navigation_icon_padding">18dp</dimen>
+    <dimen name="design_navigation_icon_size" tools:override="true">30dp</dimen>
+    <dimen name="design_navigation_icon_padding" tools:override="true">18dp</dimen>
 
     <dimen name="small_fontsize">14sp</dimen>
     <dimen name="default_fontsize">16sp</dimen>
@@ -24,5 +28,5 @@
     <dimen name="xlarge_fontsize">20sp</dimen>
 
     <dimen name="label_fontsize">16sp</dimen>
-
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

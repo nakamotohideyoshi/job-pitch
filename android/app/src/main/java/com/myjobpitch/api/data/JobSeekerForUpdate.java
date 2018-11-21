@@ -2,7 +2,7 @@ package com.myjobpitch.api.data;
 
 import java.io.Serializable;
 
-public class JobSeekerForUpdate implements Serializable {
+public class JobseekerForUpdate implements Serializable {
     private boolean active;
     private String first_name;
     private String last_name;

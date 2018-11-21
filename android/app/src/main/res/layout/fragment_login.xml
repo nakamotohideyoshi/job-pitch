@@ -114,7 +114,7 @@
                                 android:background="@android:color/transparent"
                                 android:text="https://www.myjobpitch.com/"
                                 android:textStyle="normal"
-                                android:textColor="@color/colorYellow"
+                                android:textColor="@color/yellowColor"
                                 android:theme="@style/Button"/>
                         </LinearLayout>
 

@@ -43,7 +43,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorLightGrey" />
+                android:background="@color/lightGreyColor" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -91,7 +91,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/colorLightGrey"/>
+            android:background="@color/lightGreyColor"/>
 
         <com.stfalcon.chatkit.messages.MessagesList
             android:id="@+id/messagesList"
@@ -106,7 +106,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/colorLightGrey"/>
+            android:background="@color/lightGreyColor"/>
 
         <com.stfalcon.chatkit.messages.MessageInput
             android:id="@+id/input"

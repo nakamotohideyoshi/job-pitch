@@ -6,7 +6,7 @@ import com.myjobpitch.api.MJPObjectWithDates;
 import java.util.List;
 
 @JsonIgnoreProperties({"user"})
-public class JobSeeker extends MJPObjectWithDates {
+public class Jobseeker extends MJPObjectWithDates {
     private boolean active;
     private String first_name;
     private String last_name;

@@ -108,7 +108,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -148,16 +148,17 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                     try {
                         if (file.getSize() > 0) {
                             String title = String.format("Do you want to download %s?", file.getName());
-                            Popup popup = new Popup(GoogleDriveActivity.this, title, true);
-                            popup.addGreenButton("Download", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    selectedFile = file;
-                                    download();
-                                }
-                            });
-                            popup.addGreyButton("Cancel", null);
-                            popup.show();
+                            new Popup(GoogleDriveActivity.this)
+                                    .setMessage(title)
+                                    .addGreenButton("Download", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            selectedFile = file;
+                                            download();
+                                        }
+                                    })
+                                    .addGreyButton("Cancel", null)
+                                    .show();
                         }
                     } catch (Exception e) {
                     }
@@ -195,9 +196,10 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         } else if (switchAccountRequest || mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            Popup popup = new Popup(this, "No network connection available.", true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
+            new Popup(this)
+                    .setMessage("No network connection available.")
+                    .addGreyButton("Ok", null)
+                    .show();
         } else {
             SharedPreferences prefs = getSharedPreferences("googledrive", MODE_PRIVATE);
             prefs.edit().putString("account", mCredential.getSelectedAccountName()).apply();
@@ -242,9 +244,10 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    Popup popup = new Popup(this, "This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(this)
+                            .setMessage("This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 } else {
                     getRootDir(true);
                 }
@@ -379,9 +382,10 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleDriveActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Popup popup = new Popup(GoogleDriveActivity.this, "Connection Error: Please check your internet connection", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(GoogleDriveActivity.this)
+                            .setMessage("Connection Error: Please check your internet connection")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
             }
         }
@@ -424,12 +428,12 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
 
         @Override
         protected void onPreExecute() {
-//            Loading.show(GoogleDriveActivity.this, "Downloading...");
+//            LoadingView.show(GoogleDriveActivity.this, "Downloading...");
         }
 
         @Override
         protected void onPostExecute(String path) {
-//            Loading.hide();
+//            LoadingView.hide();
             if (path != null) {
                 Intent intent = new Intent();
                 intent.putExtra("path", path);

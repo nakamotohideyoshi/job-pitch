@@ -28,7 +28,7 @@
 
             <include
                 android:id="@+id/header_view"
-                layout="@layout/view_interview_detail_item"
+                layout="@layout/view_interview_details_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -43,7 +43,7 @@
                     android:imeOptions="actionDone"
                     android:hint="Date/time"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/colorGreen"/>
+                    app:met_primaryColor="@color/greenColor"/>
                 <Button
                     android:id="@+id/interview_date_time_button"
                     android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/interview_notes"
@@ -75,7 +75,7 @@
                 android:maxLength="10000"
                 app:met_floatingLabel="normal"
                 app:met_maxCharacters="10000"
-                app:met_primaryColor="@color/colorGreen" />
+                app:met_primaryColor="@color/greenColor" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/interview_feedback"
@@ -88,7 +88,7 @@
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <Button
                 android:id="@+id/interview_create"

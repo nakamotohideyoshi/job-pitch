@@ -32,7 +32,7 @@ public class User extends MJPAPIObject {
     public boolean isRecruiter() {
         return !this.businesses.isEmpty();
     }
-    public boolean isJobSeeker() {
+    public boolean isJobseeker() {
         return this.job_seeker != null;
     }
     public void setJob_seeker(Integer job_seeker) {

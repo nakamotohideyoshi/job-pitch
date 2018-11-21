@@ -24,7 +24,7 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitchForCreation;
 import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.tasks.APIAction;
@@ -95,7 +95,7 @@ public class JobEditFragment extends FormFragment {
     private boolean isAddMode = false;
     private boolean isNew = false;
 
-    public Location location;
+    public Workplace workplace;
     public Job job;
     public boolean activation = false;
 
@@ -121,7 +121,7 @@ public class JobEditFragment extends FormFragment {
 
         } else {
 
-            location = job.getLocation_data();
+            workplace = job.getLocation_data();
 
             addMenuItem(MENUGROUP2, 100, "Share", R.drawable.ic_share);
 
@@ -163,18 +163,18 @@ public class JobEditFragment extends FormFragment {
     private void load() {
 
         String defaultPath = null;
-        if (location.getImages().size() > 0) {
-            defaultPath = location.getImages().get(0).getImage();
+        if (workplace.getImages().size() > 0) {
+            defaultPath = workplace.getImages().get(0).getImage();
         } else {
-            Business business = location.getBusiness_data();
+            Business business = workplace.getBusiness_data();
             if (business.getImages().size() > 0) {
                 defaultPath = business.getImages().get(0).getImage();
             }
         }
         if (defaultPath == null) {
-            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+            imageSelector = new ImageSelector(getApp(), logoView, R.drawable.default_logo);
         } else {
-            imageSelector = new ImageSelector(logoView, defaultPath);
+            imageSelector = new ImageSelector(getApp(), logoView, defaultPath);
         }
 
         Integer jobSector = -1;
@@ -248,9 +248,10 @@ public class JobEditFragment extends FormFragment {
 
     @OnClick(R.id.job_pitch_help)
     void onPitchHelp() {
-        Popup popup = new Popup(getContext(), "In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.", true);
-        popup.addGreyButton("Close", null);
-        popup.show();
+        new Popup(getContext())
+                .setMessage("In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.")
+                .addGreyButton("Close", null)
+                .show();
     }
 
     @OnClick(R.id.job_record_new)
@@ -277,19 +278,20 @@ public class JobEditFragment extends FormFragment {
     @OnClick(R.id.job_active)
     void onActivate() {
         if (!activeView.isChecked()) {
-            Popup popup = new Popup(getContext(), "Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.", true);
-            popup.addGreenButton("Deactivate", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            });
-            popup.addGreyButton("Cancel", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activeView.setChecked(true);
-                }
-            });
-            popup.show();
+            new Popup(getContext())
+                    .setMessage("Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.")
+                    .addGreenButton("Deactivate", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        }
+                    })
+                    .addGreyButton("Cancel", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activeView.setChecked(true);
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -339,7 +341,7 @@ public class JobEditFragment extends FormFragment {
     void saveData() {
         if (job == null) {
             job = new Job();
-            job.setLocation(location.getId());
+            job.setLocation(workplace.getId());
         }
 
         String statusName = activeView.isChecked() ? "OPEN" : "CLOSED";
@@ -399,16 +401,16 @@ public class JobEditFragment extends FormFragment {
         if (imageSelector.getImageUri() != null) {
 
             new UploadImageTask(getApp(), "user-job-images", "job", imageSelector.getImageUri(), job)
-            .addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    uploadPitch();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
+                    .addListener(new APITaskListener() {
+                        @Override
+                        public void onSuccess() {
+                            uploadPitch();
+                        }
+                        @Override
+                        public void onError(JsonNode errors) {
+                            errorHandler(errors);
+                        }
+                    }).execute();
 
         } else if (job.getImages().size() > 0 && imageSelector.getImage() == null) {
 
@@ -482,9 +484,10 @@ public class JobEditFragment extends FormFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        Popup popup = new Popup(getContext(), "Error uploading video!", true);
-                        popup.addGreyButton("Ok", null);
-                        popup.show();
+                        new Popup(getContext())
+                                .setMessage("Error uploading video!")
+                                .addGreyButton("Ok", null)
+                                .show();
                     }
                 });
                 upload.start();
@@ -511,7 +514,7 @@ public class JobEditFragment extends FormFragment {
             getApp().popFragment();
         } else {
             fragmentManager.popBackStackImmediate();
-            JobDetailFragment fragment = new JobDetailFragment();
+            JobDetailsFragment fragment = new JobDetailsFragment();
             fragment.job = job;
             getApp().pushFragment(fragment);
         }

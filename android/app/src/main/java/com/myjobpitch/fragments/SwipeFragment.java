@@ -53,7 +53,7 @@ public class SwipeFragment<T> extends BaseFragment {
 
         // refresh button
         addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);
-        if (AppData.user.isJobSeeker()) {
+        if (AppData.user.isJobseeker()) {
             addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
         } else {
             addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
@@ -122,7 +122,7 @@ public class SwipeFragment<T> extends BaseFragment {
         if (menuID == 100) {
             loadData();
         } else if (menuID == 101) {
-            goToJobDetail();
+            goToJobDetails();
         } else if (menuID == 111) {
             goToEditProfile();
         }
@@ -186,7 +186,7 @@ public class SwipeFragment<T> extends BaseFragment {
     protected void selectedCard(T object) {
     }
 
-    protected void goToJobDetail() {
+    protected void goToJobDetails() {
 
     }
 

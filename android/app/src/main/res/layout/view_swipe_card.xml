@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:text="CONNECT"
-                        android:textColor="@color/colorGreen"
+                        android:textColor="@color/greenColor"
                         android:textSize="30sp"
                         android:textStyle="bold"
                         android:background="@drawable/apply_bg"/>
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:text="REMOVE"
-                        android:textColor="@color/colorYellow"
+                        android:textColor="@color/yellowColor"
                         android:textSize="30sp"
                         android:textStyle="bold"
                         android:background="@drawable/remove_bg"/>

@@ -87,7 +87,7 @@ public class BusinessListFragment extends BaseFragment {
         } else {
             if (isAddMode) {
                 title = "Add job";
-                headerImageView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
+                headerImageView.setColorFilter(ContextCompat.getColor(getApp(), R.color.greenColor));
                 naveTitleView.setText("Select business");
                 emptyView.setVisibility(View.GONE);
             } else {
@@ -100,7 +100,7 @@ public class BusinessListFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -125,9 +125,10 @@ public class BusinessListFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (isUserMode) {
                     if (adapter.getItem(position).getRestricted()) {
-                        Popup popup = new Popup(getContext(), "You must an administrator to view this information.", true);
-                        popup.addGreyButton("Ok", null);
-                        popup.show();
+                        new Popup(getContext())
+                                .setMessage("You must an administrator to view this information.")
+                                .addGreyButton("Ok", null)
+                                .show();
                     } else {
                         BusinessUserListFragment fragment = new BusinessUserListFragment();
                         fragment.business = adapter.getItem(position);
@@ -135,7 +136,7 @@ public class BusinessListFragment extends BaseFragment {
                         getApp().pushFragment(fragment);
                     }
                 } else {
-                    BusinessDetailFragment fragment = new BusinessDetailFragment();
+                    BusinessDetailsFragment fragment = new BusinessDetailsFragment();
                     fragment.businessId = adapter.getItem(position).getId();
 
                     getApp().pushFragment(fragment);
@@ -209,29 +210,31 @@ public class BusinessListFragment extends BaseFragment {
     }
 
     private void deleteBusiness(final Business business) {
-        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + business.getName(), true);
-        popup.addYellowButton("Delete", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int locationCount = business.getLocations().size();
-                if (locationCount == 0) {
-                    deleteBusinessAction(business);
-                    return;
-                }
-
-                Popup popup = new Popup(getContext(), "Deleting this business will also delete " + locationCount + " workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", true);
-                popup.addYellowButton("Delete", new View.OnClickListener() {
+        new Popup(getContext())
+                .setMessage("Are you sure you want to delete " + business.getName())
+                .addYellowButton("Delete", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        deleteBusinessAction(business);
+                        int workplaceCount = business.getLocations().size();
+                        if (workplaceCount == 0) {
+                            deleteBusinessAction(business);
+                            return;
+                        }
+
+                        new Popup(getContext())
+                                .setMessage("Deleting this business will also delete " + workplaceCount + " workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.")
+                                .addYellowButton("Delete", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        deleteBusinessAction(business);
+                                    }
+                                })
+                                .addGreyButton("Cancel", null)
+                                .show();
                     }
-                });
-                popup.addGreyButton("Cancel", null);
-                popup.show();
-            }
-        });
-        popup.addGreyButton("Cancel", null);
-        popup.show();
+                })
+                .addGreyButton("Cancel", null)
+                .show();
     }
 
     private void deleteBusinessAction(final Business business) {
@@ -310,7 +313,6 @@ public class BusinessListFragment extends BaseFragment {
                 AppHelper.showBusinessInfo1(getItem(position), convertView);
                 editButton.setVisibility(View.GONE);
                 removeButton.setVisibility(View.GONE);
-
             } else {
                 AppHelper.showBusinessInfo(getItem(position), convertView);
                 if (isAddMode) {
@@ -342,7 +344,7 @@ public class BusinessListFragment extends BaseFragment {
                         editButton.setVisibility(View.GONE);
                         removeButton.setVisibility(View.GONE);
                     }
-                 }
+                }
             }
         }
 

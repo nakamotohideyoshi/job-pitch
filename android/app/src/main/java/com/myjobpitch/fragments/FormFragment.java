@@ -21,7 +21,7 @@ public class FormFragment extends BaseFragment {
 
         for (EditText view : getRequiredFields().values()) {
             if (view.getText().toString().isEmpty()) {
-                view.setError(getString(R.string.error_field_required));
+                view.setError(getString(R.string.field_required));
                 if (errorView == null) {
                     errorView = view;
                     errorView.getParent().requestChildFocus(errorView,errorView);
@@ -40,9 +40,10 @@ public class FormFragment extends BaseFragment {
         hideLoading();
 
         if (errors == null) {
-            Popup popup = new Popup(getContext(), "Connection Error: Please check your internet connection", true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
+            new Popup(getContext())
+                    .setMessage("Connection Error: Please check your internet connection")
+                    .addGreyButton("Ok", null)
+                    .show();
             return;
         }
 
@@ -72,9 +73,10 @@ public class FormFragment extends BaseFragment {
         }
 
         if (errorView == null && errorMessage != null) {
-            Popup popup = new Popup(getContext(), errorMessage, true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
+            new Popup(getContext())
+                    .setMessage(errorMessage)
+                    .addGreyButton("Ok", null)
+                    .show();
         }
 
     }

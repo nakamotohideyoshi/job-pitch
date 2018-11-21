@@ -1,5 +1,7 @@
 package com.myjobpitch.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,13 +10,14 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import com.myjobpitch.MainActivity;
+import com.myjobpitch.pages.MainActivity;
 import com.myjobpitch.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -47,24 +50,28 @@ public class ImageSelector {
 
     Uri imageUri;
 
-    public ImageSelector(View view, int defaultImageRes) {
-        init(view);
-        defaultBitmap = BitmapFactory.decodeResource(MainActivity.shared().getResources(), defaultImageRes);
+    Context context;
+
+    public ImageSelector(Context context, View view, int defaultImageRes) {
+        init(context, view);
+        defaultBitmap = BitmapFactory.decodeResource(context.getResources(), defaultImageRes);
     }
 
-    public ImageSelector(View view, String defaultImagePath) {
-        init(view);
+    public ImageSelector(Context context, View view, String defaultImagePath) {
+        init(context, view);
         this.defaultImagePath = defaultImagePath;
     }
 
-    void init(View view) {
+    void init(Context context, View view) {
+        this.context = context;
         ButterKnife.bind(this, view);
 
-        Display display = MainActivity.shared().getWindowManager().getDefaultDisplay();
+        Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         display.getMetrics(displayMetrics);
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = (displayMetrics.widthPixels - AppHelper.dp2px(30)) * 3 / 4;
+        params.height = (displayMetrics.widthPixels - (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
+                context.getResources().getDisplayMetrics())) * 3 / 4;
         view.setLayoutParams(params);
 
         imageView = AppHelper.getImageView(view);
@@ -90,48 +97,7 @@ public class ImageSelector {
             imagePath = path;
         }
 
-        final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
-
-        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                .considerExifParams(true)
-                .cacheOnDisk(true)
-                .build();
-
-        ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String path1, View view) {
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onLoadingFailed(String path1, View view, FailReason failReason) {
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onLoadingComplete(String path1, View view, Bitmap loadedImage) {
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                if (path == null) {
-                    bitmap = null;
-                    removeButton.setVisibility(View.GONE);
-                    addButton.setText("Add Logo");
-                    imageUri = null;
-                } else {
-                    bitmap = loadedImage;
-                    removeButton.setVisibility(View.VISIBLE);
-                    addButton.setText("Change Logo");
-                }
-            }
-            @Override
-            public void onLoadingCancelled(String uri, View view) {
-            }
-        });
-
+        AppHelper.loadImage(imagePath, imageView);
     }
 
     public Bitmap getImage() {
@@ -169,7 +135,7 @@ public class ImageSelector {
     public void setImageUri(Uri uri) {
         String path;
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = MainActivity.shared().getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
         if(cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
@@ -184,11 +150,6 @@ public class ImageSelector {
 
     public Uri getImageUri() {
         return imageUri;
-    }
-
-    @OnClick(R.id.image_add_button)
-    void onClickAdd() {
-        MainActivity.shared().showFilePicker(true);
     }
 
     @OnClick(R.id.image_remove_button)

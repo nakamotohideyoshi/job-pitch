@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.myjobpitch.fragments.LocationEditFragment">
+    tools:context="com.myjobpitch.fragments.WorkplaceEditFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,10 +25,10 @@
                 android:imeOptions="actionDone"
                 android:hint="Name"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/location_desc"
+                android:id="@+id/workplace_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -38,7 +38,7 @@
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorGreen"/>
+                app:met_primaryColor="@color/greenColor"/>
 
             <TextView
                 android:text="Public"
@@ -62,7 +62,7 @@
                     android:imeOptions="actionDone"
                     android:hint="Email Addresss"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/colorGreen"/>
+                    app:met_primaryColor="@color/greenColor"/>
                 <ImageButton
                     android:id="@+id/location_email_help"
                     android:layout_width="30dp"
@@ -95,7 +95,7 @@
                     android:imeOptions="actionDone"
                     android:hint="Phone (optional)"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/colorGreen"/>
+                    app:met_primaryColor="@color/greenColor"/>
                 <CheckBox
                     android:id="@+id/location_phone_public"
                     android:layout_width="wrap_content"
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Street"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/colorGreen"/>
+                    app:met_primaryColor="@color/greenColor"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
                         android:layout_marginRight="15dp"
                         android:hint="City"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/colorGreen"/>
+                        app:met_primaryColor="@color/greenColor"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/location_region"
                         android:layout_width="wrap_content"
@@ -159,7 +159,7 @@
                         android:layout_weight="1"
                         android:hint="Region"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/colorGreen"/>
+                        app:met_primaryColor="@color/greenColor"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -174,7 +174,7 @@
                         android:layout_marginRight="15dp"
                         android:hint="Postcode"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/colorGreen"/>
+                        app:met_primaryColor="@color/greenColor"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/location_country"
                         android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                         android:layout_weight="1"
                         android:hint="Country"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/colorGreen"/>
+                        app:met_primaryColor="@color/greenColor"/>
                 </LinearLayout>
             </LinearLayout>
 

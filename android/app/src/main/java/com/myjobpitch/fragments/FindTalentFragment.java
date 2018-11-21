@@ -10,9 +10,9 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ExcludeJobSeeker;
+import com.myjobpitch.api.data.ExcludeJobseeker;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import butterknife.OnClick;
 
-public class FindTalentFragment extends SwipeFragment<JobSeeker> {
+public class FindTalentFragment extends SwipeFragment<Jobseeker> {
 
     public Job job;
 
@@ -55,14 +55,14 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
 
     @Override
     protected void loadData() {
-        final List<JobSeeker> data = new ArrayList<>();
+        final List<Jobseeker> data = new ArrayList<>();
 
         showLoading();
         new APITask(new APIAction() {
             @Override
             public void run() {
                 job = MJPApi.shared().getUserJob(job.getId());
-                data.addAll(MJPApi.shared().get(JobSeeker.class, "job=" + job.getId()));
+                data.addAll(MJPApi.shared().get(Jobseeker.class, "job=" + job.getId()));
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -80,10 +80,10 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected void showDeckInfo(JobSeeker jobSeeker, View view) {
-        AppHelper.loadJobSeekerImage(jobSeeker, getCardImageContainer(view));
-        setCardTitle(view, AppHelper.getJobSeekerName(jobSeeker));
-        setCardDesc(view, jobSeeker.getDescription());
+    protected void showDeckInfo(Jobseeker jobseeker, View view) {
+        AppHelper.loadJobseekerImage(jobseeker, getCardImageContainer(view));
+        setCardTitle(view, AppHelper.getJobseekerName(jobseeker));
+        setCardDesc(view, jobseeker.getDescription());
     }
 
     private void updateEmptyView() {
@@ -105,14 +105,14 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected void swipedLeft(final JobSeeker jobSeeker) {
+    protected void swipedLeft(final Jobseeker jobseeker) {
         new APITask(new APIAction() {
             @Override
             public void run() {
-                ExcludeJobSeeker data = new ExcludeJobSeeker();
+                ExcludeJobseeker data = new ExcludeJobseeker();
                 data.setJob(job.getId());
-                data.setJob_seeker(jobSeeker.getId());
-                MJPApi.shared().excludeJobSeeker(data);
+                data.setJob_seeker(jobseeker.getId());
+                MJPApi.shared().excludeJobseeker(data);
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -127,16 +127,17 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected void swipedRight(final JobSeeker jobSeeker) {
+    protected void swipedRight(final Jobseeker jobseeker) {
         new APITask(new APIAction() {
             @Override
             public void run() {
                 ApplicationForCreation applicationForCreation = new ApplicationForCreation();
                 applicationForCreation.setJob(job.getId());
-                applicationForCreation.setJob_seeker(jobSeeker.getId());
+                applicationForCreation.setJob_seeker(jobseeker.getId());
                 applicationForCreation.setShortlisted(false);
-                MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-                job = MJPApi.shared().getUserJob(job.getId());
+                applicationForCreation = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                Application application = MJPApi.shared().get(Application.class, applicationForCreation.getId());
+                job = application.getJob_data();
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -148,9 +149,10 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             public void onError(JsonNode errors) {
                 if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
                     cardStack.unSwipeCard();
-                    Popup popup = new Popup(getContext(), "You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
             }
         }).execute();
@@ -158,11 +160,11 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected void selectedCard(JobSeeker jobSeeker) {
-        TalentDetailFragment fragment = new TalentDetailFragment();
-        fragment.jobSeeker = jobSeeker;
+    protected void selectedCard(Jobseeker jobseeker) {
+        TalentDetailsFragment fragment = new TalentDetailsFragment();
+        fragment.jobseeker = jobseeker;
         fragment.job = job;
-        fragment.action = new TalentDetailFragment.Action() {
+        fragment.action = new TalentDetailsFragment.Action() {
             @Override
             public void apply(Job job) {
                 FindTalentFragment.this.job = job;
@@ -178,8 +180,8 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected  void goToJobDetail() {
-        JobDetailFragment fragment = new JobDetailFragment();
+    protected  void goToJobDetails() {
+        JobDetailsFragment fragment = new JobDetailsFragment();
         fragment.job = job;
         getApp().pushFragment(fragment);
     }

@@ -1,20 +1,18 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".activities.IntroActivity$PlaceholderFragment">
+    tools:context=".pages.IntroActivity">
 
     <TextView
-        android:text="Welcome to Reported PD, a safe, private space to share stories of police interactions."
+        android:id="@+id/intro_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
         android:gravity="center"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:id="@+id/onboarding_title"/>
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,13 +23,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"/>
         <ImageView
+            android:id="@+id/intro_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/logo"
-            android:id="@+id/onboarding_image"/>
+            android:layout_weight="3"/>
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,12 +34,11 @@
     </LinearLayout>
 
     <TextView
-        android:text="Welcome to Reported PD, a safe, private space to share stories of police interactions."
+        android:id="@+id/intro_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="center"
-        android:textSize="16sp"
-        android:id="@+id/onboarding_comment"/>
+        android:textSize="16sp"/>
 
 </FrameLayout>

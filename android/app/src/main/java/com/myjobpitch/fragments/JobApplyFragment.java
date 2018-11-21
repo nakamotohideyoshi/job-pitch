@@ -66,7 +66,7 @@ public class JobApplyFragment extends FormFragment {
 
         title = "Apply Job";
 
-        mPitch = AppData.jobSeeker.getPitch();
+        mPitch = AppData.jobseeker.getPitch();
         if (mPitch != null) {
             AppHelper.loadImage(mPitch.getThumbnail(), mImagePreview);
             mPlayIcon.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class JobApplyFragment extends FormFragment {
             public void run() {
                 ApplicationForCreation applicationForCreation = pitchId == null ? new ApplicationForCreation() : new ApplicationForCreationWithPitch(pitchId);
                 applicationForCreation.setJob(job.getId());
-                applicationForCreation.setJob_seeker(AppData.jobSeeker.getId());
+                applicationForCreation.setJob_seeker(AppData.jobseeker.getId());
                 MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
             }
         }).addListener(new APITaskListener() {
@@ -134,7 +134,7 @@ public class JobApplyFragment extends FormFragment {
             @Override
             public void run() {
                 SpecificPitchForCreation specificPitch = new SpecificPitchForCreation();
-                specificPitch.setJob_seeker(AppData.jobSeeker.getId());
+                specificPitch.setJob_seeker(AppData.jobseeker.getId());
                 mPitch = MJPApi.shared().createSpecificPitch(specificPitch);
             }
         }).addListener(new APITaskListener() {
@@ -173,9 +173,10 @@ public class JobApplyFragment extends FormFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        Popup popup = new Popup(getContext(), "Error uploading video!", true);
-                        popup.addGreyButton("Ok", null);
-                        popup.show();
+                        new Popup(getContext())
+                                .setMessage("Error uploading video!")
+                                .addGreyButton("Ok", null)
+                                .show();
                     }
                 });
                 upload.start();

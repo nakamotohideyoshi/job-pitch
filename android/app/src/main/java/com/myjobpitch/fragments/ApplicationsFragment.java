@@ -14,7 +14,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -42,7 +42,7 @@ public class ApplicationsFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    JobSeeker jobSeeker;
+    Jobseeker jobseeker;
 
     private ApplicationAdapter adapter;
     private int applyButtonIcon;
@@ -64,7 +64,7 @@ public class ApplicationsFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -87,11 +87,11 @@ public class ApplicationsFragment extends BaseFragment {
             }
         });
 
-        if (AppData.user.isJobSeeker()) {
+        if (AppData.user.isJobseeker()) {
             addMenuItem(MENUGROUP2, 100, "Edit Profile", R.drawable.ic_edit);
         }
 
-        if (jobSeeker != null) {
+        if (jobseeker != null) {
             showInactiveBanner();
         }
 
@@ -111,7 +111,7 @@ public class ApplicationsFragment extends BaseFragment {
     }
 
     void showInactiveBanner() {
-        if (!jobSeeker.isActive()) {
+        if (!jobseeker.isActive()) {
             AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "");
@@ -125,8 +125,8 @@ public class ApplicationsFragment extends BaseFragment {
             @Override
             public void run() {
                 applications.addAll(getApplications());
-                if (AppData.user.isJobSeeker()) {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                if (AppData.user.isJobseeker()) {
+                    jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
                 }
             }
         }).addListener(new APITaskListener() {
@@ -138,7 +138,7 @@ public class ApplicationsFragment extends BaseFragment {
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (AppData.user.isJobSeeker()) {
+                if (AppData.user.isJobseeker()) {
                     showInactiveBanner();
                 }
             }

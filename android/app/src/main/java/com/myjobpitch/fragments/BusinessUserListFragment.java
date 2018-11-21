@@ -1,28 +1,22 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Workplace;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -60,7 +54,7 @@ public class BusinessUserListFragment extends BaseFragment {
 
     public String businessName;
     public Business business;
-    public List<Location> locations;
+    public List<Workplace> workplaces;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +68,7 @@ public class BusinessUserListFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -102,12 +96,13 @@ public class BusinessUserListFragment extends BaseFragment {
                     fragment.isEditMode = true;
                     fragment.businessUser = adapter.getItem(position);
                     fragment.businessId = business.getId();
-                    fragment.locations = locations;
+                    fragment.workplaces = workplaces;
                     getApp().pushFragment(fragment);
                 } else {
-                    Popup popup = new Popup(getContext(), "Cannot edit currently logged in user.", true);
-                    popup.addGreyButton("Ok", null);
-                    popup.show();
+                    new Popup(getContext())
+                            .setMessage("Cannot edit currently logged in user.")
+                            .addGreyButton("Ok", null)
+                            .show();
                 }
             }
         });
@@ -134,7 +129,7 @@ public class BusinessUserListFragment extends BaseFragment {
         BusinessUserEditFragment fragment = new BusinessUserEditFragment();
         fragment.isEditMode = false;
         fragment.businessId = business.getId();
-        fragment.locations = locations;
+        fragment.workplaces = workplaces;
         getApp().pushFragment(fragment);
     }
 
@@ -148,11 +143,11 @@ public class BusinessUserListFragment extends BaseFragment {
     }
 
     void loadWorkplaces() {
-        locations = new ArrayList<>();
+        workplaces = new ArrayList<>();
         new APITask(new APIAction() {
             @Override
             public void run() {
-                locations.addAll(MJPApi.shared().getUserLocations(business.getId()));
+                workplaces.addAll(MJPApi.shared().getUserWorkplaces(business.getId()));
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -220,7 +215,7 @@ public class BusinessUserListFragment extends BaseFragment {
 
         @Override
         public void fillValues(final int position, View convertView) {
-            AppHelper.showBusinessUserInfo(getItem(position), convertView, locations);
+            AppHelper.showBusinessUserInfo(getItem(position), convertView, workplaces);
         }
 
     }

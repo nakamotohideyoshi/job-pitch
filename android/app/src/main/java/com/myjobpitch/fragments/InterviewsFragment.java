@@ -18,7 +18,7 @@ import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -46,7 +46,7 @@ public class InterviewsFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    JobSeeker jobSeeker;
+    Jobseeker jobseeker;
 
     public Job job;
     public List<Application> applications;
@@ -74,7 +74,7 @@ public class InterviewsFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -94,7 +94,7 @@ public class InterviewsFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                InterviewDetailFragment fragment = new InterviewDetailFragment();
+                InterviewDetailsFragment fragment = new InterviewDetailsFragment();
                 fragment.interviewId = adapter.getItem(position).getId();
                 for (Application application : applications) {
                     if (adapter.getItem(position).getApplication().intValue() == application.getId().intValue()) {
@@ -106,7 +106,7 @@ public class InterviewsFragment extends BaseFragment {
             }
         });
 
-        if (AppData.user.isJobSeeker()) {
+        if (AppData.user.isJobseeker()) {
             addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
         }
 

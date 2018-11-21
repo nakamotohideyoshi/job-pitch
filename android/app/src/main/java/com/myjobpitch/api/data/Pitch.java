@@ -12,10 +12,10 @@ public class Pitch extends MJPAPIObject {
     private String thumbnail;
 
     @JsonProperty("job_seeker")
-    private Integer jobSeeker;
+    private Integer jobseeker;
 
-    public Integer getJobSeeker() {
-        return jobSeeker;
+    public Integer getJobseeker() {
+        return jobseeker;
     }
 
     public String getVideo() {

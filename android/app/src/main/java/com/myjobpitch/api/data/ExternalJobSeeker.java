@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @JsonIgnoreProperties({"user"})
-public class ExternalJobSeeker implements Serializable {
+public class ExternalJobseeker implements Serializable {
     private String first_name;
     private String last_name;
     private String email;

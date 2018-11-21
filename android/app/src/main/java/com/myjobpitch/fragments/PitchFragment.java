@@ -20,7 +20,7 @@ import com.myjobpitch.activities.CameraActivity;
 import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Jobseeker;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -53,7 +53,7 @@ public class PitchFragment extends BaseFragment {
     @BindView(R.id.skip_button)
     TextView mSkipButton;
 
-    JobSeeker jobSeeker;
+    Jobseeker jobseeker;
     Pitch mPitch;
     String mVideoPath;
 
@@ -65,14 +65,14 @@ public class PitchFragment extends BaseFragment {
 
         mUploadButton.setVisibility(View.GONE);
 
-        if (jobSeeker == null) {
+        if (jobseeker == null) {
             showLoading(view);
             new APITask(new APIAction() {
                 @Override
                 public void run() {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-//                    AppData.existProfile = jobSeeker.getProfile() != null;
-                    mPitch = jobSeeker.getPitch();
+                    jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
+//                    AppData.existProfile = jobseeker.getProfile() != null;
+                    mPitch = jobseeker.getPitch();
                 }
             }).addListener(new APITaskListener() {
                 @Override
@@ -184,8 +184,8 @@ public class PitchFragment extends BaseFragment {
                                 new APITask(new APIAction() {
                                     @Override
                                     public void run() {
-                                        jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                                        mPitch = jobSeeker.getPitch();
+                                        jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
+                                        mPitch = jobseeker.getPitch();
                                         mVideoPath = null;
                                     }
                                 }).addListener(new APITaskListener() {
@@ -217,9 +217,10 @@ public class PitchFragment extends BaseFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        Popup popup = new Popup(getContext(), "Error uploading video!", true);
-                        popup.addGreyButton("Ok", null);
-                        popup.show();
+                        new Popup(getContext())
+                                .setMessage("Error uploading video!")
+                                .addGreyButton("Ok", null)
+                                .show();
                     }
                 });
                 upload.start();

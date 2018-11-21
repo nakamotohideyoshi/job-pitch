@@ -41,7 +41,7 @@ public class ChangePasswordFragment extends FormFragment {
         View view = inflater.inflate(R.layout.fragment_change_password, container, false);
         ButterKnife.bind(this, view);
 
-        mEmailView.setText("Email: " + AppData.getEmail());
+        mEmailView.setText("Email: " + getApp().loadData(AppData.KEY_EMAIL));
 
         return  view;
     }
@@ -74,9 +74,10 @@ public class ChangePasswordFragment extends FormFragment {
             @Override
             public void onSuccess() {
                 hideLoading();
-                Popup popup = new Popup(getContext(), "Success!", true);
-                popup.addGreenButton("Ok", null);
-                popup.show();
+                new Popup(getContext())
+                        .setMessage("Success!")
+                        .addGreenButton("Ok", null)
+                        .show();
             }
             @Override
             public void onError(JsonNode errors) {

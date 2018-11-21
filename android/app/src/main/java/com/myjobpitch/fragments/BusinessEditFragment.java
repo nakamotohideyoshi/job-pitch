@@ -60,7 +60,7 @@ public class BusinessEditFragment extends FormFragment {
         View view = inflater.inflate(R.layout.fragment_business_edit, container, false);
         ButterKnife.bind(this, view);
 
-        imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+        imageSelector = new ImageSelector(getApp(), logoView, R.drawable.default_logo);
         isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
         if (business == null) {
@@ -164,7 +164,7 @@ public class BusinessEditFragment extends FormFragment {
                     business = MJPApi.shared().createBusiness(business);
                     AppData.user = MJPApi.shared().getUser();
                 } else {
-                    business = MJPApi.shared().updateBusiness(business);
+                    business = MJPApi.shared().updateBusiness(business.getId(), business);
                 }
             }
         }).addListener(new APITaskListener() {
@@ -232,7 +232,7 @@ public class BusinessEditFragment extends FormFragment {
         }
 
         getApp().getSupportFragmentManager().popBackStackImmediate();
-        BusinessDetailFragment fragment = new BusinessDetailFragment();
+        BusinessDetailsFragment fragment = new BusinessDetailsFragment();
         fragment.isFirstCreate = isFirstCreate;
         fragment.businessId = business.getId();
         getApp().pushFragment(fragment);

@@ -1,12 +1,25 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.myjobpitch",
-      "sha256_cert_fingerprints": [
-        "4C:3B:2A:36:A4:BF:C8:8A:1F:06:1F:B8:F3:D7:FA:AA:5B:73:6E:F2:3B:F4:17:C3:1C:F4:3B:39:FC:CC:0E:15"
-      ]
-    }
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.myjobpitch",
+    "sha256_cert_fingerprints":
+    ["4C:3B:2A:36:A4:BF:C8:8A:1F:06:1F:B8:F3:D7:FA:AA:5B:73:6E:F2:3B:F4:17:C3:1C:F4:3B:39:FC:CC:0E:15"]
   }
-]
+},
+{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target": {
+    "namespace": "web",
+    "site": "https://test.sclabs.co.uk"
+  }
+},
+{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.myjobpitch",
+    "sha256_cert_fingerprints":
+    ["4C:3B:2A:36:A4:BF:C8:8A:1F:06:1F:B8:F3:D7:FA:AA:5B:73:6E:F2:3B:F4:17:C3:1C:F4:3B:39:FC:CC:0E:15"]
+  }
+}]

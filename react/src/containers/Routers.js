@@ -303,8 +303,13 @@ const Routers = ({ user }) => {
 
       {/********* public routers ********/}
 
-      <Route exact path="/public/locations/:workplaceId" component={PublicWorkplace} />
-      <Route exact path="/public/jobs/:jobId" component={PublicJob} />
+      <Route
+        exact
+        path="/public/locations/:workplaceId"
+        render={props => <Layout content={PublicWorkplace} {...props} />}
+      />
+
+      <Route exact path="/public/jobs/:jobId" render={props => <Layout content={PublicJob} {...props} />} />
 
       <Route exact component={NotFound} />
     </Switch>

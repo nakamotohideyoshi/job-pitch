@@ -25,6 +25,7 @@ export const uploadVideoToAWS = (endpoint, { id, token }, pitchData, onUploadPro
       },
       error => {
         if (error) throw error;
+        localStorage.removeItem('aws.cognito.identity-id.eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2');
         resolve();
       }
     ).on('httpUploadProgress', progress => {

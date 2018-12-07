@@ -259,6 +259,12 @@ class Profile extends React.Component {
 
     if (!profile) {
       this.props.history.push('/jobseeker/settings/jobprofile');
+      return;
+    }
+
+    const { from } = this.props.location.state || {};
+    if (from) {
+      this.props.history.push(from.pathname, from.state);
     }
   };
 

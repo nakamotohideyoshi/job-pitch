@@ -39,9 +39,9 @@ class FindJob extends React.Component {
   };
 
   componentWillMount() {
-    const { findJobsAction, location } = this.props;
+    const { findJobsAction, location, jobs } = this.props;
     const { jobId } = location.state || {};
-    if (jobId) {
+    if (jobId && jobs) {
       this.onSelect(jobId);
     } else {
       findJobsAction();
@@ -62,7 +62,7 @@ class FindJob extends React.Component {
   onApply = (job, event) => {
     event && event.stopPropagation();
 
-    const { jobseeker, history } = this.props;
+    const { jobseeker } = this.props;
 
     if (!jobseeker.active) {
       confirm({
@@ -71,7 +71,7 @@ class FindJob extends React.Component {
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push('/jobseeker/settings/profile');
+          this.goProfile();
         }
       });
       return;
@@ -86,7 +86,7 @@ class FindJob extends React.Component {
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push('/jobseeker/settings/profile');
+          this.goProfile();
         }
       });
       return;
@@ -100,13 +100,24 @@ class FindJob extends React.Component {
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push('/jobseeker/settings/profile');
+          this.goProfile();
         }
       });
       return;
     }
 
     this.setState({ visibleApply: true, selectedId: job.id });
+  };
+
+  goProfile = () => {
+    this.props.history.push('/jobseeker/settings/profile', {
+      from: {
+        pathname: '/jobseeker/find',
+        state: {
+          jobId: this.state.selectedId
+        }
+      }
+    });
   };
 
   onSelect = selectedId => this.setState({ visibleDetail: !!selectedId, selectedId });

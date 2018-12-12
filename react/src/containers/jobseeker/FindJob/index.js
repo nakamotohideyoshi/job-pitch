@@ -270,7 +270,7 @@ class FindJob extends React.Component {
 
         <PageSubHeader>
           <Breadcrumb />
-          <Link to="/jobseeker/settings/jobprofile">Change job matches</Link>
+          <Link to="/jobseeker/settings/jobprofile">Change job criteria</Link>
         </PageSubHeader>
 
         <div className="content">

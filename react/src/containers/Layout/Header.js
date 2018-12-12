@@ -19,7 +19,7 @@ import { Icons } from 'components';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { logoutAction } from 'redux/auth';
-import titleImage from 'assets/title.png';
+import titleImage from 'assets/title_horizontal_version2_white.png';
 
 import JsMenu from './menus/JsMenu';
 import RcMenu from './menus/RcMenu';

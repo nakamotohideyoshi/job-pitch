@@ -30,12 +30,12 @@ const Settings = ({ location, history, jobseeker }) => {
       </PageHeader>
 
       <Tabs activeKey={activeKey} animated={false} onChange={selecteTab}>
-        <TabPane tab="My Profile" key="profile">
+        <TabPane tab="My Details" key="profile">
           <Profile />
         </TabPane>
 
         {jobseeker && (
-          <TabPane tab="Job Profile" key="jobprofile">
+          <TabPane tab="Job Criteria" key="jobprofile">
             <JobProfile />
           </TabPane>
         )}

@@ -406,14 +406,12 @@ class Profile extends React.Component {
         <Item
           label={
             <span>
-              CV summary&nbsp;
+              About yourself &nbsp;
               <Popover
                 placement="right"
                 content={
                   <span>
-                    CV summary is what the recruiter first see, write if you
-                    <br />
-                    have previous relevant experience where and for how long.
+                    Highlights from your CV
                   </span>
                 }
               >

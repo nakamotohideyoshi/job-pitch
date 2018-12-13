@@ -61,7 +61,7 @@ class JobProfile extends React.Component {
 
         success: () => {
           this.setState({ loading: false });
-          message.success('Job Profile saved successfully!!');
+          message.success('Job Criteria saved successfully!!');
 
           if (!jobprofile) {
             this.props.history.push('/jobseeker/find');

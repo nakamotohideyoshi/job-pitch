@@ -30,11 +30,17 @@ export default styled(Layout.Header)`
   .title-logo {
     display: inline-block;
     margin: 0 20px 0 10px;
+    width: 172px;
+    position: relative;
+    top: -5px;
+    & > img {
+       width: 100%;
+    }
   }
 
   .left-menu {
     display: inline-block;
-    width: calc(100% - 270px);
+    width: calc(100% - 302px);
 
     ${media.tablet`
       float: left;

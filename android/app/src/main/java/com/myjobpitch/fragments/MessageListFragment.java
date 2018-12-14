@@ -14,7 +14,7 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.api.data.MessageForUpdate;
@@ -33,9 +33,8 @@ import butterknife.BindView;
 
 public class MessageListFragment extends ApplicationsFragment {
 
-    View noPitchView;
     Job job;
-    Jobseeker jobseeker;
+    JobSeeker jobSeeker;
 
     @BindView(R.id.job_title_view)
     View jobTitleView;
@@ -43,25 +42,15 @@ public class MessageListFragment extends ApplicationsFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = initView(inflater, container, R.drawable.swipe_icon_message, "You have no applications.", R.layout.cell_message_list);
-
-        noPitchView = view.findViewById(R.id.nopitch_view);
-        view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getApp().setRootFragement(R.id.menu_record);
-            }
-        });
+        View view = initView(inflater, container, R.drawable.swipe_icon_message, getString(R.string.applications_empty_text), R.layout.cell_message_list);
 
         // header view, loading data
 
-        title = "Messages";
+        title = getString(R.string.messages_title);
 
         if (job != null) {
             AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
-            addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
         } else {
-            AppHelper.setJobTitleViewText(jobTitleView, "All Messages");
             updateMessage();
         }
 
@@ -76,23 +65,14 @@ public class MessageListFragment extends ApplicationsFragment {
     protected List<Application> getApplications() {
         Integer jobseekerId = AppData.user.getJob_seeker();
         if (jobseekerId != null) {
-            jobseeker = MJPApi.shared().get(Jobseeker.class, jobseekerId);
-            if (jobseeker.getPitch() == null) {
-                Handler mainHandler = new Handler(MessageListFragment.this.getContext().getMainLooper());
-
-                Runnable myRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        noPitchView.setVisibility(View.VISIBLE);
-                    }
-                };
-                mainHandler.post(myRunnable);
+            jobSeeker = MJPApi.shared().get(JobSeeker.class, jobseekerId);
+            if (jobSeeker.getPitch() == null) {
                 return new ArrayList<>();
             }
         }
 
-        List<Application> appApplicationsList = new ArrayList();
-        List<Application> applications = new ArrayList();
+       List<Application> appApplicationsList = new ArrayList();
+       List<Application> applications = new ArrayList();
 
         String query = job != null ? "job=" + job.getId() : null;
         appApplicationsList.addAll(MJPApi.shared().get(Application.class, query));
@@ -113,14 +93,14 @@ public class MessageListFragment extends ApplicationsFragment {
             Message lastMessage = application.getMessages().get(application.getMessages().size() - 1);
             Job job = application.getJob_data();
 
-            if (AppData.user.isJobseeker()) {
+            if (AppData.user.isJobSeeker()) {
                 AppHelper.loadJobLogo(job, AppHelper.getImageView(view));
                 setItemTitle(view, job.getTitle());
                 setItemSubTitle(view, AppHelper.getBusinessName(job));
             } else {
-                Jobseeker jobseeker = application.getJob_seeker();
-                AppHelper.loadJobseekerImage(jobseeker, AppHelper.getImageView(view));
-                setItemTitle(view, AppHelper.getJobseekerName(jobseeker));
+                JobSeeker jobSeeker = application.getJob_seeker();
+                AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
+                setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
                 setItemSubTitle(view, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
             }
 
@@ -152,33 +132,23 @@ public class MessageListFragment extends ApplicationsFragment {
     protected void selectedApplication(Application application) {
         final Application selectedApplication = application;
 
-        if (AppData.user.isJobseeker()) {
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-//                    AppData.existProfile = jobseeker.getProfile() != null;
-                }
+        if (AppData.user.isJobSeeker()) {
+            new APITask(() -> {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+//                    AppData.existProfile = jobSeeker.getProfile() != null;
             }).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
-                    if (!jobseeker.isActive()) {
-                        new Popup(getContext())
-                                .setMessage("To message please activate your account")
-                                .addGreenButton("Activate", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
+                    if (!jobSeeker.isActive()) {
+                        Popup popup = new Popup(getContext(), R.string.to_message_account_activate, true);
+                        popup.addGreenButton(R.string.activate, view -> {
 
-                                        TalentProfileFragment fragment = new TalentProfileFragment();
-                                        getApp().pushFragment(fragment);
-                                    }
-                                })
-                                .addGreyButton("Cancel", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                    }
-                                })
-                                .show();
+                            TalentProfileFragment fragment = new TalentProfileFragment();
+                            getApp().pushFragment(fragment);
+                        });
+                        popup.addGreyButton(R.string.cancel, v -> {
+                        });
+                        popup.show();
                     } else {
                         MessageFragment fragment = new MessageFragment();
                         fragment.application = selectedApplication;
@@ -194,23 +164,16 @@ public class MessageListFragment extends ApplicationsFragment {
 
             final Job selectedJob = application.getJob_data();
             if (selectedJob.getStatus() == 2) {
-                new Popup(getContext())
-                        .setMessage("To message please activate your job")
-                        .addGreenButton("Activate", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                JobEditFragment fragment = new JobEditFragment();
-                                fragment.job = selectedJob;
-                                fragment.activation = true;
-                                getApp().pushFragment(fragment);
-                            }
-                        })
-                        .addGreyButton("Cancel", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                            }
-                        })
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.to_message_activate_job, true);
+                popup.addGreenButton(R.string.activate, view -> {
+                    JobEditFragment fragment = new JobEditFragment();
+                    fragment.job = selectedJob;
+                    fragment.activation = true;
+                    getApp().pushFragment(fragment);
+                });
+                popup.addGreyButton(R.string.cancel, v -> {
+                });
+                popup.show();
             } else {
                 MessageFragment fragment = new MessageFragment();
                 fragment.application = application;
@@ -225,12 +188,7 @@ public class MessageListFragment extends ApplicationsFragment {
             messageForUpdate.setId(message.getId());
             messageForUpdate.setRead(true);
 
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    MJPApi.shared().update(MessageForUpdate.class, messageForUpdate);
-                }
-            }).addListener(new APITaskListener() {
+            new APITask(() -> MJPApi.shared().update(MessageForUpdate.class, messageForUpdate)).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                 }

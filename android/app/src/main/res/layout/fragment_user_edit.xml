@@ -12,7 +12,7 @@
         android:background="#fff">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
 
@@ -22,17 +22,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor" />
+                app:met_primaryColor="@color/colorGreen" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="left">
+                android:layout_gravity="start">
 
                 <CheckBox
                     android:id="@+id/administrator_active"
@@ -43,11 +43,11 @@
                     android:theme="@style/CheckBox" />
 
                 <TextView
-                    android:text="Administrator"
+                    android:text="@string/administrator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:theme="@style/DefaultText" />
 
 
@@ -62,9 +62,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:hint="Locations"
+                    android:hint="@string/workplaces_title"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <Button
                     android:id="@+id/location_select_button"
                     android:layout_width="match_parent"
@@ -74,7 +74,7 @@
 
             <Button
                 android:id="@+id/user_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"
@@ -84,7 +84,7 @@
 
             <Button
                 android:id="@+id/user_resend"
-                android:text="Resend invitation"
+                android:text="@string/resend_inviation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"
@@ -94,7 +94,7 @@
 
             <Button
                 android:id="@+id/user_delete"
-                android:text="Delete User"
+                android:text="@string/delete_user"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"

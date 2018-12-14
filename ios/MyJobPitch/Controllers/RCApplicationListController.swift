@@ -83,20 +83,20 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         let controller1 = RCApplicationSubListController.instantiate()
-        controller1.title = "NEW APPLICATIONS"
-        controller1.emptyMsg = "No applications at the moment. Once thet happens you cant go trough them here and shortlist\nif needed, you can easy switch to Find Talent mode and \"head hunt\" as well."
+        controller1.title = NSLocalizedString("NEW APPLICATIONS", comment: "")
+        controller1.emptyMsg = NSLocalizedString("No applications at the moment. Once thet happens you cant go trough them here and shortlist\nif needed, you can easy switch to Find Talent mode and \"head hunt\" as well.", comment: "")
         controller1.job = job
         controller1.status = ApplicationStatus.APPLICATION_CREATED_ID
         
         let controller2 = RCApplicationSubListController.instantiate()
-        controller2.title = "MY CONNECTIONS"
-        controller2.emptyMsg = "No candidates have applied for this job yet. Once that happens, their applications will appear here."
+        controller2.title = NSLocalizedString("MY CONNECTIONS", comment: "")
+        controller2.emptyMsg = NSLocalizedString("No candidates have applied for this job yet. Once that happens, their applications will appear here.", comment: "")
         controller2.job = job
         controller2.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
         
         let controller3 = RCApplicationSubListController.instantiate()
-        controller3.title = "MY SHORTLIST"
-        controller3.emptyMsg = "You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."
+        controller3.title = NSLocalizedString("MY SHORTLIST", comment: "")
+        controller3.emptyMsg = NSLocalizedString("You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications.", comment: "")
         controller3.job = job
         controller3.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
         controller3.shortlisted = true
@@ -191,7 +191,8 @@ extension RCApplicationSubListController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
 
-                            PopupController.showYellow("Are you sure you want to delete this application?", ok: "Delete", okCallback: {
+                            PopupController.showYellow(NSLocalizedString("Are you sure you want to delete this application?", comment: ""),
+                                                       ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                                 
                                 self.showLoading()
                                 
@@ -203,7 +204,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                     }
                                 }
                                 
-                            }, cancel: "Cancel", cancelCallback: nil)
+                            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
                             
                             return false
             })
@@ -217,7 +218,8 @@ extension RCApplicationSubListController: UITableViewDataSource {
                           callback: { (cell) -> Bool in
                             
                             if self.status == ApplicationStatus.APPLICATION_CREATED_ID {
-                                PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect (1 credit)", okCallback: {
+                                PopupController.showYellow(NSLocalizedString("Are you sure you want to connect this application?", comment: ""),
+                                                           ok: NSLocalizedString("Connect (1 credit)", comment: ""), okCallback: {
                                     
                                     self.showLoading()
                                     
@@ -233,7 +235,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
                                         }
                                     }
                                     
-                                }, cancel: "Cancel", cancelCallback: nil)
+                                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
                                 
                             } else {
                                 let controller = MessageController0.instantiate()

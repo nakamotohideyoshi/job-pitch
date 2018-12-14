@@ -27,16 +27,16 @@ class SwipeController: MJPController {
         
         if AppData.user.isJobseeker() {
             
-            title = "Find Job"
-            emptyView.message.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
+            title = NSLocalizedString("Find Job", comment: "")
+            emptyView.message.text = NSLocalizedString("There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above.", comment: "")
             infoLabel.superview?.isHidden = true
             creditsButton.superview?.isHidden = true
             
         } else {
             
-            title = "Find Talent"
+            title = NSLocalizedString("Find Talent", comment: "")
             
-            emptyView.button.setTitle("Remove filter", for: .normal)
+            emptyView.button.setTitle(NSLocalizedString("Remove filter", comment: ""), for: .normal)
             updateEmptyView()
             updateTokens()
         }
@@ -83,12 +83,12 @@ class SwipeController: MJPController {
     }
     
     func updateEmptyView() {
-        var str = "There are no more new matches for this job."
+        var str = NSLocalizedString("There are no more new matches for this job.", comment: "")
         if searchJob.requiresCV {
-            str = String(format: "%@\n\n%@", str, "You are currently hiding job seekers who have not uploaded a CV")
+            str = String(format: "%@\n\n%@", str, NSLocalizedString("You are currently hiding job seekers who have not uploaded a CV", comment: ""))
         }
         if searchJob.requiresPitch {
-            str = String(format: "%@\n%@", str, "You are currently hiding job seekers who have not uploaded a video pitch")
+            str = String(format: "%@\n%@", str, NSLocalizedString("You are currently hiding job seekers who have not uploaded a video pitch", comment: ""))
         }
         emptyView.message.text = str
         
@@ -111,7 +111,7 @@ class SwipeController: MJPController {
     func updateTokens() {
         let tokens = searchJob.locationData.businessData.tokens // temp code
         let credits = tokens != nil ? (tokens as! Int) : 0
-        creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
+        creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? NSLocalizedString("Credits", comment: "") : NSLocalizedString("Credit", comment: "")), for: .normal)
     }
     
     func refreshCompleted(_ data: [MJPObject]) {
@@ -153,8 +153,8 @@ class SwipeController: MJPController {
         
         // swipe options
         let options = MDCSwipeToChooseViewOptions()
-        options.likedText = AppData.user.isJobseeker() ? "Apply" : "Connect"
-        options.nopeText = "Remove"
+        options.likedText = AppData.user.isJobseeker() ? NSLocalizedString("Apply", comment: "") : NSLocalizedString("Connect", comment: "")
+        options.nopeText = NSLocalizedString("Remove", comment: "")
         options.delegate = self
         options.likedColor = AppData.greenColor
         options.nopeColor = AppData.yellowColor
@@ -293,18 +293,20 @@ class SwipeController: MJPController {
         if AppData.user.isJobseeker() {
 
             if (!AppData.jobseeker.active) {
-                PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
+                PopupController.showGreen(NSLocalizedString("To apply please activate your account", comment: ""),
+                                          ok: NSLocalizedString("Activate", comment: ""), okCallback: {
                     self.editAction()
-                }, cancel: "Cancel") {
+                }, cancel: NSLocalizedString("Cancel", comment: "")) {
                     self.reloadCard()
                 }
                 return
             }
             
             if (AppData.jobseeker.profileImage == nil) {
-                PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
+                PopupController.showGreen(NSLocalizedString("To apply please set your photo", comment: ""),
+                                          ok: NSLocalizedString("Edit profile", comment: ""), okCallback: {
                     self.editAction()
-                }, cancel: "Cancel") {
+                }, cancel: NSLocalizedString("Cancel", comment: "")) {
                     self.reloadCard()
                 }
                 return
@@ -312,9 +314,11 @@ class SwipeController: MJPController {
             
             let job = self.data[self.currentIndex - self.cards.count] as! Job
             if (job.requiresCV && AppData.jobseeker.cv == nil) {
-                PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
+                PopupController.showGreen(NSLocalizedString("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", comment: ""),
+                                          ok: NSLocalizedString("Edit profile", comment: ""),
+                                          okCallback: {
                     self.editAction()
-                }, cancel: "Cancel") {
+                }, cancel: NSLocalizedString("Cancel", comment: "")) {
                     self.reloadCard()
                 }
                 return

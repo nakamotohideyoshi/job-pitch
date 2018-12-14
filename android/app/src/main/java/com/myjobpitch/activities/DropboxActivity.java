@@ -31,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -79,57 +78,47 @@ public class DropboxActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mToolbar.setNavigationIcon(R.drawable.ic_back);
-        mToolbar.setTitle("Dropbox");
+        mToolbar.setTitle(R.string.dropbox);
         setSupportActionBar(mToolbar);
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (dbxClient != null) {
-                    new GetFilesTask().execute();
-                } else {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (dbxClient != null) {
+                new GetFilesTask().execute();
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
         // list view
 
         if (adapter == null) {
-            adapter = new FilesAdapter(this, new ArrayList<Metadata>());
+            adapter = new FilesAdapter(this, new ArrayList<>());
         } else {
             adapter.clear();
         }
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Metadata metadata = adapter.getItem(position);
-                if (metadata instanceof FolderMetadata) {
-                    if (((FolderMetadata) metadata).getId().equals("back")) {
-                        arrPath.remove(arrPath.size()-1);
-                    } else {
-                        arrPath.add(metadata.getName());
-                    }
-                    adapter.clear();
-                    new GetFilesTask().execute();
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            final Metadata metadata = adapter.getItem(position);
+            if (metadata instanceof FolderMetadata) {
+                if (((FolderMetadata) metadata).getId().equals("back")) {
+                    arrPath.remove(arrPath.size()-1);
                 } else {
-                    String title = String.format("Do you want to download %s?", metadata.getName());
-                    new Popup(DropboxActivity.this)
-                            .setMessage(title)
-                            .addGreenButton("Download", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    selectedFile = (FileMetadata)metadata;
-                                    download();
-                                }
-                            })
-                            .addGreyButton("Cancel", null)
-                            .show();
+                    arrPath.add(metadata.getName());
                 }
+                adapter.clear();
+                new GetFilesTask().execute();
+            } else {
+                String title = String.format(getString(R.string.download_message), metadata.getName());
+                Popup popup = new Popup(DropboxActivity.this, title, true);
+                popup.addGreenButton(R.string.download, v -> {
+                    selectedFile = (FileMetadata)metadata;
+                    download();
+                });
+                popup.addGreyButton(R.string.cancel, null);
+                popup.show();
             }
         });
 
@@ -159,7 +148,7 @@ public class DropboxActivity extends AppCompatActivity {
             dbxClient = new DbxClientV2(requestConfig, accessToken);
 
             if (signButton != null) {
-                signButton.setTitle("Sign out");
+                signButton.setTitle(R.string.sign_out);
             }
 
             arrPath.clear();
@@ -170,7 +159,7 @@ public class DropboxActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        signButton = menu.add(Menu.NONE, 100, 1, dbxClient == null ? "Sign in" : "Sign out");
+        signButton = menu.add(Menu.NONE, 100, 1, dbxClient == null ? R.string.sign_in : R.string.sign_out);
         signButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
@@ -187,7 +176,7 @@ public class DropboxActivity extends AppCompatActivity {
                 try {
                     dbxClient = null;
                     adapter.clear();
-                    signButton.setTitle("Sign in");
+                    signButton.setTitle(R.string.sign_in);
                     SharedPreferences prefs = getSharedPreferences("dropbox", MODE_PRIVATE);
                     prefs.edit().remove("access-token").apply();
                 } catch (Exception e) {
@@ -295,12 +284,12 @@ public class DropboxActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-//            LoadingView.show(DropboxActivity.this, "Downloading...");
+//            Loading.show(DropboxActivity.this, "Downloading...");
         }
 
         @Override
         protected void onPostExecute(String path) {
-//            LoadingView.hide();
+//            Loading.hide();
             if (path != null) {
                 Intent intent = new Intent();
                 intent.putExtra("path", path);
@@ -337,11 +326,11 @@ public class DropboxActivity extends AppCompatActivity {
                     icon = R.drawable.d_pdf;
                 }
             }
-            ImageView iconView = (ImageView)convertView.findViewById(R.id.image_view);
+            ImageView iconView = convertView.findViewById(R.id.image_view);
             iconView.setBackgroundColor(Color.TRANSPARENT);
             iconView.setImageResource(icon);
 
-            TextView nameView = (TextView) convertView.findViewById(R. id.file_name);
+            TextView nameView = convertView.findViewById(R. id.file_name);
             nameView.setText(metadata.getName());
 
             String strSize = "";
@@ -358,7 +347,7 @@ public class DropboxActivity extends AppCompatActivity {
                     strSize = (int)size/1024/1024/1024 + " GB";
                 }
             }
-            TextView attributesView = (TextView) convertView.findViewById(R.id.file_attributes);
+            TextView attributesView = convertView.findViewById(R.id.file_attributes);
             attributesView.setText(strSize);
 
             return convertView;

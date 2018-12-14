@@ -25,7 +25,7 @@ class HRJobEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = job == nil ? "Add Job" : "Edit Job"
+        title = job == nil ? NSLocalizedString("Add Job", comment: "") : NSLocalizedString("Edit Job", comment: "")
         isModal = true
         
         workplaceNames = AppData.workplaces.map { $0.name }
@@ -53,7 +53,7 @@ class HRJobEditController: MJPController {
         return [
             "title":    (titleView, titleErrorView),
             "description":    (descriptionView, descriptionErrorView),
-            "workplace":    (workplaceView, workplaceErrorView),
+            "location":    (workplaceView, workplaceErrorView),
         ]
     }
     

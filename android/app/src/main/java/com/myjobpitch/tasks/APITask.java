@@ -35,11 +35,7 @@ public class APITask extends AsyncTask<Void, Void, Boolean> {
                     errors = mapper.readTree(e.getResponseBodyAsByteArray());
                 } catch (IOException e1) {}
             } else if (statusCode == 403) {
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    Log.e("MJPApiException", e.getResponseBodyAsString());
-                    errors = mapper.readTree(e.getResponseBodyAsByteArray());
-                } catch (IOException e1) {}
+
             } else {
                 e.printStackTrace();
             }

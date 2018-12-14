@@ -24,13 +24,13 @@ import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.activities.CameraActivity;
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.activities.WebviewActivity;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.Jobseeker;
-import com.myjobpitch.api.data.JobseekerForUpdate;
+import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.JobSeekerForUpdate;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.APIAction;
@@ -149,15 +149,15 @@ public class TalentProfileFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_talent_profile, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Edit Profile";
+        title = getString(R.string.edit_profile);
 
         // data
         mSexNames = AppHelper.getNames(AppData.sexes);
         mSexView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mSexNames));
 
-        if (AppData.jobseeker == null) {
+        if (AppData.jobSeeker == null) {
             mAvatarView.setImageResource(R.drawable.avatar);
-            mEmailView.setText(getApp().loadData(AppData.KEY_EMAIL));
+            mEmailView.setText(AppData.getEmail());
             mCVViewButton.setVisibility(View.GONE);
         } else {
             load();
@@ -179,66 +179,60 @@ public class TalentProfileFragment extends FormFragment {
 
     void load() {
 
-        Jobseeker jobseeker = AppData.jobseeker;
+        JobSeeker jobSeeker = AppData.jobSeeker;
 
-        final String imagePath = jobseeker.getProfile_image();
+        final String imagePath = jobSeeker.getProfile_image();
         if (imagePath != null) {
             AppHelper.loadImage(imagePath, mAvatarView);
         } else {
             mAvatarView.setImageResource(R.drawable.avatar);
         }
 
-        mActiveView.setChecked(jobseeker.isActive());
+        mActiveView.setChecked(jobSeeker.isActive());
 
-        mFirstNameView.setText(jobseeker.getFirst_name());
-        mLastNameView.setText(jobseeker.getLast_name());
+        mFirstNameView.setText(jobSeeker.getFirst_name());
+        mLastNameView.setText(jobSeeker.getLast_name());
 
-        mEmailView.setText(jobseeker.getEmail());
-        mEmailPublicView.setChecked(jobseeker.getEmail_public());
+        mEmailView.setText(jobSeeker.getEmail());
+        mEmailPublicView.setChecked(jobSeeker.getEmail_public());
 
-        mTelephoneView.setText(jobseeker.getTelephone());
-        mTelephonePublicView.setChecked(jobseeker.getTelephone_public());
+        mTelephoneView.setText(jobSeeker.getTelephone());
+        mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
 
-        mMobileView.setText(jobseeker.getMobile());
-        mMobilePublicView.setChecked(jobseeker.getMobile_public());
+        mMobileView.setText(jobSeeker.getMobile());
+        mMobilePublicView.setChecked(jobSeeker.getMobile_public());
 
-        if (jobseeker.getAge() != null) {
-            mAgeView.setText(jobseeker.getAge().toString());
+        if (jobSeeker.getAge() != null) {
+            mAgeView.setText(jobSeeker.getAge().toString());
         }
-        mAgePublicView.setChecked(jobseeker.getAge_public());
+        mAgePublicView.setChecked(jobSeeker.getAge_public());
 
-        if (jobseeker.getSex() != null) {
-            mSexView.setText(AppData.getNameById(AppData.sexes, jobseeker.getSex()));
+        if (jobSeeker.getSex() != null) {
+            mSexView.setText(AppData.getNameById(AppData.sexes, jobSeeker.getSex()));
         }
-        mSexPublicView.setChecked(jobseeker.getSex_public());
+        mSexPublicView.setChecked(jobSeeker.getSex_public());
 
-        if (jobseeker.getNationality() != null) {
-            mNationalityView.setText(AppData.getNameById(AppData.nationalities, jobseeker.getNationality()));
+        if (jobSeeker.getNationality() != null) {
+            mNationalityView.setText(AppData.getNameById(AppData.nationalities, jobSeeker.getNationality()));
         }
-        mNationalityPublicView.setChecked(jobseeker.getNationality_public());
+        mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
 
-        mNationalNumberView.setText(jobseeker.getNational_insurance_number());
+        mNationalNumberView.setText(jobSeeker.getNational_insurance_number());
 
-        mDescriptionView.setText(jobseeker.getDescription());
+        mDescriptionView.setText(jobSeeker.getDescription());
 
-        mCVViewButton.setVisibility(jobseeker.getCV() == null ? View.GONE : View.VISIBLE);
-        mCVRemoveButton.setVisibility(jobseeker.getCV() == null ? View.GONE : View.VISIBLE);
+        mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
+        mCVRemoveButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
-        mPitch = jobseeker.getPitch();
+        mPitch = jobSeeker.getPitch();
         mPitchPlayButton.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
 
-        mHasReferencesView.setChecked(jobseeker.getHas_references());
-        mTickBox.setChecked(jobseeker.getTruth_confirmation());
+        mHasReferencesView.setChecked(jobSeeker.getHas_references());
+        mTickBox.setChecked(jobSeeker.getTruth_confirmation());
     }
 
-    @OnClick(R.id.image_view)
-    void onPhotoAction1() {
-        isAvatarSelector = true;
-        getApp().showFilePicker(true);
-    }
-
-    @OnClick(R.id.avata_add_button)
-    void onPhotoAction2() {
+    @OnClick({R.id.image_view, R.id.avata_add_button})
+    void onPhotoAction() {
         isAvatarSelector = true;
         getApp().showFilePicker(true);
     }
@@ -246,20 +240,11 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_active)
     void onActivate() {
         if (!mActiveView.isChecked()) {
-            new Popup(getContext())
-                    .setMessage("Your profile will not be visible and will not be able to apply for jobs or send messages")
-                    .addGreenButton("Deactivate", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        }
-                    })
-                    .addGreyButton("Cancel", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mActiveView.setChecked(true);
-                        }
-                    })
-                    .show();
+            Popup popup = new Popup(getContext(), R.string.activate_message, true);
+            popup.addGreenButton(R.string.deactivate, view -> {
+            });
+            popup.addGreyButton(R.string.cancel, v -> mActiveView.setChecked(true));
+            popup.show();
         }
     }
 
@@ -270,42 +255,34 @@ public class TalentProfileFragment extends FormFragment {
             items.add(new SelectItem(nationality.getName(), false));
         }
 
-        new SelectDialog(getApp(), "Select Nationality", items, false, new SelectDialog.Action() {
-            @Override
-            public void apply(int selectedIndex) {
-                mNationalityView.setText(AppData.nationalities.get(selectedIndex).getName());
-            }
-        });
+        new SelectDialog(getApp(), getString(R.string.select_nationality), items, false, selectedIndex -> mNationalityView.setText(AppData.nationalities.get(selectedIndex).getName()));
     }
 
     @OnClick(R.id.job_seeker_national_number_help)
     void onNationalNumberHelp() {
-        new Popup(getContext())
-                .setMessage("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.")
-                .addGreyButton("Close", null)
-                .show();
+        Popup popup = new Popup(getContext(), R.string.national_number_help, true);
+        popup.addGreyButton(R.string.close, null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_help)
     void onCVHelp() {
-        new Popup(getContext())
-                .setMessage("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.")
-                .addGreyButton("Close", null)
-                .show();
+        Popup popup = new Popup(getContext(), R.string.cv_help, true);
+        popup.addGreyButton(R.string.close, null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_add_help)
     void onCVAddHelp() {
-        new Popup(getContext())
-                .setMessage("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.")
-                .addGreyButton("Close", null)
-                .show();
+        Popup popup = new Popup(getContext(), R.string.cv_add_help, true);
+        popup.addGreyButton(R.string.close, null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_view)
     void onCVView() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(AppData.jobseeker.getCV()));
+        intent.setData(Uri.parse(AppData.jobSeeker.getCV()));
         startActivity(intent);
     }
 
@@ -332,7 +309,7 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_pitch_help)
     void onPitchHelp() {
         Intent intent = new Intent(getApp(), WebviewActivity.class);
-        intent.putExtra(WebviewActivity.TITLE, "Record Pitch");
+        intent.putExtra(WebviewActivity.TITLE, R.string.record_pitch);
         intent.putExtra(WebviewActivity.FILENAME, "pitch");
         getApp().startActivity(intent);
 //        getApp().overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
@@ -401,7 +378,7 @@ public class TalentProfileFragment extends FormFragment {
                     }
                 }
                 if (cvUri != null) {
-                    mCVCommentView.setText("CV added: save to upload.");
+                    mCVCommentView.setText(R.string.cv_added);
                     mCVClearButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -413,111 +390,107 @@ public class TalentProfileFragment extends FormFragment {
         if (!valid()) return;
 
         if (!mTickBox.isChecked()) {
-            new Popup(getContext())
-                    .setMessage("You must check the box confirming the truth of the information you have provided.")
-                    .addGreyButton("Ok", null)
-                    .show();
+            Popup popup = new Popup(getContext(), R.string.tick_box_message, true);
+            popup.addGreyButton(R.string.ok, null);
+            popup.show();
             return;
         }
 
-        final JobseekerForUpdate jobseekerForUpdate = new JobseekerForUpdate();
-        jobseekerForUpdate.setActive(mActiveView.isChecked());
-        jobseekerForUpdate.setFirst_name(mFirstNameView.getText().toString().trim());
-        jobseekerForUpdate.setLast_name(mLastNameView.getText().toString().trim());
-        jobseekerForUpdate.setEmail_public(mEmailPublicView.isChecked());
-        jobseekerForUpdate.setTelephone(mTelephoneView.getText().toString().trim());
-        jobseekerForUpdate.setTelephone_public(mTelephonePublicView.isChecked());
-        jobseekerForUpdate.setMobile(mMobileView.getText().toString().trim());
-        jobseekerForUpdate.setMobile_public(mMobilePublicView.isChecked());
+        final JobSeekerForUpdate jobSeekerForUpdate = new JobSeekerForUpdate();
+        jobSeekerForUpdate.setActive(mActiveView.isChecked());
+        jobSeekerForUpdate.setFirst_name(mFirstNameView.getText().toString().trim());
+        jobSeekerForUpdate.setLast_name(mLastNameView.getText().toString().trim());
+        jobSeekerForUpdate.setEmail_public(mEmailPublicView.isChecked());
+        jobSeekerForUpdate.setTelephone(mTelephoneView.getText().toString().trim());
+        jobSeekerForUpdate.setTelephone_public(mTelephonePublicView.isChecked());
+        jobSeekerForUpdate.setMobile(mMobileView.getText().toString().trim());
+        jobSeekerForUpdate.setMobile_public(mMobilePublicView.isChecked());
         if (!mAgeView.getText().toString().isEmpty()) {
-            jobseekerForUpdate.setAge(Integer.parseInt(mAgeView.getText().toString()));
+            jobSeekerForUpdate.setAge(Integer.parseInt(mAgeView.getText().toString()));
         }
-        jobseekerForUpdate.setAge_public(mAgePublicView.isChecked());
+        jobSeekerForUpdate.setAge_public(mAgePublicView.isChecked());
         Integer sex = AppData.getIdByName(AppData.sexes, mSexView.getText().toString());
         if (sex != -1) {
-            jobseekerForUpdate.setSex(sex);
+            jobSeekerForUpdate.setSex(sex);
         }
-        jobseekerForUpdate.setSex_public(mSexPublicView.isChecked());
+        jobSeekerForUpdate.setSex_public(mSexPublicView.isChecked());
         Integer nationality = AppData.getIdByName(AppData.nationalities, mNationalityView.getText().toString());
         if (nationality != -1) {
-            jobseekerForUpdate.setNationality(nationality);
+            jobSeekerForUpdate.setNationality(nationality);
         }
-        jobseekerForUpdate.setNationality_public(mNationalityPublicView.isChecked());
-        jobseekerForUpdate.setDescription(mDescriptionView.getText().toString().trim());
-        jobseekerForUpdate.setHas_references(mHasReferencesView.isChecked());
-        jobseekerForUpdate.setTruth_confirmation(mTickBox.isChecked());
-        jobseekerForUpdate.setNational_insurance_number(mNationalNumberView.getText().toString());
+        jobSeekerForUpdate.setNationality_public(mNationalityPublicView.isChecked());
+        jobSeekerForUpdate.setDescription(mDescriptionView.getText().toString().trim());
+        jobSeekerForUpdate.setHas_references(mHasReferencesView.isChecked());
+        jobSeekerForUpdate.setTruth_confirmation(mTickBox.isChecked());
+        jobSeekerForUpdate.setNational_insurance_number(mNationalNumberView.getText().toString());
 
         showLoading();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
+        new APITask(() -> {
 
-                File avatarFile = null;
-                FileSystemResource avatarFileResource = null;
+            File avatarFile = null;
+            FileSystemResource avatarFileResource = null;
 
-                if ( avatarUri != null) {
-                    try {
-                        File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        String filename = "profile_" + avatarUri.getLastPathSegment();
-                        avatarFile = new File(dir, filename);
-
-                        // Copy imageUri content to temp file
-                        InputStream in = getApp().getContentResolver().openInputStream(avatarUri);
-                        FileOutputStream out = new FileOutputStream(avatarFile);
-                        byte[] buf = new byte[1024];
-                        int len;
-                        while ((len = in.read(buf)) > 0)
-                            out.write(buf, 0, len);
-                        out.close();
-                        in.close();
-
-                        avatarFileResource = new FileSystemResource(avatarFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if ( avatarUri != null) {
+                try {
+                    File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
+                    String filename = "profile_" + avatarUri.getLastPathSegment();
+                    avatarFile = new File(dir, filename);
+
+                    // Copy imageUri content to temp file
+                    InputStream in = getApp().getContentResolver().openInputStream(avatarUri);
+                    FileOutputStream out = new FileOutputStream(avatarFile);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0)
+                        out.write(buf, 0, len);
+                    out.close();
+                    in.close();
+
+                    avatarFileResource = new FileSystemResource(avatarFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                File cvFile = null;
-                FileSystemResource cvFileResource = null;
+            File cvFile = null;
+            FileSystemResource cvFileResource = null;
 
-                if (cvUri != null) {
-                    try {
-                        File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        String filename = "cv_" + cvUri.getLastPathSegment();
-                        cvFile = new File(dir, filename);
-
-                        // Copy imageUri content to temp file
-                        InputStream in = getApp().getContentResolver().openInputStream(cvUri);
-                        FileOutputStream out = new FileOutputStream(cvFile);
-                        byte[] buf = new byte[1024];
-                        int len;
-                        while ((len = in.read(buf)) > 0)
-                            out.write(buf, 0, len);
-                        out.close();
-                        in.close();
-
-                        cvFileResource = new FileSystemResource(cvFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if (cvUri != null) {
+                try {
+                    File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
-                }
+                    String filename = "cv_" + cvUri.getLastPathSegment();
+                    cvFile = new File(dir, filename);
 
-                AppData.jobseeker = MJPApi.shared().updateJobseeker(AppData.user.getJob_seeker(), jobseekerForUpdate, avatarFileResource, cvFileResource);
+                    // Copy imageUri content to temp file
+                    InputStream in = getApp().getContentResolver().openInputStream(cvUri);
+                    FileOutputStream out = new FileOutputStream(cvFile);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0)
+                        out.write(buf, 0, len);
+                    out.close();
+                    in.close();
 
-                if (avatarFile != null) {
-                    avatarFile.delete();
+                    cvFileResource = new FileSystemResource(cvFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if (cvFile != null) {
-                    cvFile.delete();
-                }
+            }
+
+            AppData.jobSeeker = MJPApi.shared().updateJobSeeker(AppData.user.getJob_seeker(), jobSeekerForUpdate, avatarFileResource, cvFileResource, removedCV);
+
+            if (avatarFile != null) {
+                avatarFile.delete();
+            }
+            if (cvFile != null) {
+                cvFile.delete();
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -537,12 +510,7 @@ public class TalentProfileFragment extends FormFragment {
 
     void uploadPitch() {
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                mPitch = MJPApi.shared().create(Pitch.class, new Pitch());
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> mPitch = MJPApi.shared().create(Pitch.class, new Pitch())).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp(), "pitches");
@@ -560,15 +528,10 @@ public class TalentProfileFragment extends FormFragment {
                                 loading.setType(Loading.Type.SPIN);
                                 break;
                             case PitchUpload.COMPLETE:
-                                new APITask(new APIAction() {
-                                    @Override
-                                    public void run() {
-                                        AppData.jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-                                    }
-                                }).addListener(new APITaskListener() {
+                                new APITask(() -> AppData.jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker())).addListener(new APITaskListener() {
                                     @Override
                                     public void onSuccess() {
-                                        mPitch = AppData.jobseeker.getPitch();
+                                        mPitch = AppData.jobSeeker.getPitch();
                                         mVideoPath = null;
                                         saveCompleted();
                                     }
@@ -593,10 +556,9 @@ public class TalentProfileFragment extends FormFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        new Popup(getContext())
-                                .setMessage("Error uploading video!")
-                                .addGreyButton("Ok", null)
-                                .show();
+                        Popup popup = new Popup(getContext(), R.string.error_video_upload, true);
+                        popup.addGreyButton(R.string.ok, null);
+                        popup.show();
                     }
                 });
                 upload.start();
@@ -611,7 +573,7 @@ public class TalentProfileFragment extends FormFragment {
 
     void saveCompleted() {
         if (AppData.user.getJob_seeker() == null) {
-            AppData.user.setJob_seeker(AppData.jobseeker.getId());
+            AppData.user.setJob_seeker(AppData.jobSeeker.getId());
             getApp().setRootFragement(R.id.menu_job_profile);
         } else {
             getApp().popFragment();
@@ -621,7 +583,7 @@ public class TalentProfileFragment extends FormFragment {
     void setAvatarUri(Uri uri) {
         String path;
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getApp().getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = MainActivity.shared().getContentResolver().query(uri, projection, null, null, null);
         if(cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();

@@ -48,7 +48,7 @@ extension IntroController: UIScrollViewDelegate {
         let currentPage = pageControl.currentPage
         pageControl.currentPage = Int(scrollView.contentOffset.x) / Int(UIScreen.main.bounds.size.width)
         if currentPage != pageControl.currentPage {
-            readyButton.setTitle(pageControl.currentPage == 3 ? "I'm ready" : "Next", for: .normal)
+            readyButton.setTitle(pageControl.currentPage == 3 ? NSLocalizedString("I'm ready", comment: "") : NSLocalizedString("Next", comment: ""), for: .normal)
             skipButton.isHidden = pageControl.currentPage == 3
         }
     }

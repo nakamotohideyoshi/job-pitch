@@ -60,13 +60,13 @@ class LocationEditController: MJPController {
         if workplace == nil {
             isNew = true
             
-            title = "Add Workplace"
+            title = NSLocalizedString("Add Workplace", comment: "")
             logoView.image = UIImage(named: "default-logo")
             emailField.text = AppData.email
             
         } else {
             
-            title = "Edit Workplace"
+            title = NSLocalizedString("Edit Workplace", comment: "")
             business = workplace.businessData
             AppHelper.loadLogo(workplace, imageView: logoView, completion: nil)
             nameField.text = workplace.name
@@ -106,11 +106,13 @@ class LocationEditController: MJPController {
     }
     
     @IBAction func emailHelp(_ sender: Any) {
-        PopupController.showGray("The is the email that notifications will be sent to, it can be different to your login email address.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("The is the email that notifications will be sent to, it can be different to your login email address.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func addressHelpAction(_ sender: Any) {
-        PopupController.showGray("Search for a place name, street, postcode, etc. or click the map to select location.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("Search for a place name, street, postcode, etc. or click the map to select location.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func addLogoAction(_ sender: Any) {
@@ -179,7 +181,7 @@ class LocationEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading("Uploading...")
+                self.showLoading(NSLocalizedString("Uploading...", comment: ""))
                 
                 API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-location-images",

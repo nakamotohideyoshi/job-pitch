@@ -12,18 +12,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.myjobpitch.R;
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.MJPObjectWithName;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.api.data.Workplace;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -39,8 +37,13 @@ import java.util.List;
 
 public class AppHelper {
 
-    public static String getJobseekerName(Jobseeker jobseeker) {
-        return jobseeker.getFirst_name() + " " + jobseeker.getLast_name();
+    public static int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                MainActivity.shared().getResources().getDisplayMetrics());
+    }
+
+    public static String getJobSeekerName(JobSeeker jobSeeker) {
+        return jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
     }
 
     public static String getBusinessName(Job job) {
@@ -80,14 +83,22 @@ public class AppHelper {
         ((TextView)emptyView.findViewById(R.id.empty_text)).setText(title);
     }
 
+    public static void setEmptyViewText(View emptyView, int textId) {
+        ((TextView)emptyView.findViewById(R.id.empty_text)).setText(textId);
+    }
+
     public static void setJobTitleViewText(View jobTitleView, String title) {
         ((TextView)jobTitleView.findViewById(R.id.job_title_text)).setText(title);
     }
 
-
     public static void setEmptyButtonText(View emptyView, String text) {
         ((TextView)emptyView.findViewById(R.id.empty_button)).setText(text);
     }
+
+    public static void setEmptyButtonText(View emptyView, int textId) {
+        ((TextView)emptyView.findViewById(R.id.empty_button)).setText(textId);
+    }
+
 
     // ..._edit_buttons.xml
 
@@ -134,48 +145,21 @@ public class AppHelper {
         return (TextView) view.findViewById(R.id.item_location);
     }
 
-    public static void showBusinessUserInfo(BusinessUser businessUser, View view, List<Workplace> locations) {
-
-        // email
-        getItemTitleView(view).setText(businessUser.getEmail());
-
-        // workplace
-        int locationCount = businessUser.getLocations().size();
-        String subTitle = locationCount == 0 ? "Administrator" : "";
-
-        if (businessUser.getUser() == AppData.user.getId().intValue()) {
-            subTitle = "Administrator (Current User)";
-        }
-
-        for (int i=0; i<locations.size(); i++) {
-            if (businessUser.getLocations().indexOf(locations.get(i).getId()) > -1) {
-                if (subTitle == "") {
-                    subTitle = locations.get(i).getName();
-                } else {
-                    subTitle = subTitle + ", " + locations.get(i).getName();
-                }
-            }
-        }
-
-        getItemSubTitleView(view).setText(subTitle);
-
-    }
-
     public static void showInterviewInfo(Interview interview, View view, Application application) {
 
-        Jobseeker jobseeker = application.getJob_seeker();
+        JobSeeker jobSeeker = application.getJob_seeker();
         Job job = application.getJob_data();
         String status = interview.getStatus();
 
         if (AppData.user.isRecruiter()) {
-            loadJobseekerImage(jobseeker, getImageView(view));
+            loadJobSeekerImage(jobSeeker, getImageView(view));
 
             // job seeker name
-            getItemTitleView(view).setText(jobseeker.getFirst_name() + " " + jobseeker.getLast_name());
+            getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
 
             // CV
 
-            getItemSubTitleView(view).setText(jobseeker.getDescription());
+            getItemSubTitleView(view).setText(jobSeeker.getDescription());
         } else {
             loadJobLogo(job, getImageView(view));
 
@@ -189,7 +173,7 @@ public class AppHelper {
         SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
         getItemDateTimeTitleView(view).setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
 
-        // Workplace
+        // Location
 
         getItemLocationTitleView(view).setText(application.getJob_data().getLocation_data().getName());
 
@@ -197,28 +181,26 @@ public class AppHelper {
 
             case InterviewStatus.PENDING:
                 // Status
-                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? "Interview request sent" : "Interview request received");
+                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? R.string.interview_sent : R.string.interview_received);
                 break;
             case InterviewStatus.ACCEPTED:
                 // Status
-                getItemStatusTitleView(view).setText("Interview accepted");
+                getItemStatusTitleView(view).setText(R.string.interview_accepted);
                 break;
 
             case InterviewStatus.COMPLETED:
                 // Status
-                getItemStatusTitleView(view).setText("This interview is done");
+                getItemStatusTitleView(view).setText(R.string.interview_done);
                 break;
 
             case InterviewStatus.CANCELLED:
                 // Status
                 //getItemStatusTitleView(view).setText("Interview cancelled");
-                String cancelledBy = "You";
-                if (interview.getCancelled_by() == AppData.JOBSEEKER && AppData.user.isRecruiter()) {
-                    cancelledBy = "Job seeker";
-                } else if (interview.getCancelled_by() == AppData.RECRUITER && AppData.user.isJobseeker()) {
-                    cancelledBy = "Recruiter";
+                if (interview.getCancelled_by() == AppData.JOBSEEKER) {
+                    getItemStatusTitleView(view).setText(R.string.interview_cancel_by_js);
+                } else if (interview.getCancelled_by() == AppData.RECRUITER) {
+                    getItemStatusTitleView(view).setText(R.string.interview_cancel_by_rc);
                 }
-                getItemStatusTitleView(view).setText("Interview cancelled by " + cancelledBy);
 
                 view.setAlpha(0.8f);
                 view.setBackgroundColor(0xFFE1E1E1);
@@ -250,89 +232,30 @@ public class AppHelper {
 
             case InterviewStatus.PENDING:
                 // Status
-                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? "Interview request sent" : "Interview request received");
+                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? R.string.interview_sent : R.string.interview_received);
                 break;
             case InterviewStatus.ACCEPTED:
                 // Status
-                getItemStatusTitleView(view).setText("Interview accepted");
+                getItemStatusTitleView(view).setText(R.string.interview_accepted);
                 break;
 
             case InterviewStatus.COMPLETED:
                 // Status
-                getItemStatusTitleView(view).setText("This interview is done");
+                getItemStatusTitleView(view).setText(R.string.interview_done);
                 break;
 
             case InterviewStatus.CANCELLED:
                 // Status
                 //getItemStatusTitleView(view).setText("Interview cancelled");
-                String cancelledBy = "You";
-                if (interview.getCancelled_by() == AppData.JOBSEEKER && AppData.user.isRecruiter()) {
-                    cancelledBy = "Job seeker";
-                } else if (interview.getCancelled_by() == AppData.RECRUITER && AppData.user.isJobseeker()) {
-                    cancelledBy = "Recruiter";
+                if (interview.getCancelled_by() == AppData.JOBSEEKER) {
+                    getItemStatusTitleView(view).setText(R.string.interview_cancel_by_js);
+                } else if (interview.getCancelled_by() == AppData.RECRUITER) {
+                    getItemStatusTitleView(view).setText(R.string.interview_cancel_by_rc);
                 }
-                getItemStatusTitleView(view).setText("Interview cancelled by " + cancelledBy);
-
                 break;
             default:
                 break;
-
         }
-
-    }
-
-    public static void showBusinessInfo(Business business, View view) {
-
-        // logo
-        Image logo = getBusinessLogo(business);
-        if (logo != null) {
-            loadImage(logo.getThumbnail(), view);
-        } else {
-            getImageView(view).setImageResource(R.drawable.default_logo);
-        }
-
-        // business name
-        getItemTitleView(view).setText(business.getName());
-
-        // workplace count
-        int locationCount = business.getLocations().size();
-        getItemSubTitleView(view).setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
-
-        // credit count
-        int creditCount = business.getTokens();
-        getItemAttributesView(view).setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
-
-    }
-
-    public static void showBusinessInfo1(Business business, View view) {
-
-        // business name
-        getItemTitleView(view).setText(business.getName());
-
-        // workplace count
-        int userCount = business.getUsers().size();
-        getItemSubTitleView(view).setText(userCount + (userCount > 1 ? " users" : " users"));
-    }
-
-    public static void showWorkplaceInfo(Workplace location, View view) {
-
-        // logo
-        Image logo = getWorkplaceLogo(location);
-        if (logo != null) {
-            loadImage(logo.getThumbnail(), view);
-        } else {
-            getImageView(view).setImageResource(R.drawable.default_logo);
-        }
-
-        // workplace name
-        getItemTitleView(view).setText(location.getName());
-
-        // job count
-        int jobCount = location.getJobs().size();
-        getItemSubTitleView(view).setText("Includes " + jobCount + (jobCount > 1 ? " jobs" : " job"));
-
-        getItemAttributesView(view).setVisibility(View.GONE);
-
     }
 
     public static void showJobInfo(Job job, View view) {
@@ -343,11 +266,10 @@ public class AppHelper {
         // job title
         getItemTitleView(view).setText(job.getTitle());
 
-        // business and workplace name
+        // business and location name
         getItemSubTitleView(view).setText(getBusinessName(job));
 
         getItemAttributesView(view).setVisibility(View.GONE);
-
     }
 
     // image loader
@@ -411,17 +333,17 @@ public class AppHelper {
         return file;
     }
 
-    public static void loadJobseekerImage(Jobseeker jobseeker, View container) {
-        loadJobseekerImage(jobseeker, getImageView(container));
+    public static void loadJobSeekerImage(JobSeeker jobSeeker, View container) {
+        loadJobSeekerImage(jobSeeker, getImageView(container));
     }
 
-    public static void loadJobseekerImage(Jobseeker jobseeker, ImageView imageView) {
-        if (jobseeker.getProfile_thumb() != null) {
-            loadImage(jobseeker.getProfile_thumb(), imageView);
+    public static void loadJobSeekerImage(JobSeeker jobSeeker, ImageView imageView) {
+        if (jobSeeker.getProfile_thumb() != null) {
+            loadImage(jobSeeker.getProfile_thumb(), imageView);
             return;
         }
 
-        Pitch pitch = jobseeker.getPitch();
+        Pitch pitch = jobSeeker.getPitch();
         if (pitch != null) {
             loadImage(pitch.getThumbnail(), imageView);
             return;
@@ -451,7 +373,7 @@ public class AppHelper {
         return null;
     }
 
-    public static Image getWorkplaceLogo(Workplace workplace) {
+    public static Image getWorkplaceLogo(com.myjobpitch.api.data.Location workplace) {
         List<Image> images = workplace.getImages();
         if (images != null && images.size() > 0) {
             return images.get(0);

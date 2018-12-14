@@ -2,7 +2,6 @@ package com.myjobpitch.views;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,7 +28,7 @@ public class SelectDialog extends ArrayAdapter<SelectDialog.SelectItem> {
 
     public SelectDialog(Context context, String title, List<SelectItem> data, boolean multiselect, final Action action) {
 
-        super(context, 0, new ArrayList<SelectItem>());
+        super(context, 0, new ArrayList<>());
 
         this.multiselect = multiselect;
         this.acion = action;
@@ -41,10 +40,10 @@ public class SelectDialog extends ArrayAdapter<SelectDialog.SelectItem> {
         View view = inflater.inflate(R.layout.view_select, null);
         builder.setView(view);
 
-        ListView listView = (ListView) view.findViewById(R.id.listView);
+        ListView listView = view.findViewById(R.id.listView);
         listView.setAdapter(this);
 
-        EditText filterText = (EditText) view.findViewById(R.id.filterText);
+        EditText filterText = view.findViewById(R.id.filterText);
         filterText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -59,15 +58,10 @@ public class SelectDialog extends ArrayAdapter<SelectDialog.SelectItem> {
         });
 
         if (multiselect) {
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    action.apply(-1);
-                }
-            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> action.apply(-1));
         }
 
-        builder.setNegativeButton("CANCEL", null);
+        builder.setNegativeButton(R.string.cancel, null);
         dialog = builder.show();
 
         this.data = data;
@@ -97,32 +91,29 @@ public class SelectDialog extends ArrayAdapter<SelectDialog.SelectItem> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.cell_multi_select, parent, false);
             if (!multiselect) {
-                CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.item_checkbox);
+                CheckBox checkBox = convertView.findViewById(R.id.item_checkbox);
                 ((ViewGroup)checkBox.getParent()).removeView(checkBox);
             }
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectItem item = getItem(position);
-                if (multiselect) {
-                    item.checked = !item.checked;
-                    notifyDataSetChanged();
-                } else {
-                    hideKeyboard();
-                    acion.apply(data.indexOf(item));
-                    dialog.hide();
-                }
+        convertView.setOnClickListener(v -> {
+            SelectItem item = getItem(position);
+            if (multiselect) {
+                item.checked = !item.checked;
+                notifyDataSetChanged();
+            } else {
+                hideKeyboard();
+                acion.apply(data.indexOf(item));
+                dialog.hide();
             }
         });
 
         SelectItem item = getItem(position);
 
-        TextView textView = (TextView) convertView.findViewById(R.id.item_label);
+        TextView textView = convertView.findViewById(R.id.item_label);
         textView.setText(item.label);
         if (multiselect) {
-            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.item_checkbox);
+            CheckBox checkBox = convertView.findViewById(R.id.item_checkbox);
             checkBox.setChecked(item.checked);
         }
 

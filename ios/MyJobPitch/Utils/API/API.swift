@@ -56,7 +56,7 @@ class API: NSObject {
             
             let userInfo = rkError.userInfo as! [String: Any]
             if userInfo["NO_TOKENS"] != nil {
-                return "You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page."
+                return NSLocalizedString("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", comment: "")
             }
             
             for (_, value) in userInfo {
@@ -71,7 +71,7 @@ class API: NSObject {
             return userInfo
         }
         
-        return "Connection Error: Please check your internet connection"
+        return NSLocalizedString("Connection Error: Please check your internet connection", comment: "")
     }
 
     

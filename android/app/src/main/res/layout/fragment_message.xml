@@ -16,7 +16,7 @@
             android:id="@+id/header_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="10dp">
+            android:paddingEnd="10dp">
 
             <include
                 layout="@layout/view_job_item"
@@ -26,7 +26,7 @@
             <ImageView
                 android:layout_width="8dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_right_arrow" />
@@ -43,23 +43,23 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/lightGreyColor" />
+                android:background="@color/colorLightGrey" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
                 <TextView
                     android:id="@+id/message_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
-                    android:paddingRight="20dp"
-                    android:text="Interview"
+                    android:paddingEnd="20dp"
+                    android:text="@string/interview_title"
                     android:textAlignment="center"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -69,9 +69,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/message_label"
+                    android:layout_toEndOf="@+id/message_label"
                     android:ellipsize="end"
-                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp"
                     android:text="Date + Time"
                     android:textAlignment="center"
                     android:textSize="13sp" />
@@ -79,7 +79,7 @@
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_right_arrow" />
@@ -91,7 +91,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/lightGreyColor"/>
+            android:background="@color/colorLightGrey"/>
 
         <com.stfalcon.chatkit.messages.MessagesList
             android:id="@+id/messagesList"
@@ -106,7 +106,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/lightGreyColor"/>
+            android:background="@color/colorLightGrey"/>
 
         <com.stfalcon.chatkit.messages.MessageInput
             android:id="@+id/input"

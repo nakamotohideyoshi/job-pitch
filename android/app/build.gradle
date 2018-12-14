@@ -6,8 +6,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 171
-        versionName "1.1-beta.171"
+        versionCode 179
+        versionName "1.1-beta.179"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -27,11 +27,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
-
-//configurations.all {
-//    resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
-//}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -69,15 +69,9 @@ dependencies {
 
     implementation 'com.github.rubensousa:bottomsheetbuilder:1.6.1'
 
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
-
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
 
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
-
-    implementation('com.weiwangcn.betterspinner:library:1.1.0') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
 
     implementation('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -106,14 +100,11 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.romandanylyk:pageindicatorview:1.0.1@aar'
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3@aar'
 
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
 
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     implementation project(path: ':swipedeck')
 }
-
-//repositories {
-//    mavenCentral()
-//}
-

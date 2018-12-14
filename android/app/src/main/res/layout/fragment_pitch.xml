@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/fragment_vertical_margin"
-        android:paddingLeft="@dimen/fragment_horizontal_margin"
-        android:paddingRight="@dimen/fragment_horizontal_margin"
+        android:paddingStart="@dimen/fragment_horizontal_margin"
+        android:paddingEnd="@dimen/fragment_horizontal_margin"
         android:paddingTop="@dimen/fragment_vertical_margin"
         android:orientation="vertical">
 
         <TextView
-            android:text="Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."
+            android:text="@string/record_desk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -29,17 +29,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Check out our "
+                android:text="@string/check_out_our_"
                 android:textSize="@dimen/default_fontsize"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/example_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="example video"
+                android:text="@string/example_video"
                 android:textSize="@dimen/default_fontsize"
                 android:textStyle="bold"
-                android:textColor="@color/greenColor"/>
+                android:textColor="@color/colorGreen"/>
         </LinearLayout>
 
         <FrameLayout
@@ -70,7 +70,7 @@
         </FrameLayout>
 
         <Button
-            android:text="Record New Pitch"
+            android:text="@string/record_new_pitch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"
@@ -79,7 +79,7 @@
             android:id="@+id/new_record"/>
 
         <Button
-            android:text="Upload"
+            android:text="@string/upload"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"
@@ -92,11 +92,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Record later"
+            android:text="@string/record_later"
             android:layout_gravity="center"
             android:textSize="@dimen/default_fontsize"
             android:textStyle="bold"
-            android:textColor="@color/greenColor"/>
+            android:textColor="@color/colorGreen"/>
 
     </LinearLayout>
 

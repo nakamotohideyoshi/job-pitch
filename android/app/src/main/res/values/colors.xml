@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#333333</color>
-    <color name="colorPrimaryDark">#212121</color>
-    <color name="colorAccent">#00b6a4</color>
+    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorAccent">#333333</color>
 
-    <color name="greenColor">#00b6a4</color>
-    <color name="yellowColor">#ff9300</color>
-
-    <color name="greyColor">#b7b7b7</color>
-    <color name="lightGreyColor">#f0f0f0</color>
-
-
+    <color name="colorYellow">#ff9300</color>
+    <color name="colorGreen">#00b6a4</color>
     <color name="colorBlue">#00619c</color>
+    <color name="colorLightGrey">#d6d6d6</color>
     <color name="colorPopup">#f2232323</color>
+
 
     <color name="greyLabel">#b8b8b8</color>
     <color name="linkButton">#00b6a4</color>
 
     <color name="blackText">#424242</color>
-
+    <color name="colorNav1">#808080</color>
 </resources>

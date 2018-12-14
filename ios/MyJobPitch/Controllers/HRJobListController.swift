@@ -60,9 +60,9 @@ class HRJobListController: MJPController {
     func refreshTable() {
         tableView.reloadData()
         if AppData.hrJobs.count == 0 {
-            emptyView.setData(message: "You have no jobs.",
-                                   button: "Create job",
-                                   action: self.addHRJob)
+            emptyView.setData(message: NSLocalizedString("You have no jobs.", comment: ""),
+                              button: NSLocalizedString("Create job", comment: ""),
+                              action: self.addHRJob)
         } else {
             emptyView.isHidden = true
         }
@@ -70,7 +70,7 @@ class HRJobListController: MJPController {
     
     func showError() {
         hideLoading()
-        emptyView.setData(message: "Server Error!", button: "Refresh") {
+        emptyView.setData(message: NSLocalizedString("Server Error!", comment: ""), button: NSLocalizedString("Refresh", comment: "")) {
             self.showLoading()
             self.loadData()
         }
@@ -88,7 +88,7 @@ class HRJobListController: MJPController {
 
 extension HRJobListController: IndicatorInfoProvider {
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "JOBS")
+        return IndicatorInfo(title: NSLocalizedString("JOBS", comment: ""))
     }
 }
 
@@ -114,7 +114,8 @@ extension HRJobListController: UITableViewDataSource {
                                   padding: 20,
                                   callback: { (cell) -> Bool in
 
-                                    PopupController.showYellow("Are you sure you want to delete this job?", ok: "Delete", okCallback: {
+                                    PopupController.showYellow(NSLocalizedString("Are you sure you want to delete this job?", comment: ""),
+                                                               ok: NSLocalizedString("Delete", comment: ""), okCallback: {
 
                                         self.showLoading()
 
@@ -129,7 +130,7 @@ extension HRJobListController: UITableViewDataSource {
                                             self.tableView.reloadData()
                                         }
 
-                                    }, cancel: "Cancel", cancelCallback: nil)
+                                    }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
 
                                     return false
                     })

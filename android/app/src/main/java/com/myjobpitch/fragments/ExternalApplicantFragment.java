@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.ExternalApplication;
-import com.myjobpitch.api.data.ExternalJobseeker;
+import com.myjobpitch.api.data.ExternalJobSeeker;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Sex;
@@ -74,7 +74,7 @@ public class ExternalApplicantFragment extends FormFragment {
 
     List<String> mSexNames = new ArrayList<>();
     ExternalApplication externalApplication;
-    ExternalJobseeker jobseeker;
+    ExternalJobSeeker jobSeeker;
     public Job job;
 
     @Override
@@ -83,7 +83,7 @@ public class ExternalApplicantFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_external_applicant, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Add Application";
+        title = getString(R.string.add_application);
 
         // data
         for (Sex sex : AppData.sexes) {
@@ -120,7 +120,7 @@ public class ExternalApplicantFragment extends FormFragment {
             items.add(new SelectItem(nationality.getName(), false));
         }
 
-        new SelectDialog(getApp(), "Select Nationality", items, false, new SelectDialog.Action() {
+        new SelectDialog(getApp(), getString(R.string.select_nationality), items, false, new SelectDialog.Action() {
             @Override
             public void apply(int selectedIndex) {
                 mNationalityView.setText(nationalities.get(selectedIndex).getName());
@@ -130,36 +130,35 @@ public class ExternalApplicantFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_national_number_help)
     void onNationalNumberHelp() {
-        new Popup(getContext())
-                .setMessage("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.")
-                .addGreyButton("Close", null)
-                .show();
+        Popup popup = new Popup(getContext(), R.string.national_number_help, true);
+        popup.addGreyButton(R.string.close, null);
+        popup.show();
     }
 
     void saveData() {
-        if (jobseeker == null) {
-            jobseeker = new ExternalJobseeker();
+        if (jobSeeker == null) {
+            jobSeeker = new ExternalJobSeeker();
         }
-        jobseeker.setFirst_name(mFirstNameView.getText().toString().trim());
-        jobseeker.setLast_name(mLastNameView.getText().toString().trim());
-        jobseeker.setEmail(mEmailView.getText().toString().trim());
-        jobseeker.setTelephone(mTelephoneView.getText().toString().trim());
-        jobseeker.setMobile(mMobileView.getText().toString().trim());
+        jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
+        jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
+        jobSeeker.setEmail(mEmailView.getText().toString().trim());
+        jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
+        jobSeeker.setMobile(mMobileView.getText().toString().trim());
         if (!mAgeView.getText().toString().isEmpty()) {
-            jobseeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
+            jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
         }
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
-            jobseeker.setSex(AppData.sexes.get(sexIndex).getId());
+            jobSeeker.setSex(AppData.sexes.get(sexIndex).getId());
         }
         for (Nationality nationality : AppData.nationalities) {
             if (nationality.getName().equals(mNationalityView.getText().toString())) {
-                jobseeker.setNationality(nationality.getId());
+                jobSeeker.setNationality(nationality.getId());
                 break;
             }
         }
-        jobseeker.setNational_insurance_number(mNationalNumberView.getText().toString());
-        jobseeker.setDescription(mDescriptionView.getText().toString());
+        jobSeeker.setNational_insurance_number(mNationalNumberView.getText().toString());
+        jobSeeker.setDescription(mDescriptionView.getText().toString());
     }
 
     @OnClick(R.id.job_seeker_cancel)
@@ -181,16 +180,9 @@ public class ExternalApplicantFragment extends FormFragment {
 
         externalApplication.setJob(job.getId());
         externalApplication.setShortlisted(shortlisted.isChecked());
-        externalApplication.setJob_Seeker(jobseeker);
+        externalApplication.setJob_Seeker(jobSeeker);
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-
-                MJPApi.shared().addExternalApplication(externalApplication);
-
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> MJPApi.shared().addExternalApplication(externalApplication)).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 getApp().popFragment();

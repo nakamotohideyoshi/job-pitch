@@ -98,7 +98,7 @@ extension MessageListController: UITableViewDelegate {
 //                    controller.activation = true
 //                    let navController = UINavigationController(rootViewController: controller)
 //                    self.present(navController, animated: true, completion: nil)
-//                }, cancel: "Cancel", cancelCallback: nil)
+//                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
 //                return
 //            }
 //        } else {
@@ -106,7 +106,7 @@ extension MessageListController: UITableViewDelegate {
 //            if (application.job.status == 2) {
 //                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
 //                    JobEditController.pushController(location: nil, job: application.job)
-//                }, cancel: "Cancel", cancelCallback: nil)
+//                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
 //                return
 //            }
 //        }

@@ -12,7 +12,7 @@
         android:background="#fff">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
 
@@ -20,9 +20,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="right">
+                android:layout_gravity="end">
                 <TextView
-                    android:text="Active"
+                    android:text="@string/active"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -45,12 +45,9 @@
                 android:layout_marginTop="15dp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:hint="Title"
+                android:hint="@string/title"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
-
-
-
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/job_desc"
@@ -59,11 +56,11 @@
                 android:layout_marginTop="15dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:hint="Description"
+                android:hint="@string/description"
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -74,9 +71,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:hint="Select Sector"
+                    android:hint="@string/sector"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <Button
                     android:id="@+id/job_sector_button"
                     android:layout_width="match_parent"
@@ -89,18 +86,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:hint="Select Contract"
+                android:hint="@string/contact"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                 android:id="@+id/job_hours"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:hint="Select Hours"
+                android:hint="@string/hours"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +106,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="Video Pitch:"
+                    android:text="@string/video_pitch_"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -122,7 +119,7 @@
             </LinearLayout>
 
             <TextView
-                android:text="Record or upload a short video intro to showcase your company. Tell potential candidates about the role, and why it is a great place to work!"
+                android:text="@string/job_pitch_help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -139,7 +136,7 @@
                     android:id="@+id/job_record_new"
                     android:layout_width="98dp"
                     android:layout_height="98dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"
                     android:orientation="vertical"
                     android:background="@color/colorPrimary"
                     android:gravity="center">
@@ -149,7 +146,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/icon_record" />
                     <TextView
-                        android:text="Record New"
+                        android:text="@string/record_new"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -170,7 +167,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/icon_play" />
                     <TextView
-                        android:text="Play Current"
+                        android:text="@string/play_current"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -183,9 +180,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="right">
+                android:layout_gravity="end">
                 <TextView
-                    android:text="Require Pitch"
+                    android:text="@string/require_pitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -196,7 +193,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -205,9 +202,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="right">
+                android:layout_gravity="end">
                 <TextView
-                    android:text="Require CV"
+                    android:text="@string/require_cv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -218,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -232,7 +229,7 @@
 
             <Button
                 android:id="@+id/job_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"

@@ -13,7 +13,7 @@ public class Job extends MJPObjectWithDates {
     private Integer hours;
     private Integer status;
 
-    private Workplace location_data;
+    private Location location_data;
     private List<Image> images;
     private List<Pitch> videos;
 
@@ -77,7 +77,7 @@ public class Job extends MJPObjectWithDates {
         this.status = status;
     }
 
-    public Workplace getLocation_data() {
+    public Location getLocation_data() {
         return location_data;
     }
 

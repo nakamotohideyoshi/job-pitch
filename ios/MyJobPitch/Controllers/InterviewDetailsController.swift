@@ -32,7 +32,7 @@ class InterviewDetailsController: MJPController {
         
         if AppData.user.isRecruiter() {
             let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
-            setTitle(title: "Interview", subTitle: subTitle)
+            setTitle(title: NSLocalizedString("Interview", comment: ""), subTitle: subTitle)
         }
     }
     
@@ -104,7 +104,7 @@ class InterviewDetailsController: MJPController {
         if interview.feedback == "" {
             let noneParameters = [NSForegroundColorAttributeName : UIColor.lightGray,
                                    NSFontAttributeName : UIFont.italicSystemFont(ofSize: 15)]
-            feedbackLabel.attributedText = NSMutableAttributedString(string: "None", attributes: noneParameters)
+            feedbackLabel.attributedText = NSMutableAttributedString(string: NSLocalizedString("None", comment: ""), attributes: noneParameters)
         } else {
             feedbackLabel.attributedText = nil
             feedbackLabel.text = interview.feedback
@@ -146,7 +146,8 @@ class InterviewDetailsController: MJPController {
     }
     
     func acceptAction() {
-        PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you want to accept this interview?", comment: ""),
+                                   ok: NSLocalizedString("Ok", comment: ""), okCallback: {
             self.showLoading()
             let interviewForSave = InterviewForSave()
             interviewForSave.id = self.interview?.id
@@ -157,11 +158,12 @@ class InterviewDetailsController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func cancelAction() {
-        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you want to cancel this interview?", comment: ""),
+                                   ok: NSLocalizedString("Ok", comment: ""), okCallback: {
             self.showLoading()
             API.shared().deleteInterview(self.interview.id) { (error) in
                 if error == nil {
@@ -170,7 +172,7 @@ class InterviewDetailsController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func completeAction() {
@@ -216,9 +218,9 @@ extension InterviewDetailsController: UITableViewDataSource {
         let interview = interviews[indexPath.row]
         var status1 = ""
         if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-            status1 = "Completed"
+            status1 = NSLocalizedString("Completed", comment: "")
         } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-            status1 = "Cancelled"
+            status1 = NSLocalizedString("Cancelled", comment: "")
         }        
         
         (cell.viewWithTag(1) as! UILabel).text = AppHelper.dateToShortString(interview.at)

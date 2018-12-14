@@ -28,12 +28,12 @@
                     android:id="@+id/header_image"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"
                     android:src="@drawable/menu_business"
                     android:scaleType="centerCrop"/>
 
                 <TextView
-                    android:text="Select which business to add job to"
+                    android:text="@string/select_business_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blackText"

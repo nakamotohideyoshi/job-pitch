@@ -2,7 +2,7 @@ package com.myjobpitch.utils;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPObjectWithName;
@@ -12,13 +12,16 @@ import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Contract;
+import com.myjobpitch.api.data.Employee;
+import com.myjobpitch.api.data.HREmployee;
+import com.myjobpitch.api.data.HRJob;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Workplace;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
@@ -50,11 +53,6 @@ public class AppData {
     public static final int REQUEST_DROPBOX = 10003;
 
 
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_SERVER_URL = "server_url";
-    public static final String KEY_TOKEN = "token";
-
-
     public static User user;
 
     public static List<Hours> hours;
@@ -68,46 +66,85 @@ public class AppData {
     public static InitialTokens initialTokens;
 
     public static int userRole = -1;
-    public static Jobseeker jobseeker;
+    public static JobSeeker jobSeeker;
     public static JobProfile profile;
 
-    public static List<Business> businesses = new ArrayList<>();
-    public static List<Workplace> workplaces = new ArrayList<>();
-    public static List<Job> jobs = new ArrayList<>();
-    public static List<BusinessUser> businessUsers = new ArrayList<>();
-    public static List<Jobseeker> jobseekers = new ArrayList<>();
-    public static List<Application> applications = new ArrayList<>();
+    public static ArrayList<Business> businesses = new ArrayList<>();
+    public static ArrayList<Location> workplaces = new ArrayList<>();
+    public static ArrayList<Job> jobs = new ArrayList<>();
+    public static ArrayList<BusinessUser> businessUsers = new ArrayList<>();
+    public static ArrayList<JobSeeker> jobSeekers = new ArrayList<>();
+    public static ArrayList<Application> applications = new ArrayList<>();
     public static int newMessageCount = 0;
 
     public static int appsRefreshTime = DEFAULT_REFRESH_TIME;
     //    public static var appsUpdateCallback: (() -> Void)?
 
 
-    public static void clearData() {
-        MJPApi.shared().clearToken();
+    public static ArrayList<HRJob> hrJobs = new ArrayList<>();
+    public static ArrayList<HREmployee> hrEmployees = new ArrayList<>();
+    public static ArrayList<Employee> employees = new ArrayList<>();
 
+
+    /************ Shared Preferences ***********/
+
+    public static String getEmail() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("email", "");
+    }
+
+    public static void saveEmail(String email) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("email", email)
+                .apply();
+    }
+
+    public static String getToken() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("token", "");
+    }
+
+    public static void saveToken(String key) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("token", key)
+                .apply();
+    }
+
+    public static String getServerUrl() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("server", null);
+    }
+
+    public static void saveServerUrl(String url) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("server", url)
+                .apply();
+    }
+
+    public static void clearData() {
         existProfile = false;
 
         user = null;
         userRole = -1;
-        jobseeker = null;
+        jobSeeker = null;
         profile = null;
 
-        businesses = new ArrayList<>();
-        workplaces = new ArrayList<>();
-        jobs = new ArrayList<>();
-        businessUsers = new ArrayList<>();
-        jobseekers = new ArrayList<>();
-        applications = new ArrayList<>();
+        businesses.clear();
+        workplaces.clear();
+        jobs.clear();
+        businessUsers.clear();
+        jobSeekers.clear();
+        applications.clear();
+
+        hrJobs.clear();
+        hrEmployees.clear();
+        employees.clear();
 
         stopTimer();
     }
 
     public static void loadData() {
         user = MJPApi.shared().getUser();
-        if (user.isJobseeker()) {
-            Jobseeker jobseeker = MJPApi.shared().get(Jobseeker.class, user.getJob_seeker());
-            existProfile = jobseeker.getProfile() != null;
+        if (user.isJobSeeker()) {
+            JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, user.getJob_seeker());
+            existProfile = jobSeeker.getProfile() != null;
         }
 
         if (initialTokens == null) {
@@ -130,9 +167,9 @@ public class AppData {
             Role.RECRUITER_ID = getIdByName(roles, Role.RECRUITER);
         }
 
-        if (user.isJobseeker()) {
+        if (user.isJobSeeker()) {
             userRole = Role.JOB_SEEKER_ID;
-            getJobseeker();
+            getJobSeeker();
             getProfile();
             if (profile != null) {
                 getApplications();
@@ -181,22 +218,24 @@ public class AppData {
 
     //================ menu =============
 
-    static void getJobseeker() {
-        if (user.isJobseeker()) {
-            jobseeker = MJPApi.shared().get(Jobseeker.class, user.getJob_seeker());
+    static void getJobSeeker() {
+        if (user.isJobSeeker()) {
+            jobSeeker = MJPApi.shared().get(JobSeeker.class, user.getJob_seeker());
         }
     }
 
     static void getProfile() {
-        if (jobseeker.getProfile() != null) {
-            profile = MJPApi.shared().get(JobProfile.class, jobseeker.getProfile());
+        if (jobSeeker.getProfile() != null) {
+            profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
         }
     }
 
     //================ businesses =============
 
     public static void getBusinesses() {
-        businesses = MJPApi.shared().getUserBusinesses();
+        List<Business> data = MJPApi.shared().getUserBusinesses();
+        businesses.clear();
+        businesses.addAll(data);
     }
 
     public static void updateBusiness(Business busienss) {
@@ -218,21 +257,23 @@ public class AppData {
     //================ workplaces =============
 
     public static void getWorkplaces(Integer businessId) {
-        workplaces = MJPApi.shared().getUserWorkplaces(businessId);
+        List<Location> data = MJPApi.shared().getUserLocations(businessId);
+        workplaces.clear();
+        workplaces.addAll(data);
     }
 
-    public static void updateWorkplace(Workplace workplace) {
+    public static void updateWorkplace(Location workplace) {
         updateObj(workplaces, workplace);
         updateBusiness(workplace.getBusiness_data());
     }
 
     public static void getWorkplace(Integer workplaceId) {
-        Workplace workplace = MJPApi.shared().getUserWorkplace(workplaceId);
-        updateWorkplace(workplace);
+        Location location = MJPApi.shared().getUserLocation(workplaceId);
+        updateWorkplace(location);
     }
 
     public void removeWorkplace(Integer workplaceId) {
-        Workplace obj = getObjById(workplaces, workplaceId);
+        Location obj = getObjById(workplaces, workplaceId);
         if (obj != null) {
             workplaces.remove(obj);
         }
@@ -240,12 +281,16 @@ public class AppData {
 
     //================ jobs =============
 
-    public static void getJobs(Integer workplaceId) {
-        jobs = MJPApi.shared().getUserJobs(workplaceId);
+    public static void getJobs(Integer locationId) {
+        List<Job> data = MJPApi.shared().getUserJobs(locationId);
+        jobs.clear();
+        jobs.addAll(data);
     }
 
     public static void searchJobs() {
-        jobs = MJPApi.shared().get(Job.class);
+        List<Job> data = MJPApi.shared().get(Job.class);
+        jobs.clear();
+        jobs.addAll(data);
     }
 
     public static void updateJob(Job job) {
@@ -268,20 +313,24 @@ public class AppData {
     //================ jobseekers =============
 
     public static void searchJobseekers(Integer jobId) {
-        jobseekers = MJPApi.shared().get(Jobseeker.class, "job=" + jobId);
+        List<JobSeeker> data = MJPApi.shared().get(JobSeeker.class, "job=" + jobId);
+        jobSeekers.clear();
+        jobSeekers.addAll(data);
     }
 
     public void removeJobseeker(Integer jobseekerId) {
-        Jobseeker obj = getObjById(jobseekers, jobseekerId);
+        JobSeeker obj = getObjById(jobSeekers, jobseekerId);
         if (obj != null) {
-            jobseekers.remove(obj);
+            jobSeekers.remove(obj);
         }
     }
 
     //================ business users =============
 
     public static void getBusinessUsers(Integer businessId) {
-        businessUsers = MJPApi.shared().getBusinessUsers(businessId);
+        List<BusinessUser> data = MJPApi.shared().getBusinessUsers(businessId);
+        businessUsers.clear();
+        businessUsers.addAll(data);
     }
 
     public static void getBusinessUser(Integer businessId, Integer userId) {
@@ -346,7 +395,10 @@ public class AppData {
     }
 
     public static void getApplications() {
-        applications = MJPApi.shared().get(Application.class);
+        List<Application> data = MJPApi.shared().get(Application.class);
+        applications.clear();
+        applications.addAll(data);
+
         getNewMessageCount();
     }
 

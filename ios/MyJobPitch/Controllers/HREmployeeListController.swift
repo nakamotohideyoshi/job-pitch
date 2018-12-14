@@ -53,8 +53,8 @@ class HREmployeeListController: MJPController {
     func refreshTable() {
         tableView.reloadData()
         if AppData.hrEmployees.count == 0 {
-            emptyView.setData(message: "You have no employees.",
-                                   button: "Create employee",
+            emptyView.setData(message: NSLocalizedString("You have no employees.", comment: ""),
+                                   button: NSLocalizedString("Create employee", comment: ""),
                                    action: self.addHREmployee)
         } else {
             emptyView.isHidden = true
@@ -63,7 +63,7 @@ class HREmployeeListController: MJPController {
     
     func showError() {
         hideLoading()
-        emptyView.setData(message: "Server Error!", button: "Refresh") {
+        emptyView.setData(message: NSLocalizedString("Server Error!", comment: ""), button: NSLocalizedString("Refresh", comment: "")) {
             self.showLoading()
             self.loadData()
         }
@@ -81,7 +81,7 @@ class HREmployeeListController: MJPController {
 
 extension HREmployeeListController: IndicatorInfoProvider {
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "EMPLOYEES")
+        return IndicatorInfo(title: NSLocalizedString("EMPLOYEES", comment: ""))
     }
 }
 
@@ -113,7 +113,8 @@ extension HREmployeeListController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
 
-                            PopupController.showYellow("Are you sure you want to delete this employee?", ok: "Delete", okCallback: {
+                            PopupController.showYellow(NSLocalizedString("Are you sure you want to delete this employee?", comment: ""),
+                                                       ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                                 
                                 self.showLoading()
                                 
@@ -128,7 +129,7 @@ extension HREmployeeListController: UITableViewDataSource {
                                     self.tableView.reloadData()
                                 }
                                 
-                            }, cancel: "Cancel", cancelCallback: nil)
+                            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
 
                             return false
             })

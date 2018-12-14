@@ -166,23 +166,26 @@ class ApplicationDetailsController: MJPController {
         }
         
         if (!AppData.jobseeker.active) {
-            PopupController.showGreen("To apply please activate your account", ok: "Activate", okCallback: {
+            PopupController.showGreen(NSLocalizedString("To apply please activate your account", comment: ""),
+                                      ok: NSLocalizedString("Activate", comment: ""), okCallback: {
                 showProfile()
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             return
         }
         
         if (AppData.jobseeker.profileImage == nil && AppData.jobseeker.getPitch() == nil) {
-            PopupController.showGreen("To apply please set your photo", ok: "Edit profile", okCallback: {
+            PopupController.showGreen(NSLocalizedString("To apply please set your photo", comment: ""),
+                                      ok: NSLocalizedString("Edit profile", comment: ""), okCallback: {
                 showProfile()
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             return
         }
         
         if (job.requiresCV && AppData.jobseeker.cv == nil) {
-            PopupController.showGreen("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", ok: "Edit profile", okCallback: {
+            PopupController.showGreen(NSLocalizedString("Looks like this job wants you to upload a full CV before applying! You can upload a PDF or document to your profile.", comment: ""),
+                                      ok: NSLocalizedString("Edit profile", comment: ""), okCallback: {
                 showProfile()
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             return
         }
         
@@ -196,15 +199,17 @@ class ApplicationDetailsController: MJPController {
     }
     
     @IBAction func removeAction(_ sender: Any) {
-        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you are not interested in this job?", comment: ""),
+                                   ok: NSLocalizedString("I'm Sure", comment: ""), okCallback: {
             self.showLoading()
             self.popController()
             self.removeCallback?()
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func acceptAction() {
-        PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you want to accept this interview?", comment: ""),
+                                   ok: NSLocalizedString("Ok", comment: ""), okCallback: {
             self.showLoading()
             let interviewForSave = InterviewForSave()
             interviewForSave.id = self.interview?.id
@@ -215,11 +220,12 @@ class ApplicationDetailsController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func cancelInterview() {
-        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you want to cancel this interview?", comment: ""),
+                                   ok: NSLocalizedString("Ok", comment: ""), okCallback: {
             self.showLoading()
             API.shared().deleteInterview(self.interview.id) { error in
                 if error == nil {
@@ -228,17 +234,18 @@ class ApplicationDetailsController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     @IBAction func messageAction(_ sender: Any) {
         if AppData.jobseeker != nil && !AppData.jobseeker.active {
             
-            PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+            PopupController.showGreen(NSLocalizedString("To message please active your account", comment: ""),
+                                      ok: NSLocalizedString("Activate", comment: ""), okCallback: {
                 let controller = JobseekerProfileController.instantiate()
                 controller.isModal = true
                 self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             
         } else {
         
@@ -306,9 +313,9 @@ extension ApplicationDetailsController: UITableViewDataSource {
         let interview = interviews[indexPath.row]
         var status1 = ""
         if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-            status1 = "Completed"
+            status1 = NSLocalizedString("Completed", comment: "")
         } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-            status1 = "Cancelled"
+            status1 = NSLocalizedString("Cancelled", comment: "")
         }
         
         (cell.viewWithTag(1) as! UILabel).text = AppHelper.dateToShortString(interview.at)

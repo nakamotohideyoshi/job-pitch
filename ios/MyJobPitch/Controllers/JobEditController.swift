@@ -109,13 +109,13 @@ class JobEditController: MJPController {
         if job == nil {
             isNew = true
             
-            navigationItem.title = "Add Job"
+            navigationItem.title = NSLocalizedString("Add Job", comment: "")
             navigationItem.rightBarButtonItem = nil
             logoView.image = UIImage(named: "default-logo")
             
         } else {
             
-            navigationItem.title = "Edit Job"
+            navigationItem.title = NSLocalizedString("Edit Job", comment: "")
             
             workplace = job.locationData
             
@@ -159,8 +159,9 @@ class JobEditController: MJPController {
     
     @IBAction func onActivate(_ sender: Any) {
         if !self.active.isOn {
-            PopupController.showGreen("Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.", ok: "Deactivate", okCallback: {
-            }, cancel: "Cancel", cancelCallback: {
+            PopupController.showGreen(NSLocalizedString("Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.", comment: ""),
+                                      ok: NSLocalizedString("Deactivate", comment: ""), okCallback: {
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: {
                 self.activateBackUp()
             })
         }
@@ -175,7 +176,8 @@ class JobEditController: MJPController {
     }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
-        PopupController.showGray("In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {
@@ -255,7 +257,7 @@ class JobEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading("Uploading...")
+                self.showLoading(NSLocalizedString("Uploading...", comment: ""))
                 
                 API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-job-images",
@@ -263,7 +265,7 @@ class JobEditController: MJPController {
                                          objectId: self.job.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                            self.showLoading(NSLocalizedString("Uploading...", comment: ""), withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }) { (_, error) in
                     if error == nil {
                         self.uploadPitch()
@@ -296,7 +298,7 @@ class JobEditController: MJPController {
 
             PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "job-videos", progress: { (progress) in
                 if progress < 1 {
-                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                    self.showLoading(NSLocalizedString("Uploading Pitch...", comment: ""), withProgress: progress)
                 } else {
                     self.showLoading()
                 }

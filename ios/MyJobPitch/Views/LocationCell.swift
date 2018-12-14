@@ -21,7 +21,11 @@ class LocationCell: MGSwipeTableCell {
                 AppHelper.loadLogo(location, imageView: imgView, completion: nil)
                 nameLabel.text = location.name
                 let jobCount = location.jobs.count
-                subTitle.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")
+                if jobCount == 1 {
+                    subTitle.text = String(format: NSLocalizedString("Includes %lu job", comment: ""), jobCount)
+                } else {
+                    subTitle.text = String(format: NSLocalizedString("Includes %lu jobs", comment: ""), jobCount)
+                }
             }
         }
     }        

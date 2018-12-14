@@ -9,9 +9,9 @@
         android:id="@+id/filterText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Type to search"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:hint="@string/type_to_search"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:imeOptions="actionDone"
         android:inputType="text">
     </EditText>
@@ -20,8 +20,8 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5px"
-        android:paddingRight="5px"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_marginTop="5dp" />
 
     <View

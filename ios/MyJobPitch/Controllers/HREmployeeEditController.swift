@@ -49,7 +49,7 @@ class HREmployeeEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = employee == nil ? "Add Employee" : "Edit Employee"
+        title = employee == nil ? NSLocalizedString("Add Employee", comment: "") : NSLocalizedString("Edit Employee", comment: "")
         isModal = true
         
         photoPicker = ImagePicker()
@@ -172,7 +172,8 @@ class HREmployeeEditController: MJPController {
     }
     
     @IBAction func nationalNumberHelp(_ sender: Any) {
-        PopupController.showGray("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -219,7 +220,7 @@ class HREmployeeEditController: MJPController {
             
             if self.photoImage != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                self.showLoading("Uploading data...", withProgress: rate)
+                self.showLoading(NSLocalizedString("Uploading data...", comment: ""), withProgress: rate)
             }
             
         }) { (employee, error) in
@@ -248,7 +249,7 @@ extension HREmployeeEditController: UITextFieldDelegate {
         if birthdayField == textField {
             let selector = WWCalendarTimeSelector.instantiate()
             selector.delegate = self
-            selector.optionTopPanelTitle = "Choose Date"
+            selector.optionTopPanelTitle = NSLocalizedString("Choose Date", comment: "")
             if birthday != nil {
                 selector.optionCurrentDate = birthday
             }

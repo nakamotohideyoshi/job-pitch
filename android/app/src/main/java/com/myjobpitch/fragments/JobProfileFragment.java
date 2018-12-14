@@ -74,12 +74,12 @@ public class JobProfileFragment extends FormFragment {
 
         // data
         mContractNames = AppHelper.getNames(AppData.contracts);
-        mContractNames.add(0, "Any");
+        mContractNames.add(0, getString(R.string.any_));
         mContractView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mContractNames));
         mContractView.setText(mContractNames.get(0));
 
         mHoursNames = AppHelper.getNames(AppData.hours);
-        mHoursNames.add(0, "Any");
+        mHoursNames.add(0, getString(R.string.any_));
         mHoursView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mHoursNames));
         mHoursView.setText(mHoursNames.get(0));
 
@@ -99,7 +99,7 @@ public class JobProfileFragment extends FormFragment {
         return new HashMap<String, EditText>() {
             {
                 put("sectors", mSectorsView);
-                put("workplace", mAddressView);
+                put("location", mAddressView);
             }
         };
     }
@@ -116,7 +116,7 @@ public class JobProfileFragment extends FormFragment {
             }
             updateSelectedSectors(selectedSectors);
         } else {
-            updateSelectedSectors(new ArrayList<Sector>());
+            updateSelectedSectors(new ArrayList<>());
         }
 
         if (profile.getContract() != null) {
@@ -166,17 +166,14 @@ public class JobProfileFragment extends FormFragment {
             ));
         }
 
-        new SelectDialog(getApp(), "Select job sectors", items, true, new SelectDialog.Action() {
-            @Override
-            public void apply(int selectedIndex) {
-                selectedSectors.clear();
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i).checked) {
-                        selectedSectors.add(AppData.sectors.get(i));
-                    }
+        new SelectDialog(getApp(), getString(R.string.select), items, true, selectedIndex -> {
+            selectedSectors.clear();
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).checked) {
+                    selectedSectors.add(AppData.sectors.get(i));
                 }
-                updateSelectedSectors(selectedSectors);
             }
+            updateSelectedSectors(selectedSectors);
         });
     }
 
@@ -207,8 +204,8 @@ public class JobProfileFragment extends FormFragment {
         if (!valid()) return;
 
         final JobProfile profile = new JobProfile();
-        profile.setId(AppData.jobseeker.getProfile());
-        profile.setJob_seeker(AppData.jobseeker.getId());
+        profile.setId(AppData.jobSeeker.getProfile());
+        profile.setJob_seeker(AppData.jobSeeker.getId());
 
         List<Integer> selectedSectors = new ArrayList<>();
         for (Sector sector : mSelectedSectors)
@@ -236,36 +233,29 @@ public class JobProfileFragment extends FormFragment {
 
         showLoading();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                if (profile.getId() == null) {
-                    AppData.profile = MJPApi.shared().create(JobProfile.class, profile);
-                } else {
-                    AppData.profile = MJPApi.shared().update(JobProfile.class, profile);
-                }
+        new APITask(() -> {
+            if (profile.getId() == null) {
+                AppData.profile = MJPApi.shared().create(JobProfile.class, profile);
+            } else {
+                AppData.profile = MJPApi.shared().update(JobProfile.class, profile);
             }
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 hideLoading();
-                new Popup(getContext())
-                        .setMessage("Success!")
-                        .addGreenButton("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (AppData.jobseeker.getProfile() == null) {
-                                    AppData.startTimer();
-                                    AppData.jobseeker.setProfile(AppData.profile.getId());
-                                    if (AppData.jobseeker.getPitch() == null) {
-                                        getApp().setRootFragement(R.id.menu_record);
-                                    } else {
-                                        getApp().setRootFragement(R.id.menu_find_job);
-                                    }
-                                }
-                            }
-                        })
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.success, true);
+                popup.addGreenButton(R.string.ok, view -> {
+                    if (AppData.jobSeeker.getProfile() == null) {
+                        AppData.startTimer();
+                        AppData.jobSeeker.setProfile(AppData.profile.getId());
+                        if (AppData.jobSeeker.getPitch() == null) {
+                            getApp().setRootFragement(R.id.menu_record);
+                        } else {
+                            getApp().setRootFragement(R.id.menu_find_job);
+                        }
+                    }
+                });
+                popup.show();
             }
             @Override
             public void onError(JsonNode errors) {

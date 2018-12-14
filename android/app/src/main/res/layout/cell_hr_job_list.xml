@@ -15,7 +15,7 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:padding="12dp"
-            android:background="@color/yellowColor"
+            android:background="@color/colorYellow"
             android:src="@drawable/swipe_icon_remove"
             android:scaleType="fitCenter"/>
 
@@ -24,7 +24,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:orientation="horizontal"
         android:gravity="center">
 

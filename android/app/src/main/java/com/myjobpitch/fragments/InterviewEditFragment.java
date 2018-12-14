@@ -21,7 +21,7 @@ import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewForCreation;
 import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -102,23 +102,23 @@ public class InterviewEditFragment extends FormFragment {
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
-        loadDetails();
+        loadDetail();
 
         return  view;
     }
 
-    private void loadDetails() {
-        Jobseeker jobseeker = application.getJob_seeker();
+    private void loadDetail() {
+        JobSeeker jobSeeker = application.getJob_seeker();
         Job job = application.getJob_data();
 
-        AppHelper.loadJobseekerImage(jobseeker, imageView);
+        AppHelper.loadJobSeekerImage(jobSeeker, imageView);
 
         // job seeker name
-        itemTitle.setText(jobseeker.getFirst_name() + " " + jobseeker.getLast_name());
+        itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
 
         // CV
         if (AppData.user.isRecruiter()) {
-            itemSubTitle.setText(jobseeker.getDescription());
+            itemSubTitle.setText(jobSeeker.getDescription());
         } else {
             itemSubTitle.setText(job.getDescription());
         }
@@ -150,29 +150,29 @@ public class InterviewEditFragment extends FormFragment {
 
         switch (mode) {
             case "NEW":
-                title = "Arrange Interview";
-                createButton.setText("Send Invitation");
+                title = getString(R.string.arrange_interview);
+                createButton.setText(R.string.send_inviation);
                 break;
             case "EDIT":
-                title = "Edit Interview";
-                createButton.setText("Update");
+                title = getString(R.string.edit_interview);
+                createButton.setText(R.string.update);
                 break;
             case "NOTE":
-                title = "Edit Notes";
+                title = getString(R.string.edit_notes);
                 interviewDateTimeButton.setEnabled(false);
                 interviewMessage.setEnabled(false);
-                createButton.setText("Update Recruiter's Notes");
+                createButton.setText(R.string.update_notes);
                 break;
             case "COMPLETE":
-                title = "Complete Interview";
+                title = getString(R.string.complete_interview);
                 interviewDateTimeButton.setVisibility(View.GONE);
                 interviewDateTime.setVisibility(View.GONE);
                 interviewFeedback.setVisibility(View.VISIBLE);
-                createButton.setText("Complete");
+                createButton.setText(R.string.complete);
                 break;
             case "CANCEL":
-                title = "Cancel Interview";
-                createButton.setText("Cancel");
+                title = getString(R.string.cancel_interview);
+                createButton.setText(R.string.cancel);
                 interviewDateTimeButton.setEnabled(false);
                 interviewFeedback.setVisibility(View.VISIBLE);
                 break;
@@ -194,16 +194,13 @@ public class InterviewEditFragment extends FormFragment {
         final DatePickerDialog datePickerDialog;
 
 
-        datePickerDialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
-                tempStr = selectedDayOfMonth + "/" + selectedMonth + "/" + selectedYear;
-                getTime();
+        datePickerDialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, (datePicker, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+            tempStr = selectedDayOfMonth + "/" + selectedMonth + "/" + selectedYear;
+            getTime();
 
-            }
         }, year, month, day);
 
-        datePickerDialog.setTitle("Select Date");
+        datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.show();
     }
 
@@ -213,26 +210,23 @@ public class InterviewEditFragment extends FormFragment {
         hour = dateAndTime.get(Calendar.HOUR_OF_DAY);
         minute = dateAndTime.get(Calendar.MINUTE);
 
-        timePickerDialog = new TimePickerDialog(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                date = new Date();
-                tempStr += " " + selectedHour + ":" + selectedMinute;
+        timePickerDialog = new TimePickerDialog(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, (timePicker, selectedHour, selectedMinute) -> {
+            date = new Date();
+            tempStr += " " + selectedHour + ":" + selectedMinute;
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
-                try {
-                    date = dateFormat.parse(tempStr);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
-                SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
-                interviewDateTime.setText(format.format(date) + " at " + format1.format(date));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+            try {
+                date = dateFormat.parse(tempStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+            SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+            SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+            interviewDateTime.setText(format.format(date) + " at " + format1.format(date));
         }, hour, minute, true);//Yes 24 hour time
 
-        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
 
@@ -246,12 +240,7 @@ public class InterviewEditFragment extends FormFragment {
         interviewForCreation.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
         interviewForCreation.setFeedback("");
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                MJPApi.shared().createInterview(interviewForCreation);
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> MJPApi.shared().createInterview(interviewForCreation)).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 getApp().popFragment();
@@ -273,12 +262,7 @@ public class InterviewEditFragment extends FormFragment {
         interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
         interviewForUpdate.setFeedback(interviewFeedback.getText().toString() == null ? "" : interviewFeedback.getText().toString());
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                MJPApi.shared().updateInterview(interviewForUpdate, interview.getId());
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> MJPApi.shared().updateInterview(interviewForUpdate, interview.getId())).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 getApp().popFragment();
@@ -299,30 +283,19 @@ public class InterviewEditFragment extends FormFragment {
         interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
         interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
         interviewForUpdate.setFeedback(interviewFeedback.getText().toString() == null ? "" : interviewFeedback.getText().toString());
-        new Popup(getContext())
-                .setMessage("Are you sure you want to complete this interview?")
-                .addGreenButton("Yes", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new APITask(new APIAction() {
-                            @Override
-                            public void run() {
-                                MJPApi.shared().completeInterview(interviewForUpdate, interview.getId());
-                            }
-                        }).addListener(new APITaskListener() {
-                            @Override
-                            public void onSuccess() {
-                                getApp().popFragment();
-                            }
-                            @Override
-                            public void onError(JsonNode errors) {
-                                errorHandler(errors);
-                            }
-                        }).execute();
-                    }
-                })
-                .addGreyButton("No", null)
-                .show();
+        Popup popup = new Popup(getContext(), R.string.interview_complete_message, true);
+        popup.addGreenButton(R.string.yes, view -> new APITask(() -> MJPApi.shared().completeInterview(interviewForUpdate, interview.getId())).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute());
+        popup.addGreyButton(R.string.no, null);
+        popup.show();
     }
 
     @OnClick(R.id.interview_create)

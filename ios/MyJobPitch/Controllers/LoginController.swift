@@ -80,7 +80,8 @@ class LoginController: MJPController {
                 let deprecation = ((result as! [Deprecation]).filter {$0.platform == "IOS"})[0]
                 if  Int(version)! <= Int(deprecation.error)! {
                     
-                    PopupController.showGreen("Your app is out of date, you must upgrade to continue", ok: "Update", okCallback: {
+                    PopupController.showGreen(NSLocalizedString("Your app is out of date, you must upgrade to continue", comment: ""),
+                                              ok: NSLocalizedString("Update", comment: ""), okCallback: {
                         let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
                         if #available(iOS 10.0, *) {
                             UIApplication.shared.open(url!, options: [:], completionHandler: { (_) in
@@ -89,20 +90,21 @@ class LoginController: MJPController {
                         } else {
                             UIApplication.shared.openURL(url!)
                         }
-                    }, cancel: "Close app", cancelCallback: {
+                    }, cancel: NSLocalizedString("Close app", comment: ""), cancelCallback: {
                         exit(0)
                     })
                     
                 } else if Int(version)! <= Int(deprecation.warning)! {
                     
-                    PopupController.showGreen("Your app is out of date, update now to take advantage of the latest features", ok: "Update", okCallback: {
+                    PopupController.showGreen(NSLocalizedString("Your app is out of date, update now to take advantage of the latest features", comment: ""),
+                                              ok: NSLocalizedString("Update", comment: ""), okCallback: {
                         let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
                         if #available(iOS 10.0, *) {
                             UIApplication.shared.open(url!, options: [:], completionHandler: nil)
                         } else {
                             UIApplication.shared.openURL(url!)
                         }
-                    }, cancel: "Dismiss", cancelCallback: {
+                    }, cancel: NSLocalizedString("Dismiss", comment: ""), cancelCallback: {
                         self.autoLogin()
                     })
                     
@@ -164,11 +166,12 @@ class LoginController: MJPController {
 
                 } else {
                     
-                    let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
+                    let popupController = PopupController.show(AppHelper.getFrontController(), message: NSLocalizedString("Choose User Type", comment: ""),
+                                                               ok: NSLocalizedString("Get a Job", comment: ""), okCallback: {
                         AppData.userRole = Role.ROLE_JOB_SEEKER_ID
                         let controller = AppHelper.instantiate("Intro")
                         self.navigationController?.pushViewController(controller, animated: true)
-                    }, cancel: "I Need Staff", cancelCallback: {
+                    }, cancel: NSLocalizedString("I Need Staff", comment: ""), cancelCallback: {
                         AppData.userRole = Role.ROLE_RECRUITER_ID
                         SideMenuController.pushController(id: "businesses")
                     })
@@ -259,7 +262,7 @@ class LoginController: MJPController {
         let api4Action = UIAlertAction(title: "https://release.sclabs.co.uk", style: .default, handler: setServerUrl)
         actionSheet.addAction(api4Action)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         
         present(actionSheet, animated: true, completion: nil)

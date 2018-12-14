@@ -19,7 +19,7 @@ class BusinessUserListController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTitle(title: "Users", subTitle: business.name)
+        setTitle(title: NSLocalizedString("Users", comment: ""), subTitle: business.name)
         
         tableView.addPullToRefresh {
             self.loadData()
@@ -72,9 +72,9 @@ class BusinessUserListController: MJPController {
                 let names: [String] = locations.map { $0.name }
                 label = names.joined(separator: ", ")
             } else if user.email == AppData.user.email {
-                label = "Administrator (Current User)"
+                label = NSLocalizedString("Administrator (Current User)", comment: "")
             } else {
-                label = "Administrator"
+                label = NSLocalizedString("Administrator", comment: "")
             }
             return (user, label)
         })
@@ -119,7 +119,8 @@ extension BusinessUserListController: UITableViewDelegate {
         let (user, _) = data[indexPath.row]
 
         if user.email == AppData.user.email {
-            PopupController.showGray("Cannot edit currently logged in user", ok: "Ok")
+            PopupController.showGray(NSLocalizedString("Cannot edit currently logged in user", comment: ""),
+                                     ok: NSLocalizedString("Ok", comment: ""))
             return
         }
         

@@ -1,22 +1,28 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
-import com.myjobpitch.api.data.Workplace;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -54,7 +60,7 @@ public class BusinessUserListFragment extends BaseFragment {
 
     public String businessName;
     public Business business;
-    public List<Workplace> workplaces;
+    public List<Location> locations;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,64 +68,55 @@ public class BusinessUserListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Users";
+        title = getString(R.string.users_title);
 
         AppHelper.setJobTitleViewText(jobTitleView, businessName);
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                if (loading == null) {
-                    loadBusinessUsers();
-                }
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            if (loading == null) {
+                loadBusinessUsers();
             }
         });
 
         // list view
 
         if (adapter == null) {
-            adapter = new BusinessesUserAdapter(getApp(), new ArrayList<BusinessUser>());
+            adapter = new BusinessesUserAdapter(getApp(), new ArrayList<>());
         } else {
             adapter.clear();
         }
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (adapter.getItem(position).getUser() != AppData.user.getId().intValue()) {
-                    BusinessUserEditFragment fragment = new BusinessUserEditFragment();
-                    fragment.isEditMode = true;
-                    fragment.businessUser = adapter.getItem(position);
-                    fragment.businessId = business.getId();
-                    fragment.workplaces = workplaces;
-                    getApp().pushFragment(fragment);
-                } else {
-                    new Popup(getContext())
-                            .setMessage("Cannot edit currently logged in user.")
-                            .addGreyButton("Ok", null)
-                            .show();
-                }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            if (adapter.getItem(position).getUser() != AppData.user.getId().intValue()) {
+                BusinessUserEditFragment fragment = new BusinessUserEditFragment();
+                fragment.isEditMode = true;
+                fragment.businessUser = adapter.getItem(position);
+                fragment.businessId = business.getId();
+                fragment.locations = locations;
+                getApp().pushFragment(fragment);
+            } else {
+                Popup popup = new Popup(getContext(), R.string.cannt_edit_current_user, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
             }
         });
 
         if (business.getRestricted()) {
             swipeRefreshLayout.setRefreshing(false);
             emptyView.setVisibility(View.VISIBLE);
-            emptyText.setText("You must an administrator to view this information.");
+            emptyText.setText(R.string.administrator_message);
             emptyButton.setVisibility(View.GONE);
         } else {
             swipeRefreshLayout.setRefreshing(true);
-            addMenuItem(MENUGROUP1, 115, "Create User", R.drawable.ic_add);
+            addMenuItem(MENUGROUP1, 115, getString(R.string.create_user), R.drawable.ic_add);
             // loading data
             loadWorkplaces();
         }
-
-
 
         return view;
     }
@@ -129,7 +126,7 @@ public class BusinessUserListFragment extends BaseFragment {
         BusinessUserEditFragment fragment = new BusinessUserEditFragment();
         fragment.isEditMode = false;
         fragment.businessId = business.getId();
-        fragment.workplaces = workplaces;
+        fragment.locations = locations;
         getApp().pushFragment(fragment);
     }
 
@@ -143,13 +140,8 @@ public class BusinessUserListFragment extends BaseFragment {
     }
 
     void loadWorkplaces() {
-        workplaces = new ArrayList<>();
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                workplaces.addAll(MJPApi.shared().getUserWorkplaces(business.getId()));
-            }
-        }).addListener(new APITaskListener() {
+        locations = new ArrayList<>();
+        new APITask(() -> locations.addAll(MJPApi.shared().getUserLocations(business.getId()))).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
 
@@ -164,20 +156,15 @@ public class BusinessUserListFragment extends BaseFragment {
 
     void loadBusinessUsers() {
         final List<BusinessUser> businessUsers = new ArrayList<>();
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                businessUsers.addAll(MJPApi.shared().getBusinessUsers(business.getId()));
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> businessUsers.addAll(MJPApi.shared().getBusinessUsers(business.getId()))).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 adapter.clear();
                 adapter.addAll(businessUsers);
                 if (businessUsers.size() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
-                    emptyText.setText("This Business doesn't seem to have any user yet!");
-                    emptyButton.setText("Create User");
+                    emptyText.setText(R.string.business_user_empty_message);
+                    emptyButton.setText(R.string.create_user);
                 }
                 updatedBusinessUserList();
                 swipeRefreshLayout.setRefreshing(false);
@@ -215,7 +202,30 @@ public class BusinessUserListFragment extends BaseFragment {
 
         @Override
         public void fillValues(final int position, View convertView) {
-            AppHelper.showBusinessUserInfo(getItem(position), convertView, workplaces);
+            BusinessUser businessUser = getItem(position);
+
+            // email
+            AppHelper.getItemTitleView(convertView).setText(businessUser.getEmail());
+
+            // location
+            int locationCount = businessUser.getLocations().size();
+            String subTitle = locationCount == 0 ? getString(R.string.administrator) : "";
+
+            if (businessUser.getUser() == AppData.user.getId().intValue()) {
+                subTitle = getString(R.string.administrator_current);
+            }
+
+            for (int i=0; i<locations.size(); i++) {
+                if (businessUser.getLocations().indexOf(locations.get(i).getId()) > -1) {
+                    if (subTitle == "") {
+                        subTitle = locations.get(i).getName();
+                    } else {
+                        subTitle = subTitle + ", " + locations.get(i).getName();
+                    }
+                }
+            }
+
+            AppHelper.getItemSubTitleView(convertView).setText(subTitle);
         }
 
     }

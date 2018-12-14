@@ -18,7 +18,7 @@ import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -46,7 +46,7 @@ public class InterviewsFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    Jobseeker jobseeker;
+    JobSeeker jobSeeker;
 
     public Job job;
     public List<Application> applications;
@@ -59,12 +59,12 @@ public class InterviewsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_interview_list, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Interviews";
+        title = getString(R.string.interview_title);
 
         // empty view
 
-        AppHelper.setEmptyViewText(emptyView, "No Interviews");
-        AppHelper.setEmptyButtonText(emptyView, "Refresh");
+        AppHelper.setEmptyViewText(emptyView, R.string.interview_empty_message);
+        AppHelper.setEmptyButtonText(emptyView, R.string.refresh);
 
         if (AppData.user.isRecruiter()) {
             AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
@@ -74,40 +74,32 @@ public class InterviewsFragment extends BaseFragment {
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadApplications();
-            }
-        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> loadApplications());
 
         // list view
 
         if (adapter == null) {
-            adapter = new InterviewAdapter(getApp(), new ArrayList<Interview>());
+            adapter = new InterviewAdapter(getApp(), new ArrayList<>());
         } else {
             adapter.clear();
         }
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                InterviewDetailsFragment fragment = new InterviewDetailsFragment();
-                fragment.interviewId = adapter.getItem(position).getId();
-                for (Application application : applications) {
-                    if (adapter.getItem(position).getApplication().intValue() == application.getId().intValue()) {
-                        fragment.application = application;
-                        getApp().pushFragment(fragment);
-                        break;
-                    }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            InterviewDetailFragment fragment = new InterviewDetailFragment();
+            fragment.interviewId = adapter.getItem(position).getId();
+            for (Application application : applications) {
+                if (adapter.getItem(position).getApplication().intValue() == application.getId().intValue()) {
+                    fragment.application = application;
+                    getApp().pushFragment(fragment);
+                    break;
                 }
             }
         });
 
-        if (AppData.user.isJobseeker()) {
-            addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP1, 112, getString(R.string.edit_profile), R.drawable.ic_edit);
         }
 
         onRefresh();
@@ -117,12 +109,9 @@ public class InterviewsFragment extends BaseFragment {
 
     private void loadApplications() {
         applications = new ArrayList();
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                String query = job == null ? null : "job=" + job.getId();
-                applications.addAll(MJPApi.shared().get(Application.class, query));
-            }
+        new APITask(() -> {
+            String query = job == null ? null : "job=" + job.getId();
+            applications.addAll(MJPApi.shared().get(Application.class, query));
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {

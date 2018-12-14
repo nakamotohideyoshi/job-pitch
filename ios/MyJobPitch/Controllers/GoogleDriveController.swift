@@ -57,7 +57,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDriveReadonly]
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-            showLoading("Sign in...")
+            showLoading(NSLocalizedString("Sign in...", comment: ""))
             GIDSignIn.sharedInstance().signInSilently()
         }
     }
@@ -76,13 +76,13 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         loading.view.removeFromSuperview()
         
         if error != nil {
-            PopupController.showGreen("Authentication Error",
+            PopupController.showGreen(NSLocalizedString("Authentication Error", comment: ""),
                                       ok: nil, okCallback: nil,
-                                      cancel: "OK", cancelCallback: {
+                                      cancel: NSLocalizedString("Ok", comment: ""), cancelCallback: {
                                         self.dismiss(animated: true, completion: nil)
             })
         } else {
-            navigationItem.rightBarButtonItem?.title = "Sign out"
+            navigationItem.rightBarButtonItem?.title = NSLocalizedString("Sign out", comment: "")
             service.authorizer = user.authentication.fetcherAuthorizer()
             tableView.infiniteScrollingView.startAnimating()
             arrPath = ["root"];
@@ -110,7 +110,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
             if error != nil {
                 PopupController.showGreen("Error",
                                           ok: nil, okCallback: nil,
-                                          cancel: "OK", cancelCallback: nil)
+                                          cancel: NSLocalizedString("Ok", comment: ""), cancelCallback: nil)
             } else {
                 if self.arrPath.count > 1 && self.files.count == 0 {
                     let file = GTLRDrive_File()
@@ -134,7 +134,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     }
     
     func downloadFile(file: GTLRDrive_File) {
-        showLoading("Downloading...")
+        showLoading(NSLocalizedString("Downloading...", comment: ""))
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: file.identifier!)
         service.executeQuery(query) { (ticket, result, error) in
             self.loading.view.removeFromSuperview()
@@ -151,16 +151,16 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
                 }
             }
             
-            PopupController.showGreen("Failed to download " + file.name!,
+            PopupController.showGreen(NSLocalizedString("Failed to download", comment: ""),
                                       ok: nil, okCallback: nil,
-                                      cancel: "OK", cancelCallback: nil)
+                                      cancel: NSLocalizedString("Ok", comment: ""), cancelCallback: nil)
         }
     }
 
     @IBAction func signAction(_ sender: Any) {
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             GIDSignIn.sharedInstance().signOut()
-            navigationItem.rightBarButtonItem?.title = "Sign in"
+            navigationItem.rightBarButtonItem?.title = NSLocalizedString("Sign in", comment: "")
             files.removeAll()
             tableView.reloadData()
         } else {
@@ -242,10 +242,10 @@ extension GoogleDriveController: UITableViewDelegate {
             tableView.infiniteScrollingView.startAnimating()            
         } else {
             if file.size != nil {
-                let title = String(format: "Do you want to download %@?", file.name!)
-                PopupController.showGreen(title, ok: "Download", okCallback: {
+                let title = String(format: NSLocalizedString("Do you want to download %@?", comment: ""), file.name!)
+                PopupController.showGreen(title, ok: NSLocalizedString("Download", comment: ""), okCallback: {
                     self.downloadFile(file: file)
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             }            
         }
     }

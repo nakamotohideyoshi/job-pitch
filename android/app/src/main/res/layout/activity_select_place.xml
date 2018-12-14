@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentStart="true" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -29,10 +29,10 @@
 
     <Button
         android:id="@+id/select_button"
-        android:text="Select"
+        android:text="@string/select"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:background="@drawable/button_green"

@@ -31,11 +31,11 @@ class InterviewEditController: MJPController {
         
         isModal = true
         
-        var title = "Arrange Interview"
+        var title = NSLocalizedString("Arrange Interview", comment: "")
         if isComplete {
-            title = "Complete Interview"
+            title = NSLocalizedString("Complete Interview", comment: "")
         } else if interview != nil {
-            title = "Edit Interview"
+            title = NSLocalizedString("Edit Interview", comment: "")
         }
         let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         setTitle(title: title, subTitle: subTitle)
@@ -81,7 +81,7 @@ class InterviewEditController: MJPController {
                 feedbackTextView.superview?.isHidden = false
             }
             
-            saveButton.setTitle(isComplete ? "Complete" : "Update", for: .normal)
+            saveButton.setTitle(isComplete ? NSLocalizedString("Complete", comment: "") : NSLocalizedString("Update", comment: ""), for: .normal)
         }
     }
     
@@ -151,7 +151,7 @@ extension InterviewEditController: UITextFieldDelegate {
         if dateTimeField == textField {
             let selector = WWCalendarTimeSelector.instantiate()
             selector.delegate = self
-            selector.optionTopPanelTitle = "Choose Date/Time"
+            selector.optionTopPanelTitle = NSLocalizedString("Choose Date/Time", comment: "")
             selector.optionCurrentDate = dateTime
             selector.optionStyles.showYear(true)
             selector.optionStyles.showDateMonth(true)

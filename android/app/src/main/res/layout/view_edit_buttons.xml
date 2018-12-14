@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="5dp"
-        android:background="@color/greenColor"
+        android:background="@color/colorGreen"
         android:src="@drawable/swipe_icon_edit"
         android:scaleType="fitCenter"/>
     <ImageButton
@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="5dp"
-        android:background="@color/yellowColor"
+        android:background="@color/colorYellow"
         android:src="@drawable/swipe_icon_remove"
         android:scaleType="fitCenter"/>
 </LinearLayout>

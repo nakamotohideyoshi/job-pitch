@@ -1,0 +1,27 @@
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "1bR-IJ-0X9"; */
+"1bR-IJ-0X9.text" = "Status";
+
+/* Class = "UILabel"; text = "Date/Time"; ObjectID = "9SQ-cR-SfS"; */
+"9SQ-cR-SfS.text" = "Date/Time";
+
+/* Class = "UILabel"; text = "Location:"; ObjectID = "Iss-Ds-pPm"; */
+"Iss-Ds-pPm.text" = "Location:";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "KDb-x6-BdB"; */
+"KDb-x6-BdB.normalTitle" = "Accept";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "SY1-ne-QHJ"; */
+"SY1-ne-QHJ.normalTitle" = "Cancel";
+
+/* Class = "UILabel"; text = "Date/Time:"; ObjectID = "VS4-o2-VFd"; */
+"VS4-o2-VFd.text" = "Date/Time:";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "Y2c-j8-Ikm"; */
+"Y2c-j8-Ikm.text" = "Status:";
+
+/* Class = "UILabel"; text = "Location"; ObjectID = "i3O-7M-NG6"; */
+"i3O-7M-NG6.text" = "Location";
+
+/* Class = "UIButton"; normalTitle = "Complete"; ObjectID = "vAz-qL-fUZ"; */
+"vAz-qL-fUZ.normalTitle" = "Complete";

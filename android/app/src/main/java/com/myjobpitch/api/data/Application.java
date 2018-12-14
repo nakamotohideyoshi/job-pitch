@@ -5,7 +5,7 @@ import java.util.List;
 public class Application extends BaseApplication {
 
     private Job job_data;
-    private Jobseeker job_seeker;
+    private JobSeeker job_seeker;
     private Integer created_by;
     private Integer deleted_by;
     private List<Message> messages;
@@ -15,7 +15,7 @@ public class Application extends BaseApplication {
     public Job getJob_data() {
         return job_data;
     }
-    public Jobseeker getJob_seeker() {
+    public JobSeeker getJob_seeker() {
         return job_seeker;
     }
     public Integer getCreated_by() {

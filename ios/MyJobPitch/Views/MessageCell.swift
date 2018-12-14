@@ -22,7 +22,7 @@ class MessageCell: UITableViewCell {
             if application != nil {
                 let job = application.job!
                 let lastMessage = application.messages?.lastObject as! Message
-                let message = lastMessage.fromRole == AppData.userRole ? String(format: "You: %@", (lastMessage.content)!) : lastMessage.content
+                let message = lastMessage.fromRole == AppData.userRole ? String(format: "%@: %@", NSLocalizedString("You", comment: ""), (lastMessage.content)!) : lastMessage.content
                 let deleted = application.status == ApplicationStatus.APPLICATION_DELETED_ID
                 
                 var title: String!, subTitle: String!

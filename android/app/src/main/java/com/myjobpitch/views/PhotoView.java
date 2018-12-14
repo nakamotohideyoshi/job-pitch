@@ -25,7 +25,7 @@ public class PhotoView extends Dialog {
         setContentView(R.layout.view_photoview);
         setCancelable(true);
 
-        PhotoDraweeView photoDraweeView = (PhotoDraweeView) findViewById(R.id.photo_drawee_view);
+        PhotoDraweeView photoDraweeView = findViewById(R.id.photo_drawee_view);
         ViewGroup.LayoutParams params = photoDraweeView.getLayoutParams();
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

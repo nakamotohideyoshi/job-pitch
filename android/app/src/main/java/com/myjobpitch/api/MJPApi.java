@@ -18,7 +18,7 @@ import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
 import com.myjobpitch.api.data.Employee;
-import com.myjobpitch.api.data.ExcludeJobseeker;
+import com.myjobpitch.api.data.ExcludeJobSeeker;
 import com.myjobpitch.api.data.ExternalApplication;
 import com.myjobpitch.api.data.HREmployee;
 import com.myjobpitch.api.data.HRJob;
@@ -31,10 +31,10 @@ import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitchForCreation;
 import com.myjobpitch.api.data.JobProfile;
-import com.myjobpitch.api.data.Jobseeker;
-import com.myjobpitch.api.data.JobseekerForUpdate;
+import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.JobSeekerForUpdate;
 import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Workplace;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.Nationality;
@@ -63,6 +63,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -82,11 +83,11 @@ public class MJPApi {
 
     private static final Map<Class<? extends MJPAPIObject>, String> classEndPoints = new HashMap<Class<? extends MJPAPIObject>, String>() {{
         put(JobProfile.class, "job-profiles");
-        put(Jobseeker.class, "job-seekers");
+        put(JobSeeker.class, "job-seekers");
         put(Pitch.class, "pitches");
         put(Job.class, "jobs");
         put(JobPitchForCreation.class, "job-videos");
-        put(Workplace.class, "locations");
+        put(Location.class, "locations");
         put(Business.class, "businesses");
         put(Sector.class, "sectors");
         put(Contract.class, "contracts");
@@ -103,7 +104,6 @@ public class MJPApi {
         put(MessageForCreation.class, "messages");
         put(MessageForUpdate.class, "messages");
         put(ProductToken.class, "google-play-products");
-        put(Employee.class, "employee/employees");
     }};
 
     private String apiRoot;
@@ -301,37 +301,37 @@ public class MJPApi {
         return post(getUrl("user-businesses"), business, Business.class);
     }
 
-    public Business updateBusiness(int businessId, Business business) {
-        return put(getUrl("user-businesses", businessId), business, Business.class);
+    public Business updateBusiness(Business business) {
+        return put(getUrl("user-businesses", business.getId()), business, Business.class);
     }
 
     public void deleteBusiness(Integer id) {
         delete(getUrl("user-businesses", id));
     }
 
-    public Workplace createWorkplace(Workplace workplace) {
-        return post(getUrl("user-locations"), workplace, Workplace.class);
+    public Location createLocation(Location location) {
+        return post(getUrl("user-locations"), location, Location.class);
     }
 
-    public Workplace updateWorkplace(Workplace workplace) {
-        return put(getUrl("user-locations", workplace.getId()), workplace, Workplace.class);
+    public Location updateLocation(Location location) {
+        return put(getUrl("user-locations", location.getId()), location, Location.class);
     }
 
-    public List<Workplace> getUserWorkplaces(Integer business_id) {
+    public List<Location> getUserLocations(Integer business_id) {
         URI uri = getUrl("user-locations", business_id != null ? "business=" + business_id : null);
-        return Arrays.asList(get(uri, Workplace[].class));
+        return Arrays.asList(get(uri, Location[].class));
     }
 
-    public Workplace getUserWorkplace(Integer id) {
-        return get(getUrl("user-locations", id), Workplace.class);
+    public Location getUserLocation(Integer id) {
+        return get(getUrl("user-locations", id), Location.class);
     }
 
-    public void deleteWorkplace(Integer id) {
+    public void deleteLocation(Integer id) {
         delete(getUrl("user-locations", id));
     }
 
-    public List<Job> getUserJobs(Integer workplaceId) {
-        URI uri = getUrl("user-jobs", workplaceId != null ? "location=" + workplaceId : null);
+    public List<Job> getUserJobs(Integer location_id) {
+        URI uri = getUrl("user-jobs", location_id != null ? "location=" + location_id : null);
         return Arrays.asList(get(uri, Job[].class));
     }
 
@@ -375,7 +375,7 @@ public class MJPApi {
         delete(getUrl("user-business-images", id));
     }
 
-    public void deleteWorkplaceImage(Integer id) {
+    public void deleteLocationImage(Integer id) {
         delete(getUrl("user-location-images", id));
     }
 
@@ -383,32 +383,30 @@ public class MJPApi {
         delete(getUrl("user-job-images", id));
     }
 
-    public Jobseeker updateJobseeker(Integer jobseekerId, JobseekerForUpdate jobseeker, Resource profileImage, Resource cv) {
+    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv, boolean removedCV) {
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        for (Field field : jobseeker.getClass().getDeclaredFields()) {
+        for (Field field : jobSeeker.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             try {
                 String name = field.getName();
-                Object value = field.get(jobseeker);
-                if (!name.equals("pitches")) {
-                    parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
-                }
+                Object value = field.get(jobSeeker);
+                parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
             } catch (Exception e) {
             }
         }
         if (profileImage != null) {
             parts.put("profile_image", Arrays.asList(new Object[] {profileImage}));
         }
-        if (cv != null) {
-            parts.put("cv", Arrays.asList(new Object[] {cv}));
+        if (cv != null || removedCV) {
+            parts.put("cv", Arrays.asList(new Object[] {cv != null ? cv : ""}));
         }
 
-        HttpMethod method = jobseekerId == null ? HttpMethod.POST : HttpMethod.PATCH;
+        HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PATCH;
         HttpHeaders headers = getDefaultHttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity request = createAuthenticatedRequest(parts, headers);
-        return rest.exchange(getUrl("job-seekers", jobseekerId), method, request, Jobseeker.class).getBody();
+        return rest.exchange(getUrl("job-seekers", jobSeekerId), method, request, JobSeeker.class).getBody();
     }
 
 
@@ -464,7 +462,7 @@ public class MJPApi {
         post(getUrl("applications/external"), externalApplication, Object.class);
     }
 
-    public void excludeJobseeker(ExcludeJobseeker data) {
+    public void excludeJobSeeker(ExcludeJobSeeker data) {
         post(getUrl(String.format("user-jobs/%s/exclude", data.getJob())), data, Object.class);
     }
 
@@ -485,10 +483,27 @@ public class MJPApi {
         return get(getUrl(endpoint, pitchId), Pitch.class);
     }
 
+
     // HR jobs
 
     public List<HRJob> getHRJobs() {
         return Arrays.asList(get(getUrl("hr/jobs"), HRJob[].class));
+    }
+
+    public HRJob getHRJob(Integer id) {
+        return get(getUrl("hr/jobs", id), HRJob.class);
+    }
+
+    public HRJob createHRJob(HRJob hrJob) {
+        return post(getUrl("hr/jobs"), hrJob, HRJob.class);
+    }
+
+    public HRJob updateHRJob(Integer id, HRJob hrJob) {
+        return put(getUrl("hr/jobs", id), hrJob, HRJob.class);
+    }
+
+    public void deleteHRJob(Integer id) {
+        delete(getUrl("hr/jobs", id));
     }
 
     // HR employees
@@ -496,4 +511,42 @@ public class MJPApi {
     public List<HREmployee> getHREmployees() {
         return Arrays.asList(get(getUrl("hr/employees"), HREmployee[].class));
     }
+
+    public HREmployee getHREmployee(Integer id) {
+        return get(getUrl("hr/employees", id), HREmployee.class);
+    }
+
+    public HREmployee updateHREmployee(Integer employeeId, HREmployee hrEmployee, Resource profileImage) {
+
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        for (Field field : hrEmployee.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                String name = field.getName();
+                Object value = field.get(hrEmployee);
+                parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
+            } catch (Exception e) {
+            }
+        }
+        if (profileImage != null) {
+            parts.put("profile_image", Arrays.asList(new Object[] {profileImage}));
+        }
+
+        HttpMethod method = employeeId == null ? HttpMethod.POST : HttpMethod.PATCH;
+        HttpHeaders headers = getDefaultHttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity request = createAuthenticatedRequest(parts, headers);
+        return rest.exchange(getUrl("hr/employees", employeeId), method, request, HREmployee.class).getBody();
+    }
+
+    public void deleteHREmployee(Integer id) {
+        delete(getUrl("hr/employees", id));
+    }
+
+    // employees
+
+    public Employee getEmployee(Integer id) {
+        return get(getUrl("employee/employees", id), Employee.class);
+    }
+
 }

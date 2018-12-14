@@ -37,8 +37,8 @@ class ResetPasswordController: MJPController {
             API.shared().resetPassword(request) { (_, error) in
                 if error == nil {
                     self.hideLoading()
-                    let _ = PopupController.show(AppHelper.getFrontController(), message: "Password reset requested, please check your email.",
-                                                 ok: nil, okCallback: nil, cancel: "OK", cancelCallback: {
+                    let _ = PopupController.show(AppHelper.getFrontController(), message: NSLocalizedString("Password reset requested, please check your email.", comment: ""),
+                                                 ok: nil, okCallback: nil, cancel: NSLocalizedString("Ok", comment: ""), cancelCallback: {
                         self.dismiss(animated: true, completion: nil)
                     })
                 } else {

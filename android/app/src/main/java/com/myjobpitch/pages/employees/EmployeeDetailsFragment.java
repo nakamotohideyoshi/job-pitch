@@ -60,12 +60,9 @@ public class EmployeeDetailsFragment extends BaseFragment {
         titleView.setText(employee.getJob().getTitle());
         jobDescView.setText(employee.getJob().getDescription());
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
-                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            }
+        mapView.getMapAsync(map -> {
+            googleMap = map;
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         });
 
         return view;

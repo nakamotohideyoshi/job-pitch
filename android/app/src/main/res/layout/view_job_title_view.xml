@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="30dp"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <TextView
         android:id="@+id/job_title_text"

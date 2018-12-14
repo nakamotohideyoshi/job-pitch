@@ -41,8 +41,9 @@ class MessageController: JSQMessagesViewController {
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "Input is disabled"
-                PopupController.showGray("You cannot send messages until your application is accepted", ok: "OK")
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("Input is disabled", comment: "")
+                PopupController.showGray(NSLocalizedString("You cannot send messages until your application is accepted", comment: ""),
+                                         ok: NSLocalizedString("Ok", comment: ""))
             }
             
         } else {
@@ -50,8 +51,9 @@ class MessageController: JSQMessagesViewController {
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "Input is disabled"
-                PopupController.showGreen("You cannot send messages until you have connected", ok: "Connect (1 credit)", okCallback: {
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("Input is disabled", comment: "")
+                PopupController.showGreen(NSLocalizedString("You cannot send messages until you have connected", comment: ""),
+                                          ok: NSLocalizedString("Connect (1 credit)", comment: ""), okCallback: {
                     
                     let data = ApplicationStatusUpdate()
                     data.id = self.application.id
@@ -66,17 +68,19 @@ class MessageController: JSQMessagesViewController {
                                 }
                             }
                         } else {
-                            PopupController.showGray("There was an error connecting the jobseeker.", ok: "Ok")
+                            PopupController.showGray(NSLocalizedString("There was an error connecting the jobseeker.", comment: ""),
+                                                     ok: NSLocalizedString("Ok", comment: ""))
                         }
                     }
                     
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
                 
             } else if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "Input is disabled"
-                PopupController.showGray("This application has been deleted.", ok: "OK")
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("Input is disabled", comment: "")
+                PopupController.showGray(NSLocalizedString("This application has been deleted.", comment: ""),
+                                         ok: NSLocalizedString("Ok", comment: ""))
             }
         }
         
@@ -91,7 +95,7 @@ class MessageController: JSQMessagesViewController {
         let jobseekerPhoto = jobseeker.profileThumb
         
         inputToolbar.isUserInteractionEnabled = true
-        inputToolbar.contentView.textView.placeHolder = "New Message"
+        inputToolbar.contentView.textView.placeHolder = NSLocalizedString("New Message", comment: "")
         
         if AppData.user.isJobseeker() {
             
@@ -104,7 +108,7 @@ class MessageController: JSQMessagesViewController {
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "Input is disabled"
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("Input is disabled", comment: "")
             }
             
         } else {
@@ -118,12 +122,12 @@ class MessageController: JSQMessagesViewController {
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "Input is disabled"
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("Input is disabled", comment: "")
                 
             } else if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
-                inputToolbar.contentView.textView.placeHolder = "This application has been deleted."
+                inputToolbar.contentView.textView.placeHolder = NSLocalizedString("This application has been deleted.", comment: "")
             }
         }
         
@@ -138,7 +142,7 @@ class MessageController: JSQMessagesViewController {
             if interview != nil {
                 if (interview?.messages.lastObject as! Message).id == message.id {
 //                    content = "Interview\n" + content! + "\nInterview: " + AppHelper.dateToLongString((interview?.at)!)
-                    content = "Interview\n" + content! + "\n"
+                    content = NSLocalizedString("Interview", comment: "") + "\n" + content! + "\n"
                 }
             }
             
@@ -232,7 +236,7 @@ class MessageController: JSQMessagesViewController {
         if interview != nil {
             let (_, message) = messages[indexPath.row]
             if (interview?.messages.lastObject as! Message).id == message.id {
-                let str: NSMutableAttributedString =  NSMutableAttributedString(string: "Interview: " + AppHelper.dateToLongString((interview?.at)!))
+                let str: NSMutableAttributedString =  NSMutableAttributedString(string: NSLocalizedString("Interview", comment: "") + ": " + AppHelper.dateToLongString((interview?.at)!))
                 str.addAttribute(NSUnderlineStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
                 str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
                 str.addAttribute(NSForegroundColorAttributeName, value: UIColor.white, range: NSMakeRange(0, str.length))

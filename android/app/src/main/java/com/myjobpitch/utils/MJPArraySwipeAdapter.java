@@ -17,10 +17,6 @@ public abstract class MJPArraySwipeAdapter<T> extends ArrayAdapter<T> implements
 
     private SwipeItemAdapterMangerImpl mItemManger = new SwipeItemAdapterMangerImpl(this);
 
-    public MJPArraySwipeAdapter(Context context, T[] objects) {
-        super(context, 0, objects);
-    }
-
     public MJPArraySwipeAdapter(Context context, List<T> objects) {
         super(context, 0, objects);
     }

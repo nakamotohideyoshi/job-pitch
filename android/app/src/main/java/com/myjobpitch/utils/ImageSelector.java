@@ -1,7 +1,5 @@
 package com.myjobpitch.utils;
 
-import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,14 +8,13 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,28 +47,24 @@ public class ImageSelector {
 
     Uri imageUri;
 
-    Context context;
-
-    public ImageSelector(Context context, View view, int defaultImageRes) {
-        init(context, view);
-        defaultBitmap = BitmapFactory.decodeResource(context.getResources(), defaultImageRes);
+    public ImageSelector(View view, int defaultImageRes) {
+        init(view);
+        defaultBitmap = BitmapFactory.decodeResource(MainActivity.shared().getResources(), defaultImageRes);
     }
 
-    public ImageSelector(Context context, View view, String defaultImagePath) {
-        init(context, view);
+    public ImageSelector(View view, String defaultImagePath) {
+        init(view);
         this.defaultImagePath = defaultImagePath;
     }
 
-    void init(Context context, View view) {
-        this.context = context;
+    void init(View view) {
         ButterKnife.bind(this, view);
 
-        Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
+        Display display = MainActivity.shared().getWindowManager().getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         display.getMetrics(displayMetrics);
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = (displayMetrics.widthPixels - (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
-                context.getResources().getDisplayMetrics())) * 3 / 4;
+        params.height = (displayMetrics.widthPixels - AppHelper.dp2px(30)) * 3 / 4;
         view.setLayoutParams(params);
 
         imageView = AppHelper.getImageView(view);
@@ -85,7 +78,7 @@ public class ImageSelector {
                 bitmap = null;
                 imageView.setImageBitmap(defaultBitmap);
                 removeButton.setVisibility(View.GONE);
-                addButton.setText("Add Logo");
+                addButton.setText(R.string.add_logo);
                 imageUri = null;
                 return;
             }
@@ -97,7 +90,48 @@ public class ImageSelector {
             imagePath = path;
         }
 
-        AppHelper.loadImage(imagePath, imageView);
+        final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
+
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .considerExifParams(true)
+                .cacheOnDisk(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String path1, View view) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onLoadingFailed(String path1, View view, FailReason failReason) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onLoadingComplete(String path1, View view, Bitmap loadedImage) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                if (path == null) {
+                    bitmap = null;
+                    removeButton.setVisibility(View.GONE);
+                    addButton.setText(R.string.add_logo);
+                    imageUri = null;
+                } else {
+                    bitmap = loadedImage;
+                    removeButton.setVisibility(View.VISIBLE);
+                    addButton.setText(R.string.change_logo);
+                }
+            }
+            @Override
+            public void onLoadingCancelled(String uri, View view) {
+            }
+        });
+
     }
 
     public Bitmap getImage() {
@@ -124,7 +158,7 @@ public class ImageSelector {
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             imageView.setImageBitmap(bitmap);
             removeButton.setVisibility(View.VISIBLE);
-            addButton.setText("Change Logo");
+            addButton.setText(R.string.change_logo);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,7 +169,7 @@ public class ImageSelector {
     public void setImageUri(Uri uri) {
         String path;
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = MainActivity.shared().getContentResolver().query(uri, projection, null, null, null);
         if(cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
@@ -150,6 +184,11 @@ public class ImageSelector {
 
     public Uri getImageUri() {
         return imageUri;
+    }
+
+    @OnClick(R.id.image_add_button)
+    void onClickAdd() {
+        MainActivity.shared().showFilePicker(true);
     }
 
     @OnClick(R.id.image_remove_button)

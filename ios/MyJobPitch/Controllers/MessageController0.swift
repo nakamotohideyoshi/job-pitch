@@ -27,7 +27,7 @@ class MessageController0: MJPController {
         
         if AppData.user.isRecruiter() {
             let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
-            setTitle(title: "Messages", subTitle: subTitle)
+            setTitle(title: NSLocalizedString("Messages", comment: ""), subTitle: subTitle)
         }
         
         infoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
@@ -102,7 +102,7 @@ class MessageController0: MJPController {
         }
         
         if interview != nil {
-            interviewButton.setTitle("Interview: " + AppHelper.dateToLongString(interview.at), for: .normal)
+            interviewButton.setTitle(NSLocalizedString("Interview", comment: "") + ": " + AppHelper.dateToLongString(interview.at), for: .normal)
         }
         
         interviewButton.superview?.isHidden = interview == nil

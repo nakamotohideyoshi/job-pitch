@@ -43,13 +43,17 @@ class InterviewView: UIView {
             let accepted = interview?.status == InterviewStatus.INTERVIEW_ACCEPTED
             
             if pending {
-                statusLabel.text = AppData.user.isJobseeker() ? "Interview request received" : "Interview request sent"
+                statusLabel.text = AppData.userRole === Role.ROLE_JOB_SEEKER_ID ? NSLocalizedString("Interview request received", comment: "") : NSLocalizedString("Interview request sent", comment: "")
             } else if accepted {
-                statusLabel.text = "Interview accepted"
+                statusLabel.text = NSLocalizedString("Interview accepted", comment: "")
             } else if interview?.status == InterviewStatus.INTERVIEW_COMPLETED {
-                statusLabel.text = "This interview is done"
+                statusLabel.text = NSLocalizedString("This interview is done", comment: "")
             } else {
-                statusLabel.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+                if AppData.userRole === Role.ROLE_RECRUITER_ID {
+                    statusLabel.text = NSLocalizedString("Interview cancelled by Recruiter", comment: "")
+                } else {
+                    statusLabel.text = NSLocalizedString("Interview cancelled by Jobseeker", comment: "")
+                }
             }
             
             datetimeLabel.text = AppHelper.dateToLongString((interview?.at)!)

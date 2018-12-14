@@ -30,23 +30,23 @@ class BusinessDetailsController: MJPController {
         
         if addMode {
             
-            title = "Add job"
-            infoView.setDescription(icon: "menu-business", text: "Select which workplace to add job to")
+            title = NSLocalizedString("Add job", comment: "")
+            infoView.setDescription(icon: "menu-business", text: NSLocalizedString("Select which workplace to add job to", comment: ""))
 
             creditCount.isHidden = true
             editRemoveView.isHidden = true
 
-            toolbar.titleLabel.text = "SELECT A WORKOPLACE"
+            toolbar.titleLabel.text = NSLocalizedString("SELECT A WORKOPLACE", comment: "")
             
         } else {
             
-            title = "Businesses"
+            title = NSLocalizedString("Businesses", comment: "")
             
             AppHelper.loadLogo(business, imageView: infoView.imgView, completion: nil)
             infoView.titleLabel.text = business.name
-            creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
+            creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? NSLocalizedString("Credits", comment: "") : NSLocalizedString("Credit", comment: ""))
             
-            toolbar.titleLabel.text = "WORKPLACES"
+            toolbar.titleLabel.text = NSLocalizedString("WORKPLACES", comment: "")
         }
         
         if !business.restricted {
@@ -58,7 +58,7 @@ class BusinessDetailsController: MJPController {
             
             toolbar.rightAction = addWorkplace
             
-            emptyView.button.setTitle("Create workplace", for: .normal)
+            emptyView.button.setTitle(NSLocalizedString("Create workplace", comment: ""), for: .normal)
             emptyView.action = addWorkplace
         }
         
@@ -95,15 +95,19 @@ class BusinessDetailsController: MJPController {
         
         if !addMode {
             let workplaceCount = workplaces.count
-            infoView.subTitleLabel.text = String(format: "Includes %lu %@", workplaceCount, workplaceCount > 1 ? "workplaces" : "workplace")
+            if workplaceCount > 1 {
+                infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu workplaces", comment: ""), workplaceCount)
+            } else {
+                infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu workplace", comment: ""), workplaceCount)
+            }
         }
         
         emptyView.isHidden = workplaces.count > 0
         
         if UserDefaults.standard.integer(forKey: "tutorial") == 1 {
-            emptyView.message.text = "Great, you've created your business!\nNow tap to create your workplaces."
+            emptyView.message.text = NSLocalizedString("Great, you've created your business!\nNow tap to create your workplaces.", comment: "")
         } else {
-            emptyView.message.text = "You have not added any workplaces yet."
+            emptyView.message.text = NSLocalizedString("You have not added any workplaces yet.", comment: "")
         }
         
         tableView.reloadData()
@@ -119,9 +123,9 @@ class BusinessDetailsController: MJPController {
         
         let workplaceCount = workplaces.count
         let message = workplaceCount == 0 ?
-            String(format: "Are you sure you want to delete %@", business.name) :
-            String(format: "Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", workplaceCount)
-        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), business.name) :
+            String(format: NSLocalizedString("Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", comment: ""), workplaceCount)
+        PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
             
             self.showLoading()
             AppData.removeBusiness(self.business) { error in
@@ -132,7 +136,7 @@ class BusinessDetailsController: MJPController {
                 }
             }
             
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func addWorkplace() {
@@ -189,7 +193,12 @@ extension BusinessDetailsController: UITableViewDataSource {
         AppHelper.loadLogo(workplace, imageView: cell.infoView.imgView, completion: nil)
         cell.infoView.titleLabel.text = workplace.name
         let jobCount = workplace.jobs.count
-        cell.infoView.subTitleLabel.text = String(format: "Includes %lu %@", jobCount, jobCount == 1 ? "job" : "jobs")
+        if jobCount == 1 {
+            cell.infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu job", comment: ""), jobCount)
+        } else {
+            cell.infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu jobs", comment: ""), jobCount)
+        }
+        
         
         if !business.restricted && !addMode {
             
@@ -201,9 +210,9 @@ extension BusinessDetailsController: UITableViewDataSource {
                               callback: { (cell) -> Bool in
                                 
                                 let message = jobCount == 0 ?
-                                    String(format: "Are you sure you want to delete %@", workplace.name) :
-                                    String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
-                                PopupController.showYellow(message, ok: "Delete", okCallback: {
+                                    String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), workplace.name) :
+                                    String(format: NSLocalizedString("Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", comment: ""), jobCount)
+                                PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                                     
                                     cell.hideSwipe(animated: true)
                                     self.showLoading()
@@ -216,7 +225,7 @@ extension BusinessDetailsController: UITableViewDataSource {
                                         }
                                     }
                                     
-                                }, cancel: "Cancel", cancelCallback: {
+                                }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: {
                                     cell.hideSwipe(animated: true)
                                 })
                                 

@@ -27,7 +27,7 @@ class BusinessUserEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTitle(title: businessUser == nil ? "Create User" : "Edit User", subTitle: business.name)
+        setTitle(title: businessUser == nil ? NSLocalizedString("Create User", comment: "") : NSLocalizedString("Edit User", comment: ""), subTitle: business.name)
         isModal = true
         
         locationNames = AppData.workplaces.map { $0.name }
@@ -41,7 +41,7 @@ class BusinessUserEditController: MJPController {
             selectedLocationsNames = (AppData.workplaces.filter { businessUser.locations.contains($0.id) }).map { $0.name }
             workPlaceSelector.text = selectedLocationsNames.joined(separator: ", ")
             
-            saveButton.setTitle("Save", for: .normal)
+            saveButton.setTitle(NSLocalizedString("Save", comment: ""), for: .normal)
             resendButton.superview?.isHidden = false
             deleteButton.superview?.isHidden = false
         }
@@ -72,7 +72,7 @@ class BusinessUserEditController: MJPController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        workplaceError.text = !isAdministrator.isOn && selectedLocationsNames.count == 0 ? "This field is required." : ""
+        workplaceError.text = !isAdministrator.isOn && selectedLocationsNames.count == 0 ? NSLocalizedString("This field is required.", comment: "") : ""
         
         if !valid() || workplaceError.text != "" {
             return
@@ -139,8 +139,8 @@ class BusinessUserEditController: MJPController {
     }
     
     @IBAction func deleteAction(_ sender: Any) {
-        let message = String(format: "Are you sure you want to delete %@", businessUser.email)
-        PopupController.showYellow(message, ok: "Delete", okCallback: {
+        let message = String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), businessUser.email)
+        PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
             self.showLoading()
             
             API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id) { (error) in
@@ -151,7 +151,7 @@ class BusinessUserEditController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     static func instantiate() -> BusinessUserEditController {

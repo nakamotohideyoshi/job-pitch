@@ -201,7 +201,7 @@ class MJPController: UIViewController {
         hideLoading()
         
         if let message = error as? String {
-            PopupController.showGray(message, ok: "OK")
+            PopupController.showGray(message, ok: NSLocalizedString("Ok", comment: ""))
             return
         }
         
@@ -225,7 +225,7 @@ class MJPController: UIViewController {
                     fields.1.text = message
                 } else {
                     message = message == nil ? key : key + ": " + message
-                    PopupController.showGray(message, ok: "OK")
+                    PopupController.showGray(message, ok: NSLocalizedString("Ok", comment: ""))
                 }
             }
         }

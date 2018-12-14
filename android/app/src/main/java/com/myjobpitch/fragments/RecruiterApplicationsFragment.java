@@ -15,7 +15,7 @@ import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -33,14 +33,12 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     public static final int CONNECTIONS = 1;
     public static final int MY_SHORTLIST = 2;
 
-    private static final String[] titles = {
-            "Applications", "Connections", "My Shortlist"
+    private static final int[] titles = {
+            R.string.applications_title, R.string.connections_title, R.string.my_shortlist
     };
 
-    private static final String[] emptyTexts = {
-            "No applications at the moment. Once thet happens you cant go trough them here and shortlist\nif needed, you can easy switch to Find Talent mode and \"head hunt\" as well.",
-            "You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants.",
-            "You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."
+    private static final int[] emptyTexts = {
+            R.string.new_applications_empty_text, R.string.connections_empty_text,  R.string.my_shortlist_empty_text
     };
 
     public Job job;
@@ -50,15 +48,15 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int applyButtonIcon = listKind == APPLICATIONS ? R.drawable.swipe_icon_connect : R.drawable.swipe_icon_message;
-        View view = initView(inflater, container, applyButtonIcon, emptyTexts[listKind], R.layout.cell_application_list);
-        title = titles[listKind];
+        View view = initView(inflater, container, applyButtonIcon, getString(emptyTexts[listKind]), R.layout.cell_application_list);
+        title = getString(titles[listKind]);
 
         if (job != null) {
             AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
         }
 
-        addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
-        addMenuItem(MENUGROUP1, 121, "Add Application", R.drawable.ic_add);
+        addMenuItem(MENUGROUP1, 101, getString(R.string.job_details), R.drawable.ic_edit);
+        addMenuItem(MENUGROUP1, 121, getString(R.string.add_application), R.drawable.ic_add);
         return  view;
     }
 
@@ -74,9 +72,9 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void showApplicationInfo(Application application, View view) {
-        Jobseeker jobseeker = application.getJob_seeker();
-        AppHelper.loadJobseekerImage(jobseeker, view);
-        setItemTitle(view, AppHelper.getJobseekerName(jobseeker));
+        JobSeeker jobSeeker = application.getJob_seeker();
+        AppHelper.loadJobSeekerImage(jobSeeker, view);
+        setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
         setItemSubTitle(view, job.getTitle());
         setItemAttributes(view, AppHelper.getBusinessName(job));
         setItemDesc(view, job.getLocation_data().getPlace_name());
@@ -91,14 +89,14 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
                 }
             }
             if (isOpenInterview) {
-                setItemSubTitle(view, (job.getTitle() + " (Pending Interview)"));
+                setItemSubTitle(view, String.format("%s (%s)", job.getTitle(), getString(R.string.pending_interview)));
             }
         }
     }
 
     @Override
     protected void selectedApplication(Application application) {
-        TalentDetailsFragment fragment = new TalentDetailsFragment();
+        TalentDetailFragment fragment = new TalentDetailFragment();
         fragment.application = application;
         getApp().pushFragment(fragment);
     }
@@ -106,45 +104,37 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     @Override
     protected void applyItem(final Application application) {
         if (listKind == APPLICATIONS) {
-            new Popup(getContext())
-                    .setMessage("Are you sure you want to connect this applicaton?")
-                    .addYellowButton("Connect (1 credit)", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showLoading();
-                            new APITask(new APIAction() {
-                                @Override
-                                public void run() {
-                                    Application updatedApplication = SerializationUtils.clone(application);
-                                    updatedApplication.setStatus(ApplicationStatus.ESTABLISHED_ID);
-                                    final ApplicationStatusUpdate update = new ApplicationStatusUpdate(application);
-                                    MJPApi.shared().updateApplicationStatus(update);
-                                }
-                            }).addListener(new APITaskListener() {
-                                @Override
-                                public void onSuccess() {
-                                    hideLoading();
-                                    onRefresh();
-                                }
-                                @Override
-                                public void onError(JsonNode errors) {
-                                    if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
-                                        hideLoading();
-                                        new Popup(getContext())
-                                                .setMessage("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.")
-                                                .addGreyButton("Ok", null)
-                                                .show();
-                                    } else {
-                                        errorHandler(errors);
-                                    }
-
-                                }
-                            }).execute();
-
+            Popup popup = new Popup(getContext(), R.string.connect_message, true);
+            popup.addYellowButton(R.string.connect_1, view -> {
+                showLoading();
+                new APITask(() -> {
+                    Application updatedApplication = SerializationUtils.clone(application);
+                    updatedApplication.setStatus(ApplicationStatus.ESTABLISHED_ID);
+                    final ApplicationStatusUpdate update = new ApplicationStatusUpdate(application);
+                    MJPApi.shared().updateApplicationStatus(update);
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideLoading();
+                        onRefresh();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                            hideLoading();
+                            Popup popup1 = new Popup(getContext(), R.string.no_tokens, true);
+                            popup1.addGreyButton(R.string.ok, null);
+                            popup1.show();
+                        } else {
+                            errorHandler(errors);
                         }
-                    })
-                    .addGreyButton("Cancel", null)
-                    .show();
+
+                    }
+                }).execute();
+
+            });
+            popup.addGreyButton(R.string.cancel, null);
+            popup.show();
         } else {
             MessageFragment fragment = new MessageFragment();
             fragment.application = application;
@@ -154,40 +144,31 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void removeItem(final Application application) {
-        new Popup(getContext())
-                .setMessage("Are you sure you want to delete this applicaton?")
-                .addYellowButton("Delete", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showLoading();
-                        new APITask(new APIAction() {
-                            @Override
-                            public void run() {
-                                MJPApi.shared().delete(Application.class, application.getId());
-                            }
-                        }).addListener(new APITaskListener() {
-                            @Override
-                            public void onSuccess() {
-                                hideLoading();
-                                onRefresh();
-                            }
-                            @Override
-                            public void onError(JsonNode errors) {
-                                errorHandler(errors);
-                            }
-                        }).execute();
+        Popup popup = new Popup(getContext(), R.string.appliction_remove_message, true);
+        popup.addYellowButton(R.string.delete, view -> {
+            showLoading();
+            new APITask(() -> MJPApi.shared().delete(Application.class, application.getId())).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    hideLoading();
+                    onRefresh();
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
 
 
-                    }
-                })
-                .addGreyButton("Cancel", null)
-                .show();
+        });
+        popup.addGreyButton(R.string.cancel, null);
+        popup.show();
     }
 
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 101) {
-            JobDetailsFragment fragment = new JobDetailsFragment();
+            JobDetailFragment fragment = new JobDetailFragment();
             fragment.job = job;
             getApp().pushFragment(fragment);
         } else if (menuID == 121) {

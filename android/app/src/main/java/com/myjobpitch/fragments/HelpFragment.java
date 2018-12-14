@@ -24,31 +24,31 @@ public class HelpFragment extends BaseFragment {
 
     @OnClick(R.id.help_about)
     void onAbout() {
-        goWebviewFragment("About", "about");
+        goWebviewFragment(R.string.about, "about");
     }
 
     @OnClick(R.id.help_how_it)
     void onHowIt() {
         if (AppData.userRole == Role.JOB_SEEKER_ID) {
-            goWebviewFragment("How it works", "help_jobseeker");
+            goWebviewFragment(R.string.how_it, "help_jobseeker");
         } else {
-            goWebviewFragment("How it works", "help_recruiter");
+            goWebviewFragment(R.string.how_it, "help_recruiter");
         }
     }
 
     @OnClick(R.id.help_terms)
     void onTerms() {
-        goWebviewFragment("Terms and Conditions", "terms");
+        goWebviewFragment(R.string.terms, "terms");
     }
 
     @OnClick(R.id.help_privacy)
     void onPrivacy() {
-        goWebviewFragment("Privacy", "privacy");
+        goWebviewFragment(R.string.privacy, "privacy");
     }
 
-    void goWebviewFragment(String title, String filename) {
+    void goWebviewFragment(int titleId, String filename) {
         WebviewFragment fragment = new WebviewFragment();
-        fragment.title = title;
+        fragment.title = getString(titleId);
         fragment.mFilename = filename;
         getApp().pushFragment(fragment);
     }

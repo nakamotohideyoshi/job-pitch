@@ -20,7 +20,7 @@ import com.myjobpitch.activities.CameraActivity;
 import com.myjobpitch.activities.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -53,7 +53,7 @@ public class PitchFragment extends BaseFragment {
     @BindView(R.id.skip_button)
     TextView mSkipButton;
 
-    Jobseeker jobseeker;
+    JobSeeker jobSeeker;
     Pitch mPitch;
     String mVideoPath;
 
@@ -65,15 +65,12 @@ public class PitchFragment extends BaseFragment {
 
         mUploadButton.setVisibility(View.GONE);
 
-        if (jobseeker == null) {
+        if (jobSeeker == null) {
             showLoading(view);
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-//                    AppData.existProfile = jobseeker.getProfile() != null;
-                    mPitch = jobseeker.getPitch();
-                }
+            new APITask(() -> {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+//                    AppData.existProfile = jobSeeker.getProfile() != null;
+                mPitch = jobSeeker.getPitch();
             }).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
@@ -156,12 +153,7 @@ public class PitchFragment extends BaseFragment {
 
         showLoading();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                mPitch = MJPApi.shared().create(Pitch.class, new Pitch());
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> mPitch = MJPApi.shared().create(Pitch.class, new Pitch())).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp(), "pitches");
@@ -181,13 +173,10 @@ public class PitchFragment extends BaseFragment {
                                 break;
                             case PitchUpload.COMPLETE:
                                 Log.d("upload", "COMPLETE");
-                                new APITask(new APIAction() {
-                                    @Override
-                                    public void run() {
-                                        jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-                                        mPitch = jobseeker.getPitch();
-                                        mVideoPath = null;
-                                    }
+                                new APITask(() -> {
+                                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                                    mPitch = jobSeeker.getPitch();
+                                    mVideoPath = null;
                                 }).addListener(new APITaskListener() {
                                     @Override
                                     public void onSuccess() {
@@ -217,10 +206,9 @@ public class PitchFragment extends BaseFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        new Popup(getContext())
-                                .setMessage("Error uploading video!")
-                                .addGreyButton("Ok", null)
-                                .show();
+                        Popup popup = new Popup(getContext(), R.string.error_video_upload, true);
+                        popup.addGreyButton(R.string.ok, null);
+                        popup.show();
                     }
                 });
                 upload.start();
@@ -245,7 +233,7 @@ public class PitchFragment extends BaseFragment {
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
             WebviewFragment fragment = new WebviewFragment();
-            fragment.title = "Record Pitch";
+            fragment.title = getString(R.string.record_pitch);
             fragment.mFilename = "pitch";
             getApp().pushFragment(fragment);
         }

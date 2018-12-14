@@ -64,9 +64,9 @@ public class JobApplyFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_job_apply, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Apply Job";
+        title = getString(R.string.job_apply);
 
-        mPitch = AppData.jobseeker.getPitch();
+        mPitch = AppData.jobSeeker.getPitch();
         if (mPitch != null) {
             AppHelper.loadImage(mPitch.getThumbnail(), mImagePreview);
             mPlayIcon.setVisibility(View.VISIBLE);
@@ -97,14 +97,11 @@ public class JobApplyFragment extends FormFragment {
     }
 
     void createApplication(final Integer pitchId) {
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                ApplicationForCreation applicationForCreation = pitchId == null ? new ApplicationForCreation() : new ApplicationForCreationWithPitch(pitchId);
-                applicationForCreation.setJob(job.getId());
-                applicationForCreation.setJob_seeker(AppData.jobseeker.getId());
-                MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-            }
+        new APITask(() -> {
+            ApplicationForCreation applicationForCreation = pitchId == null ? new ApplicationForCreation() : new ApplicationForCreationWithPitch(pitchId);
+            applicationForCreation.setJob(job.getId());
+            applicationForCreation.setJob_seeker(AppData.jobSeeker.getId());
+            MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
@@ -130,13 +127,10 @@ public class JobApplyFragment extends FormFragment {
             return;
         }
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                SpecificPitchForCreation specificPitch = new SpecificPitchForCreation();
-                specificPitch.setJob_seeker(AppData.jobseeker.getId());
-                mPitch = MJPApi.shared().createSpecificPitch(specificPitch);
-            }
+        new APITask(() -> {
+            SpecificPitchForCreation specificPitch = new SpecificPitchForCreation();
+            specificPitch.setJob_seeker(AppData.jobSeeker.getId());
+            mPitch = MJPApi.shared().createSpecificPitch(specificPitch);
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
@@ -173,10 +167,9 @@ public class JobApplyFragment extends FormFragment {
                     @Override
                     public void onError(String message) {
                         hideLoading();
-                        new Popup(getContext())
-                                .setMessage("Error uploading video!")
-                                .addGreyButton("Ok", null)
-                                .show();
+                        Popup popup = new Popup(getContext(), R.string.error_video_upload, true);
+                        popup.addGreyButton(R.string.ok, null);
+                        popup.show();
                     }
                 });
                 upload.start();

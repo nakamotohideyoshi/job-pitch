@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:hint="Business Name"
             app:met_floatingLabel="normal"
-            app:met_primaryColor="@color/greenColor"/>
+            app:met_primaryColor="@color/colorGreen"/>
 
         <TextView
             android:id="@+id/business_credits"

@@ -33,11 +33,11 @@ class BusinessEditController: MJPController {
         
         if business == nil {
             isNew = true
-            title = "Add Business"
+            title = NSLocalizedString("Add Business", comment: "")
             logoView.image = UIImage(named: "default-logo")
-            creditsLabel.text = AppData.initialTokens.tokens.stringValue + " free credits"
+            creditsLabel.text = AppData.initialTokens.tokens.stringValue + NSLocalizedString(" free credits", comment: "")
         } else {
-            title = "Edit Business"
+            title = NSLocalizedString("Edit Business", comment: "")
             AppHelper.loadLogo(business, imageView: logoView, completion: nil)
             nameField.text = business.name
             creditsLabel.text = String(format: "%@", business.tokens)
@@ -78,7 +78,7 @@ class BusinessEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.showLoading("Uploading...")
+                self.showLoading(NSLocalizedString("Uploading...", comment: ""))
                 
                 API.shared().uploadImage(self.logoImage,
                                          endpoint: "user-business-images",
@@ -86,7 +86,7 @@ class BusinessEditController: MJPController {
                                          objectId: self.business.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.showLoading("Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                            self.showLoading(NSLocalizedString("Uploading...", comment: ""), withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }) { (_, error) in
                     if error == nil {
                         self.saveFinished()

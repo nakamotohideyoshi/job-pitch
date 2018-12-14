@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -66,19 +64,16 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                settingMap();
+        mapFragment.getMapAsync(googleMap -> {
+            mMap = googleMap;
+            settingMap();
 
-                if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
-                    ActivityCompat.requestPermissions(SelectPlaceActivity.this, permissions, 10000);
-                } else {
-                    createGoogleApiClient();
-                }
+            if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
+                ActivityCompat.requestPermissions(SelectPlaceActivity.this, permissions, 10000);
+            } else {
+                createGoogleApiClient();
             }
         });
 
@@ -86,10 +81,9 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
-        new Popup(this)
-                .setMessage("Tap on the city or location that you would like to set and tap \"select\" on the upper right corner")
-                .addGreyButton("Got it!", null)
-                .show();
+        Popup popup = new Popup(this, R.string.google_map_message, true);
+        popup.addGreyButton(R.string.got_it, null);
+        popup.show();
     }
 
     void settingMap() {
@@ -98,13 +92,8 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
         final int d = (int) (50 * getResources().getDisplayMetrics().density);
         mMap.setPadding(0, d, 0, d);
 
-        final Button selectButton = (Button)findViewById(R.id.select_button);
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectLocation();
-            }
-        });
+        final Button selectButton = findViewById(R.id.select_button);
+        selectButton.setOnClickListener(v -> selectLocation());
 
         if (getIntent().hasExtra(LATITUDE)) {
             updatePosition(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
@@ -163,7 +152,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
-//        LoadingView.show(this, "LoadingView...");
+//        Loading.show(this, "Loading...");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -225,7 +214,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             }
         }
 
-//        LoadingView.hide();
+//        Loading.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }
@@ -236,7 +225,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult var1) {
-//        LoadingView.hide();
+//        Loading.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }

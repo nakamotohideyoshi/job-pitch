@@ -1,7 +1,9 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -14,8 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.tasks.APIAction;
@@ -23,6 +27,8 @@ import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,73 +68,65 @@ public class SelectJobFragment extends BaseFragment {
 
         // set header
 
-        pageIconView.setColorFilter(ContextCompat.getColor(getApp(), R.color.greenColor));
+        pageIconView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
         pageIconView.setImageDrawable(getApp().getCurrentMenu().getIcon());
 
         final int pageId = getApp().getCurrentMenuID();
         switch (pageId) {
             case R.id.menu_find_talent:
-                commentView.setText("Select job bellow to start finding talent for your business.");
+                commentView.setText(R.string.find_talent_comment);
                 break;
             case R.id.menu_applications:
-                commentView.setText("Select a job below to view job seekers who have expressed interest in a job.");
+                commentView.setText(R.string.application_comment);
                 break;
             case R.id.menu_connections:
-                commentView.setText("Select a job below to view job seekers you have connected with.");
+                commentView.setText(R.string.connection_comment);
                 break;
             case R.id.menu_shortlist:
-                commentView.setText("Select a job below to view the job seekers you have shortlisted for that role.");
+                commentView.setText(R.string.shortlist_comment);
                 break;
             case R.id.menu_rc_interview:
-                commentView.setText("Select a job below to view and arrange interviews.");
+                commentView.setText(R.string.interview_comment);
                 break;
         }
 
-        navTitleView.setText("Select a Job");
+        navTitleView.setText(R.string.select_job);
 
         // empty view
 
-        AppHelper.setEmptyViewText(emptyView, "You have not added any\njobs yet.");
-        AppHelper.setEmptyButtonText(emptyView, "Create job");
+        AppHelper.setEmptyViewText(emptyView, R.string.select_job_empty_text);
+        AppHelper.setEmptyButtonText(emptyView, R.string.create_job);
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadJobs();
-            }
-        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> loadJobs());
 
         // list view
 
         if (adapter == null) {
-            adapter = new JobAdapter(getApp(), new ArrayList<Job>());
+            adapter = new JobAdapter(getApp(), new ArrayList<>());
         } else {
             adapter.clear();
         }
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Job job = adapter.getItem(position);
-                if (pageId == R.id.menu_find_talent) {
-                    FindTalentFragment fragment = new FindTalentFragment();
-                    fragment.job = job;
-                    getApp().pushFragment(fragment);
-                } else if (pageId == R.id.menu_rc_interview) {
-                    InterviewsFragment fragment = new InterviewsFragment();
-                    fragment.job = job;
-                    fragment.title = title;
-                    getApp().pushFragment(fragment);
-                } else {
-                    RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
-                    fragment.job = job;
-                    fragment.listKind = pageId - R.id.menu_applications;
-                    getApp().pushFragment(fragment);
-                }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            Job job = adapter.getItem(position);
+            if (pageId == R.id.menu_find_talent) {
+                FindTalentFragment fragment = new FindTalentFragment();
+                fragment.job = job;
+                getApp().pushFragment(fragment);
+            } else if (pageId == R.id.menu_rc_interview) {
+                InterviewsFragment fragment = new InterviewsFragment();
+                fragment.job = job;
+                fragment.title = title;
+                getApp().pushFragment(fragment);
+            } else {
+                RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
+                fragment.job = job;
+                fragment.listKind = pageId - R.id.menu_applications;
+                getApp().pushFragment(fragment);
             }
         });
 
@@ -143,15 +141,12 @@ public class SelectJobFragment extends BaseFragment {
     void loadJobs() {
         final List<Job> jobs = new ArrayList<>();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                List<Job> data = MJPApi.shared().getUserJobs(null);
-                for(int i=0; i<data.size(); i++) {
-                    Job job = data.get(i);
-                    if (job.getStatus() == jobActiveStatus) {
-                        jobs.add(job);
-                    }
+        new APITask(() -> {
+            List<Job> data = MJPApi.shared().getUserJobs(null);
+            for(int i=0; i<data.size(); i++) {
+                Job job = data.get(i);
+                if (job.getStatus() == jobActiveStatus) {
+                    jobs.add(job);
                 }
             }
         }).addListener(new APITaskListener() {
@@ -185,7 +180,7 @@ public class SelectJobFragment extends BaseFragment {
             BusinessListFragment fragment = new BusinessListFragment();
             getApp().pushFragment(fragment);
         } else {
-            BusinessDetailsFragment fragment = new BusinessDetailsFragment();
+            BusinessDetailFragment fragment = new BusinessDetailFragment();
             fragment.businessId = AppData.user.getBusinesses().get(0);
             getApp().pushFragment(fragment);
         }

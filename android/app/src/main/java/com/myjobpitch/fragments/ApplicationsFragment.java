@@ -14,7 +14,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -42,7 +42,7 @@ public class ApplicationsFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    Jobseeker jobseeker;
+    JobSeeker jobSeeker;
 
     private ApplicationAdapter adapter;
     private int applyButtonIcon;
@@ -58,40 +58,30 @@ public class ApplicationsFragment extends BaseFragment {
         // empty view
 
         AppHelper.setEmptyViewText(emptyView, emptyText);
-        AppHelper.setEmptyButtonText(emptyView, "Refresh");
+        AppHelper.setEmptyButtonText(emptyView, getString(R.string.refresh));
 
         AppHelper.setJobTitleViewText(jobTitleView, "");
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadApplications();
-            }
-        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> loadApplications());
 
         // list view
 
         if (adapter == null) {
-            adapter = new ApplicationAdapter(getApp(), new ArrayList<Application>());
+            adapter = new ApplicationAdapter(getApp(), new ArrayList<>());
         } else {
             adapter.clear();
         }
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedApplication(adapter.getItem(position));
-            }
-        });
+        listView.setOnItemClickListener((parent, view1, position, id) -> selectedApplication(adapter.getItem(position)));
 
-        if (AppData.user.isJobseeker()) {
-            addMenuItem(MENUGROUP2, 100, "Edit Profile", R.drawable.ic_edit);
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP2, 100, getString(R.string.edit_profile), R.drawable.ic_edit);
         }
 
-        if (jobseeker != null) {
+        if (jobSeeker != null) {
             showInactiveBanner();
         }
 
@@ -111,8 +101,8 @@ public class ApplicationsFragment extends BaseFragment {
     }
 
     void showInactiveBanner() {
-        if (!jobseeker.isActive()) {
-            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
+        if (!jobSeeker.isActive()) {
+            AppHelper.setJobTitleViewText(jobTitleView, getString(R.string.profile_isnot_active));
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "");
         }
@@ -121,13 +111,10 @@ public class ApplicationsFragment extends BaseFragment {
 
     private void loadApplications() {
         final List<Application> applications = new ArrayList();
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                applications.addAll(getApplications());
-                if (AppData.user.isJobseeker()) {
-                    jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-                }
+        new APITask(() -> {
+            applications.addAll(getApplications());
+            if (AppData.user.isJobSeeker()) {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -138,7 +125,7 @@ public class ApplicationsFragment extends BaseFragment {
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (AppData.user.isJobseeker()) {
+                if (AppData.user.isJobSeeker()) {
                     showInactiveBanner();
                 }
             }
@@ -179,19 +166,9 @@ public class ApplicationsFragment extends BaseFragment {
         public void fillValues(final int position, View convertView) {
             showApplicationInfo(getItem(position), convertView);
 
-            AppHelper.getEditButton(convertView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    applyItem(getItem(position));
-                }
-            });
+            AppHelper.getEditButton(convertView).setOnClickListener(view -> applyItem(getItem(position)));
 
-            AppHelper.getRemoveButton(convertView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeItem(getItem(position));
-                }
-            });
+            AppHelper.getRemoveButton(convertView).setOnClickListener(view -> removeItem(getItem(position)));
         }
 
     }

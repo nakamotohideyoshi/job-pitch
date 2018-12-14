@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.myjobpitch.fragments.WorkplaceEditFragment">
+    tools:context="com.myjobpitch.fragments.LocationEditFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
 
@@ -23,28 +23,28 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:hint="Name"
+                android:hint="@string/name"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/workplace_desc"
+                android:id="@+id/location_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:hint="Describe your workplace"
+                android:hint="@string/describe_workplace"
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <TextView
-                android:text="Public"
+                android:text="@string/public_"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:layout_marginTop="15dp"
                 android:theme="@style/GreyLabel" />
 
@@ -55,27 +55,27 @@
                 android:gravity="bottom">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/location_email"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionDone"
-                    android:hint="Email Addresss"
+                    android:hint="@string/email"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <ImageButton
                     android:id="@+id/location_email_help"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/icon_help"/>
                 <CheckBox
                     android:id="@+id/location_email_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -88,20 +88,20 @@
                 android:gravity="bottom">
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/location_phone"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="phone"
                     android:imeOptions="actionDone"
-                    android:hint="Phone (optional)"
+                    android:hint="@string/phone_optional"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/location_phone_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="true"
                     android:theme="@style/CheckBox" />
             </LinearLayout>
@@ -114,7 +114,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="Match area"
+                    android:text="@string/match_area"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -135,9 +135,9 @@
                     android:id="@+id/location_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Street"
+                    android:hint="@string/street"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -148,18 +148,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginRight="15dp"
-                        android:hint="City"
+                        android:layout_marginEnd="15dp"
+                        android:hint="@string/city"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/greenColor"/>
+                        app:met_primaryColor="@color/colorGreen"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/location_region"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Region"
+                        android:hint="@string/region"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/greenColor"/>
+                        app:met_primaryColor="@color/colorGreen"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -171,18 +171,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginRight="15dp"
-                        android:hint="Postcode"
+                        android:layout_marginEnd="15dp"
+                        android:hint="@string/postcode"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/greenColor"/>
+                        app:met_primaryColor="@color/colorGreen"/>
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/location_country"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Country"
+                        android:hint="@string/country"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/greenColor"/>
+                        app:met_primaryColor="@color/colorGreen"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -195,13 +195,12 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="5dp"
                     android:src="@drawable/icon_location"
                     android:scaleType="centerCrop"/>
                 <Button
-                    android:text="Set My Location"
+                    android:text="@string/set_my_location"
                     android:id="@+id/location_address_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
@@ -218,7 +217,7 @@
 
             <Button
                 android:id="@+id/location_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"

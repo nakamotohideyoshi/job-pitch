@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class ExternalApplication implements Serializable {
     Integer job;
     boolean shortlisted = false;
-    ExternalJobseeker job_seeker;
+    ExternalJobSeeker job_seeker;
 
 
     public Integer getJob() {
@@ -25,11 +25,11 @@ public class ExternalApplication implements Serializable {
         this.shortlisted = shortlisted;
     }
 
-    public ExternalJobseeker getJob_seeker() {
+    public ExternalJobSeeker getJob_seeker() {
         return job_seeker;
     }
 
-    public void setJob_Seeker(ExternalJobseeker job_seeker) { this.job_seeker = job_seeker; }
+    public void setJob_Seeker(ExternalJobSeeker job_seeker) { this.job_seeker = job_seeker; }
 
 
 }

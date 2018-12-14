@@ -40,12 +40,12 @@
 
             <Button
                 android:id="@+id/avata_add_button"
-                android:text="Change Profile Photo"
+                android:text="@string/change_profile_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@color/transparent"
-                android:textColor="@color/greenColor"
+                android:textColor="@color/colorGreen"
                 android:theme="@style/Button"/>
 
             <LinearLayout
@@ -55,7 +55,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="Active"
+                    android:text="@string/active"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -75,9 +75,9 @@
                 android:layout_marginTop="16dp"
                 android:inputType="textPersonName"
                 android:imeOptions="actionDone"
-                android:hint="First Name"
+                android:hint="@string/first_name"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/job_seeker_last_name"
@@ -86,12 +86,12 @@
                 android:layout_marginTop="16dp"
                 android:inputType="textPersonName"
                 android:imeOptions="actionDone"
-                android:hint="Last Name"
+                android:hint="@string/last_name"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <TextView
-                android:text="Public"
+                android:text="@string/public_"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -109,10 +109,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="textEmailAddress"
-                    android:hint="Email Addresss"
+                    android:hint="@string/email"
                     android:enabled="false"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/job_seeker_email_public"
                     android:layout_width="wrap_content"
@@ -135,9 +135,9 @@
                     android:layout_weight="1"
                     android:inputType="phone"
                     android:imeOptions="actionDone"
-                    android:hint="Telephone (optional)"
+                    android:hint="@string/telephone_optional"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/job_seeker_telephone_public"
                     android:layout_width="wrap_content"
@@ -160,9 +160,9 @@
                     android:layout_weight="1"
                     android:inputType="phone"
                     android:imeOptions="actionDone"
-                    android:hint="Phone (optional)"
+                    android:hint="@string/phone_optional"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/job_seeker_mobile_public"
                     android:layout_width="wrap_content"
@@ -185,9 +185,9 @@
                     android:layout_weight="1"
                     android:inputType="number"
                     android:imeOptions="actionDone"
-                    android:hint="Age (optional)"
+                    android:hint="@string/age_optional"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/job_seeker_age_public"
                     android:layout_width="wrap_content"
@@ -208,9 +208,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Sex (optional)"
+                    android:hint="@string/sex_optional"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
                     android:id="@+id/job_seeker_sex_public"
                     android:layout_width="wrap_content"
@@ -235,9 +235,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
-                        android:hint="Nationality (optional)"
+                        android:hint="@string/nationality_optional"
                         app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/greenColor"/>
+                        app:met_primaryColor="@color/colorGreen"/>
                     <Button
                         android:id="@+id/job_seeker_nationality_button"
                         android:layout_width="match_parent"
@@ -261,7 +261,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="National insurance number"
+                    android:text="@string/national_number"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -281,8 +281,8 @@
                 android:layout_marginTop="8dp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:hint="(optional)"
-                app:met_primaryColor="@color/greenColor"/>
+                android:hint="@string/optional"
+                app:met_primaryColor="@color/colorGreen"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -291,7 +291,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="CV summary"
+                    android:text="@string/cv_summary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -311,10 +311,10 @@
                 android:layout_marginTop="8dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:hint="Enter text here"
+                android:hint="@string/enter_text_here"
                 android:maxLength="1000"
                 app:met_maxCharacters="1000"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -352,7 +352,7 @@
 
             <Button
                 android:id="@+id/job_seeker_cv_view"
-                android:text="View CV"
+                android:text="@string/view_cv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="8dp"
@@ -361,7 +361,7 @@
 
             <Button
                 android:id="@+id/job_seeker_cv_remove"
-                android:text="Remove CV"
+                android:text="@string/remove_cv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="8dp"
@@ -370,7 +370,7 @@
 
             <Button
                 android:id="@+id/job_seeker_cv_upload"
-                android:text="Upload CV"
+                android:text="@string/upload_cv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="8dp"
@@ -384,7 +384,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
-                    android:text="Video Pitch:"
+                    android:text="@string/video_pitch_"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -397,7 +397,7 @@
             </LinearLayout>
 
             <TextView
-                android:text="Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."
+                android:text="@string/record_desk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -409,16 +409,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Check out our "
+                    android:text="@string/check_out_our_"
                     android:textSize="@dimen/default_fontsize"/>
                 <TextView
                     android:id="@+id/example_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="example video"
+                    android:text="@string/example_video"
                     android:textSize="@dimen/default_fontsize"
                     android:textStyle="bold"
-                    android:textColor="@color/greenColor"/>
+                    android:textColor="@color/colorGreen"/>
             </LinearLayout>
 
             <LinearLayout
@@ -440,7 +440,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/icon_record" />
                     <TextView
-                        android:text="Record New"
+                        android:text="@string/record_new"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -461,7 +461,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/icon_play" />
                     <TextView
-                        android:text="Play Current"
+                        android:text="@string/play_current"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -472,7 +472,7 @@
 
             <CheckBox
                 android:id="@+id/job_seeker_has_references"
-                android:text="References Available"
+                android:text="@string/ref_available"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -480,8 +480,7 @@
 
             <CheckBox
                 android:id="@+id/job_seeker_tick_box"
-                android:text="By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work in UK &amp; Northern Ireland.
-If required I will give full details if I have been convicted of any criminal offence."
+                android:text="@string/ticking_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -490,7 +489,7 @@ If required I will give full details if I have been convicted of any criminal of
 
             <Button
                 android:id="@+id/job_seeker_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="8dp"

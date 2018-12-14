@@ -15,39 +15,62 @@ import java.util.Arrays;
 
 public class Popup extends Dialog {
 
-    private static final ArrayList<Integer> BACKGROUNDS = new ArrayList<>(Arrays.asList(R.drawable.button_green, R.drawable.button_yellow, R.drawable.button_grey));
-    private static final int BT_GREEN = 0;
-    private static final int BT_YELLOW = 1;
-    private static final int BT_GREY = 2;
+    ArrayList<Integer> buttons = new ArrayList<>(Arrays.asList(R.id.button1, R.id.button2, R.id.button3));
 
-    private ArrayList<Integer> buttons = new ArrayList<>(Arrays.asList(R.id.button1, R.id.button2, R.id.button3));
+    public enum  ButtonType {
+        BT_GREEN, BT_YELLOW, BT_BLUE, BT_GREY
+    }
 
-    public Popup(Context context) {
+    public Popup(Context context, String message, boolean cancelable) {
         super(context);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setContentView(R.layout.view_popup);
+        setCancelable(cancelable);
+
+        ((TextView)findViewById(R.id.title)).setText(message);
     }
 
-    public Popup setMessage(String text) {
-        ((TextView)findViewById(R.id.title)).setText(text);
-        return this;
+    public Popup(Context context, int messageId, boolean cancelable) {
+        super(context);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        setContentView(R.layout.view_popup);
+        setCancelable(cancelable);
+
+        ((TextView)findViewById(R.id.title)).setText(messageId);
     }
 
-    public Popup setMessage(int resId) {
-        ((TextView)findViewById(R.id.title)).setText(resId);
-        return this;
+    public Button addButton(int textId, ButtonType type, final View.OnClickListener listener) {
+        return addButton(getContext().getString(textId), type, listener);
     }
 
-    private Popup addButton(int type, String text, final View.OnClickListener listener) {
-
-        if (buttons.size() == 0) return null;
+    public Button addButton(String text, ButtonType type, final View.OnClickListener listener) {
+        if (buttons.size() == 0) {
+            return null;
+        }
 
         Button button = findViewById(buttons.get(0));
         button.setVisibility(View.VISIBLE);
-        button.setBackgroundResource(BACKGROUNDS.get(type));
         button.setText(text);
+
+        switch (type) {
+            case BT_GREEN:
+                button.setBackgroundResource(R.drawable.button_green);
+                break;
+            case BT_YELLOW:
+                button.setBackgroundResource(R.drawable.button_yellow);
+                break;
+            case BT_BLUE:
+                button.setBackgroundResource(R.drawable.button_blue);
+                break;
+            case BT_GREY:
+                button.setBackgroundResource(R.drawable.button_grey);
+                break;
+        }
+
         button.setOnClickListener(v -> {
             dismiss();
             if (listener != null) listener.onClick(v);
@@ -55,31 +78,30 @@ public class Popup extends Dialog {
 
         buttons.remove(0);
 
-        return this;
+        return button;
     }
 
-    public Popup addGreenButton(int resId, final View.OnClickListener listener) {
-        return addButton(BT_GREEN, getContext().getResources().getString(resId), listener);
+    public Button addGreenButton(String text, final View.OnClickListener listener) {
+        return addButton(text, ButtonType.BT_GREEN, listener);
     }
 
-    public Popup addGreenButton(String text, final View.OnClickListener listener) {
-        return addButton(BT_GREEN, text, listener);
+    public Button addYellowButton(String text, final View.OnClickListener listener) {
+        return addButton(text, ButtonType.BT_YELLOW, listener);
     }
 
-    public Popup addYellowButton(int resId, final View.OnClickListener listener) {
-        return addButton(BT_YELLOW, getContext().getResources().getString(resId), listener);
+    public Button addGreyButton(String text, final View.OnClickListener listener) {
+        return addButton(text, ButtonType.BT_GREY, listener);
     }
 
-    public Popup addYellowButton(String text, final View.OnClickListener listener) {
-        return addButton(BT_YELLOW, text, listener);
+    public Button addGreenButton(int textId, final View.OnClickListener listener) {
+        return addButton(textId, ButtonType.BT_GREEN, listener);
     }
 
-    public Popup addGreyButton(int resId, final View.OnClickListener listener) {
-        return addButton(BT_GREY, getContext().getResources().getString(resId), listener);
+    public Button addYellowButton(int textId, final View.OnClickListener listener) {
+        return addButton(textId, ButtonType.BT_YELLOW, listener);
     }
 
-    public Popup addGreyButton(String text, final View.OnClickListener listener) {
-        return addButton(BT_GREY, text, listener);
+    public Button addGreyButton(int textId, final View.OnClickListener listener) {
+        return addButton(textId, ButtonType.BT_GREY, listener);
     }
-
 }

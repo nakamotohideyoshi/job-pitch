@@ -23,33 +23,33 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:hint="Name"
+                android:hint="@string/name"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp">
                 <TextView
-                    android:text="Credits:"
+                    android:text="@string/credits"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:textColor="#333"/>
                 <TextView
                     android:id="@+id/business_credits"
                     android:text="100"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:textSize="20dp"
+                    android:layout_gravity="end"
+                    android:textSize="20sp"
                     android:textColor="#aaa"/>
             </FrameLayout>
 
             <Button
             android:id="@+id/add_credits_button"
-            android:text="Add Credits"
+            android:text="@string/add_credits"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="5dp"
@@ -65,7 +65,7 @@
 
             <Button
                 android:id="@+id/business_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"

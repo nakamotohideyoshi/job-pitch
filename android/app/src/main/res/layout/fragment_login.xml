@@ -51,21 +51,21 @@
                         android:id="@+id/user_email"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/input_height"
-                        android:layout_marginLeft="50dp"
-                        android:layout_marginRight="50dp"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginEnd="50dp"
                         android:background="@drawable/edit_text"
-                        android:hint="Email Address"
+                        android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:theme="@style/EditText"/>
                     <EditText
                         android:id="@+id/user_password"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/input_height"
-                        android:layout_marginLeft="50dp"
-                        android:layout_marginRight="50dp"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginEnd="50dp"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/edit_text"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:theme="@style/EditText" />
 
@@ -78,15 +78,15 @@
                             android:id="@+id/login_panel"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingLeft="50dp"
-                            android:paddingRight="50dp"
+                            android:paddingStart="50dp"
+                            android:paddingEnd="50dp"
                             android:orientation="vertical">
                             <Button
                                 android:id="@+id/login_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/button_height"
                                 android:background="@drawable/button_green"
-                                android:text="Login"
+                                android:text="@string/login"
                                 android:theme="@style/Button"/>
                             <Button
                                 android:id="@+id/forgot_password"
@@ -94,7 +94,7 @@
                                 android:layout_height="@dimen/button_height"
                                 android:layout_marginTop="15dp"
                                 android:background="@android:color/transparent"
-                                android:text="Forgot password?"
+                                android:text="@string/forgot_password"
                                 android:textSize="@dimen/default_fontsize"
                                 android:textColor="#0095ff"
                                 android:theme="@style/Button" />
@@ -103,7 +103,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/button_height"
                                 android:background="@android:color/transparent"
-                                android:text="Don't have an account? Sign up"
+                                android:text="@string/dont_have_account"
                                 android:textSize="@dimen/default_fontsize"
                                 android:textColor="#0095ff"
                                 android:theme="@style/Button"/>
@@ -114,7 +114,7 @@
                                 android:background="@android:color/transparent"
                                 android:text="https://www.myjobpitch.com/"
                                 android:textStyle="normal"
-                                android:textColor="@color/yellowColor"
+                                android:textColor="@color/colorYellow"
                                 android:theme="@style/Button"/>
                         </LinearLayout>
 
@@ -122,19 +122,19 @@
                             android:id="@+id/register_panel"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingLeft="50dp"
-                            android:paddingRight="50dp"
+                            android:paddingStart="50dp"
+                            android:paddingEnd="50dp"
                             android:orientation="vertical">
                             <Button
                                 android:id="@+id/register_button"
-                                android:text="Register"
+                                android:text="@string/register"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/button_height"
                                 android:background="@drawable/button_green"
                                 android:theme="@style/Button" />
                             <Button
                                 android:id="@+id/go_login"
-                                android:text="Have an account? Sign in"
+                                android:text="@string/have_account"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/button_height"
                                 android:background="@android:color/transparent"
@@ -150,8 +150,8 @@
                     android:id="@+id/reset_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="50dp"
-                    android:paddingRight="50dp"
+                    android:paddingStart="50dp"
+                    android:paddingEnd="50dp"
                     android:orientation="vertical">
                     <EditText
                         android:id="@+id/reset_email"
@@ -159,13 +159,13 @@
                         android:layout_height="@dimen/input_height"
                         android:layout_marginTop="55dp"
                         android:background="@drawable/edit_text"
-                        android:hint="Email Address"
+                        android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:theme="@style/EditText"/>
 
                     <Button
                         android:id="@+id/reset_button"
-                        android:text="Reset my password"
+                        android:text="@string/reset_password"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/button_height"
                         android:layout_marginTop="55dp"
@@ -174,7 +174,7 @@
 
                     <Button
                         android:id="@+id/reset_cancel"
-                        android:text="Cancel"
+                        android:text="@string/cancel"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/button_height"
                         android:layout_marginTop="15dp"

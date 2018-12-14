@@ -1,7 +1,6 @@
 package com.myjobpitch.activities;
 
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -32,12 +31,7 @@ public class MediaPlayerActivity extends Activity {
         if (getIntent().getExtras() != null) {
             String url = getIntent().getStringExtra(PATH);
             if (url != null) {
-                mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mProgressView.setVisibility(View.INVISIBLE);
-                    }
-                });
+                mVideoView.setOnPreparedListener(mp -> mProgressView.setVisibility(View.INVISIBLE));
                 mVideoView.setMediaController(new MediaController(this));
                 mVideoView.setVideoURI(Uri.parse(url));
                 mVideoView.start();

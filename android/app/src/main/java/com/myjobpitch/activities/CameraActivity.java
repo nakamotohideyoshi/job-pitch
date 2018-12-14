@@ -161,7 +161,7 @@ public class CameraActivity extends AppCompatActivity {
                 captureStatus = CaptureStatus.READY;
                 count = 10;
                 mCameraText.setText(String.format("%d", count));
-                mRecordButton.setText("READY");
+                mRecordButton.setText(R.string.ready);
                 mRecordButton.setBackgroundResource(R.drawable.camera_ready_button);
                 mSwitchButton.setVisibility(View.INVISIBLE);
                 createTimer();
@@ -170,7 +170,7 @@ public class CameraActivity extends AppCompatActivity {
                 captureStatus = CaptureStatus.NONE;
                 count = 0;
                 mCameraText.setText("");
-                mRecordButton.setText("RECORD");
+                mRecordButton.setText(R.string.record);
                 mRecordButton.setBackgroundResource(R.drawable.camera_normal_button);
                 mSwitchButton.setVisibility(View.VISIBLE);
                 createTimer();
@@ -188,12 +188,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Handler mainHandler = new Handler(CameraActivity.this.getMainLooper());
-                Runnable myRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        update();
-                    }
-                };
+                Runnable myRunnable = () -> update();
                 mainHandler.post(myRunnable);
             }
         }, 1000, 1000);
@@ -214,7 +209,7 @@ public class CameraActivity extends AppCompatActivity {
                     captureStatus = CaptureStatus.CAPTURE;
                     count = 30;
                     mCameraText.setText(String.format("%d", count));
-                    mRecordButton.setText("STOP");
+                    mRecordButton.setText(R.string.stop);
                     mRecordButton.setBackgroundResource(R.drawable.camera_record_button);
 
                     new AsyncTask<Void, Void, Boolean>() {

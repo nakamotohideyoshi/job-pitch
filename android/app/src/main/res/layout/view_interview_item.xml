@@ -9,7 +9,6 @@
         layout="@layout/view_image_loader"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"/>
 
     <TextView
@@ -18,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/item_img"
-        android:layout_toRightOf="@+id/item_img"
         android:ellipsize="end"
         android:lines="1"
         android:text="Title Title Title Title Title Title Title "
@@ -32,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_title"
         android:layout_toEndOf="@+id/item_img"
-        android:layout_toRightOf="@+id/item_img"
         android:ellipsize="end"
         android:lines="1"
         android:text="subtitle subtitle subtitle subtitle subtitle subtitle "
@@ -47,7 +44,7 @@
         android:layout_below="@+id/item_img"
         android:ellipsize="end"
         android:lines="1"
-        android:text="Status:"
+        android:text="@string/interview_status"
         android:textSize="13sp"
         android:textStyle="bold" />
 
@@ -57,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/item_title"
         android:layout_alignTop="@+id/item_status_label"
-        android:layout_toRightOf="@+id/item_status_label"
+        android:layout_toEndOf="@+id/item_status_label"
         android:ellipsize="end"
         android:lines="1"
         android:text="status status status status status status status status"
@@ -71,7 +68,7 @@
         android:layout_below="@+id/item_status_label"
         android:ellipsize="end"
         android:lines="1"
-        android:text="Date/Time:"
+        android:text="@string/interview_datetime"
         android:textSize="13sp"
         android:textStyle="bold" />
 
@@ -81,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/item_title"
         android:layout_alignTop="@+id/item_date_time_label"
-        android:layout_toRightOf="@+id/item_date_time_label"
+        android:layout_toEndOf="@+id/item_date_time_label"
         android:ellipsize="end"
         android:lines="1"
         android:text="date/time date/time date/time date/time date/time date/time date/time"
@@ -98,10 +95,10 @@
             android:id="@+id/item_location_label"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="Location:"
+            android:text="@string/interview_location"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -110,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/item_location_label"
-            android:layout_toRightOf="@+id/item_location_label"
+            android:layout_toEndOf="@+id/item_location_label"
             android:ellipsize="end"
             android:lines="1"
             android:text="location location location location location location"
@@ -130,10 +127,10 @@
             android:id="@+id/item_feedback_label"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="Feedback:"
+            android:text="@string/interview_feedback"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -142,10 +139,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignTop="@+id/item_feedback_label"
-            android:layout_toRightOf="@+id/item_feedback_label"
+            android:layout_toEndOf="@+id/item_feedback_label"
             android:ellipsize="end"
             android:lines="100"
-            android:hint="None"
+            android:hint="@string/none"
             android:textSize="13sp" />
 
     </RelativeLayout>
@@ -162,10 +159,10 @@
             android:id="@+id/item_notes_label"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:lines="2"
-            android:text="Recruiter's notes:"
+            android:text="@string/interview_notes"
             android:textAlignment="center"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -175,10 +172,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignTop="@+id/item_notes_label"
-            android:layout_toRightOf="@+id/item_notes_label"
+            android:layout_toEndOf="@+id/item_notes_label"
             android:ellipsize="end"
             android:lines="100"
-            android:hint="None"
+            android:hint="@string/none"
             android:textSize="13sp" />
     </RelativeLayout>
 

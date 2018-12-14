@@ -24,6 +24,12 @@ public class EmptyView {
         ButterKnife.bind(this, view);
     }
 
+    public EmptyView setText(String text) {
+        emptyText.setText(text);
+        emptyText.setVisibility(View.VISIBLE);
+        return this;
+    }
+
     public EmptyView setText(int resId) {
         emptyText.setText(resId);
         emptyText.setVisibility(View.VISIBLE);

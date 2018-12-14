@@ -22,13 +22,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
 
             <include
                 android:id="@+id/header_view"
-                layout="@layout/view_interview_details_item"
+                layout="@layout/view_interview_detail_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -41,9 +41,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:hint="Date/time"
+                    android:hint="@string/interview_datetime"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <Button
                     android:id="@+id/interview_date_time_button"
                     android:layout_width="match_parent"
@@ -58,24 +58,24 @@
                 android:layout_marginTop="15dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:hint="Message"
+                android:hint="@string/message_title"
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/interview_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:hint="Recruiter's notes"
+                android:hint="@string/interview_notes"
                 android:imeOptions="actionDone"
                 android:inputType="textMultiLine"
                 android:maxLength="10000"
                 app:met_floatingLabel="normal"
                 app:met_maxCharacters="10000"
-                app:met_primaryColor="@color/greenColor" />
+                app:met_primaryColor="@color/colorGreen" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/interview_feedback"
@@ -84,15 +84,15 @@
                 android:layout_marginTop="15dp"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:hint="Feedback"
+                android:hint="@string/interview_feedback"
                 android:maxLength="10000"
                 app:met_maxCharacters="10000"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <Button
                 android:id="@+id/interview_create"
-                android:text="Send Invitation"
+                android:text="@string/send_inviation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"

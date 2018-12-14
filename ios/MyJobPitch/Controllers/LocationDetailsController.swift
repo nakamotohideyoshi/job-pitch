@@ -32,10 +32,10 @@ class LocationDetailsController: MJPController {
             editRemoveView.removeCallback = removeWorkplace
         }
 
-        toolbar.titleLabel.text = "JOBS"
+        toolbar.titleLabel.text = NSLocalizedString("JOBS", comment: "")
         toolbar.rightAction = addJob
         
-        emptyView.button.setTitle("Create job", for: .normal)
+        emptyView.button.setTitle(NSLocalizedString("Create job", comment: ""), for: .normal)
         emptyView.action = addJob
         
         tableView.addPullToRefresh {
@@ -70,13 +70,17 @@ class LocationDetailsController: MJPController {
         jobs = AppData.jobs
 
         let jobCount = jobs.count
-        infoView.subTitleLabel.text = String(format: "Includes %lu %@", jobCount, jobCount > 1 ? "jobs" : "job")
+        if jobCount > 1 {
+            infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu jobs", comment: ""), jobCount)
+        } else {
+            infoView.subTitleLabel.text = String(format: NSLocalizedString("Includes %lu job", comment: ""), jobCount)
+        }
         
         emptyView.isHidden = jobs.count > 0
         if UserDefaults.standard.integer(forKey: "tutorial") == 2 {
-            emptyView.message.text = "Okay, last step, now tap to create your first job."
+            emptyView.message.text = NSLocalizedString("Okay, last step, now tap to create your first job.", comment: "")
         } else {
-            emptyView.message.text = "You have not added any jobs yet."
+            emptyView.message.text = NSLocalizedString("You have not added any jobs yet.", comment: "")
         }
         
         tableView.reloadData()
@@ -92,9 +96,9 @@ class LocationDetailsController: MJPController {
         
         let jobCount = jobs.count
         let message = jobCount == 0 ?
-            String(format: "Are you sure you want to delete %@", workplace.name) :
-            String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
-        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), workplace.name) :
+            String(format: NSLocalizedString("Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", comment: ""), jobCount)
+        PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
             
             self.showLoading()
             AppData.removeWorkplace(self.workplace) { error in
@@ -105,7 +109,7 @@ class LocationDetailsController: MJPController {
                 }
             }
             
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     func addJob() {
@@ -146,8 +150,8 @@ extension LocationDetailsController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
                             
-                            let message = String(format: "Are you sure you want to delete %@", job.title)
-                            PopupController.showYellow(message, ok: "Delete", okCallback: {
+                            let message = String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), job.title)
+                            PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                                 
                                 cell.hideSwipe(animated: true)
                                 self.showLoading()
@@ -160,7 +164,7 @@ extension LocationDetailsController: UITableViewDataSource {
                                     }
                                 }
                                 
-                            }, cancel: "Cancel", cancelCallback: {
+                            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: {
                                 cell.hideSwipe(animated: true)
                             })
                             

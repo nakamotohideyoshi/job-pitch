@@ -45,7 +45,8 @@ class ChangePasswordController: MJPController {
             API.shared().changePassword(request) { (_, error) in
                 if error == nil {
                     self.hideLoading()
-                    PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
+                    PopupController.showGreen(NSLocalizedString("Success!", comment: ""),
+                                              ok: NSLocalizedString("Ok", comment: ""), okCallback: nil, cancel: nil, cancelCallback: nil)
                 } else {                    
                     self.handleError(error)
                 }

@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
+import com.myjobpitch.R;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.views.Popup;
 
@@ -20,7 +22,7 @@ public class BaseFragment extends Fragment {
     protected final int MENUGROUP2 = 11;    // disable when loading
 
     protected MainActivity getApp() {
-        return (MainActivity)this.getActivity();
+        return MainActivity.shared();
     }
 
     /* loading view */
@@ -68,6 +70,22 @@ public class BaseFragment extends Fragment {
         return menuItem;
     }
 
+    protected MenuItem changeMenuItem(int id, @DrawableRes int iconRes) {
+        MenuItem menuItem = getApp().getToolbarMenu().findItem(id);
+        if(iconRes != -1) {
+            menuItem.setIcon(iconRes);
+        }
+        menuItem.setVisible(true);
+        return  menuItem;
+    }
+
+    protected MenuItem setVisibleMenuItem(int id, Boolean isVisible) {
+        MenuItem menuItem = getApp().getToolbarMenu().findItem(id);
+        menuItem.setVisible(isVisible);
+
+        return menuItem;
+    }
+
     public void onMenuSelected(int menuID) {
     }
 
@@ -78,10 +96,9 @@ public class BaseFragment extends Fragment {
         hideLoading();
 
         if (errors == null) {
-            new Popup(getContext())
-                    .setMessage("Connection Error: Please check your internet connection")
-                    .addGreyButton("Ok", null)
-                    .show();
+            Popup popup = new Popup(getContext(), R.string.error_no_connection, true);
+            popup.addGreyButton(R.string.ok, null);
+            popup.show();
         }
     }
 

@@ -41,13 +41,17 @@ class InterviewCell: MGSwipeTableCell {
         didSet {
             if interview != nil {
                 if interview.status == InterviewStatus.INTERVIEW_PENDING {
-                    status.text = AppData.user.isJobseeker() ? "Interview request received" : "Interview request sent"
+                    status.text = AppData.user.isJobseeker() ? NSLocalizedString("Interview request received", comment: "") : NSLocalizedString("Interview request sent", comment: "")
                 } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
-                    status.text = "Interview accepted"
+                    status.text = NSLocalizedString("Interview accepted", comment: "")
                 } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-                    status.text = "This interview is done"
+                    status.text = NSLocalizedString("This interview is done", comment: "")
                 } else {
-                    status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+                    if AppData.userRole === Role.ROLE_RECRUITER_ID {
+                        status.text = NSLocalizedString("Interview cancelled by Recruiter", comment: "")
+                    } else {
+                        status.text = NSLocalizedString("Interview cancelled by Jobseeker", comment: "")
+                    }                    
                 }
                 
                 dataTime.text = AppHelper.dateToLongString(interview.at)

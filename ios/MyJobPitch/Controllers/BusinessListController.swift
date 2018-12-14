@@ -28,7 +28,7 @@ class BusinessListController: MJPController {
         
         if businessMode {
             
-            title = "Businesses"
+            title = NSLocalizedString("Businesses", comment: "")
             infoView.superview?.isHidden = true
             toolbar.isHidden = true
             emptyView.action = addBusiness
@@ -36,14 +36,14 @@ class BusinessListController: MJPController {
         } else {
             
             if userMode {
-                title = "Users"
-                infoView.setDescription(icon: "menu-users", text: "Select a business below to view users")
+                title = NSLocalizedString("Users", comment: "")
+                infoView.setDescription(icon: "menu-users", text: NSLocalizedString("Select a business below to view users", comment: ""))
             } else {
-                title = "Add job"
-                infoView.setDescription(icon: "menu-business", text: "Select which business to add job to")
+                title = NSLocalizedString("Add job", comment: "")
+                infoView.setDescription(icon: "menu-business", text: NSLocalizedString("Select which business to add job to", comment: ""))
             }
             
-            toolbar.titleLabel.text = "SELECT A BUSINESS"
+            toolbar.titleLabel.text = NSLocalizedString("SELECT A BUSINESS", comment: "")
             toolbar.rightAction = AppData.user.canCreateBusinesses ? addBusiness : nil
             emptyView.isHidden = true
         }
@@ -88,11 +88,11 @@ class BusinessListController: MJPController {
             
             emptyView.isHidden = false
             if businesses.count == 0 {
-                emptyView.message.text = "Hi, Welcome to MyJobPitch\nLets start with easy adding your Business"
-                emptyView.button.setTitle("Create business", for: .normal)
+                emptyView.message.text = NSLocalizedString("Hi, Welcome to MyJobPitch\nLets start with easy adding your Business", comment: "")
+                emptyView.button.setTitle(NSLocalizedString("Create business", comment: ""), for: .normal)
             } else if !AppData.user.canCreateBusinesses {
-                emptyView.message.text = "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can always create additional workplaces under your existing business."
-                emptyView.button.setTitle("Contact Us", for: .normal)
+                emptyView.message.text = NSLocalizedString("Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can always create additional workplaces under your existing business.", comment: "")
+                emptyView.button.setTitle(NSLocalizedString("Contact Us", comment: ""), for: .normal)
             } else {
                 emptyView.isHidden = true
             }
@@ -145,14 +145,19 @@ extension BusinessListController: UITableViewDataSource {
         if userMode {
             
             let userCount = business.users.count
-            cell.infoView.subTitleLabel.text = String(format: "%lu %@", userCount, userCount > 1 ? "users" : "user")
+            cell.infoView.subTitleLabel.text = String(format: "%lu %@", userCount, userCount > 1 ? NSLocalizedString("users", comment: "") : NSLocalizedString("user", comment: ""))
             cell.creditCount.isHidden = true
             
         } else {
             
             let workplaceCount = business.locations.count
-            cell.infoView.subTitleLabel.text = String(format: "Includes %lu %@", workplaceCount, workplaceCount > 1 ? "workplaces" : "workplace")
-            cell.creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
+            if workplaceCount > 1 {
+                cell.infoView.subTitleLabel.text = String(format: "Includes %lu workplaces", workplaceCount)
+            } else {
+                cell.infoView.subTitleLabel.text = String(format: "Includes %lu workplace", workplaceCount)
+            }
+            
+            cell.creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? NSLocalizedString("Credits", comment: "") : NSLocalizedString("Credit", comment: ""))
         
             if businessMode && !business.restricted {
                 
@@ -179,9 +184,9 @@ extension BusinessListController: UITableViewDataSource {
                                       callback: { (cell) -> Bool in
                                         
                                         let message = workplaceCount == 0 ?
-                                                String(format: "Are you sure you want to delete %@", business.name) :
-                                                String(format: "Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", workplaceCount)
-                                        PopupController.showYellow(message, ok: "Delete", okCallback: {
+                                                String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), business.name) :
+                                                String(format: NSLocalizedString("Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", comment: ""), workplaceCount)
+                                        PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                                             
                                             cell.hideSwipe(animated: true)
                                             self.showLoading()
@@ -194,7 +199,7 @@ extension BusinessListController: UITableViewDataSource {
                                                 }                                                
                                             }
                                             
-                                        }, cancel: "Cancel", cancelCallback: {
+                                        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: {
                                             cell.hideSwipe(animated: true)
                                         })
                                         
@@ -223,7 +228,8 @@ extension BusinessListController: UITableViewDelegate {
         if userMode {
             
             if business.restricted {
-                PopupController.showGray("You must an administrator to view this information.", ok: "Ok")
+                PopupController.showGray(NSLocalizedString("You must an administrator to view this information.", comment: ""),
+                                         ok: NSLocalizedString("Ok", comment: ""))
             } else {
                 let controller = BusinessUserListController.instantiate()
                 controller.business = business

@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/fragment_vertical_margin"
-        android:paddingLeft="@dimen/fragment_horizontal_margin"
-        android:paddingRight="@dimen/fragment_horizontal_margin"
+        android:paddingStart="@dimen/fragment_horizontal_margin"
+        android:paddingEnd="@dimen/fragment_horizontal_margin"
         android:paddingTop="@dimen/fragment_vertical_margin"
         android:orientation="vertical">
 
         <TextView
-            android:text="Video Pitch"
+            android:text="@string/video_pitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -49,7 +49,7 @@
         </FrameLayout>
 
         <Button
-            android:text="Record Specific Pitch"
+            android:text="@string/record_specific_pitch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"
@@ -58,7 +58,7 @@
             android:id="@+id/new_record"/>
 
         <Button
-            android:text="Apply"
+            android:text="@string/apply"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="15dp"

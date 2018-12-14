@@ -25,7 +25,7 @@ class InterviewListController: MJPController {
         
         if AppData.user.isRecruiter() {
             let subTitle = String(format: "%@, (%@)", job.title, job.getBusinessName())
-            setTitle(title: "Interviews", subTitle: subTitle)
+            setTitle(title: NSLocalizedString("Interviews", comment: ""), subTitle: subTitle)
         }
         
         tableView.addPullToRefresh {

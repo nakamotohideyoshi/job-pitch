@@ -128,7 +128,7 @@ class JobApplyController: MJPController {
             
             PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "application-pitches", progress: { (progress) in
                 if progress < 1 {
-                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                    self.showLoading(NSLocalizedString("Uploading Pitch...", comment: ""), withProgress: progress)
                 } else {
                     self.showLoading()
                 }

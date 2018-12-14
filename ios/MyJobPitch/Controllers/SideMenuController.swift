@@ -12,29 +12,29 @@ class SideMenuController: UIViewController {
     
     static var currentID = ""
     static let menuItems = [
-        "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
-        "j_applications":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
-        "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
-        "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
-        "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
-        "add_record":   ["icon": "menu-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
-        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobseekerDetails",   "per": ""],
-        "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobseekerProfile",   "per": ""],
+        "find_job":     ["icon": "menu-search",         "title": NSLocalizedString("Find Job", comment: ""),                "identifier": "Swipe",              "per": "P"],
+        "j_applications":["icon": "menu-applications2",   "title": NSLocalizedString("My Applications", comment: ""),            "identifier": "ApplicationList",    "per": "P"],
+        "messages":     ["icon": "menu-message",        "title": NSLocalizedString("Messages", comment: ""),                "identifier": "MessageList",        "per": "PB"],
+        "j_interviews":  ["icon": "menu-interview",        "title": NSLocalizedString("Interviews", comment: ""),             "identifier": "InterviewList",          "per": "P"],
+        "job_profile":  ["icon": "menu-job-profile",    "title": NSLocalizedString("Job Profile", comment: ""),             "identifier": "JobProfile",         "per": "J"],
+        "add_record":   ["icon": "menu-record",     "title": NSLocalizedString("Record Pitch", comment: ""),            "identifier": "Pitch",              "per": "J"],
+        "view_profile": ["icon": "menu-user-profile",   "title": NSLocalizedString("Profile", comment: ""),                 "identifier": "JobseekerDetails",   "per": ""],
+        "user_profile": ["icon": "menu-user-profile",   "title": NSLocalizedString("Profile", comment: ""),                 "identifier": "JobseekerProfile",   "per": ""],
         
-        "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
-        "applications": ["icon": "menu-applications1",    "title": "Applications",            "identifier": "SelectJob",    "per": "B"],
-        "interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
-        "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
-        "users":        ["icon": "menu-users",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
+        "find_talent":  ["icon": "menu-search",         "title": NSLocalizedString("Find Talent", comment: ""),             "identifier": "SelectJob",          "per": "B"],
+        "applications": ["icon": "menu-applications1",    "title": NSLocalizedString("Applications", comment: ""),            "identifier": "SelectJob",    "per": "B"],
+        "interviews":  ["icon": "menu-interview",        "title": NSLocalizedString("Interviews", comment: ""),             "identifier": "SelectJob",          "per": "B"],
+        "businesses":   ["icon": "menu-business",       "title": NSLocalizedString("Add or Edit Jobs", comment: ""),        "identifier": "BusinessList",       "per": ""],
+        "users":        ["icon": "menu-users",   "title": NSLocalizedString("Users", comment: ""),                   "identifier": "BusinessList",       "per": ""],
         
-        "hr":           ["icon": "menu-users",   "title": "HR",                   "identifier": "HRSystem",       "per": ""],
-        "employees":    ["icon": "menu-users",   "title": "Employees",                   "identifier": "EmployeeList",       "per": ""],
+        "hr":           ["icon": "menu-users",   "title": NSLocalizedString("HR", comment: ""),                   "identifier": "HRSystem",       "per": ""],
+        "employees":    ["icon": "menu-users",   "title": NSLocalizedString("Employees", comment: ""),                   "identifier": "EmployeeList",       "per": ""],
         
-        "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
-        "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
-        "share":        ["icon": "menu-share",          "title": "Tell a friend",           "identifier": "Share",              "per": ""],
-        "contact_us":   ["icon": "menu-contact-us",     "title": "Contact Us",              "identifier": "ContactUs",          "per": ""],
-        "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
+        "change_pass":  ["icon": "menu-key",            "title": NSLocalizedString("Change Password", comment: ""),         "identifier": "ChangePassword",     "per": ""],
+        "help":         ["icon": "menu-help",           "title": NSLocalizedString("Help", comment: ""),                    "identifier": "Help",               "per": ""],
+        "share":        ["icon": "menu-share",          "title": NSLocalizedString("Tell a friend", comment: ""),           "identifier": "Share",              "per": ""],
+        "contact_us":   ["icon": "menu-contact-us",     "title": NSLocalizedString("Contact Us", comment: ""),              "identifier": "ContactUs",          "per": ""],
+        "log_out":      ["icon": "menu-logout",         "title": NSLocalizedString("Log Out", comment: ""),                 "identifier": "Signin",             "per": ""]
     ]
     
     static let jobseekerMenu = [
@@ -84,8 +84,10 @@ class SideMenuController: UIViewController {
             nameView.text = AppData.jobseeker.getFullName()
             data = SideMenuController.jobseekerMenu
         } else {
-            AppHelper.loadLogo(AppData.businesses[0], imageView: pictureView, completion: nil)
-            nameView.text = AppData.businesses[0].name
+            if AppData.businesses.count > 0 {
+                AppHelper.loadLogo(AppData.businesses[0], imageView: pictureView, completion: nil)
+                nameView.text = AppData.businesses[0].name
+            }            
             data = SideMenuController.recruiterMenu
             if (AppData.businesses.filter { $0.hr_access }.count != 0) {
                 data.insert("hr", at: 7)
@@ -153,12 +155,13 @@ extension SideMenuController: UITableViewDataSource {
         let image = UIImage(named: item["icon"]!)
         
         cell.iconView.image = image?.withRenderingMode(.alwaysTemplate)
+        cell.iconView.tintColor = AppData.darkColor
         if SideMenuController.currentID == id {
             cell.backgroundColor = AppData.lightGreyColor
-            cell.iconView.tintColor = AppData.greenColor
-            cell.iconView.alpha = 1
-            cell.nameLabel.textColor = AppData.greenColor
-            cell.nameLabel.alpha = 1
+//            cell.iconView.tintColor = AppData.greenColor
+//            cell.iconView.alpha = 1
+//            cell.nameLabel.textColor = AppData.greenColor
+//            cell.nameLabel.alpha = 1
         } else {
             cell.isUserInteractionEnabled = true
             let pers = item["per"]
@@ -173,10 +176,10 @@ extension SideMenuController: UITableViewDataSource {
             }
             
             cell.backgroundColor = UIColor.white
-            cell.iconView.tintColor = AppData.darkColor
-            cell.iconView.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
-            cell.nameLabel.textColor = AppData.darkColor
-            cell.nameLabel.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
+//            cell.iconView.tintColor = AppData.darkColor
+//            cell.iconView.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
+//            cell.nameLabel.textColor = AppData.darkColor
+//            cell.nameLabel.alpha = cell.isUserInteractionEnabled ? 1 : 0.3
         }
         
         let newMessageCount = AppData.newMessageCount
@@ -222,10 +225,10 @@ extension SideMenuController: UITableViewDelegate {
         
         if id == "log_out" {
             let popupController = PopupController.show((UIApplication.shared.keyWindow?.rootViewController)!,
-                                                       message: "Are you sure you want to log out?",
-                                                       ok: "Log Out", okCallback: {
+                                                       message: NSLocalizedString("Are you sure you want to log out?", comment: ""),
+                                                       ok: NSLocalizedString("Log Out", comment: ""), okCallback: {
                                                         SideMenuController.pushController(id: id)
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
             popupController.okButton?.backgroundColor = AppData.greenColor
         } else if id == "share" {
             let url = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/"

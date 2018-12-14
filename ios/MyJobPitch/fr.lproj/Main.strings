@@ -1,0 +1,900 @@
+
+/* Class = "UILabel"; text = "Require CV"; ObjectID = "07E-TW-9ey"; */
+"07E-TW-9ey.text" = "Require CV";
+
+/* Class = "UINavigationItem"; title = "Edit Profile"; ObjectID = "0K5-hD-rgz"; */
+"0K5-hD-rgz.title" = "Edit Profile";
+
+/* Class = "UILabel"; text = "This busniness doesn't seem to have any user yet!"; ObjectID = "0KO-y8-kHf"; */
+"0KO-y8-kHf.text" = "This busniness doesn't seem to have any user yet!";
+
+/* Class = "UINavigationItem"; title = "Employees"; ObjectID = "0hc-u1-qtS"; */
+"0hc-u1-qtS.title" = "Employees";
+
+/* Class = "UIButton"; normalTitle = "View CV"; ObjectID = "0nb-ZL-uKS"; */
+"0nb-ZL-uKS.normalTitle" = "View CV";
+
+/* Class = "UILabel"; text = "Public"; ObjectID = "1RX-au-gpl"; */
+"1RX-au-gpl.text" = "Public";
+
+/* Class = "UILabel"; text = "Mobile:"; ObjectID = "24j-J6-FaM"; */
+"24j-J6-FaM.text" = "Mobile:";
+
+/* Class = "UILabel"; text = "Quick and easy! Use your phone camera to record a quick video introduction for yourself."; ObjectID = "25x-io-NG6"; */
+"25x-io-NG6.text" = "Quick and easy! Use your phone camera to record a quick video introduction for yourself.";
+
+/* Class = "UITextField"; placeholder = "(optional)"; ObjectID = "2bx-TN-LWO"; */
+"2bx-TN-LWO.placeholder" = "(optional)";
+
+/* Class = "UILabel"; text = "CV summary:"; ObjectID = "2ke-KW-NFS"; */
+"2ke-KW-NFS.text" = "CV summary:";
+
+/* Class = "UILabel"; text = "It only takes a few seconds but will save you countless hours of searching!"; ObjectID = "2kq-Fk-e7z"; */
+"2kq-Fk-e7z.text" = "It only takes a few seconds but will save you countless hours of searching!";
+
+/* Class = "UIButton"; normalTitle = "Resend invitation"; ObjectID = "2o8-Ya-uYX"; */
+"2o8-Ya-uYX.normalTitle" = "Resend invitation";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "321-Ej-a45"; */
+"321-Ej-a45.normalTitle" = "Save";
+
+/* Class = "UILabel"; text = "Gender:"; ObjectID = "3Iq-8a-eWb"; */
+"3Iq-8a-eWb.text" = "Gender:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3jv-f9-gIZ"; */
+"3jv-f9-gIZ.text" = "Label";
+
+/* Class = "UILabel"; text = "Job match area:"; ObjectID = "3yi-vX-HtY"; */
+"3yi-vX-HtY.text" = "Job match area:";
+
+/* Class = "UITextField"; placeholder = "Select Radius"; ObjectID = "47X-so-z3Y"; */
+"47X-so-z3Y.placeholder" = "Select Radius";
+
+/* Class = "UIButton"; normalTitle = "Skip"; ObjectID = "4oN-QQ-SWs"; */
+"4oN-QQ-SWs.normalTitle" = "Skip";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "5BO-7i-4NO"; */
+"5BO-7i-4NO.text" = "Label";
+
+/* Class = "UILabel"; text = "Interview"; ObjectID = "5YZ-jb-BPW"; */
+"5YZ-jb-BPW.text" = "Interview";
+
+/* Class = "UILabel"; text = "Welcome!"; ObjectID = "5bV-Vn-8QS"; */
+"5bV-Vn-8QS.text" = "Welcome!";
+
+/* Class = "UILabel"; text = "•    speak clearly\n•    be yourself\n•    show you strengths"; ObjectID = "5fR-VW-Jq5"; */
+"5fR-VW-Jq5.text" = "•    speak clearly\n•    be yourself\n•    show you strengths";
+
+/* Class = "UITextField"; placeholder = "Email Address"; ObjectID = "5h0-N2-nkT"; */
+"5h0-N2-nkT.placeholder" = "Email Address";
+
+/* Class = "UIButton"; normalTitle = "Change Logo"; ObjectID = "5jy-gl-fqb"; */
+"5jy-gl-fqb.normalTitle" = "Change Logo";
+
+/* Class = "UILabel"; text = "Record or upload a short video intro to showcase your company. Tell potential candidates about the role, and why it is a great place to work!"; ObjectID = "5zJ-8i-N9m"; */
+"5zJ-8i-N9m.text" = "Record or upload a short video intro to showcase your company. Tell potential candidates about the role, and why it is a great place to work!";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "6ed-oU-w2g"; */
+"6ed-oU-w2g.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "example video!"; ObjectID = "6mD-ct-Vxd"; */
+"6mD-ct-Vxd.normalTitle" = "example video!";
+
+/* Class = "UILabel"; text = "How it works"; ObjectID = "6u8-EB-oIa"; */
+"6u8-EB-oIa.text" = "How it works";
+
+/* Class = "UILabel"; text = "References Available"; ObjectID = "70o-pC-65u"; */
+"70o-pC-65u.text" = "References Available";
+
+/* Class = "UILabel"; text = "9+"; ObjectID = "7AR-F4-fHf"; */
+"7AR-F4-fHf.text" = "9+";
+
+/* Class = "UITextField"; placeholder = "Email Address"; ObjectID = "7he-KV-swI"; */
+"7he-KV-swI.placeholder" = "Email Address";
+
+/* Class = "UIButton"; normalTitle = "Connect"; ObjectID = "7n4-ao-KAO"; */
+"7n4-ao-KAO.normalTitle" = "Connect";
+
+/* Class = "UITextField"; placeholder = "Nationality (optional)"; ObjectID = "7v1-HT-Gni"; */
+"7v1-HT-Gni.placeholder" = "Nationality (optional)";
+
+/* Class = "UILabel"; text = "9+"; ObjectID = "87a-h1-eUa"; */
+"87a-h1-eUa.text" = "9+";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "8GG-yf-nFb"; */
+"8GG-yf-nFb.normalTitle" = "Save";
+
+/* Class = "UITextField"; placeholder = "First Name"; ObjectID = "8R4-qv-1ox"; */
+"8R4-qv-1ox.placeholder" = "First Name";
+
+/* Class = "UINavigationItem"; title = "Add Job"; ObjectID = "8Ub-h0-s6y"; */
+"8Ub-h0-s6y.title" = "Add Job";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "8WG-mY-BPG"; */
+"8WG-mY-BPG.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Applications"; ObjectID = "8mB-a7-qYL"; */
+"8mB-a7-qYL.title" = "Applications";
+
+/* Class = "UITextField"; placeholder = "Country"; ObjectID = "AF8-Pn-ulE"; */
+"AF8-Pn-ulE.placeholder" = "Country";
+
+/* Class = "UIButton"; normalTitle = "View CV"; ObjectID = "AUj-lC-4Xu"; */
+"AUj-lC-4Xu.normalTitle" = "View CV";
+
+/* Class = "UITextField"; placeholder = "Age (optional)"; ObjectID = "AWa-Ay-cYP"; */
+"AWa-Ay-cYP.placeholder" = "Age (optional)";
+
+/* Class = "UILabel"; text = "Administrator"; ObjectID = "Abq-dc-BZf"; */
+"Abq-dc-BZf.text" = "Administrator";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "Ar6-ij-jEp"; */
+"Ar6-ij-jEp.normalTitle" = "Save";
+
+/* Class = "UILabel"; text = "Terms and Conditions"; ObjectID = "Arc-uM-cd6"; */
+"Arc-uM-cd6.text" = "Terms and Conditions";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\ndsfsafsdf"; ObjectID = "Azu-1H-5xh"; */
+"Azu-1H-5xh.text" = "Lorem ipsum dolor sit amet,\ndsfsafsdf";
+
+/* Class = "UILabel"; text = "Jobseeker Name"; ObjectID = "B1e-8k-OnC"; */
+"B1e-8k-OnC.text" = "Jobseeker Name";
+
+/* Class = "UIButton"; normalTitle = "Upload CV"; ObjectID = "B2u-XX-U4C"; */
+"B2u-XX-U4C.normalTitle" = "Upload CV";
+
+/* Class = "UILabel"; text = "Business Name (Workplace Name)"; ObjectID = "B3p-0l-wif"; */
+"B3p-0l-wif.text" = "Business Name (Workplace Name)";
+
+/* Class = "UINavigationItem"; title = "Applications"; ObjectID = "B8z-gk-5ps"; */
+"B8z-gk-5ps.title" = "Applications";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "BKM-eX-hbm"; */
+"BKM-eX-hbm.text" = "Label";
+
+/* Class = "UILabel"; text = "By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I have been convicted of any criminal offence."; ObjectID = "BTV-Be-Wux"; */
+"BTV-Be-Wux.text" = "By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I have been convicted of any criminal offence.";
+
+/* Class = "UILabel"; text = "Feedback"; ObjectID = "BZ5-f1-n2i"; */
+"BZ5-f1-n2i.text" = "Feedback";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua."; ObjectID = "Bbl-T8-Unz"; */
+"Bbl-T8-Unz.text" = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua.";
+
+/* Class = "UIBarButtonItem"; title = "Cancel"; ObjectID = "Bh9-gH-ZIO"; */
+"Bh9-gH-ZIO.title" = "Cancel";
+
+/* Class = "UILabel"; text = "Hours:"; ObjectID = "BqX-TG-pAJ"; */
+"BqX-TG-pAJ.text" = "Hours:";
+
+/* Class = "UITextField"; placeholder = "Email Address (optional)"; ObjectID = "Br8-zP-o4d"; */
+"Br8-zP-o4d.placeholder" = "Email Address (optional)";
+
+/* Class = "UITextField"; placeholder = "Workplace"; ObjectID = "BrL-9X-LD2"; */
+"BrL-9X-LD2.placeholder" = "Workplace";
+
+/* Class = "UILabel"; text = "Require Pitch"; ObjectID = "C1c-2i-dZe"; */
+"C1c-2i-dZe.text" = "Require Pitch";
+
+/* Class = "UIButton"; normalTitle = "Remove CV"; ObjectID = "CTk-0S-P8h"; */
+"CTk-0S-P8h.normalTitle" = "Remove CV";
+
+/* Class = "UILabel"; text = "Previous interviews"; ObjectID = "CTu-bA-g9e"; */
+"CTu-bA-g9e.text" = "Previous interviews";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "CgS-3e-3WN"; */
+"CgS-3e-3WN.text" = "Label";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua."; ObjectID = "DFY-oY-QbG"; */
+"DFY-oY-QbG.text" = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua.";
+
+/* Class = "UIButton"; normalTitle = "Record Specific Pitch"; ObjectID = "DKu-68-6N5"; */
+"DKu-68-6N5.normalTitle" = "Record Specific Pitch";
+
+/* Class = "UILabel"; text = "Complete your profile"; ObjectID = "Da4-g1-tsl"; */
+"Da4-g1-tsl.text" = "Complete your profile";
+
+/* Class = "UINavigationItem"; title = "Employees"; ObjectID = "DpC-0c-BKe"; */
+"DpC-0c-BKe.title" = "Employees";
+
+/* Class = "UITextField"; placeholder = "Nationality (optional)"; ObjectID = "Dvo-Qs-R5Z"; */
+"Dvo-Qs-R5Z.placeholder" = "Nationality (optional)";
+
+/* Class = "UILabel"; text = "comment"; ObjectID = "EHS-3V-gcW"; */
+"EHS-3V-gcW.text" = "comment";
+
+/* Class = "UILabel"; text = "Video Pitch"; ObjectID = "EK1-H6-VA8"; */
+"EK1-H6-VA8.text" = "Video Pitch";
+
+/* Class = "UILabel"; text = "Public"; ObjectID = "EL6-bH-eYB"; */
+"EL6-bH-eYB.text" = "Public";
+
+/* Class = "UILabel"; text = "Job Description"; ObjectID = "EYj-Ia-TqS"; */
+"EYj-Ia-TqS.text" = "Job Description";
+
+/* Class = "UIButton"; normalTitle = "https://www.myjobpitch.com"; ObjectID = "F59-JL-Hdg"; */
+"F59-JL-Hdg.normalTitle" = "https://www.myjobpitch.com";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "FhC-hj-TqJ"; */
+"FhC-hj-TqJ.normalTitle" = "Save";
+
+/* Class = "UITextField"; placeholder = "Select Contract"; ObjectID = "FsJ-e0-yoa"; */
+"FsJ-e0-yoa.placeholder" = "Select Contract";
+
+/* Class = "UITextField"; placeholder = "Last Name"; ObjectID = "Fx3-7R-Y8b"; */
+"Fx3-7R-Y8b.placeholder" = "Last Name";
+
+/* Class = "UIButton"; normalTitle = "example video!"; ObjectID = "FxO-91-KwV"; */
+"FxO-91-KwV.normalTitle" = "example video!";
+
+/* Class = "UITextField"; placeholder = "Nationality (optional)"; ObjectID = "G8Q-nE-b0y"; */
+"G8Q-nE-b0y.placeholder" = "Nationality (optional)";
+
+/* Class = "UILabel"; text = "CV:"; ObjectID = "GPy-tp-XSo"; */
+"GPy-tp-XSo.text" = "CV:";
+
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "Gw0-Rn-TFY"; */
+"Gw0-Rn-TFY.normalTitle" = "Login";
+
+/* Class = "UINavigationItem"; title = "Record Pitch"; ObjectID = "H1S-xe-AQx"; */
+"H1S-xe-AQx.title" = "Record Pitch";
+
+/* Class = "UITextField"; placeholder = "Title"; ObjectID = "H60-qV-sTd"; */
+"H60-qV-sTd.placeholder" = "Title";
+
+/* Class = "UITextField"; placeholder = "Sex (optional)"; ObjectID = "HI3-XN-Cn2"; */
+"HI3-XN-Cn2.placeholder" = "Sex (optional)";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "HNX-uB-szb"; */
+"HNX-uB-szb.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Business Details"; ObjectID = "HXV-39-JQ4"; */
+"HXV-39-JQ4.title" = "Business Details";
+
+/* Class = "UITextField"; placeholder = "Confirm Password"; ObjectID = "IAf-gl-p6L"; */
+"IAf-gl-p6L.placeholder" = "Confirm Password";
+
+/* Class = "UINavigationItem"; title = "Dropbox"; ObjectID = "IZ7-5w-DQc"; */
+"IZ7-5w-DQc.title" = "Dropbox";
+
+/* Class = "UILabel"; text = "Privacy Policy"; ObjectID = "IoF-Ts-SfZ"; */
+"IoF-Ts-SfZ.text" = "Privacy Policy";
+
+/* Class = "UILabel"; text = "100"; ObjectID = "IxZ-NM-uiX"; */
+"IxZ-NM-uiX.text" = "100";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "JGd-o6-xO2"; */
+"JGd-o6-xO2.normalTitle" = "Save";
+
+/* Class = "UITextField"; placeholder = "Last Name"; ObjectID = "JTI-ni-j06"; */
+"JTI-ni-j06.placeholder" = "Last Name";
+
+/* Class = "UITextField"; placeholder = "Phone (optional)"; ObjectID = "JjY-jZ-19N"; */
+"JjY-jZ-19N.placeholder" = "Phone (optional)";
+
+/* Class = "UINavigationItem"; title = "Applications"; ObjectID = "JpD-ou-Y9Q"; */
+"JpD-ou-Y9Q.title" = "Applications";
+
+/* Class = "UIBarButtonItem"; title = "Sign in"; ObjectID = "JzV-7M-Oaq"; */
+"JzV-7M-Oaq.title" = "Sign in";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "KOy-lx-KFw"; */
+"KOy-lx-KFw.placeholder" = "Name";
+
+/* Class = "UILabel"; text = "You're just a few steps away from you next job!"; ObjectID = "KPi-wp-Wa6"; */
+"KPi-wp-Wa6.text" = "You're just a few steps away from you next job!";
+
+/* Class = "UILabel"; text = "Message"; ObjectID = "Kee-3a-7Hb"; */
+"Kee-3a-7Hb.text" = "Message";
+
+/* Class = "UIButton"; normalTitle = "Record Pitch"; ObjectID = "Kw5-3c-FVL"; */
+"Kw5-3c-FVL.normalTitle" = "Record Pitch";
+
+/* Class = "UINavigationItem"; title = "Location"; ObjectID = "L7C-hT-qM2"; */
+"L7C-hT-qM2.title" = "Location";
+
+/* Class = "UITextField"; placeholder = "First Name"; ObjectID = "L7I-0H-CzR"; */
+"L7I-0H-CzR.placeholder" = "First Name";
+
+/* Class = "UIButton"; normalTitle = "Change Logo"; ObjectID = "L94-6s-Dwg"; */
+"L94-6s-Dwg.normalTitle" = "Change Logo";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "LKa-jp-9PP"; */
+"LKa-jp-9PP.text" = "Label";
+
+/* Class = "UITextField"; placeholder = "Birthday (Optiona)"; ObjectID = "Lf9-Kd-Fya"; */
+"Lf9-Kd-Fya.placeholder" = "Birthday (Optiona)";
+
+/* Class = "UINavigationItem"; title = "Add Workplace"; ObjectID = "Lhh-T0-0zl"; */
+"Lhh-T0-0zl.title" = "Add Workplace";
+
+/* Class = "UIButton"; normalTitle = "Change Logo"; ObjectID = "LsN-xq-SCq"; */
+"LsN-xq-SCq.normalTitle" = "Change Logo";
+
+/* Class = "UILabel"; text = "asdf\nsdafsdf"; ObjectID = "LyH-EW-SEV"; */
+"LyH-EW-SEV.text" = "asdf\nsdafsdf";
+
+/* Class = "UILabel"; text = "No candidates have applied for this job yet. Once that happens, their applications will appear here."; ObjectID = "M61-XP-jfw"; */
+"M61-XP-jfw.text" = "No candidates have applied for this job yet. Once that happens, their applications will appear here.";
+
+/* Class = "UILabel"; text = "Jan 12, 12:45PM"; ObjectID = "MS7-Iz-pmR"; */
+"MS7-Iz-pmR.text" = "Jan 12, 12:45PM";
+
+/* Class = "UILabel"; text = "Temporary"; ObjectID = "Mo7-Vv-xf4"; */
+"Mo7-Vv-xf4.text" = "Temporary";
+
+/* Class = "UILabel"; text = "Shortlisted"; ObjectID = "MpS-LH-WNR"; */
+"MpS-LH-WNR.text" = "Shortlisted";
+
+/* Class = "UITextField"; placeholder = "New Password"; ObjectID = "MuA-Sa-6jq"; */
+"MuA-Sa-6jq.placeholder" = "New Password";
+
+/* Class = "UILabel"; text = "Recruiter's notes"; ObjectID = "NBd-44-gG9"; */
+"NBd-44-gG9.text" = "Recruiter's notes";
+
+/* Class = "UIButton"; normalTitle = "Change Profile Photo"; ObjectID = "NDu-ja-vjO"; */
+"NDu-ja-vjO.normalTitle" = "Change Profile Photo";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Nb6-Q9-7Bu"; */
+"Nb6-Q9-7Bu.text" = "Label";
+
+/* Class = "UILabel"; text = "Check out our"; ObjectID = "Nba-k3-IUr"; */
+"Nba-k3-IUr.text" = "Check out our";
+
+/* Class = "UILabel"; text = "Match area "; ObjectID = "Nln-N0-1Rw"; */
+"Nln-N0-1Rw.text" = "Match area ";
+
+/* Class = "UINavigationItem"; title = "Workplace Details"; ObjectID = "Noo-a6-5y9"; */
+"Noo-a6-5y9.title" = "Workplace Details";
+
+/* Class = "UILabel"; text = "Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."; ObjectID = "OHE-5f-Uf7"; */
+"OHE-5f-Uf7.text" = "Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want.";
+
+/* Class = "UILabel"; text = "You have no messages!  Once you have connected through the main interface with someone, you'll be able to communicate with them here."; ObjectID = "OW2-wO-B54"; */
+"OW2-wO-B54.text" = "You have no messages!  Once you have connected through the main interface with someone, you'll be able to communicate with them here.";
+
+/* Class = "UILabel"; text = "CV overview"; ObjectID = "ObU-M1-6s0"; */
+"ObU-M1-6s0.text" = "CV overview";
+
+/* Class = "UITextField"; placeholder = "Select Hours"; ObjectID = "PHR-Xa-QLF"; */
+"PHR-Xa-QLF.placeholder" = "Select Hours";
+
+/* Class = "UITextField"; placeholder = "(optional)"; ObjectID = "PZC-KW-z3C"; */
+"PZC-KW-z3C.placeholder" = "(optional)";
+
+/* Class = "UINavigationItem"; title = "Jobs"; ObjectID = "PfX-zI-2TK"; */
+"PfX-zI-2TK.title" = "Jobs";
+
+/* Class = "UIButton"; normalTitle = "Upload"; ObjectID = "PjT-Hp-9b7"; */
+"PjT-Hp-9b7.normalTitle" = "Upload";
+
+/* Class = "UINavigationItem"; title = "Google Drive"; ObjectID = "PkI-hI-BVQ"; */
+"PkI-hI-BVQ.title" = "Google Drive";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "PvC-Jf-klH"; */
+"PvC-Jf-klH.text" = "Label";
+
+/* Class = "UILabel"; text = "Job Title"; ObjectID = "QMn-fF-oCL"; */
+"QMn-fF-oCL.text" = "Job Title";
+
+/* Class = "UILabel"; text = "Reference available on request"; ObjectID = "QkP-yS-xHv"; */
+"QkP-yS-xHv.text" = "Reference available on request";
+
+/* Class = "UILabel"; text = "Workplace Description"; ObjectID = "R4X-aE-2v9"; */
+"R4X-aE-2v9.text" = "Workplace Description";
+
+/* Class = "UINavigationItem"; title = "Talent Details"; ObjectID = "RUh-0z-eCJ"; */
+"RUh-0z-eCJ.title" = "Talent Details";
+
+/* Class = "UILabel"; text = "Record New"; ObjectID = "RXt-v2-1nC"; */
+"RXt-v2-1nC.text" = "Record New";
+
+/* Class = "UITextField"; placeholder = "Job"; ObjectID = "RZx-T0-GkX"; */
+"RZx-T0-GkX.placeholder" = "Job";
+
+/* Class = "UILabel"; text = "Label lsdjf lasjdf lajsdf lajksdf lajsdf lasdjf lasjdf lasjf lsdfj"; ObjectID = "Rgw-IN-Mbh"; */
+"Rgw-IN-Mbh.text" = "Label lsdjf lasjdf lajsdf lajksdf lajsdf lasdjf lasjdf lasjf lsdfj";
+
+/* Class = "UITextField"; placeholder = "Select Hours"; ObjectID = "S4B-cK-3NQ"; */
+"S4B-cK-3NQ.placeholder" = "Select Hours";
+
+/* Class = "UILabel"; text = "National insurance number "; ObjectID = "S7L-bM-ZgJ"; */
+"S7L-bM-ZgJ.text" = "National insurance number ";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "SND-w6-MpZ"; */
+"SND-w6-MpZ.normalTitle" = "Save";
+
+/* Class = "UILabel"; text = "Job Title"; ObjectID = "SVW-9C-aWb"; */
+"SVW-9C-aWb.text" = "Job Title";
+
+/* Class = "UILabel"; text = "Get hired"; ObjectID = "T8r-lg-Uyf"; */
+"T8r-lg-Uyf.text" = "Get hired";
+
+/* Class = "UITextField"; placeholder = "First Name"; ObjectID = "TFu-K3-KAn"; */
+"TFu-K3-KAn.placeholder" = "First Name";
+
+/* Class = "UIButton"; normalTitle = "Arrange interview"; ObjectID = "TRB-kR-t1s"; */
+"TRB-kR-t1s.normalTitle" = "Arrange interview";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "Tiv-Gh-CTA"; */
+"Tiv-Gh-CTA.text" = "Name";
+
+/* Class = "UINavigationItem"; title = "Employee Details"; ObjectID = "U1k-3u-rbT"; */
+"U1k-3u-rbT.title" = "Employee Details";
+
+/* Class = "UILabel"; text = "Sector:"; ObjectID = "UO7-Ko-T7R"; */
+"UO7-Ko-T7R.text" = "Sector:";
+
+/* Class = "UITextField"; placeholder = "Last Name"; ObjectID = "UTc-lJ-cnw"; */
+"UTc-lJ-cnw.placeholder" = "Last Name";
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "Us7-tc-3aP"; */
+"Us7-tc-3aP.text" = "Status";
+
+/* Class = "UITextField"; placeholder = "Gender (optional)"; ObjectID = "V4a-GD-29t"; */
+"V4a-GD-29t.placeholder" = "Gender (optional)";
+
+/* Class = "UITextField"; placeholder = "Business"; ObjectID = "V5Z-oS-gda"; */
+"V5Z-oS-gda.placeholder" = "Business";
+
+/* Class = "UILabel"; text = "Shortlisted"; ObjectID = "V7E-1M-BMo"; */
+"V7E-1M-BMo.text" = "Shortlisted";
+
+/* Class = "UINavigationItem"; title = "Add Job"; ObjectID = "Vab-Ft-IEE"; */
+"Vab-Ft-IEE.title" = "Add Job";
+
+/* Class = "UILabel"; text = "National Insurance number supplied"; ObjectID = "ViB-ki-TP1"; */
+"ViB-ki-TP1.text" = "National Insurance number supplied";
+
+/* Class = "UILabel"; text = "Get ready!"; ObjectID = "Vxe-bd-Ro9"; */
+"Vxe-bd-Ro9.text" = "Get ready!";
+
+/* Class = "UINavigationItem"; title = "Users"; ObjectID = "W8C-vq-EcD"; */
+"W8C-vq-EcD.title" = "Users";
+
+/* Class = "UITextField"; placeholder = "Region"; ObjectID = "WEa-Xi-9TI"; */
+"WEa-Xi-9TI.placeholder" = "Region";
+
+/* Class = "UILabel"; text = "Location:"; ObjectID = "Wet-MH-r7B"; */
+"Wet-MH-r7B.text" = "Location:";
+
+/* Class = "UILabel"; text = "9999K"; ObjectID = "Whg-CU-HVR"; */
+"Whg-CU-HVR.text" = "9999K";
+
+/* Class = "UILabel"; text = "CV:"; ObjectID = "Woj-Rn-kIs"; */
+"Woj-Rn-kIs.text" = "CV:";
+
+/* Class = "UITextField"; placeholder = "Work Places"; ObjectID = "XI6-Ln-as8"; */
+"XI6-Ln-as8.placeholder" = "Work Places";
+
+/* Class = "UINavigationItem"; title = "Add Business"; ObjectID = "XMp-Fa-cU4"; */
+"XMp-Fa-cU4.title" = "Add Business";
+
+/* Class = "UIButton"; normalTitle = "99 Credits"; ObjectID = "XQS-aA-5j0"; */
+"XQS-aA-5j0.normalTitle" = "99 Credits";
+
+/* Class = "UITextField"; placeholder = "Select Contract"; ObjectID = "Xy4-uh-wAS"; */
+"Xy4-uh-wAS.placeholder" = "Select Contract";
+
+/* Class = "UINavigationItem"; title = "All Messages"; ObjectID = "XyA-bp-IaE"; */
+"XyA-bp-IaE.title" = "All Messages";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Y3p-bX-eSI"; */
+"Y3p-bX-eSI.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "Delete user"; ObjectID = "YDv-SX-72a"; */
+"YDv-SX-72a.normalTitle" = "Delete user";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua."; ObjectID = "YmB-qq-JbA"; */
+"YmB-qq-JbA.text" = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua.";
+
+/* Class = "UITextField"; placeholder = "Email (Optional)"; ObjectID = "Yun-br-3ia"; */
+"Yun-br-3ia.placeholder" = "Email (Optional)";
+
+/* Class = "UILabel"; text = "By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I have been convicted of any criminal offence."; ObjectID = "YyG-SL-uo2"; */
+"YyG-SL-uo2.text" = "By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I have been convicted of any criminal offence.";
+
+/* Class = "UILabel"; text = "Previous interviews"; ObjectID = "Z6f-Vd-0Rh"; */
+"Z6f-Vd-0Rh.text" = "Previous interviews";
+
+/* Class = "UINavigationItem"; title = "Messages"; ObjectID = "Z9f-ld-nuy"; */
+"Z9f-ld-nuy.title" = "Messages";
+
+/* Class = "UILabel"; text = "Age:"; ObjectID = "ZO2-6n-7FJ"; */
+"ZO2-6n-7FJ.text" = "Age:";
+
+/* Class = "UITextField"; placeholder = "Telephone (optional)"; ObjectID = "ZVl-Np-rSH"; */
+"ZVl-Np-rSH.placeholder" = "Telephone (optional)";
+
+/* Class = "UIButton"; normalTitle = "Forgot password?"; ObjectID = "ZVx-H6-QTl"; */
+"ZVx-H6-QTl.normalTitle" = "Forgot password?";
+
+/* Class = "UILabel"; text = "Play Current"; ObjectID = "ZaM-a3-G2p"; */
+"ZaM-a3-G2p.text" = "Play Current";
+
+/* Class = "UILabel"; text = "Record Your Pitch"; ObjectID = "aQI-Tl-Nt7"; */
+"aQI-Tl-Nt7.text" = "Record Your Pitch";
+
+/* Class = "UIButton"; normalTitle = "Register"; ObjectID = "atM-51-Gec"; */
+"atM-51-Gec.normalTitle" = "Register";
+
+/* Class = "UINavigationItem"; title = "Arrange Interview"; ObjectID = "avd-fg-5iB"; */
+"avd-fg-5iB.title" = "Arrange Interview";
+
+/* Class = "UILabel"; text = "Video Pitch"; ObjectID = "b1V-dM-qHx"; */
+"b1V-dM-qHx.text" = "Video Pitch";
+
+/* Class = "UILabel"; text = "Date Time"; ObjectID = "bKA-3h-5FH"; */
+"bKA-3h-5FH.text" = "Date Time";
+
+/* Class = "UITextField"; placeholder = "Select Sector"; ObjectID = "bPT-9Q-UNY"; */
+"bPT-9Q-UNY.placeholder" = "Select Sector";
+
+/* Class = "UIButton"; normalTitle = "Record New Pitch"; ObjectID = "c8c-2z-a3y"; */
+"c8c-2z-a3y.normalTitle" = "Record New Pitch";
+
+/* Class = "UITextField"; placeholder = "Postcode"; ObjectID = "cYz-Up-Eax"; */
+"cYz-Up-Eax.placeholder" = "Postcode";
+
+/* Class = "UILabel"; text = "Recruiter's notes"; ObjectID = "ca3-nf-7su"; */
+"ca3-nf-7su.text" = "Recruiter's notes";
+
+/* Class = "UITextField"; placeholder = "Title"; ObjectID = "cac-LO-dCQ"; */
+"cac-LO-dCQ.placeholder" = "Title";
+
+/* Class = "UILabel"; text = "Previous interviews"; ObjectID = "ccU-hx-UGh"; */
+"ccU-hx-UGh.text" = "Previous interviews";
+
+/* Class = "UILabel"; text = "Record New"; ObjectID = "dTQ-t9-cbr"; */
+"dTQ-t9-cbr.text" = "Record New";
+
+/* Class = "UIButton"; normalTitle = "Apply"; ObjectID = "dnD-gF-6Ud"; */
+"dnD-gF-6Ud.normalTitle" = "Apply";
+
+/* Class = "UITextField"; placeholder = "Select Sectors"; ObjectID = "e5c-ET-4aO"; */
+"e5c-ET-4aO.placeholder" = "Select Sectors";
+
+/* Class = "UINavigationItem"; title = "Interviews"; ObjectID = "eGv-Ll-No7"; */
+"eGv-Ll-No7.title" = "Interviews";
+
+/* Class = "UINavigationItem"; title = "Job Details"; ObjectID = "eTc-DF-ezn"; */
+"eTc-DF-ezn.title" = "Job Details";
+
+/* Class = "UITextField"; placeholder = "Telephone (optional)"; ObjectID = "ecB-l4-JOM"; */
+"ecB-l4-JOM.placeholder" = "Telephone (optional)";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua."; ObjectID = "elH-ZO-Rv6"; */
+"elH-ZO-Rv6.text" = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua.";
+
+/* Class = "UIBarButtonItem"; title = "Select"; ObjectID = "eou-IJ-TnI"; */
+"eou-IJ-TnI.title" = "Select";
+
+/* Class = "UINavigationItem"; title = "Job Details"; ObjectID = "esa-hw-9Pm"; */
+"esa-hw-9Pm.title" = "Job Details";
+
+/* Class = "UIButton"; normalTitle = "Messages"; ObjectID = "eu2-lm-Sen"; */
+"eu2-lm-Sen.normalTitle" = "Messages";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "exF-Lw-5b2"; */
+"exF-Lw-5b2.placeholder" = "Email";
+
+/* Class = "UILabel"; text = "Active"; ObjectID = "eyE-JJ-WPP"; */
+"eyE-JJ-WPP.text" = "Active";
+
+/* Class = "UILabel"; text = "namehere@gmail.com"; ObjectID = "f2D-ef-8tu"; */
+"f2D-ef-8tu.text" = "namehere@gmail.com";
+
+/* Class = "UITextField"; placeholder = "City"; ObjectID = "fCk-k9-Lse"; */
+"fCk-k9-Lse.placeholder" = "City";
+
+/* Class = "UITextField"; placeholder = "National number (optional)"; ObjectID = "fat-BQ-i4I"; */
+"fat-BQ-i4I.placeholder" = "National number (optional)";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "fbu-Ca-A57"; */
+"fbu-Ca-A57.normalTitle" = "Cancel";
+
+/* Class = "UILabel"; text = "999Credit"; ObjectID = "fx9-wE-gEX"; */
+"fx9-wE-gEX.text" = "999Credit";
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "fzz-4E-wAO"; */
+"fzz-4E-wAO.text" = "Status";
+
+/* Class = "UIButton"; normalTitle = "Set My Location"; ObjectID = "gbf-z8-KLC"; */
+"gbf-z8-KLC.normalTitle" = "Set My Location";
+
+/* Class = "UINavigationItem"; title = "Apply Job"; ObjectID = "gd4-YH-9Nl"; */
+"gd4-YH-9Nl.title" = "Apply Job";
+
+/* Class = "UILabel"; text = "9+"; ObjectID = "gfY-be-Mf1"; */
+"gfY-be-Mf1.text" = "9+";
+
+/* Class = "UIButton"; normalTitle = "Upload CV"; ObjectID = "ghU-bQ-DGy"; */
+"ghU-bQ-DGy.normalTitle" = "Upload CV";
+
+/* Class = "UITextField"; placeholder = "Phone (optional)"; ObjectID = "go1-DE-33J"; */
+"go1-DE-33J.placeholder" = "Phone (optional)";
+
+/* Class = "UIButton"; normalTitle = "https://www.myjobpitch.com"; ObjectID = "h39-M0-soz"; */
+"h39-M0-soz.normalTitle" = "https://www.myjobpitch.com";
+
+/* Class = "UILabel"; text = "Work Places"; ObjectID = "hJb-Uf-ACT"; */
+"hJb-Uf-ACT.text" = "Work Places";
+
+/* Class = "UITextField"; placeholder = "Email Address"; ObjectID = "hVz-dU-Rg6"; */
+"hVz-dU-Rg6.placeholder" = "Email Address";
+
+/* Class = "UIButton"; normalTitle = "Don't have an account? Sign up"; ObjectID = "hqS-AM-W3P"; */
+"hqS-AM-W3P.normalTitle" = "Don't have an account? Sign up";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "i63-Wb-hqp"; */
+"i63-Wb-hqp.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "iCR-2e-xs9"; */
+"iCR-2e-xs9.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Job Profile"; ObjectID = "iFQ-Op-Soa"; */
+"iFQ-Op-Soa.title" = "Job Profile";
+
+/* Class = "UILabel"; text = "Contract:"; ObjectID = "iJ0-cT-MNX"; */
+"iJ0-cT-MNX.text" = "Contract:";
+
+/* Class = "UILabel"; text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua."; ObjectID = "iio-Sk-F6L"; */
+"iio-Sk-F6L.text" = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit, sed do\neiusmod tempor incididunt ut labore\net dolore magna aliqua.";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "jo9-dH-e6b"; */
+"jo9-dH-e6b.text" = "Name";
+
+/* Class = "UILabel"; text = "Video Pitch:"; ObjectID = "ke4-cf-hgA"; */
+"ke4-cf-hgA.text" = "Video Pitch:";
+
+/* Class = "UILabel"; text = "Email:"; ObjectID = "kmt-7S-D3H"; */
+"kmt-7S-D3H.text" = "Email:";
+
+/* Class = "UITextField"; placeholder = "Street"; ObjectID = "l0T-SY-586"; */
+"l0T-SY-586.placeholder" = "Street";
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "lLZ-1G-ILi"; */
+"lLZ-1G-ILi.text" = "Status";
+
+/* Class = "UITextField"; placeholder = "Email Address"; ObjectID = "lbD-kd-ugr"; */
+"lbD-kd-ugr.placeholder" = "Email Address";
+
+/* Class = "UILabel"; text = "Feedback"; ObjectID = "lcW-7g-Txm"; */
+"lcW-7g-Txm.text" = "Feedback";
+
+/* Class = "UILabel"; text = "9999K"; ObjectID = "loK-ch-uHu"; */
+"loK-ch-uHu.text" = "9999K";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "luM-bt-KBK"; */
+"luM-bt-KBK.normalTitle" = "Save";
+
+/* Class = "UILabel"; text = "sub title"; ObjectID = "mIe-zT-OHq"; */
+"mIe-zT-OHq.text" = "sub title";
+
+/* Class = "UITextField"; placeholder = "Phone (optional)"; ObjectID = "mOm-LQ-8GB"; */
+"mOm-LQ-8GB.placeholder" = "Phone (optional)";
+
+/* Class = "UIButton"; normalTitle = "Have an account? Sign in"; ObjectID = "mmg-Ov-8MQ"; */
+"mmg-Ov-8MQ.normalTitle" = "Have an account? Sign in";
+
+/* Class = "UIButton"; normalTitle = "Not Interested"; ObjectID = "mrj-Ge-5Ls"; */
+"mrj-Ge-5Ls.normalTitle" = "Not Interested";
+
+/* Class = "UILabel"; text = "Date Time"; ObjectID = "msd-kv-HRO"; */
+"msd-kv-HRO.text" = "Date Time";
+
+/* Class = "UINavigationItem"; title = "Add Application"; ObjectID = "mtg-Vb-tx8"; */
+"mtg-Vb-tx8.title" = "Add Application";
+
+/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "n4q-aH-8aH"; */
+"n4q-aH-8aH.normalTitle" = "Next";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "oRJ-OX-CyF"; */
+"oRJ-OX-CyF.placeholder" = "Password";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "oUt-5c-yHw"; */
+"oUt-5c-yHw.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "You will be able to apply and recruiters will be able to search and see your profile the moment its complete, what are you waiting for!"; ObjectID = "ond-VR-x2t"; */
+"ond-VR-x2t.text" = "You will be able to apply and recruiters will be able to search and see your profile the moment its complete, what are you waiting for!";
+
+/* Class = "UILabel"; text = "CV summary:"; ObjectID = "oso-DK-Saf"; */
+"oso-DK-Saf.text" = "CV summary:";
+
+/* Class = "UILabel"; text = "Email"; ObjectID = "otn-cJ-uch"; */
+"otn-cJ-uch.text" = "Email";
+
+/* Class = "UIButton"; normalTitle = "Reset my password"; ObjectID = "p3E-Ib-pWJ"; */
+"p3E-Ib-pWJ.normalTitle" = "Reset my password";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "p5Z-0T-bFm"; */
+"p5Z-0T-bFm.placeholder" = "Name";
+
+/* Class = "UIButton"; normalTitle = "Send Invitation"; ObjectID = "pCc-Nt-3jz"; */
+"pCc-Nt-3jz.normalTitle" = "Send Invitation";
+
+/* Class = "UILabel"; text = "9+"; ObjectID = "pQm-et-47o"; */
+"pQm-et-47o.text" = "9+";
+
+/* Class = "UILabel"; text = "In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search."; ObjectID = "pXm-sQ-9tp"; */
+"pXm-sQ-9tp.text" = "In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search.";
+
+/* Class = "UILabel"; text = "Check out our"; ObjectID = "pZL-ab-3Du"; */
+"pZL-ab-3Du.text" = "Check out our";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "pcg-Ct-adh"; */
+"pcg-Ct-adh.normalTitle" = "Save";
+
+/* Class = "UILabel"; text = "You have no applications."; ObjectID = "pfO-V2-Hwu"; */
+"pfO-V2-Hwu.text" = "You have no applications.";
+
+/* Class = "UILabel"; text = "Interview"; ObjectID = "phm-MU-m91"; */
+"phm-MU-m91.text" = "Interview";
+
+/* Class = "UIButton"; normalTitle = "Messages"; ObjectID = "pit-T3-WVZ"; */
+"pit-T3-WVZ.normalTitle" = "Messages";
+
+/* Class = "UIButton"; normalTitle = "Record Pitch"; ObjectID = "prj-hq-jeD"; */
+"prj-hq-jeD.normalTitle" = "Record Pitch";
+
+/* Class = "UITextField"; placeholder = "Address"; ObjectID = "pyH-Sm-FHw"; */
+"pyH-Sm-FHw.placeholder" = "Address";
+
+/* Class = "UITextField"; placeholder = "Select date/time"; ObjectID = "qXL-kc-rPk"; */
+"qXL-kc-rPk.placeholder" = "Select date/time";
+
+/* Class = "UILabel"; text = "0.04 Km"; ObjectID = "qaa-bK-Vfz"; */
+"qaa-bK-Vfz.text" = "0.04 Km";
+
+/* Class = "UILabel"; text = "Location"; ObjectID = "qkN-1I-xlx"; */
+"qkN-1I-xlx.text" = "Location";
+
+/* Class = "UILabel"; text = "No Interviews"; ObjectID = "qtm-iu-VcO"; */
+"qtm-iu-VcO.text" = "No Interviews";
+
+/* Class = "UILabel"; text = "0:13"; ObjectID = "rA2-Je-mlg"; */
+"rA2-Je-mlg.text" = "0:13";
+
+/* Class = "UILabel"; text = "Job Description"; ObjectID = "rAi-U5-qOy"; */
+"rAi-U5-qOy.text" = "Job Description";
+
+/* Class = "UINavigationItem"; title = "Add Employee"; ObjectID = "rWp-Tg-JSe"; */
+"rWp-Tg-JSe.title" = "Add Employee";
+
+/* Class = "UITextField"; placeholder = "Sex (optional)"; ObjectID = "reQ-FW-mgq"; */
+"reQ-FW-mgq.placeholder" = "Sex (optional)";
+
+/* Class = "UINavigationItem"; title = "Interview"; ObjectID = "rlo-k1-aXC"; */
+"rlo-k1-aXC.title" = "Interview";
+
+/* Class = "UILabel"; text = "Play Current"; ObjectID = "rne-JZ-C9b"; */
+"rne-JZ-C9b.text" = "Play Current";
+
+/* Class = "UILabel"; text = "Business Name"; ObjectID = "rwO-Yl-ACS"; */
+"rwO-Yl-ACS.text" = "Business Name";
+
+/* Class = "UIButton"; normalTitle = "Set My Location"; ObjectID = "rzB-ME-NJv"; */
+"rzB-ME-NJv.normalTitle" = "Set My Location";
+
+/* Class = "UITextField"; placeholder = "Telephone (optional)"; ObjectID = "s66-Br-dJe"; */
+"s66-Br-dJe.placeholder" = "Telephone (optional)";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "s8z-Jc-0q7"; */
+"s8z-Jc-0q7.text" = "Label";
+
+/* Class = "UILabel"; text = "5"; ObjectID = "sCO-Xq-8OG"; */
+"sCO-Xq-8OG.text" = "5";
+
+/* Class = "UILabel"; text = "user@email.com"; ObjectID = "sId-RY-NC4"; */
+"sId-RY-NC4.text" = "user@email.com";
+
+/* Class = "UIButton"; normalTitle = "Record later"; ObjectID = "sJA-fS-cxr"; */
+"sJA-fS-cxr.normalTitle" = "Record later";
+
+/* Class = "UIButton"; normalTitle = "Change Profile Photo"; ObjectID = "sTQ-Mu-lVO"; */
+"sTQ-Mu-lVO.normalTitle" = "Change Profile Photo";
+
+/* Class = "UIButton"; normalTitle = "Messages"; ObjectID = "sYF-QJ-g58"; */
+"sYF-QJ-g58.normalTitle" = "Messages";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "sf0-al-H24"; */
+"sf0-al-H24.text" = "Name";
+
+/* Class = "UIBarButtonItem"; title = "Sign in"; ObjectID = "tAQ-2V-1iP"; */
+"tAQ-2V-1iP.title" = "Sign in";
+
+/* Class = "UILabel"; text = "Workplace Description"; ObjectID = "tS3-Qk-yoX"; */
+"tS3-Qk-yoX.text" = "Workplace Description";
+
+/* Class = "UIButton"; normalTitle = "Apply"; ObjectID = "tTB-Ad-yfn"; */
+"tTB-Ad-yfn.normalTitle" = "Apply";
+
+/* Class = "UILabel"; text = "Full-time"; ObjectID = "taa-5h-mOy"; */
+"taa-5h-mOy.text" = "Full-time";
+
+/* Class = "UINavigationItem"; title = "Select Job"; ObjectID = "uNj-ij-1CX"; */
+"uNj-ij-1CX.title" = "Select Job";
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "uOa-od-BCQ"; */
+"uOa-od-BCQ.text" = "Status";
+
+/* Class = "UINavigationItem"; title = "Change Password"; ObjectID = "uTR-YY-CHG"; */
+"uTR-YY-CHG.title" = "Change Password";
+
+/* Class = "UIButton"; normalTitle = "Send Invitation"; ObjectID = "uVq-Dn-Dxp"; */
+"uVq-Dn-Dxp.normalTitle" = "Send Invitation";
+
+/* Class = "UINavigationItem"; title = "Edit User"; ObjectID = "uky-jB-0ID"; */
+"uky-jB-0ID.title" = "Edit User";
+
+/* Class = "UIButton"; normalTitle = "Chage Password"; ObjectID = "v3t-ix-Ezu"; */
+"v3t-ix-Ezu.normalTitle" = "Chage Password";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "vBh-Ja-9mW"; */
+"vBh-Ja-9mW.text" = "Label";
+
+/* Class = "UITextField"; placeholder = "Email Address"; ObjectID = "vSp-OV-dlH"; */
+"vSp-OV-dlH.placeholder" = "Email Address";
+
+/* Class = "UILabel"; text = "Date/Time"; ObjectID = "vff-Hj-Hmq"; */
+"vff-Hj-Hmq.text" = "Date/Time";
+
+/* Class = "UILabel"; text = "Date/Time:"; ObjectID = "vin-T7-poH"; */
+"vin-T7-poH.text" = "Date/Time:";
+
+/* Class = "UIButton"; normalTitle = "Remove"; ObjectID = "vuH-8r-xXq"; */
+"vuH-8r-xXq.normalTitle" = "Remove";
+
+/* Class = "UILabel"; text = "Great show who you are here for your next job"; ObjectID = "vwr-vs-jqo"; */
+"vwr-vs-jqo.text" = "Great show who you are here for your next job";
+
+/* Class = "UILabel"; text = "Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."; ObjectID = "vyS-eo-cZC"; */
+"vyS-eo-cZC.text" = "Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want.";
+
+/* Class = "UILabel"; text = "Email:"; ObjectID = "wHS-1b-ORQ"; */
+"wHS-1b-ORQ.text" = "Email:";
+
+/* Class = "UILabel"; text = "Business Name (Workplace Name)"; ObjectID = "wXv-cO-0o7"; */
+"wXv-cO-0o7.text" = "Business Name (Workplace Name)";
+
+/* Class = "UIButton"; normalTitle = "Create user"; ObjectID = "wrq-QB-EEh"; */
+"wrq-QB-EEh.normalTitle" = "Create user";
+
+/* Class = "UILabel"; text = "Credits:"; ObjectID = "xBd-8a-2nq"; */
+"xBd-8a-2nq.text" = "Credits:";
+
+/* Class = "UILabel"; text = "Date Time"; ObjectID = "xNR-3R-bMT"; */
+"xNR-3R-bMT.text" = "Date Time";
+
+/* Class = "UILabel"; text = "Date/Time"; ObjectID = "xUp-GX-Sas"; */
+"xUp-GX-Sas.text" = "Date/Time";
+
+/* Class = "UITextField"; placeholder = "Age (optional)"; ObjectID = "xsu-dn-cDc"; */
+"xsu-dn-cDc.placeholder" = "Age (optional)";
+
+/* Class = "UINavigationItem"; title = "HR System"; ObjectID = "y8E-fd-KOo"; */
+"y8E-fd-KOo.title" = "HR System";
+
+/* Class = "UILabel"; text = "Status:"; ObjectID = "yGn-nN-eo8"; */
+"yGn-nN-eo8.text" = "Status:";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "yT9-i6-o48"; */
+"yT9-i6-o48.placeholder" = "Password";
+
+/* Class = "UILabel"; text = "Credits cannot be added through the app, please go to our web page."; ObjectID = "yTG-8I-qFL"; */
+"yTG-8I-qFL.text" = "Credits cannot be added through the app, please go to our web page.";
+
+/* Class = "UILabel"; text = "National insurance number "; ObjectID = "yhB-U4-cd4"; */
+"yhB-U4-cd4.text" = "National insurance number ";
+
+/* Class = "UINavigationItem"; title = "Businesses"; ObjectID = "ykA-5a-q0r"; */
+"ykA-5a-q0r.title" = "Businesses";
+
+/* Class = "UILabel"; text = "Active"; ObjectID = "yrE-1x-bAz"; */
+"yrE-1x-bAz.text" = "Active";
+
+/* Class = "UILabel"; text = "Noname"; ObjectID = "zfh-no-53l"; */
+"zfh-no-53l.text" = "Noname";
+
+/* Class = "UILabel"; text = "About"; ObjectID = "zng-Be-eJE"; */
+"zng-Be-eJE.text" = "About";

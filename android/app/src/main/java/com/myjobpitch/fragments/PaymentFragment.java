@@ -16,9 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.pages.MainActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.ProductToken;
 import com.myjobpitch.tasks.APIAction;
@@ -73,18 +74,15 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Add Credits";
+        title = getString(R.string.add_credits);
 
         businessSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, new ArrayList<String>()));
-        businessSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                business = businesses.get(i);
-                creditsView.setText("Credits: " + business.getTokens());
-            }
+        businessSpinner.setOnItemClickListener((adapterView, view1, i, l) -> {
+            business = businesses.get(i);
+            creditsView.setText(getText(R.string.credits) + ": " + business.getTokens());
         });
 
-        productAdapter = new ProductAdapter(getApp(), new ArrayList<ProductModel>());
+        productAdapter = new ProductAdapter(getApp(), new ArrayList<>());
         productListView.setAdapter(productAdapter);
 
         showLoading(view);
@@ -94,14 +92,11 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     }
 
     void loadData() {
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                List<ProductToken> productTokens = MJPApi.shared().get(ProductToken.class);
-                products = new ArrayList<>();
-                for (ProductToken pt : productTokens) {
-                    products.add(new ProductModel(pt.getSku(), pt.getTokens()));
-                }
+        new APITask(() -> {
+            List<ProductToken> productTokens = MJPApi.shared().get(ProductToken.class);
+            products = new ArrayList<>();
+            for (ProductToken pt : productTokens) {
+                products.add(new ProductModel(pt.getSku(), pt.getTokens()));
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -116,12 +111,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     }
 
     void loadBusinesses() {
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                businesses = MJPApi.shared().getUserBusinesses();
-            }
-        }).addListener(new APITaskListener() {
+        new APITask(() -> businesses = MJPApi.shared().getUserBusinesses()).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 hideLoading();
@@ -131,7 +121,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                     businessNames.add(b.getName());
                     if (business != null && business.getName().equals(b.getName())) {
                         businessSpinner.setText(b.getName());
-                        creditsView.setText("Credits: " + b.getTokens());
+                        creditsView.setText(getText(R.string.credits) + ": "+ b.getTokens());
                     }
                 }
                 businessSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, businessNames));
@@ -153,36 +143,32 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
         mHelper = new IabHelper(getContext(), base64EncodedPublicKey);
         mHelper.enableDebugLogging(true);
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
+        mHelper.startSetup(result -> {
 
-                if (!result.isSuccess()) {
-                    new Popup(getContext())
-                            .setMessage("Problem setting up in-app billing")
-                            .addGreyButton("Ok", null)
-                            .show();
-                    return;
-                }
-
-                mBroadcastReceiver = new IabBroadcastReceiver(PaymentFragment.this);
-                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
-                getApp().registerReceiver(mBroadcastReceiver, broadcastFilter);
-
-                // IAB is fully set up. Now, let's get an inventory of stuff we own.
-                ArrayList skus = new ArrayList();
-                for (ProductModel p : products) {
-                    skus.add(p.sku);
-                }
-                try {
-                    mHelper.queryInventoryAsync(true, skus, null, mGotInventoryListener);
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    new Popup(getContext())
-                            .setMessage("Error querying inventory. Another async operation in progress.")
-                            .addGreyButton("Ok", null)
-                            .show();
-                }
-
+            if (!result.isSuccess()) {
+                Popup popup = new Popup(getContext(), R.string.problem_setting_in_app, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
+                return;
             }
+
+            mBroadcastReceiver = new IabBroadcastReceiver(PaymentFragment.this);
+            IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+            getApp().registerReceiver(mBroadcastReceiver, broadcastFilter);
+
+            // IAB is fully set up. Now, let's get an inventory of stuff we own.
+            ArrayList skus = new ArrayList();
+            for (ProductModel p : products) {
+                skus.add(p.sku);
+            }
+            try {
+                mHelper.queryInventoryAsync(true, skus, null, mGotInventoryListener);
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Popup popup = new Popup(getContext(), R.string.error_querying_inventory, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
+            }
+
         });
 
     }
@@ -214,7 +200,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        LoadingView.hide();
+//        Loading.hide();
 
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -228,10 +214,9 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         try {
             mHelper.queryInventoryAsync(mGotInventoryListener);
         } catch (IabHelper.IabAsyncInProgressException e) {
-            new Popup(getContext())
-                    .setMessage("Error querying inventory. Another async operation in progress.")
-                    .addGreyButton("Ok", null)
-                    .show();
+            Popup popup = new Popup(getContext(), R.string.error_querying_inventory, true);
+            popup.addGreyButton(R.string.ok, null);
+            popup.show();
         }
     }
 
@@ -243,10 +228,9 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             if (result.isFailure()) {
-                new Popup(getContext())
-                        .setMessage("Failed to query inventory")
-                        .addGreyButton("Ok", null)
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.error_querying_inventory, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
                 return;
             }
 
@@ -278,22 +262,20 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
             if (result.isFailure()) {
                 if (result.getResponse() != IabHelper.IABHELPER_USER_CANCELLED) {
-                    new Popup(getContext())
-                            .setMessage("purchasing Error")
-                            .addGreyButton("Ok", null)
-                            .show();
+                    Popup popup = new Popup(getContext(), R.string.error_purchasing, true);
+                    popup.addGreyButton(R.string.ok, null);
+                    popup.show();
                 }
                 return;
             }
             if (!purchase.getDeveloperPayload().equals(PAYLOAD)) {
-                new Popup(getContext())
-                        .setMessage("Error purchasing. Authenticity verification failed.")
-                        .addGreyButton("Ok", null)
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.error_purchasing, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
                 return;
             }
 
-            getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+            MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
                     .putInt("businessId", business.getId())
                     .apply();
 
@@ -305,16 +287,15 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
             if (result.isSuccess()) {
-                getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+                MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
                         .remove("businessId")
                         .apply();
                 currentPurchase = null;
                 loadBusinesses();
             } else {
-                new Popup(getContext())
-                        .setMessage("Error while consuming")
-                        .addGreyButton("Ok", null)
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.error_consuming, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
             }
         }
     };
@@ -332,25 +313,21 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.cell_product_list, parent, false);
             }
 
-            ((TextView)convertView.findViewById(R.id.product_credits)).setText(getItem(position).tokens + " Credits");
+            ((TextView)convertView.findViewById(R.id.product_credits)).setText(getItem(position).tokens + " " + getString(R.string.credits));
             ((TextView)convertView.findViewById(R.id.product_price)).setText(getItem(position).price);
 
-            convertView.findViewById(R.id.product_buy).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            convertView.findViewById(R.id.product_buy).setOnClickListener(v -> {
 
-                    if (!valid())
-                        return;
+                if (!valid())
+                    return;
 
-                    ProductModel product = getItem(position);
-                    try {
-                        mHelper.launchPurchaseFlow(getApp(), product.sku, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
-                    } catch (IabHelper.IabAsyncInProgressException e) {
-                        new Popup(getContext())
-                                .setMessage("Error launching purchase flow. Another async operation in progress.")
-                                .addGreyButton("Ok", null)
-                                .show();
-                    }
+                ProductModel product = getItem(position);
+                try {
+                    mHelper.launchPurchaseFlow(getApp(), product.sku, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    Popup popup = new Popup(getContext(), R.string.error_launching_purchase, true);
+                    popup.addGreyButton(R.string.ok, null);
+                    popup.show();
                 }
             });
 
@@ -376,7 +353,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             String productId = currentPurchase.getSku();
             String purchaseToken = currentPurchase.getToken();
 
-            int businessId = getApp().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE)
+            int businessId = MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE)
                     .getInt("businessId", businesses.get(0).getId());
 
             try {
@@ -395,10 +372,9 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         protected void onPostExecute(Business business) {
             if (business == null ) {
                 hideLoading();
-                new Popup(getContext())
-                        .setMessage("Connection Error: Please check your internet connection")
-                        .addGreyButton("Ok", null)
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.error_no_connection, true);
+                popup.addGreyButton(R.string.ok, null);
+                popup.show();
             } else {
                 try {
                     mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);

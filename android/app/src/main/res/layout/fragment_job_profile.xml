@@ -24,9 +24,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
-                    android:hint="Sectors"
+                    android:hint="@string/sectors"
                     app:met_floatingLabel="normal"
-                    app:met_primaryColor="@color/greenColor"/>
+                    app:met_primaryColor="@color/colorGreen"/>
                 <Button
                     android:id="@+id/job_profile_sectors_button"
                     android:layout_width="match_parent"
@@ -39,28 +39,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Contract"
+                android:hint="@string/contact"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                 android:id="@+id/job_profile_hours"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Hours"
+                android:hint="@string/hours"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <TextView
-                android:text="Job match area"
+                android:text="@string/job_match_area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:theme="@style/GreyLabel" />
 
             <TextView
-                android:text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search."
+                android:text="@string/job_match_area_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -79,10 +79,10 @@
                         android:id="@+id/job_profile_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Address"
+                        android:hint="@string/address"
                         android:focusable="false"/>
                     <TextView
-                        android:text="Set My Location"
+                        android:text="@string/set_my_location"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/button_height"
                         android:gravity="center"
@@ -94,7 +94,6 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="5dp"
                     android:src="@drawable/icon_location"
@@ -113,13 +112,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Radius"
+                android:hint="@string/radius"
                 app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/greenColor"/>
+                app:met_primaryColor="@color/colorGreen"/>
 
             <Button
                 android:id="@+id/job_profile_save"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="16dp"

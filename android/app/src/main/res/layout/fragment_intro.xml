@@ -1,18 +1,20 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".pages.IntroActivity">
+    tools:context=".activities.IntroActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/intro_title"
+        android:text="Welcome to Reported PD, a safe, private space to share stories of police interactions."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         android:gravity="center"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:id="@+id/onboarding_title"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,10 +25,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"/>
         <ImageView
-            android:id="@+id/intro_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"/>
+            android:layout_weight="3"
+            android:src="@drawable/logo"
+            android:id="@+id/onboarding_image"/>
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,11 +37,12 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/intro_comment"
+        android:text="Welcome to Reported PD, a safe, private space to share stories of police interactions."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="center"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:id="@+id/onboarding_comment"/>
 
 </FrameLayout>

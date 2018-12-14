@@ -18,7 +18,11 @@ class JobDetailsController: MJPController {
     public var job: Job!
     
     var menuItems = [ "find_talent", "applications", "applications", "applications", "interviews" ]
-    var titles = [ "Find Talent", "New Applications", "My Connections", "My Shortlist", "Interviews" ]
+    var titles = [ NSLocalizedString("Find Talent", comment: ""),
+                   NSLocalizedString("New Applications", comment: ""),
+                   NSLocalizedString("My Connections", comment: ""),
+                   NSLocalizedString("My Shortlist", comment: ""),
+                   NSLocalizedString("Interviews", comment: "") ]
     var counts = [ "", "", "", "", "" ]
     
     override func viewDidLoad() {
@@ -31,8 +35,8 @@ class JobDetailsController: MJPController {
         }
         
         editRemoveView.removeCallback = {
-            let message = String(format: "Are you sure you want to delete %@", self.job.title)
-            PopupController.showYellow(message, ok: "Delete", okCallback: {
+            let message = String(format: NSLocalizedString("Are you sure you want to delete %@", comment: ""), self.job.title)
+            PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
                 
                 self.showLoading()
                 AppData.removeJob(self.job) { error in
@@ -43,7 +47,7 @@ class JobDetailsController: MJPController {
                     }                    
                 }
                 
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
         }
     }
     

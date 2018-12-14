@@ -55,7 +55,7 @@ class JobseekerDetailsController: MJPController {
         
         if application == nil && jobseeker == nil {
             
-            title = "Profile"
+            title = NSLocalizedString("Profile", comment: "")
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
             
             isProfile = true
@@ -85,16 +85,24 @@ class JobseekerDetailsController: MJPController {
     
     func loadData() {
         
+        var connected = false
+        var external = false
+        var status: NSNumber = -1
+        
         if application != nil {
             application = (AppData.applications.filter { $0.id == application.id })[0]
             interview = application?.getInterview()
             interviews = (application.interviews as! [Interview]).filter { $0.id != interview?.id }
             jobseeker = application?.jobseeker
             
+            status = application.status
+            connected = status == ApplicationStatus.APPLICATION_ESTABLISHED_ID
+            external = application.messages.count == 0
+            
             shortlisted.isOn = application.shortlisted
             
             let newMsgs = application.getNewMessageCount()
-            badge.text = "\(newMsgs)"
+            badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
             badge.isHidden = newMsgs == 0
         } else {
             interview = nil
@@ -115,35 +123,43 @@ class JobseekerDetailsController: MJPController {
         resource.isCircleView = true
         resources.append(resource)
         
+        pageControl.numberOfPages = resources.count
+        pageControl.isHidden = resources.count <= 1
+
+        carousel.bounces = false
+        carousel.reloadData()
+        
         nameLabel.text = jobseeker.getFullName()
         
-        if jobseeker.sex != nil && (jobseeker.sexPublic || isProfile) {
+        var visible = jobseeker.sex != nil && (jobseeker.sexPublic || isProfile)
+        if visible {
             genderLabel.text = AppData.getNameByID(AppData.sexes, id: jobseeker.sex) + (!jobseeker.sexPublic ? " (private)" : "")
-            genderLabel.superview?.isHidden = false
-        } else {
-            genderLabel.superview?.isHidden = true
         }
+        genderLabel.superview?.isHidden = !visible
         
-        if jobseeker.age != nil && (jobseeker.agePublic || isProfile) {
-            ageLabel.text = jobseeker.age.stringValue + (!jobseeker.agePublic ? " (private)" : "")
-            ageLabel.superview?.isHidden = false
-        } else {
-            ageLabel.superview?.isHidden = true
+        visible = jobseeker.age != nil && (jobseeker.agePublic || isProfile)
+        if visible {
+            ageLabel.text = jobseeker.age.stringValue + (!jobseeker.agePublic ? NSLocalizedString(" (private)", comment: "") : "")
         }
+        ageLabel.superview?.isHidden = !visible
         
-        if jobseeker.email != nil && ((jobseeker.emailPublic && application != nil) || isProfile) {
-            emailLabel.text = jobseeker.email + (!jobseeker.emailPublic ? " (private)" : "")
-            emailLabel.superview?.isHidden = false
-        } else {
-            emailLabel.superview?.isHidden = true
+        visible = jobseeker.email != nil && ((jobseeker.emailPublic && application != nil) || isProfile)
+        if visible {
+            emailLabel.text = jobseeker.email + (!jobseeker.emailPublic ? NSLocalizedString(" (private)", comment: "") : "")
         }
+        emailLabel.superview?.isHidden = !visible
         
-        if jobseeker.mobile != nil && jobseeker.mobile != "" && ((jobseeker.mobilePublic && application != nil) || isProfile) {
-            mobileLabel.text = jobseeker.mobile + (!jobseeker.mobilePublic ? " (private)" : "")
-            mobileLabel.superview?.isHidden = false
-        } else {
-            mobileLabel.superview?.isHidden = true
+        visible = jobseeker.mobile != nil && jobseeker.mobile != "" && ((jobseeker.mobilePublic && application != nil) || isProfile)
+        if visible {
+            mobileLabel.text = jobseeker.mobile + (!jobseeker.mobilePublic ? NSLocalizedString(" (private)", comment: "") : "")
         }
+        mobileLabel.superview?.isHidden = !visible
+        
+        shortlisted.superview?.isHidden = viewMode || !connected
+        
+        removeBtnView.isHidden = (status == ApplicationStatus.APPLICATION_DELETED_ID) || viewMode || isProfile
+        connectBtnView.isHidden = (application != nil && status != ApplicationStatus.APPLICATION_CREATED_ID) || viewMode || isProfile
+        arrangeBtnView.isHidden = !connected || interview != nil || external || viewMode || isProfile
         
         interviewInfo.superview?.isHidden = viewMode || interview == nil
         if (!(interviewInfo.superview?.isHidden)!) {
@@ -153,29 +169,14 @@ class JobseekerDetailsController: MJPController {
             interviewInfo.cancelCallback = cancelInterview
         }
         
+        messageBtnView.isHidden = !connected || external || viewMode || isProfile
+        
         availableView.isHidden = !jobseeker.hasReferences
         nationalNumberView.isHidden = !jobseeker.has_national_insurance_number
         truthfulView.isHidden = !jobseeker.truthConfirmation
         
-        // contact info
-        
-        let connected = application?.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID
-        let external = application != nil && application.messages.count == 0
-        
-        shortlisted.superview?.isHidden = viewMode || !connected
-        connectBtnView.isHidden = viewMode || isProfile || (application != nil && application?.status != ApplicationStatus.APPLICATION_CREATED_ID)
-        removeBtnView.isHidden = viewMode || isProfile || (application != nil && application?.status == ApplicationStatus.APPLICATION_DELETED_ID)
-        arrangeBtnView.isHidden = viewMode || isProfile || !connected || interview != nil || external
-        messageBtnView.isHidden = viewMode || isProfile || !connected || external
-        
         overviewLabel.text = jobseeker.desc
         cvButton.isHidden = jobseeker.cv == nil
-        
-        pageControl.numberOfPages = resources.count
-        pageControl.isHidden = resources.count <= 1
-        
-        carousel.bounces = false
-        carousel.reloadData()
         
         historyTitleView.isHidden = interviews.count == 0
         
@@ -237,8 +238,8 @@ class JobseekerDetailsController: MJPController {
     
     @IBAction func connectAction(_ sender: Any) {
         
-        let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
-        PopupController.showGreen(message, ok: "Connect (1 credit)", okCallback: {
+        let message = application == nil ? NSLocalizedString("Are you sure you want to connect this talent?", comment: "") : NSLocalizedString("Are you sure you want to connect this application?", comment: "")
+        PopupController.showGreen(message, ok: NSLocalizedString("Connect (1 credit)", comment: ""), okCallback: {
             
             self.showLoading()
             
@@ -273,13 +274,13 @@ class JobseekerDetailsController: MJPController {
                 }
             }
             
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     @IBAction func removeAction(_ sender: Any) {
         
-        let message = application == nil ? "Are you sure you want to delete this talent?" : "Are you sure you want to delete this application?"
-        PopupController.showYellow(message, ok: "Delete", okCallback: {
+        let message = application == nil ? NSLocalizedString("Are you sure you want to delete this talent?", comment: "") : NSLocalizedString("Are you sure you want to delete this application?", comment: "")
+        PopupController.showYellow(message, ok: NSLocalizedString("Delete", comment: ""), okCallback: {
             
             self.showLoading()
 
@@ -305,7 +306,7 @@ class JobseekerDetailsController: MJPController {
                 }
             }
             
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     @IBAction func arrangeAction(_ sender: Any) {
@@ -323,7 +324,8 @@ class JobseekerDetailsController: MJPController {
     }
     
     func cancelInterview() {
-        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+        PopupController.showYellow(NSLocalizedString("Are you sure you want to cancel this interview?", comment: ""),
+                                   ok: NSLocalizedString("Ok", comment: ""), okCallback: {
             self.showLoading()
             API.shared().deleteInterview(self.interview.id) { error in
                 if error == nil {
@@ -332,7 +334,7 @@ class JobseekerDetailsController: MJPController {
                     self.handleError(error)
                 }
             }
-        }, cancel: "Cancel", cancelCallback: nil)
+        }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
     }
     
     @IBAction func messagesAction(_ sender: Any) {
@@ -389,9 +391,9 @@ extension JobseekerDetailsController: UITableViewDataSource {
         let interview = interviews[indexPath.row]
         var status1 = ""
         if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-            status1 = "Completed"
+            status1 = NSLocalizedString("Completed", comment: "")
         } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-            status1 = "Cancelled"
+            status1 = NSLocalizedString("Cancelled", comment: "")
         }
         
         (cell.viewWithTag(1) as! UILabel).text = AppHelper.dateToShortString(interview.at)

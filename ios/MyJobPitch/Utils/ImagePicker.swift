@@ -20,17 +20,17 @@ class ImagePicker: NSObject {
     func present(_ controller: UIViewController, target: UIView) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let cameraAction = UIAlertAction(title: "Take Photo", style: .default) { (_) in
+        let cameraAction = UIAlertAction(title: NSLocalizedString("Take Photo1", comment: ""), style: .default) { (_) in
             self.showImagePicker(controller, type:.camera)
         }
         actionSheet.addAction(cameraAction)
         
-        let photoAction = UIAlertAction(title: "Photo library", style: .default) { (_) in
+        let photoAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: ""), style: .default) { (_) in
             self.showImagePicker(controller, type:.photoLibrary)
         }
         actionSheet.addAction(photoAction)
         
-        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
+        let googledriveAction = UIAlertAction(title: NSLocalizedString("Google Drive", comment: ""), style: .default) { (_) in
             let browser = GoogleDriveController.instantiate()
             browser.downloadCallback = { (path) in
                 self.downloadedImage(path)
@@ -40,7 +40,7 @@ class ImagePicker: NSObject {
         }
         actionSheet.addAction(googledriveAction)
         
-        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
+        let dropboxAction = UIAlertAction(title: NSLocalizedString("Dropbox", comment: ""), style: .default) { (_) in
             let browser = GoogleDriveController.instantiate()
             browser.downloadCallback = { (path) in
                 self.downloadedImage(path)
@@ -50,7 +50,7 @@ class ImagePicker: NSObject {
         }
         actionSheet.addAction(dropboxAction)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         
         if let popoverController = actionSheet.popoverPresentationController {
@@ -72,7 +72,8 @@ class ImagePicker: NSObject {
             picker.sourceType = type
             controller.present(picker, animated: true, completion: nil)
         } else {
-            PopupController.showGray("You don't have camera.", ok: "OK")
+            PopupController.showGray(NSLocalizedString("You don't have camera.", comment: ""),
+                                     ok: NSLocalizedString("Ok", comment: ""))
         }
     }
     

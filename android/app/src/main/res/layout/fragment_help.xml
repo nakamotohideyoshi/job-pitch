@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:orientation="vertical"
         android:background="#fff">
 
@@ -26,7 +26,7 @@
                 android:src="@drawable/help_about"
                 android:tint="@color/colorPrimary"/>
             <TextView
-                android:text="About"
+                android:text="@string/about"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -51,7 +51,7 @@
                 android:src="@drawable/help_how_it"
                 android:tint="@color/colorPrimary"/>
             <TextView
-                android:text="How it works"
+                android:text="@string/how_it"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -76,7 +76,7 @@
                 android:src="@drawable/help_terms"
                 android:tint="@color/colorPrimary"/>
             <TextView
-                android:text="Terms and Conditions"
+                android:text="@string/terms"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -101,7 +101,7 @@
                 android:src="@drawable/help_privacy"
                 android:tint="@color/colorPrimary"/>
             <TextView
-                android:text="Privacy"
+                android:text="@string/privacy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

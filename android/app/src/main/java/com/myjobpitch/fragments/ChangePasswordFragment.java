@@ -41,7 +41,7 @@ public class ChangePasswordFragment extends FormFragment {
         View view = inflater.inflate(R.layout.fragment_change_password, container, false);
         ButterKnife.bind(this, view);
 
-        mEmailView.setText("Email: " + getApp().loadData(AppData.KEY_EMAIL));
+        mEmailView.setText("Email: " + AppData.getEmail());
 
         return  view;
     }
@@ -64,20 +64,16 @@ public class ChangePasswordFragment extends FormFragment {
         final String password2 = mPasswordView2.getText().toString();
 
         showLoading();
-        new APITask(new APIAction() {
-            @Override
-            public void run()  {
-                ChangePassword changepassword = new ChangePassword(password1, password2);
-                MJPApi.shared().changePassword(changepassword);
-            }
+        new APITask(() -> {
+            ChangePassword changepassword = new ChangePassword(password1, password2);
+            MJPApi.shared().changePassword(changepassword);
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 hideLoading();
-                new Popup(getContext())
-                        .setMessage("Success!")
-                        .addGreenButton("Ok", null)
-                        .show();
+                Popup popup = new Popup(getContext(), R.string.success, true);
+                popup.addGreenButton(R.string.ok, null);
+                popup.show();
             }
             @Override
             public void onError(JsonNode errors) {

@@ -41,7 +41,7 @@ class AppInfoMiddleView: UIView {
     var interview: Interview! {
         didSet {
             if interview != nil {
-                let str = "Interview: " + AppHelper.dateToLongString((interview?.at)!)
+                let str = String(format: "%@: %@", NSLocalizedString("Interview", comment: ""), AppHelper.dateToLongString((interview?.at)!))
                 let subTitleParameters = [NSForegroundColorAttributeName : interview?.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
                 attributeLabel.attributedText = NSMutableAttributedString(string: str, attributes: subTitleParameters)
             }

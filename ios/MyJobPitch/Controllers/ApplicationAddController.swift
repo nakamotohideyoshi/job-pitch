@@ -90,16 +90,18 @@ class ApplicationAddController: MJPController {
     }
     
     @IBAction func nationalNumberHelp(_ sender: Any) {
-        PopupController.showGray("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", comment: ""), ok: NSLocalizedString("Close", comment: ""))
     }
     
     
     @IBAction func cvHelpAction(_ sender: Any) {
-        PopupController.showGray("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func cvAddHelpAction(_ sender: Any) {
-        PopupController.showGray("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", ok: "Close")
+        PopupController.showGray(NSLocalizedString("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", comment: ""),
+                                 ok: NSLocalizedString("Close", comment: ""))
     }
     
     @IBAction func cvCancelAction(_ sender: Any) {
@@ -181,7 +183,7 @@ class ApplicationAddController: MJPController {
             
             if self.cvdata != nil {
                 let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                self.showLoading("Uploading data...", withProgress: rate)
+                self.showLoading(NSLocalizedString("Uploading data...", comment: ""), withProgress: rate)
             }
             
         }) { (result, error) in
@@ -207,7 +209,7 @@ extension ApplicationAddController: ImagePickerDelegate {
     
     func imageSelected(_ picker: ImagePicker, image: UIImage) {
         cvdata = UIImagePNGRepresentation(image)
-        cvComment.text = "CV added: save to upload."
+        cvComment.text = NSLocalizedString("CV added: save to upload.", comment: "")
         cvCancelButton.isHidden = false
     }
 }

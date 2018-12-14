@@ -20,7 +20,9 @@ class WebViewController: MJPController {
         
         webView.scrollView.bounces = false
         
-        let path = Bundle.main.path(forResource: file, ofType: "html")!
+        let filename = file + NSLocalizedString("-help-file", comment: "")
+        
+        let path = Bundle.main.path(forResource: filename, ofType: "html")!
         do {
             let content = try String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
             webView.loadHTMLString(content, baseURL: nil)

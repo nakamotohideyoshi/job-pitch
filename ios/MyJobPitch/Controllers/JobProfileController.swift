@@ -30,7 +30,11 @@ class JobProfileController: MJPController {
     var hoursNames = [String]()
     var selectedHoursNames = [String]()
     
-    var radiusData = [(1, "1 mile"), (2, "2 miles"), (5, "5 miles"), (10, "10 miles"), (50, "50 miles")]
+    var radiusData = [(1, "1 " + NSLocalizedString("mile", comment: "")),
+                      (2, "2 " + NSLocalizedString("miles", comment: "")),
+                      (5, "5 " + NSLocalizedString("miles", comment: "")),
+                      (10, "10 " + NSLocalizedString("miles", comment: "")),
+                      (50, "50 " + NSLocalizedString("miles", comment: ""))]
     var radiusNames = [String]()
     var selectedRadiusNames = [String]()
     
@@ -70,7 +74,7 @@ class JobProfileController: MJPController {
         // contract data
         
         contractNames = AppData.contracts.map { $0.name }
-        contractNames.insert("Any", at: 0)
+        contractNames.insert(NSLocalizedString("Any", comment: ""), at: 0)
         contractField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.contractNames,
@@ -86,7 +90,7 @@ class JobProfileController: MJPController {
         // hours data
         
         hoursNames = AppData.hours.map { $0.name }
-        hoursNames.insert("Any", at: 0)
+        hoursNames.insert(NSLocalizedString("Any", comment: ""), at: 0)
         hoursField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.hoursNames,
@@ -140,7 +144,7 @@ class JobProfileController: MJPController {
             selectedContractNames = (AppData.contracts.filter { $0.id == profile?.contract }).map { $0.name }
         }
         if selectedContractNames.count == 0 {
-            selectedContractNames.append("Any")
+            selectedContractNames.append(NSLocalizedString("Any", comment: ""))
         }
         contractField.text = selectedContractNames.joined(separator: ", ")
         
@@ -150,7 +154,7 @@ class JobProfileController: MJPController {
             selectedHoursNames = (AppData.hours.filter { $0.id == profile?.hours }).map { $0.name }
         }
         if selectedHoursNames.count == 0 {
-            selectedHoursNames.append("Any")
+            selectedHoursNames.append(NSLocalizedString("Any", comment: ""))
         }
         hoursField.text = selectedHoursNames.joined(separator: ", ")
         
@@ -247,7 +251,8 @@ class JobProfileController: MJPController {
             
             AppData.profile = result as! Profile
             
-            PopupController.showGreen("Success!", ok: "OK", okCallback: {
+            PopupController.showGreen(NSLocalizedString("Success!", comment: ""),
+                                      ok: NSLocalizedString("Ok", comment: ""), okCallback: {
                 if AppData.jobseeker.profile == nil {
                     AppData.jobseeker.profile = AppData.profile.id
                     AppData.startTimer()

@@ -11,7 +11,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Jobseeker;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 
@@ -20,20 +20,10 @@ import java.util.List;
 
 public class TalentApplicationsFragment extends ApplicationsFragment {
 
-    View noPitchView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = initView(inflater, container, R.drawable.swipe_icon_message, "You have no applications.", R.layout.cell_application_list);
-
-        noPitchView = view.findViewById(R.id.nopitch_view);
-        view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getApp().setRootFragement(R.id.menu_record);
-            }
-        });
+        View view = initView(inflater, container, R.drawable.swipe_icon_message, getString(R.string.applications_empty_text), R.layout.cell_application_list);
 
         return  view;
     }
@@ -48,17 +38,8 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
     }
     @Override
     protected List<Application> getApplications() {
-        Jobseeker jobseeker = MJPApi.shared().get(Jobseeker.class, AppData.user.getJob_seeker());
-        if (jobseeker.getPitch() == null) {
-            Handler mainHandler = new Handler(TalentApplicationsFragment.this.getContext().getMainLooper());
-
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    noPitchView.setVisibility(View.VISIBLE);
-                }
-            };
-            mainHandler.post(myRunnable);
+        JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+        if (jobSeeker.getPitch() == null) {
             return new ArrayList<>();
         }
 
@@ -79,7 +60,7 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void selectedApplication(Application application) {
-        ApplicationDetailsFragment fragment = new ApplicationDetailsFragment();
+        ApplicationDetailFragment fragment = new ApplicationDetailFragment();
         fragment.application = application;
         getApp().pushFragment(fragment);
     }

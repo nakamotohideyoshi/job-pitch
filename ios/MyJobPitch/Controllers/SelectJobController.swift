@@ -19,9 +19,9 @@ class SelectJobController: MJPController {
     var jobs: [Job]!
     
     var titles = [
-        "find_talent":  "Select job bellow to start finding talent for your business.",
-        "applications": "Select a job below to view applications",
-        "interviews":    "Select a job below to view and arrange interviews.",
+        "find_talent":  NSLocalizedString("Select job bellow to start finding talent for your business", comment: ""),
+        "applications": NSLocalizedString("Select a job below to view applications", comment: ""),
+        "interviews":   NSLocalizedString("Select a job below to view and arrange interviews", comment: ""),
     ]
     
     override func viewDidLoad() {
@@ -30,11 +30,11 @@ class SelectJobController: MJPController {
         var item = SideMenuController.menuItems[SideMenuController.currentID]!
         infoView.setDescription(icon: item["icon"]!, text: titles[SideMenuController.currentID]!)
         
-        toolbar.titleLabel.text = "SELECT A JOB"
+        toolbar.titleLabel.text = NSLocalizedString("SELECT A JOB", comment: "")
         toolbar.rightAction = jobAdd
         
-        emptyView.message.text = "You have not added any jobs yet."
-        emptyView.button.setTitle("Create job", for: .normal)
+        emptyView.message.text = NSLocalizedString("You have not added any jobs yet.", comment: "")
+        emptyView.button.setTitle(NSLocalizedString("Create job", comment: ""), for: .normal)
         emptyView.action = jobAdd
         
         tableView.addPullToRefresh {

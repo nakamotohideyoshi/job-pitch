@@ -37,8 +37,8 @@ class DropboxController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
 
         if let _ = DropboxClientsManager.authorizedClient {
-            if navigationItem.rightBarButtonItem?.title == "Sign in" {
-                navigationItem.rightBarButtonItem?.title = "Sign out"
+            if navigationItem.rightBarButtonItem?.title == NSLocalizedString("Sign in", comment: "") {
+                navigationItem.rightBarButtonItem?.title = NSLocalizedString("Sign out", comment: "")
                 arrPath = [""]
                 
                 tableView.infiniteScrollingView.startAnimating()
@@ -87,7 +87,7 @@ class DropboxController: UIViewController {
         loading.addToView(parentView: view)
         loading.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         loading.labelView.isHidden = false
-        loading.labelView.text = "Downloading..."
+        loading.labelView.text = NSLocalizedString("Downloading...", comment: "")
         
         let path = "/" + arrPath.joined(separator: "/") + file.name
         let destPath = NSHomeDirectory().appendingFormat("/Documents/%@", file.name.replacingOccurrences(of: " ", with: ""))
@@ -116,9 +116,9 @@ class DropboxController: UIViewController {
                         case .path (let lookupError):
                             switch lookupError {
                             case .restrictedContent:
-                                PopupController.showGreen("The file cannot be downloaded because the content is restricted...",
+                                PopupController.showGreen(NSLocalizedString("The file cannot be downloaded because the content is restricted...", comment: ""),
                                                           ok: nil, okCallback: nil,
-                                                          cancel: "OK", cancelCallback: nil)
+                                                          cancel: NSLocalizedString("Ok", comment: ""), cancelCallback: nil)
                             default: break
                             }
                         case .other:
@@ -136,7 +136,7 @@ class DropboxController: UIViewController {
         if let _ = DropboxClientsManager.authorizedClient {
 
             DropboxClientsManager.unlinkClients()
-            navigationItem.rightBarButtonItem?.title = "Sign in"
+            navigationItem.rightBarButtonItem?.title = NSLocalizedString("Sign in", comment: "")
             files.removeAll()
             tableView.reloadData()
 
@@ -237,10 +237,10 @@ extension DropboxController: UITableViewDelegate {
 
         } else {
 
-            let title = String(format: "Do you want to download %@?", metadata.name)
-            PopupController.showGreen(title, ok: "Download", okCallback: {
+            let title = String(format: NSLocalizedString("Do you want to download %@?", comment: ""), metadata.name)
+            PopupController.showGreen(title, ok: NSLocalizedString("Download", comment: ""), okCallback: {
                 self.downloadFile(file: metadata as! Files.FileMetadata)
-            }, cancel: "Cancel", cancelCallback: nil)
+            }, cancel: NSLocalizedString("Cancel", comment: ""), cancelCallback: nil)
 
         }
     }

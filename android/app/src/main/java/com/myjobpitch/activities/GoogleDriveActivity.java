@@ -42,7 +42,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -103,65 +102,55 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         }
 
         mToolbar.setNavigationIcon(R.drawable.ic_back);
-        mToolbar.setTitle("Google Drive");
+        mToolbar.setTitle(R.string.google_drive);
         setSupportActionBar(mToolbar);
 
         // pull to refresh
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.greenColor, R.color.yellowColor);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (arrPath.size() > 0) {
-                    new GetFilesTask().execute();
-                } else {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorGreen, R.color.colorYellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (arrPath.size() > 0) {
+                new GetFilesTask().execute();
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
         // list view
 
         if (adapter == null) {
-            adapter = new FilesAdapter(this, new ArrayList<File>());
+            adapter = new FilesAdapter(this, new ArrayList<>());
         } else {
             adapter.clear();
         }
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final File file = adapter.getItem(position);
-                if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                    String fileId = file.getId();
-                    if (fileId != null) {
-                        arrPath.add(fileId);
-                        if (folderIconLink == null) {
-                            folderIconLink = file.getIconLink();
-                        }
-                    } else {
-                        arrPath.remove(arrPath.size()-1);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            final File file = adapter.getItem(position);
+            if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                String fileId = file.getId();
+                if (fileId != null) {
+                    arrPath.add(fileId);
+                    if (folderIconLink == null) {
+                        folderIconLink = file.getIconLink();
                     }
-                    adapter.clear();
-                    new GetFilesTask().execute();
                 } else {
-                    try {
-                        if (file.getSize() > 0) {
-                            String title = String.format("Do you want to download %s?", file.getName());
-                            new Popup(GoogleDriveActivity.this)
-                                    .setMessage(title)
-                                    .addGreenButton("Download", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            selectedFile = file;
-                                            download();
-                                        }
-                                    })
-                                    .addGreyButton("Cancel", null)
-                                    .show();
-                        }
-                    } catch (Exception e) {
+                    arrPath.remove(arrPath.size()-1);
+                }
+                adapter.clear();
+                new GetFilesTask().execute();
+            } else {
+                try {
+                    if (file.getSize() > 0) {
+                        String title = String.format(getString(R.string.download_message), file.getName());
+                        Popup popup = new Popup(GoogleDriveActivity.this, title, true);
+                        popup.addGreenButton(R.string.download, v -> {
+                            selectedFile = file;
+                            download();
+                        });
+                        popup.addGreyButton(R.string.cancel, null);
+                        popup.show();
                     }
+                } catch (Exception e) {
                 }
             }
         });
@@ -196,10 +185,9 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         } else if (switchAccountRequest || mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            new Popup(this)
-                    .setMessage("No network connection available.")
-                    .addGreyButton("Ok", null)
-                    .show();
+            Popup popup = new Popup(this, R.string.error_no_connection, true);
+            popup.addGreyButton(R.string.ok, null);
+            popup.show();
         } else {
             SharedPreferences prefs = getSharedPreferences("googledrive", MODE_PRIVATE);
             prefs.edit().putString("account", mCredential.getSelectedAccountName()).apply();
@@ -225,7 +213,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         } else {
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(this,
-                    "This app needs to access your Google account (via Contacts).",
+                    getString(R.string.google_drive_permission),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -244,10 +232,9 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    new Popup(this)
-                            .setMessage("This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.")
-                            .addGreyButton("Ok", null)
-                            .show();
+                    Popup popup = new Popup(this, R.string.google_drive_permission_error, true);
+                    popup.addGreyButton(R.string.ok, null);
+                    popup.show();
                 } else {
                     getRootDir(true);
                 }
@@ -309,7 +296,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(Menu.NONE, 100, 1, "Accounts");
+        MenuItem item = menu.add(Menu.NONE, 100, 1, R.string.accounts);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
@@ -382,10 +369,9 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleDriveActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    new Popup(GoogleDriveActivity.this)
-                            .setMessage("Connection Error: Please check your internet connection")
-                            .addGreyButton("Ok", null)
-                            .show();
+                    Popup popup = new Popup(GoogleDriveActivity.this, R.string.error_no_connection, true);
+                    popup.addGreyButton(R.string.ok, null);
+                    popup.show();
                 }
             }
         }
@@ -428,12 +414,12 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
 
         @Override
         protected void onPreExecute() {
-//            LoadingView.show(GoogleDriveActivity.this, "Downloading...");
+//            Loading.show(GoogleDriveActivity.this, "Downloading...");
         }
 
         @Override
         protected void onPostExecute(String path) {
-//            LoadingView.hide();
+//            Loading.hide();
             if (path != null) {
                 Intent intent = new Intent();
                 intent.putExtra("path", path);
@@ -469,14 +455,14 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                     icon = R.drawable.g_pdf;
                 }
             }
-            ImageView iconView = (ImageView)convertView.findViewById(R.id.image_view);
+            ImageView iconView = convertView.findViewById(R.id.image_view);
             iconView.setBackgroundColor(Color.TRANSPARENT);
             iconView.setImageResource(icon);
 
-            TextView nameView = (TextView) convertView.findViewById(R.id.file_name);
+            TextView nameView = convertView.findViewById(R.id.file_name);
             nameView.setText(file.getName());
 
-            TextView attributesView = (TextView) convertView.findViewById(R.id.file_attributes);
+            TextView attributesView = convertView.findViewById(R.id.file_attributes);
             try {
                 long size = file.getSize();
                 if (size < 1024) {

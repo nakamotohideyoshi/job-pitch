@@ -55,7 +55,7 @@ class EmployeeListController: MJPController {
     
     func showError() {
         self.hideLoading()
-        self.emptyView.setData(message: "Server Error!", button: "Refresh") {
+        self.emptyView.setData(message: NSLocalizedString("Server Error!", comment: ""), button: NSLocalizedString("Refresh", comment: "")) {
             self.showLoading()
             self.loadData()
         }

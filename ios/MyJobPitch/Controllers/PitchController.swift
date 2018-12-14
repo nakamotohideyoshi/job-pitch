@@ -112,7 +112,7 @@ class PitchController: MJPController {
             
             PitchUploader().uploadVideo(self.videoUrl, pitch: result as! Pitch, endpoint: "pitches", progress: { (progress) in
                 if progress < 1 {
-                    self.showLoading("Uploading Pitch...", withProgress: progress)
+                    self.showLoading(NSLocalizedString("Uploading Pitch...", comment: ""), withProgress: progress)
                 } else {
                     self.showLoading()
                 }
@@ -129,7 +129,9 @@ class PitchController: MJPController {
                 self.pitch = pitch
                 AppData.jobseeker.pitches = [self.pitch]
                 
-                PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
+                PopupController.showGreen(NSLocalizedString("Success!", comment: ""),
+                                          ok: NSLocalizedString("Ok", comment: ""), okCallback: nil,
+                                          cancel: nil, cancelCallback: nil)
             }
         }
     }
@@ -140,7 +142,7 @@ class PitchController: MJPController {
     
     @IBAction func helpAction(_ sender: Any) {
         let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
-        controller.navigationItem.title = "Recording Pitch"
+        controller.navigationItem.title = NSLocalizedString("Recording Pitch", comment: "")
         controller.file = "pitch"
         controller.isModal = true
         let navController = UINavigationController(rootViewController: controller)

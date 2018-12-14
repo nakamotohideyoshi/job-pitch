@@ -60,26 +60,21 @@ public class BusinessEditFragment extends FormFragment {
         View view = inflater.inflate(R.layout.fragment_business_edit, container, false);
         ButterKnife.bind(this, view);
 
-        imageSelector = new ImageSelector(getApp(), logoView, R.drawable.default_logo);
+        imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
         isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
         if (business == null) {
 
-            title = "Add Business";
+            title = getString(R.string.add_business);
             isNew = true;
-            creditsView.setText(String.format("%d free credits", AppData.initialTokens.getTokens()));
+            creditsView.setText(String.format("%d %s", AppData.initialTokens.getTokens(), getString(R.string.free_credits)));
             addCreditsButton.setVisibility(View.GONE);
 
         } else {
 
-            title = "Edit Business";
+            title = getString(R.string.edit_business);
             showLoading(view);
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    business = MJPApi.shared().getUserBusiness(business.getId());
-                }
-            }).addListener(new APITaskListener() {
+            new APITask(() -> business = MJPApi.shared().getUserBusiness(business.getId())).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                     hideLoading();
@@ -157,15 +152,12 @@ public class BusinessEditFragment extends FormFragment {
 
         showLoading();
 
-        new APITask(new APIAction() {
-            @Override
-            public void run() {
-                if (business.getId() == null) {
-                    business = MJPApi.shared().createBusiness(business);
-                    AppData.user = MJPApi.shared().getUser();
-                } else {
-                    business = MJPApi.shared().updateBusiness(business.getId(), business);
-                }
+        new APITask(() -> {
+            if (business.getId() == null) {
+                business = MJPApi.shared().createBusiness(business);
+                AppData.user = MJPApi.shared().getUser();
+            } else {
+                business = MJPApi.shared().updateBusiness(business);
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -196,12 +188,7 @@ public class BusinessEditFragment extends FormFragment {
 
         } else if (business.getImages().size() > 0 && imageSelector.getImage() == null){
 
-            new APITask(new APIAction() {
-                @Override
-                public void run() {
-                    MJPApi.shared().deleteBusinessImage(business.getImages().get(0).getId());
-                }
-            }).addListener(new APITaskListener() {
+            new APITask(() -> MJPApi.shared().deleteBusinessImage(business.getImages().get(0).getId())).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                     compltedSave();
@@ -232,7 +219,7 @@ public class BusinessEditFragment extends FormFragment {
         }
 
         getApp().getSupportFragmentManager().popBackStackImmediate();
-        BusinessDetailsFragment fragment = new BusinessDetailsFragment();
+        BusinessDetailFragment fragment = new BusinessDetailFragment();
         fragment.isFirstCreate = isFirstCreate;
         fragment.businessId = business.getId();
         getApp().pushFragment(fragment);

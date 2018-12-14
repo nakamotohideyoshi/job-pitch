@@ -33,19 +33,19 @@ class HelpController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         let titles = [
-            "about": "About",
-            "help": "How it works",
-            "terms": "Terms and Conditions",
-            "privacy": "Privacy Policy"
+            "about": NSLocalizedString("About", comment: "help file"),
+            "help": NSLocalizedString("How it works", comment: "help file"),
+            "terms": NSLocalizedString("Terms and Conditions", comment: "help file"),
+            "privacy": NSLocalizedString("Privacy Policy", comment: "help file")
         ]
         
         let webView = segue.destination as! WebViewController
         webView.navigationItem.title = titles[segue.identifier!]
         if segue.identifier == "help" {
             if AppData.userRole == Role.ROLE_JOB_SEEKER_ID {
-                webView.file = "help-jobseeker"
+                webView.file = "jobseeker"
             } else {
-                webView.file = "help-recruiter"
+                webView.file = "recruiter"
             }
         } else {
             webView.file = segue.identifier

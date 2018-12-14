@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 import com.myjobpitch.R;
 import com.myjobpitch.fragments.BaseFragment;
+import com.myjobpitch.pages.hr.employees.HREmployeeEditFragment;
 import com.myjobpitch.pages.hr.employees.HREmployeeListFragment;
+import com.myjobpitch.pages.hr.jobs.HRJobEditFragment;
 import com.myjobpitch.pages.hr.jobs.HRJobListFragment;
 
 import butterknife.BindView;
@@ -26,6 +28,7 @@ public class HRFragment extends BaseFragment {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
+    TabsPagerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,10 +38,30 @@ public class HRFragment extends BaseFragment {
 
         title = "HR";
 
-        viewPager.setAdapter(new TabsPagerAdapter(getApp().getSupportFragmentManager()));
+        addMenuItem(MENUGROUP1, 100, "Add", R.drawable.ic_add);
+
+        if (adapter == null) {
+            adapter = new TabsPagerAdapter(getApp().getSupportFragmentManager());
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+        viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 100) {
+            BaseFragment fragment;
+            if (tabLayout.getSelectedTabPosition() == 0) {
+                fragment = new HRJobEditFragment();
+            } else {
+                fragment = new HREmployeeEditFragment();
+            }
+            getApp().pushFragment(fragment);
+        }
     }
 
     public class TabsPagerAdapter extends FragmentPagerAdapter {

@@ -52,11 +52,11 @@ public class SwipeFragment<T> extends BaseFragment {
         AppHelper.setJobTitleViewText(jobTitleView, "");
 
         // refresh button
-        addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);
-        if (AppData.user.isJobseeker()) {
-            addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
+               addMenuItem(MENUGROUP1, 100, getString(R.string.refresh), R.drawable.ic_refresh);
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP1, 111, getString(R.string.edit_profile), R.drawable.ic_edit);
         } else {
-            addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
+            addMenuItem(MENUGROUP1, 101, getString(R.string.job_details), R.drawable.ic_edit);
         }
 
         return  view;
@@ -122,7 +122,7 @@ public class SwipeFragment<T> extends BaseFragment {
         if (menuID == 100) {
             loadData();
         } else if (menuID == 101) {
-            goToJobDetails();
+            goToJobDetail();
         } else if (menuID == 111) {
             goToEditProfile();
         }
@@ -142,12 +142,9 @@ public class SwipeFragment<T> extends BaseFragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.view_swipe_card, parent, false);
 
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int index = (int)cardStack.getTopCardItemId();
-                        selectedCard(getItem(index));
-                    }
+                convertView.setOnClickListener(view -> {
+                    int index = (int)cardStack.getTopCardItemId();
+                    selectedCard(getItem(index));
                 });
             }
 
@@ -186,7 +183,7 @@ public class SwipeFragment<T> extends BaseFragment {
     protected void selectedCard(T object) {
     }
 
-    protected void goToJobDetails() {
+    protected void goToJobDetail() {
 
     }
 

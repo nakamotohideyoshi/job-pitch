@@ -1,4 +1,4 @@
-django==1.9.4
+django==2.2.24
 djangorestframework==3.2.5
 djangorestframework-gis==0.8.2
 django-allauth==0.24.1
